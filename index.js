@@ -1,4 +1,13 @@
-import { AppRegistry } from 'react-native';
-import App from './App';
+import { Navigation } from 'react-native-navigation'
+import { registerScreens } from './src/screens'
 
-AppRegistry.registerComponent('ChronoMintRN', () => App);
+registerScreens()
+
+Navigation.startSingleScreenApp({
+  screen: {
+    screen: 'SplashScreen',
+    navigatorStyle: {
+      navBarHidden: true
+    }
+  }
+})
