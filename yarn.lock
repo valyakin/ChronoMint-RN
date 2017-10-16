@@ -441,12 +441,6 @@ babel-plugin-external-helpers@^6.18.0:
   dependencies:
     babel-runtime "^6.22.0"
 
-babel-plugin-functional-hmr@^1.0.21:
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/babel-plugin-functional-hmr/-/babel-plugin-functional-hmr-1.0.21.tgz#af0fe853c6707338e220bff1c4790e2fbe023062"
-  dependencies:
-    babel-plugin-syntax-jsx "^6.18.0"
-
 babel-plugin-istanbul@^4.0.0:
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/babel-plugin-istanbul/-/babel-plugin-istanbul-4.1.5.tgz#6760cdd977f411d3e175bb064f2bc327d99b2b6e"
