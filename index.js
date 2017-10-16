@@ -5,9 +5,6 @@ registerScreens()
 
 Navigation.startSingleScreenApp({
   screen: {
-    screen: 'SplashScreen',
-    navigatorStyle: {
-      navBarHidden: true
-    }
+    screen: 'SplashScreen'
   }
 })
