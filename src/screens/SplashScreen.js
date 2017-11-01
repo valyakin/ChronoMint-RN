@@ -1,10 +1,7 @@
 /* @flow */
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  ImageBackground,
-  Dimensions
-} from 'react-native'
+import { ImageBackground, Dimensions } from 'react-native'
 
 const { width, height } = Dimensions.get('window')
 
