@@ -481,7 +481,7 @@ babel-plugin-syntax-flow@^6.18.0, babel-plugin-syntax-flow@^6.5.0, babel-plugin-
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-flow/-/babel-plugin-syntax-flow-6.18.0.tgz#4c3ab20a2af26aa20cd25995c398c4eb70310c8d"
 
-babel-plugin-syntax-jsx@^6.18.0, babel-plugin-syntax-jsx@^6.5.0, babel-plugin-syntax-jsx@^6.8.0:
+babel-plugin-syntax-jsx@^6.5.0, babel-plugin-syntax-jsx@^6.8.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
 
@@ -3661,6 +3661,10 @@ react-devtools-core@^2.5.0:
   dependencies:
     shell-quote "^1.6.1"
     ws "^2.0.3"
+
+react-native-localization@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-localization/-/react-native-localization-0.2.1.tgz#c7c15694098a8f7ff53ef87c7e806138a2c3a96c"
 
 react-native-navigation@^1.1.236:
   version "1.1.236"
