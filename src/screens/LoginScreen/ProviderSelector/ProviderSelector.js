@@ -1,7 +1,7 @@
 /* @flow */
 import React from 'react'
 import PropTypes from 'prop-types'
-import Text from '@components/common/Text'
+import { Text } from '@components'
 import LoginScreenLayout from '../LoginScreenLayout'
 import strings from './strings'
 
