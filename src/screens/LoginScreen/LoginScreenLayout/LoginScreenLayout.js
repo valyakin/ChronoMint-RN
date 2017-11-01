@@ -1,31 +1,31 @@
 /* @flow */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ImageBackground, Platform, StatusBar } from 'react-native'
-import { Logo } from '@components'
+import { ImageBackground, StatusBar } from 'react-native'
+import { Logo, Text } from '@components'
+import styles from './styles'
 
-export default class LoginScreenLayout extends React.Component {
+type Props = {
+  children?: React.ReactNode,
+  title?: string,
+  subtitle?: string
+}
+
+export default class LoginScreenLayout extends React.Component<Props> {
   static propTypes = {
-    children: PropTypes.object
+    children: PropTypes.object,
+    title: PropTypes.string,
+    subtitle: PropTypes.string
   }
   
   render () {
+    const { title, subtitle } = this.props
     return (
-      <ImageBackground
-        source={require('@images/gradient.png')}
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          paddingTop: (Platform.OS !== 'ios' ? 54 : 64)
-        }}
-      >
+      <ImageBackground source={require('@images/gradient.png')} style={styles.container}>
         <StatusBar barStyle='light-content' />
-        <Logo
-          style={{
-            marginTop: 40,
-            marginBottom: 16
-          }}
-        />
+        <Logo style={styles.logo} />
+        { title && <Text style={styles.title}>{title}</Text> }
+        { subtitle && <Text style={styles.subtitle}>{subtitle}</Text> }
         { this.props.children }
       </ImageBackground>
     )
