@@ -1,7 +1,7 @@
 /* @flow */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ImageBackground, Platform } from 'react-native'
+import { ImageBackground, Platform, StatusBar } from 'react-native'
 import { Logo } from '@components'
 
 export default class LoginScreenLayout extends React.Component {
@@ -19,6 +19,7 @@ export default class LoginScreenLayout extends React.Component {
           paddingTop: (Platform.OS !== 'ios' ? 54 : 64)
         }}
       >
+        <StatusBar barStyle='light-content' />
         <Logo
           style={{
             marginTop: 40,
