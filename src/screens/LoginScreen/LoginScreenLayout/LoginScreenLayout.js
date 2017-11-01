@@ -12,7 +12,7 @@ export default class LoginScreenLayout extends React.Component {
   render () {
     return (
       <ImageBackground
-        source={require('../../assets/images/gradient.png')}
+        source={require('@images/gradient.png')}
         style={{
           flex: 1,
           alignItems: 'center',
