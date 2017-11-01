@@ -20,6 +20,7 @@
   "devDependencies": {
     "babel-eslint": "^8.0.1",
     "babel-jest": "21.2.0",
+    "babel-plugin-module-resolver": "^2.7.1",
     "babel-preset-react-native": "4.0.0",
     "eslint": "^4.8.0",
     "eslint-plugin-chronobank-react": "github:chronobank/eslint-plugin-chronobank-react",
