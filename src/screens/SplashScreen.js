@@ -30,7 +30,7 @@ export default class SplashScreen extends React.Component<Props> {
         style={{ width, height }}
         onLoadEnd={() => {
           this.props.navigator.resetTo({
-            screen: 'LoginScreen.ProviderSelector',
+            screen: 'LoginScreen.OptionSelector',
             animationType: 'fade'
           })
         }}
