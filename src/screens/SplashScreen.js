@@ -1,10 +1,7 @@
 /* @flow */
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  ImageBackground,
-  Dimensions
-} from 'react-native'
+import { ImageBackground, Dimensions, StatusBar } from 'react-native'
 
 const { width, height } = Dimensions.get('window')
 
@@ -30,11 +27,13 @@ export default class SplashScreen extends React.Component<Props> {
         style={{ width, height }}
         onLoadEnd={() => {
           this.props.navigator.resetTo({
-            screen: 'LoginScreen.ProviderSelector',
+            screen: 'LoginScreen.OptionSelector',
             animationType: 'fade'
           })
         }}
-      />
+      >
+        <StatusBar barStyle='light-content' />
+      </ImageBackground>
     )
   }
 }
