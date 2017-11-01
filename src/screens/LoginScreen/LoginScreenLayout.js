@@ -3,9 +3,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {
   ImageBackground,
-  Image,
   Platform
 } from 'react-native'
+import { Logo } from '@components'
 
 export default class LoginScreenLayout extends React.Component {
   static propTypes = {
@@ -22,8 +22,7 @@ export default class LoginScreenLayout extends React.Component {
           paddingTop: (Platform.OS !== 'ios' ? 54 : 64)
         }}
       >
-        <Image
-          source={require('../../assets/images/logo.png')}
+        <Logo
           style={{
             marginTop: 40,
             marginBottom: 16
