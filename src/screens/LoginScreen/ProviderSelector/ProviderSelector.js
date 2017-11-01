@@ -1,8 +1,9 @@
 /* @flow */
 import React from 'react'
 import PropTypes from 'prop-types'
-import Text from '../../components/common/Text'
-import LoginScreenLayout from './LoginScreenLayout'
+import Text from '../../../components/common/Text'
+import LoginScreenLayout from '../LoginScreenLayout'
+import strings from './strings'
 
 export default class ProviderSelector extends React.Component {
   static propTypes = {
@@ -18,13 +19,14 @@ export default class ProviderSelector extends React.Component {
   }
 
   render () {
+    const { navigator } = this.props
     return (
       <LoginScreenLayout>
         <Text
           onPress={() => navigator.push({
             screen: 'LoginScreen.OptionSelector'
           })}
-        >Select provider</Text>
+        >{strings.selectProvider}</Text>
       </LoginScreenLayout>
     )
   }

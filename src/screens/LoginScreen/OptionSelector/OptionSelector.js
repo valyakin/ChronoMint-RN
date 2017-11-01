@@ -1,7 +1,8 @@
 /* @flow */
 import React from 'react'
-import LoginScreenLayout from './LoginScreenLayout'
-import Text from '../../components/common/Text'
+import LoginScreenLayout from '../LoginScreenLayout'
+import Text from '../../../components/common/Text'
+import strings from './strings'
 
 export default class OptionSelector extends React.Component {
   static navigatorStyle = {
@@ -16,7 +17,7 @@ export default class OptionSelector extends React.Component {
   render () {
     return (
       <LoginScreenLayout>
-        <Text>Select option</Text>
+        <Text>{strings.selectOption}</Text>
       </LoginScreenLayout>
     )
   }

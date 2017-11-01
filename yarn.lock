@@ -3669,6 +3669,9 @@ react-devtools-core@^2.5.0:
 react-native-device-info@^0.12.1:
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.12.1.tgz#659ed145caa5a86a4815904381b25e9ebe0c24f6"
+react-native-localization@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-localization/-/react-native-localization-0.2.1.tgz#c7c15694098a8f7ff53ef87c7e806138a2c3a96c"
 
 react-native-navigation@^1.1.236:
   version "1.1.236"

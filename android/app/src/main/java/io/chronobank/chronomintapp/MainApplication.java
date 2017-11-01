@@ -5,6 +5,7 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.reactnativenavigation.NavigationReactPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new NavigationReactPackage(),
             new RNDeviceInfo()
+            new ReactNativeLocalizationPackage()
       );
     }
 
