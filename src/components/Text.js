@@ -5,7 +5,7 @@ import { Text, StyleSheet } from 'react-native'
 export default class AppText extends React.Component {
   static propTypes = {
     children: PropTypes.string,
-    style: PropTypes.object
+    style: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
   }
   render () {
     return (
