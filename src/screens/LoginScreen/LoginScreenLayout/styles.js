@@ -32,5 +32,8 @@ export default StyleSheet.create({
   },
   fetchingIndicator: {
     alignSelf: 'flex-start'
+  },
+  contentArea: {
+    flex: 1
   }
 })
