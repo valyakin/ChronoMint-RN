@@ -29,5 +29,8 @@ export default StyleSheet.create({
     alignSelf: 'flex-start',
     opacity: .6,
     fontSize: 20
+  },
+  fetchingIndicator: {
+    alignSelf: 'flex-start'
   }
 })

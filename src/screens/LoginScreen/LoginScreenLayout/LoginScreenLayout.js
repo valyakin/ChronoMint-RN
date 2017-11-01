@@ -2,7 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { ImageBackground, StatusBar } from 'react-native'
-import { Logo, Text } from '@components'
+import { Logo, Text, FetchingIndicator } from '@components'
 import styles from './styles'
 
 type Props = {
@@ -27,6 +27,7 @@ export default class LoginScreenLayout extends React.Component<Props> {
         { title && <Text style={styles.title}>{title}</Text> }
         { subtitle && <Text style={styles.subtitle}>{subtitle}</Text> }
         { this.props.children }
+        <FetchingIndicator style={styles.fetchingIndicator} />
       </ImageBackground>
     )
   }
