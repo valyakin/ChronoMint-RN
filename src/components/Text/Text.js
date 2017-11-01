@@ -1,29 +1,30 @@
+/* @flow */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Text, StyleSheet } from 'react-native'
+import { Text as RNText } from 'react-native'
+import styles from './styles'
 
-export default class AppText extends React.Component {
+type TextProps = {
+  children: string,
+  style: Object
+}
+
+export class Text extends React.Component<TextProps> {
   static propTypes = {
     children: PropTypes.string,
     style: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
   }
   render () {
     return (
-      <Text
+      <RNText
         {...this.props}
         style={[
-          style.text,
+          styles.text,
           this.props.style
         ]}
       >
         {this.props.children}
-      </Text>
+      </RNText>
     )
   }
 }
-
-const style = StyleSheet.create({
-  text: {
-    backgroundColor: 'transparent'
-  }
-})
