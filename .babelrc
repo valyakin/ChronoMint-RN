@@ -5,7 +5,8 @@
       "alias": {
         "@components": "./src/components",
         "@styleConstants": "./src/styleConstants.js",
-        "@images": "./src/assets/images"
+        "@images": "./src/assets/images",
+        "@icons": "./src/assets/icons"
       }
     }]
   ]
