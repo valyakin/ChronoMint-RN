@@ -1,24 +1,20 @@
 /* @flow */
 import React from 'react'
-import LoginScreenLayout from '../LoginScreenLayout'
 import { Text } from '@components'
 import strings from './strings'
+import screenLayout from '../../screenLayout'
+import LoginScreenLayout from '../LoginScreenLayout'
 
+@screenLayout(LoginScreenLayout)
 export default class OptionSelector extends React.Component {
-  static navigatorStyle = {
-    drawUnderNavBar: true,
-    navBarTranslucent: true,
-    navBarTransparent: true,
-    statusBarTextColorScheme: 'light',
-    animated: false,
-    animationType: 'fade'
+  static screenOptions = {
+    title: 'Login',
+    subtitle: 'Select login options:'
   }
 
   render () {
     return (
-      <LoginScreenLayout>
-        <Text>{strings.selectOption}</Text>
-      </LoginScreenLayout>
+      <Text>{strings.selectOption}</Text>
     )
   }
 }

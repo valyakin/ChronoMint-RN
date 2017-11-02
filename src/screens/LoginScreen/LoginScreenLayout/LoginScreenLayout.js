@@ -13,21 +13,20 @@ type Props = {
 }
 
 export default class LoginScreenLayout extends React.Component<Props> {
-  static navigatorButtons = {
-    rightButtons: [
-      {
-        title: 'afsdad'
-      }
-    ]
+  static navigatorStyle = {
+    drawUnderNavBar: true,
+    navBarTranslucent: true,
+    navBarTransparent: true,
+    statusBarTextColorScheme: 'light'
   }
   static propTypes = {
     children: PropTypes.object,
-    title: PropTypes.string,
-    subtitle: PropTypes.string
+    screenOptions: PropTypes.object
   }
   
   render () {
-    const { title, subtitle } = this.props
+    const { title, subtitle } = this.props.screenOptions
+
     return (
       <ImageBackground source={require('@images/gradient.png')} style={styles.container}>
         <Logo style={styles.logo} />
