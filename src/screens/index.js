@@ -1,10 +1,15 @@
 /* @flow */
-import { Navigation } from 'react-native-navigation'
-
+import registerScreens from './registerScreens'
 import SplashScreen from './SplashScreen'
 import OptionSelector from './LoginScreen/OptionSelector'
 
-export function registerScreens () {
-  Navigation.registerComponent('SplashScreen', () => SplashScreen)
-  Navigation.registerComponent('LoginScreen.OptionSelector', () => OptionSelector)
+const screens = {
+  SplashScreen,
+  Login: {
+    OptionSelector
+  }
 }
+
+const screenIds: typeof screens = registerScreens(screens)
+
+export default screenIds

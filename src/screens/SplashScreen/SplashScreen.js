@@ -2,6 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { ImageBackground, Dimensions } from 'react-native'
+import screenIds from '../'
 
 const { width, height } = Dimensions.get('window')
 
@@ -27,7 +28,7 @@ export default class SplashScreen extends React.Component<Props> {
         style={{ width, height }}
         onLoadEnd={() => {
           this.props.navigator.resetTo({
-            screen: 'Login/OptionSelector',
+            screen: screenIds.Login.OptionSelector,
             animationType: 'fade'
           })
         }}
