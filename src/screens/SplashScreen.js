@@ -1,7 +1,7 @@
 /* @flow */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ImageBackground, Dimensions, StatusBar } from 'react-native'
+import { ImageBackground, Dimensions } from 'react-native'
 
 const { width, height } = Dimensions.get('window')
 
@@ -31,9 +31,7 @@ export default class SplashScreen extends React.Component<Props> {
             animationType: 'fade'
           })
         }}
-      >
-        <StatusBar barStyle='light-content' />
-      </ImageBackground>
+      />
     )
   }
 }
