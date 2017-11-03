@@ -13,6 +13,8 @@ export default class OptionSelector extends React.Component {
   }
 
   render () {
+
+    console.log(this.props)
     return (
       <Text>{strings.selectOption}</Text>
     )

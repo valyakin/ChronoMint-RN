@@ -4,15 +4,23 @@ import PropTypes from 'prop-types'
 import { View } from 'react-native'
 import { ImageBackground } from 'react-native'
 import { Logo, Text, FetchingIndicator } from '@components'
+import screenIds from '../../'
 import styles from './styles'
 
 type Props = {
   children?: React.ReactNode,
+  navigator?: Object,
   title?: string,
   subtitle?: string
 }
 
 export default class LoginScreenLayout extends React.Component<Props> {
+  static propTypes = {
+    children: PropTypes.object,
+    navigator: PropTypes.object,
+    screenOptions: PropTypes.object
+  }
+
   static navigatorStyle = {
     drawUnderNavBar: true,
     navBarTranslucent: true,
@@ -24,14 +32,22 @@ export default class LoginScreenLayout extends React.Component<Props> {
   static navigatorButtons = {
     rightButtons: [
       {
-        icon: require('@icons/tune.png')
+        icon: require('@icons/tune.png'),
+        id: 'loginSettings'
       }
     ]
   }
 
-  static propTypes = {
-    children: PropTypes.object,
-    screenOptions: PropTypes.object
+  componentDidMount () {
+    const { navigator } = this.props
+
+    navigator.setOnNavigatorEvent(({type, id}) => {
+      if (type === 'NavBarButtonPress' && id === 'loginSettings') {
+        navigator.push({
+          screen: screenIds.Login.LoginSettings
+        })
+      }
+    })
   }
   
   render () {
