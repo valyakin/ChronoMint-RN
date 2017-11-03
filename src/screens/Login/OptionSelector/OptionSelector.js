@@ -12,11 +12,6 @@ export default class OptionSelector extends React.Component {
     subtitle: 'Select login options:'
   }
 
-  static navigatorStyle = {
-    animated: false,
-    animationType: 'fade'
-  }
-
   render () {
     return (
       <Text>{strings.selectOption}</Text>

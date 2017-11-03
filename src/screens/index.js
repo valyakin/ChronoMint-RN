@@ -1,7 +1,7 @@
 /* @flow */
 import registerScreens from './registerScreens'
 import SplashScreen from './SplashScreen'
-import OptionSelector from './LoginScreen/OptionSelector'
+import OptionSelector from './Login/OptionSelector'
 
 const screens = {
   SplashScreen,
