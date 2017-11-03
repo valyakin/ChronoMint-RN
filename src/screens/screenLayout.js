@@ -1,5 +1,6 @@
 /* @flow */
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const screenLayout = (Layout) => (Screen) => {
   if (!Layout) { 
@@ -7,10 +8,14 @@ const screenLayout = (Layout) => (Screen) => {
   }
   
   const ScreenWrapper = (props) => (
-    <Layout screenOptions={Screen.screenOptions} >
+    <Layout screenOptions={Screen.screenOptions} navigator={props.navigator} >
       <Screen {...props}/>
     </Layout>
   )
+
+  ScreenWrapper.propTypes = {
+    navigator: PropTypes.object
+  }
 
   ScreenWrapper.navigatorStyle = {
     ...(Layout.navigatorStyle || {}),
