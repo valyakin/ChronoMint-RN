@@ -17,8 +17,18 @@ export default class LoginScreenLayout extends React.Component<Props> {
     drawUnderNavBar: true,
     navBarTranslucent: true,
     navBarTransparent: true,
+    navBarButtonColor: 'white',
     statusBarTextColorScheme: 'light'
   }
+
+  static navigatorButtons = {
+    rightButtons: [
+      {
+        icon: require('@icons/tune.png')
+      }
+    ]
+  }
+
   static propTypes = {
     children: PropTypes.object,
     screenOptions: PropTypes.object
