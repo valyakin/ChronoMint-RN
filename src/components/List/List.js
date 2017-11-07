@@ -17,10 +17,13 @@ class ListItem extends React.Component {
   }
 
   render () {
-    const { key, icon, hasChevron, value } = this.props.item
+    const { key, icon, hasChevron, value, onPress } = this.props.item
 
     return (
-      <View style={styles.itemContainer} >
+      <View
+        style={styles.itemContainer}
+        onPress={onPress}
+      >
         { icon && (
           <Icon
             style={styles.itemIcon}
