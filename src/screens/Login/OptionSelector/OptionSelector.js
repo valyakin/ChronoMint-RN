@@ -1,9 +1,10 @@
 /* @flow */
 import React from 'react'
-import { Text } from '@components'
+import { List } from '@components'
 import strings from './strings'
 import screenLayout from '../../screenLayout'
 import LoginScreenLayout from '../LoginScreenLayout'
+import styles from './styles'
 
 @screenLayout(LoginScreenLayout)
 export default class OptionSelector extends React.Component {
@@ -14,9 +15,25 @@ export default class OptionSelector extends React.Component {
 
   render () {
 
-    console.log(this.props)
     return (
-      <Text>{strings.selectOption}</Text>
+      <List
+        itemStyle={styles.listItem}
+        theme='dark'
+        data={[
+          {
+            key: 'Mnemonic key',
+            icon: require('@icons/mnemonic.png')
+          },
+          {
+            key: 'Wallet file',
+            icon: require('@icons/wallet.png')
+          },
+          {
+            key: 'Private key',
+            icon: require('@icons/key.png')
+          }
+        ]}
+      />
     )
   }
 }

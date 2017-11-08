@@ -5,18 +5,18 @@ import { BACKGROUND, UNIT } from '@styleConstants'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    padding: UNIT,
-    alignItems: 'center',
+    alignItems: 'stretch',
     paddingTop: (Platform.OS !== 'ios' ? 54 : 64)
   },
   logo: {
     marginTop: 40,
+    alignSelf: 'center',
     marginBottom: 2 * UNIT
   },
   title: {
     fontSize: 34,
     lineHeight: 34,
-    marginHorizontal: UNIT,
+    marginHorizontal: 2 * UNIT,
     marginTop: 2 * UNIT,
     marginBottom: UNIT,
     color: BACKGROUND,
@@ -24,7 +24,8 @@ export default StyleSheet.create({
   },
   subtitle: {
     color: BACKGROUND,
-    margin: UNIT,
+    marginHorizontal: 2 * UNIT,
+    marginVertical: UNIT,
     lineHeight: 30,
     alignSelf: 'flex-start',
     opacity: .6,

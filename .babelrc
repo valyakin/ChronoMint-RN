@@ -4,6 +4,7 @@
     "transform-decorators-legacy",
     ["module-resolver", {
       "alias": {
+        "src": "./src",
         "@components": "./src/components",
         "@styleConstants": "./src/styleConstants.js",
         "@images": "./src/assets/images",

@@ -1,12 +1,14 @@
-import { StyleSheet } from 'react-native'
-import { UNIT } from '@styleConstants'
+import stylesFactory from 'src/utils/stylesFactory'
+import {
+  UNIT,
+  BACKGROUND,
+  FOREGROUND
+} from 'src/styleConstants'
 
-export default StyleSheet.create({
+const common = {
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomColor: '#CCCCDF',
-    borderBottomWidth: 1,
     padding: UNIT
   },
   spacer: {
@@ -20,4 +22,18 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end'
   }
-})
+}
+
+const dark = {
+  text: {
+    color: BACKGROUND
+  }
+}
+
+const light = {
+  text: {
+    color: FOREGROUND
+  }
+}
+
+export default stylesFactory(common, { dark, light })
