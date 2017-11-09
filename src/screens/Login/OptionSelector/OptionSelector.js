@@ -2,35 +2,40 @@
 import React from 'react'
 import { List } from '@components'
 import strings from './strings'
-import screenLayout from '../../screenLayout'
+import screenLayout from 'src/screens/screenLayout'
 import LoginScreenLayout from '../LoginScreenLayout'
-import styles from './styles'
 
 @screenLayout(LoginScreenLayout)
 export default class OptionSelector extends React.Component {
   static screenOptions = {
-    title: 'Login',
-    subtitle: 'Select login options:'
+    title: strings.login,
+    subtitle: strings.selectOptions
   }
 
   render () {
-
     return (
       <List
-        itemStyle={styles.listItem}
         theme='dark'
         data={[
           {
-            key: 'Mnemonic key',
-            icon: require('@icons/mnemonic.png')
+            key: strings.mnemonicKey,
+            icon: require('src/assets/icons/mnemonic.png'),
+            hasChevron: true
           },
           {
-            key: 'Wallet file',
-            icon: require('@icons/wallet.png')
+            key: strings.walletFile,
+            icon: require('src/assets/icons/wallet.png'),
+            hasChevron: true
           },
           {
-            key: 'Private key',
-            icon: require('@icons/key.png')
+            key: strings.privateKey,
+            icon: require('src/assets/icons/key.png'),
+            hasChevron: true
+          },
+          {
+            key: strings.uPort,
+            icon: require('src/assets/icons/uport.png'),
+            hasChevron: true
           }
         ]}
       />
