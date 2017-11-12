@@ -1,6 +1,6 @@
 /* @flow */
 import { StyleSheet } from 'react-native'
-import { UNIT, BACKGROUND } from '@styleConstants'
+import { UNIT, BACKGROUND } from 'src/constants/styles'
 
 export default StyleSheet.create({
   container: {

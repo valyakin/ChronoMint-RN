@@ -1,9 +1,5 @@
 import stylesFactory from 'src/utils/stylesFactory'
-import {
-  UNIT,
-  BACKGROUND,
-  FOREGROUND
-} from 'src/styleConstants'
+import { UNIT, BACKGROUND, FOREGROUND } from 'src/constants/styles'
 
 const common = {
   itemContainer: {

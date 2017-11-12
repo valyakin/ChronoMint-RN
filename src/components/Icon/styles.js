@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { UNIT } from '@styleConstants'
+import { UNIT } from 'src/constants/styles'
 
 export default StyleSheet.create({
   container: {

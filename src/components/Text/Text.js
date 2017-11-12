@@ -9,7 +9,7 @@ type TextProps = {
   style: Object
 }
 
-export class Text extends React.Component<TextProps> {
+export default class Text extends React.Component<TextProps> {
   static propTypes = {
     children: PropTypes.string,
     style: PropTypes.oneOfType([PropTypes.number, PropTypes.object])

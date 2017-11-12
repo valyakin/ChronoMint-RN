@@ -2,7 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { View } from 'react-native'
-import { Text } from '@components'
+import Text from '../Text'
 import styles from './styles'
 import strings from './strings'
 

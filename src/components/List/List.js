@@ -2,10 +2,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { FlatList, View } from 'react-native'
-import styles from './styles'
 import isDefined from 'src/utils/isDefined'
-import { Spacer } from '../Spacer/Spacer';
-import { Text } from '../Text/Text';
+import Spacer from 'src/components/Spacer'
+import Text from 'src/components/Text'
+import Icon from 'src/components/Icon'
+import styles from './styles'
 
 class ListItem extends React.Component {
   static propTypes = {
@@ -20,7 +21,6 @@ class ListItem extends React.Component {
     const theme = styles(this.props.theme)
 
     return (
-      <Icon
       <View
         style={theme.itemContainer}
         onPress={onPress}
@@ -38,7 +38,7 @@ class ListItem extends React.Component {
         </Text>
         <Spacer />
         { isDefined(value) && <Text>{value}</Text>}
-        { hasChevron && <Icon source={require('@icons/chevron-right.png')} />}
+        { hasChevron && <Icon source={require('src/assets/icons/chevron-right.png')} />}
       </View>
     )
   }

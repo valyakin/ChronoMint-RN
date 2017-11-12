@@ -1,14 +1,14 @@
 {
-    "compilerOptions": {
-      "baseUrl": ".",
-      "paths": {
-        "src/*": ["./src/*"]
-      },
-      "jsx": "preserve",
-      "allowSyntheticDefaultImports": true
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "src/*": ["./src/*"],
+      "components": ["./src/components"]
     },
-    "exclude": [
-      "node_modules",
-      "../"
-    ]
+    "jsx": "preserve",
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -1,1 +1,3 @@
-export { FetchingIndicator } from './FetchingIndicator'
+import FetchingIndicator from './FetchingIndicator'
+
+export default FetchingIndicator
