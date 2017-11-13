@@ -1,47 +1,10 @@
 /* @flow */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { FlatList, View } from 'react-native'
-import isDefined from 'src/utils/isDefined'
-import Spacer from 'src/components/Spacer'
-import Text from 'src/components/Text'
-import Icon from 'src/components/Icon'
+import { FlatList } from 'react-native'
+import Separator from './components/Separator'
+import ListItem from './components/ListItem'
 import styles from './styles'
-
-class ListItem extends React.Component {
-  static propTypes = {
-    item: PropTypes.object,
-    theme: PropTypes.oneOf(['dark', 'light'])
-  }
-
-  render () {
-    const { key, icon, hasChevron, value, onPress } = this.props.item
-
-    const theme = styles(this.props.theme)
-
-    return (
-      <View
-        style={theme.itemContainer}
-        onPress={onPress}
-      >
-        { icon && (
-          <Icon
-            style={theme.itemIcon}
-            source={icon}
-          />
-        )}
-        <Text
-          style={theme.text}
-        >
-          {key}
-        </Text>
-        <Spacer />
-        { isDefined(value) && <Text>{value}</Text>}
-        { hasChevron && <Icon source={require('src/assets/icons/chevron-right.png')} />}
-      </View>
-    )
-  }
-}
 
 export default class List extends React.Component {
   static propTypes = {
@@ -49,13 +12,24 @@ export default class List extends React.Component {
     theme: PropTypes.oneOf(['dark', 'light'])
   }
 
+  renderItem = ({ item }) => {
+    return <ListItem
+      item={item}
+      theme={this.props.theme}
+    />
+  }
+
+  renderSeparator = () => <Separator theme={this.props.theme} />
+
   render () {
-    const { theme } = this.props
+    const theme = styles(this.props.theme)
 
     return (
       <FlatList
+        style={theme.list}
         data={this.props.data}
-        renderItem={({ item }) => <ListItem item={item} theme={theme} />}
+        renderItem={this.renderItem}
+        ItemSeparatorComponent={this.renderSeparator}
       />
     )
   }

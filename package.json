@@ -26,6 +26,7 @@
     "eslint": "^4.8.0",
     "eslint-plugin-chronobank-react": "github:chronobank/eslint-plugin-chronobank-react",
     "jest": "21.2.1",
+    "react-native-logger": "^1.0.3",
     "react-test-renderer": "16.0.0-beta.5"
   },
   "jest": {

@@ -1,7 +1,7 @@
 /* @flow */
 import React from 'react'
-import { View, FlatList } from 'react-native'
-import Text from 'src/components/Text'
+import { View } from 'react-native'
+import List from 'src/components/List'
 import sceneLayout from 'src/utils/sceneLayout'
 import LoginSettingsLayout from '../LoginSettingsLayout'
 
@@ -13,7 +13,8 @@ export default class LoginSettings extends React.Component {
   render () {
     return (
       <View>
-        <FlatList
+        <List
+          theme='light'
           data={[
             {
               key: 'Network',
@@ -31,7 +32,6 @@ export default class LoginSettings extends React.Component {
               icon: require('src/assets/icons/help-circle.png')
             }
           ]}
-          renderItem={({item}) => <Text>{item.key}</Text>}
         />
       </View>
     )

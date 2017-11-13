@@ -2,41 +2,23 @@ import themeFactory from 'src/utils/themeFactory'
 import { UNIT, BACKGROUND, FOREGROUND } from 'src/constants/styles'
 
 const common = {
-  listStyle: {},
-  itemContainer: {
+  container: {
     height: 6 * UNIT,
     flexDirection: 'row',
     alignItems: 'center'
   },
-  spacer: {
-    flex: 1
-  },
-  itemIcon: {
+  icon: {
     marginHorizontal: UNIT
   },
-  itemChevronContainer: {
+  chevronContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end'
   }
 }
 
-const dark = {
-  text: {
-    color: BACKGROUND
-  }
-}
+const dark = {}
 
-const light = {
-  list: {
-    backgroundColor: BACKGROUND,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#CCCCDF'
-  },
-  text: {
-    color: FOREGROUND
-  }
-}
+const light = {}
 
 export default themeFactory(common, { dark, light })
