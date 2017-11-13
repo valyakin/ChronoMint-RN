@@ -2,7 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { View } from 'react-native'
-import Text from '../Text'
+import Text from 'src/components/Text'
 import styles from './styles'
 import strings from './strings'
 
@@ -17,7 +17,7 @@ type FetchingIndicatorProps = {
   style: number | Object
 }
 
-export class FetchingIndicator extends React.Component<FetchingIndicatorProps> {
+export default class FetchingIndicator extends React.Component<FetchingIndicatorProps> {
   static propTypes = {
     status: PropTypes.string,
     style: PropTypes.oneOfType([PropTypes.number, PropTypes.object])

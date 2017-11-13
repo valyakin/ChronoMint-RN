@@ -16,7 +16,6 @@ class ListItem extends React.Component {
 
   render () {
     const { key, icon, hasChevron, value, onPress } = this.props.item
-    console
 
     const theme = styles(this.props.theme)
 
