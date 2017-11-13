@@ -57,7 +57,7 @@ export default class LoginSceneLayout extends React.Component<Props> {
     return (
       <ImageBackground
         source={require('src/assets/images/gradient.png')}
-        style={{ flex: 1 }}
+        style={styles.container}
       >
         <Logo style={styles.logo} />
         { title && <Text style={styles.title}>{title}</Text> }
