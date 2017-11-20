@@ -53,3 +53,4 @@ buck-out/
 */fastlane/screenshots
 
 google-play-api-secret.json
+.vscode
