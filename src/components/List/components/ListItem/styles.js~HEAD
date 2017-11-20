@@ -1,5 +1,5 @@
 import themeFactory from 'src/utils/themeFactory'
-import { UNIT, BACKGROUND, FOREGROUND } from 'src/constants/styles'
+import { LINE, UNIT, FOREGROUND, BACKGROUND_LIGHT } from 'src/constants/styles'
 
 const common = {
   container: {
@@ -7,7 +7,11 @@ const common = {
     flexDirection: 'row',
     alignItems: 'center'
   },
-  icon: {
+  leftSection: {
+    width: LINE,
+    marginHorizontal: UNIT
+  },
+  rightSection: {
     marginHorizontal: UNIT
   },
   arrow: {
@@ -15,12 +19,16 @@ const common = {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end'
+  },
+  text: {
+    flex: 1,
+    textAlign: 'left'
   }
 }
 
 const dark = {
   text: {
-    color: BACKGROUND
+    color: BACKGROUND_LIGHT
   }
 }
 
