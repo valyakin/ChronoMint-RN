@@ -20,22 +20,22 @@ export default class OptionSelector extends React.Component {
           {
             key: strings.mnemonicKey,
             icon: require('src/assets/icons/mnemonic.png'),
-            hasChevron: true
+            hasArrow: true
           },
           {
             key: strings.walletFile,
             icon: require('src/assets/icons/wallet.png'),
-            hasChevron: true
+            hasArrow: true
           },
           {
             key: strings.privateKey,
             icon: require('src/assets/icons/key.png'),
-            hasChevron: true
+            hasArrow: true
           },
           {
             key: strings.uPort,
             icon: require('src/assets/icons/uport.png'),
-            hasChevron: true
+            hasArrow: true
           }
         ]}
       />

@@ -10,15 +10,24 @@ const common = {
   icon: {
     marginHorizontal: UNIT
   },
-  chevronContainer: {
+  arrow: {
+    marginRight: 2 * UNIT,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end'
   }
 }
 
-const dark = {}
+const dark = {
+  text: {
+    color: BACKGROUND
+  }
+}
 
-const light = {}
+const light = {
+  text: {
+    color: FOREGROUND
+  }
+}
 
 export default themeFactory(common, { dark, light })

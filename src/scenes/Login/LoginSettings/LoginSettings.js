@@ -18,17 +18,17 @@ export default class LoginSettings extends React.Component {
           data={[
             {
               key: 'Network',
-              hasChevron: true,
+              hasArrow: true,
               icon: require('src/assets/icons/network.png')
             },
             {
               key: 'Language',
-              hasChevron: true,
+              hasArrow: true,
               icon: require('src/assets/icons/comment.png')
             },
             {
               key: 'FAQ',
-              hasChevron: true,
+              hasArrow: true,
               icon: require('src/assets/icons/help-circle.png')
             }
           ]}

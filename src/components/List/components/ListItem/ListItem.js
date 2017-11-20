@@ -15,18 +15,18 @@ export default class ListItem extends React.Component {
   }
 
   render () {
-    const { key, icon, hasChevron, value, onPress } = this.props.item
+    const { key, icon, hasArrow, value, onPress } = this.props.item
 
     const theme = styles(this.props.theme)
 
     return (
       <View
-        style={theme.itemContainer}
+        style={theme.container}
         onPress={onPress}
       >
         { icon && (
           <Icon
-            style={theme.itemIcon}
+            style={theme.icon}
             source={icon}
           />
         )}
@@ -37,7 +37,12 @@ export default class ListItem extends React.Component {
         </Text>
         <Spacer />
         { isDefined(value) && <Text>{value}</Text>}
-        { hasChevron && <Icon source={require('src/assets/icons/chevron-right.png')} />}
+        { hasArrow && (
+          <Icon
+            source={require('src/assets/icons/chevron-right.png')}
+            style={theme.arrow}
+          />
+        )}
       </View>
     )
   }
