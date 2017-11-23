@@ -5,13 +5,12 @@ export default themeFactory({
   separator: {
     height: 1,
     marginLeft: 5 * UNIT,
-    backgroundColor: 'transparent'
+    backgroundColor: '#CCCCDF'
   }
 }, {
-  light: {
+  dark: {
     separator: {
-      backgroundColor: '#CCCCDF'
+      backgroundColor: 'transparent'
     }
-  },
-  dark: {}
+  }
 })

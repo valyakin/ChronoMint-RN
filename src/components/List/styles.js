@@ -1,8 +1,7 @@
 import themeFactory from 'src/utils/themeFactory'
-import { UNIT, BACKGROUND, FOREGROUND } from 'src/constants/styles'
+import { UNIT, BACKGROUND_LIGHT, BACKGROUND_DARK, FOREGROUND } from 'src/constants/styles'
 
-const common = {
-  listStyle: {},
+export default themeFactory({
   itemContainer: {
     height: 6 * UNIT,
     flexDirection: 'row',
@@ -19,24 +18,22 @@ const common = {
     flexDirection: 'row',
     justifyContent: 'flex-end'
   }
-}
-
-const dark = {
-  text: {
-    color: BACKGROUND
-  }
-}
-
-const light = {
-  list: {
-    backgroundColor: BACKGROUND,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#CCCCDF'
+},
+{
+  dark: {
+    text: {
+      color: BACKGROUND_LIGHT
+    }
   },
-  text: {
-    color: FOREGROUND
+  light: {
+    list: {
+      backgroundColor: BACKGROUND_LIGHT,
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      borderColor: BACKGROUND_DARK
+    },
+    text: {
+      color: FOREGROUND
+    }
   }
-}
-
-export default themeFactory(common, { dark, light })
+})
