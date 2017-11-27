@@ -34,7 +34,10 @@ export default class LoginSettings extends React.Component {
             {
               key: 'Language',
               hasArrow: true,
-              icon: require('src/assets/icons/comment.png')
+              icon: require('src/assets/icons/comment.png'),
+              onPress: () => this.props.navigator.push({
+                screen: scenes.Login.ChangeLanguage
+              })
             },
             {
               key: 'FAQ',
