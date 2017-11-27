@@ -24,7 +24,7 @@ export default class ListItem extends React.Component {
   renderLeft = () => {
     const { icon } = this.props
 
-    if (this.props.hasOwnProperty('isChecked')) {
+    if (this.props.isChecked) {
       return <Icon source={require('src/assets/icons/check.png')} />
     }
     if (icon && icon.prototype && icon.prototype.isReactComponent) {
