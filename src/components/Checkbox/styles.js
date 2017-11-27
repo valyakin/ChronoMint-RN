@@ -3,7 +3,7 @@ import { UNIT, FOREGROUND, BACKGROUND_LIGHT } from 'src/constants/styles'
 
 export default themeFactory({
   container: {
-    padding: UNIT,
+    padding: 2 * UNIT,
     flexDirection: 'row',
     alignItems: 'center'
   },

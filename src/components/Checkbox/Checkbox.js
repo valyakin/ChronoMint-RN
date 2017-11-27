@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { View, Image } from 'react-native'
+import { Image, TouchableOpacity } from 'react-native'
 import Text from 'src/components/Text'
 import styles from './styles'
 
@@ -9,7 +9,7 @@ export default class Checkbox extends React.Component {
   static propTypes = {
     label: PropTypes.string,
     theme: PropTypes.string,
-    isChecked: PropTypes.boolean,
+    isChecked: PropTypes.bool,
     onPress: PropTypes.func
   }
 
@@ -19,7 +19,7 @@ export default class Checkbox extends React.Component {
     const theme = styles(this.props.theme)
     
     return (
-      <View
+      <TouchableOpacity
         style={theme.container}
         onPress={onPress}
       >
@@ -35,7 +35,7 @@ export default class Checkbox extends React.Component {
         >
           {label}
         </Text>
-      </View>
+      </TouchableOpacity>
     )
   }
 }
