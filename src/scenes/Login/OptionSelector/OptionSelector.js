@@ -9,7 +9,8 @@ import strings from './strings'
 export default class OptionSelector extends React.Component {
   static sceneOptions = {
     title: strings.login,
-    subtitle: strings.selectOptions
+    subtitle: strings.selectOptions,
+    hasLogo: true
   }
 
   render () {

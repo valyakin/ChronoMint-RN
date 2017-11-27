@@ -52,14 +52,14 @@ export default class LoginSceneLayout extends React.Component<Props> {
   }
   
   render () {
-    const { title, subtitle } = this.props.sceneOptions
+    const { title, subtitle, hasLogo } = this.props.sceneOptions
 
     return (
       <ImageBackground
         source={require('src/assets/images/gradient.png')}
         style={styles.container}
       >
-        <Logo style={styles.logo} />
+        { hasLogo && <Logo style={styles.logo} /> }
         { title && <Text style={styles.title}>{title}</Text> }
         { subtitle && <Text style={styles.subtitle}>{subtitle}</Text> }
         <View style={styles.contentArea} >
