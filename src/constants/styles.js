@@ -1,7 +1,9 @@
 /*==============================================================================
 COLORS
 ==============================================================================*/
-export const BACKGROUND = '#ffffff'
+export const BACKGROUND = '#FBFBFE'
+export const BACKGROUND_LIGHT = '#FFFFFF'
+export const BACKGROUND_DARK = '#CCCCDF'
 export const FOREGROUND = '#00005f'
 export const FOREGROUND_LIGHT = '#66669F'
 export const FOREGROUND_LIGHTER = '#768fff'

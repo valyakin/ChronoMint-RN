@@ -1,13 +1,17 @@
 import themeFactory from 'src/utils/themeFactory'
-import { UNIT, BACKGROUND, FOREGROUND } from 'src/constants/styles'
+import { LINE, UNIT, FOREGROUND, BACKGROUND_LIGHT } from 'src/constants/styles'
 
-const common = {
+export default themeFactory({
   container: {
     height: 6 * UNIT,
     flexDirection: 'row',
     alignItems: 'center'
   },
-  icon: {
+  leftSection: {
+    width: LINE,
+    marginHorizontal: UNIT
+  },
+  rightSection: {
     marginHorizontal: UNIT
   },
   arrow: {
@@ -15,19 +19,20 @@ const common = {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end'
-  }
-}
-
-const dark = {
+  },
   text: {
-    color: BACKGROUND
+    flex: 1,
+    textAlign: 'left'
   }
-}
-
-const light = {
-  text: {
-    color: FOREGROUND
+}, {
+  dark: {
+    text: {
+      color: BACKGROUND_LIGHT
+    }
+  },
+  light: {
+    text: {
+      color: FOREGROUND
+    }
   }
-}
-
-export default themeFactory(common, { dark, light })
+})

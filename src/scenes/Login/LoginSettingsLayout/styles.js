@@ -1,12 +1,12 @@
 /* @flow */
 import { StyleSheet } from 'react-native'
-import { UNIT } from 'src/constants/styles'
+import { UNIT, BACKGROUND, BACKGROUND_LIGHT, FOREGROUND } from 'src/constants/styles'
 
 export default StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 64,
-    backgroundColor: '#FBFBFE'
+    backgroundColor: BACKGROUND
   },
   title: {
     fontSize: 34,
@@ -18,7 +18,7 @@ export default StyleSheet.create({
     alignSelf: 'flex-start'
   },
   subtitle: {
-    color: '#00005F',
+    color: FOREGROUND,
     margin: 2 * UNIT,
     lineHeight: 30,
     alignSelf: 'flex-start',

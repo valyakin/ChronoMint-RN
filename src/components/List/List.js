@@ -44,7 +44,7 @@ export default class List extends React.Component {
     ) : (
       <FlatList
         style={theme.list}
-        sections={this.props.sections}
+        data={this.props.data}
         renderItem={this.renderItem}
         renderSectionHeader={this.renderSectionHeader}
         ItemSeparatorComponent={this.renderSeparator}

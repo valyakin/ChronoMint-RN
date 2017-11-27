@@ -10,7 +10,7 @@ export default class Separator extends React.Component {
   }
 
   render () {
-    const theme = styles(theme)
+    const theme = styles(this.props.theme)
 
     return (
       <View style={theme.separator} />
