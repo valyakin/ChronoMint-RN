@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>5</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -36,7 +36,18 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Clear Sans Bold Italic.ttf</string>
+		<string>Clear Sans Bold.ttf</string>
+		<string>Clear Sans Italic.ttf</string>
+		<string>Clear Sans Light.ttf</string>
+		<string>Clear Sans Medium Italic.ttf</string>
+		<string>Clear Sans Medium.ttf</string>
+		<string>Clear Sans Thin.ttf</string>
+		<string>Clear Sans.ttf</string>
+	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

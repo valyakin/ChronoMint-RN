@@ -1,13 +1,19 @@
-import themeFactory from 'src/utils/themeFactory'
-import { UNIT, BACKGROUND_LIGHT, FOREGROUND } from 'src/constants/styles'
+import { StyleSheet } from 'react-native'
+import { UNIT, COLOR_BACKGROUND_LIGHT, COLOR_FOREGROUND, LINE } from '../../constants/styles'
 
-
-export default themeFactory({
+export default StyleSheet.create({
   container: {
+    margin: UNIT,
+    borderRadius: 10,
+    backgroundColor: '#2962FF',
     paddingVertical: UNIT,
     paddingHorizontal: 4 * UNIT,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  containerDisabled: {
+    backgroundColor: '#6A75BC'
   },
   leftSection: {
     marginRight: UNIT
@@ -16,12 +22,11 @@ export default themeFactory({
     marginLeft: UNIT
   },
   label: {
-    color: FOREGROUND
-  }
-}, {
-  dark: {
-    label: {
-      color: BACKGROUND_LIGHT
-    }
+    color: COLOR_FOREGROUND,
+    height: LINE
+  }, 
+  labelDark: {
+    color: COLOR_BACKGROUND_LIGHT,
+    height: LINE
   }
 })

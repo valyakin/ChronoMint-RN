@@ -1,8 +1,8 @@
 import { Navigation } from 'react-native-navigation'
-import scenes from './src/scenes'
+import screens from './src/screens'
 
 Navigation.startSingleScreenApp({
   screen: {
-    screen: scenes.SplashScreen
+    screen: screens.SplashScreen
   }
 })

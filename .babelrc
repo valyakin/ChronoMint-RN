@@ -3,10 +3,23 @@
   "sourceMaps": true,
   "plugins": [
     "transform-decorators-legacy",
+    "functional-hmr",
     ["module-resolver", {
       "alias": {
         "src": "./src",
-        "components": "./src/components"
+        "macaddress": "./src/macaddress.js",
+        "stream": "./node_modules/stream",
+        "crypto": "./node_modules/crypto-js",
+        "^redux/ui(.*)$": "./src/redux/ui\\1",
+        "utils/IPFS.*$": "./src/utils/IPFS",
+        "^redux/(.+)$": "@chronobank/mint/src/redux/\\1",
+        "services": "@chronobank/mint/src/services",
+        "dao": "@chronobank/mint/src/dao",
+        "models": "@chronobank/mint/src/models",
+        "utils": "@chronobank/mint/src/utils",
+        "platform": "@chronobank/mint/src/platform",
+        "market": "@chronobank/mint/src/market",
+        "user": "@chronobank/mint/src/user"
       }
     }]
   ]
