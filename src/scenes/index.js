@@ -6,6 +6,7 @@ import LoginSettings from './Login/LoginSettings'
 import SelectNetwork from './Login/SelectNetwork'
 import ChangeLanguage from './Login/ChangeLanguage'
 import EnterMnemonic from './Login/EnterMnemonic'
+import EnterPrivate from './Login/EnterPrivate'
 
 const screens = {
   SplashScreen,
@@ -15,6 +16,7 @@ const screens = {
     SelectNetwork,
     ChangeLanguage,
     EnterMnemonic,
+    EnterPrivate
   }
 }
 

@@ -40,7 +40,10 @@ export default class OptionSelector extends React.Component {
           {
             key: strings.privateKey,
             icon: require('src/assets/icons/key.png'),
-            hasArrow: true
+            hasArrow: true,
+            onPress: () => this.props.navigator.push({
+              screen: scenes.Login.EnterPrivate,
+            })
           },
           {
             key: strings.uPort,
