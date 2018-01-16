@@ -28,6 +28,7 @@ export default class LoginSceneLayout extends React.Component<Props> {
     navBarTranslucent: true,
     navBarTransparent: true,
     navBarButtonColor: 'white',
+    topBarElevationShadowEnabled: false,
     statusBarTextColorScheme: 'light'
   }
 

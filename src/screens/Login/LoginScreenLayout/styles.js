@@ -15,7 +15,7 @@ export default StyleSheet.create({
   },
   title: {
     fontSize: 34,
-    lineHeight: 34,
+    lineHeight: 48,
     marginHorizontal: 2 * UNIT,
     marginTop: 2 * UNIT,
     color: COLOR_BACKGROUND,
