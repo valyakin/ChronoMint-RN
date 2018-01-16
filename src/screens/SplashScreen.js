@@ -16,7 +16,7 @@ export default class SplashScreen extends React.Component {
 
   handleLoadEnd = () => {
     this.props.navigator.resetTo({
-      screen: scenes.Login.EnterPin,
+      screen: scenes.Login.OptionSelector,
       animationType: 'fade'
     })
   }
