@@ -370,7 +370,7 @@ babel-eslint@^8.0.1:
     babel-types "7.0.0-beta.0"
     babylon "7.0.0-beta.22"
 
-babel-generator@^6.18.0, babel-generator@^6.26.0:
+babel-generator@^6.18.0, babel-generator@^6.24.1, babel-generator@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-generator/-/babel-generator-6.26.0.tgz#ac1ae20070b79f6e3ca1d3269613053774f20dc5"
   dependencies:
@@ -2088,10 +2088,6 @@ detect-libc@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
 
-detect-newline@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-2.1.0.tgz#f41f1c10be4b00e87b5f13da680759f2c5bfd3e2"
-
 diff@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.2.0.tgz#c9ce393a4b7cbd0b058a725c93df299027868ff9"
@@ -3800,21 +3796,9 @@ jest-diff@^21.2.1:
     jest-get-type "^21.2.0"
     pretty-format "^21.2.1"
 
-jest-docblock@22.0.3:
-  version "22.0.3"
-  resolved "https://registry.yarnpkg.com/jest-docblock/-/jest-docblock-22.0.3.tgz#c33aa22682b9fc68a5373f5f82994428a2ded601"
-  dependencies:
-    detect-newline "^2.1.0"
-
-jest-docblock@^21.2.0:
+jest-docblock@^21, jest-docblock@^21.2.0:
   version "21.2.0"
   resolved "https://registry.yarnpkg.com/jest-docblock/-/jest-docblock-21.2.0.tgz#51529c3b30d5fd159da60c27ceedc195faf8d414"
-
-jest-docblock@^22.0.3:
-  version "22.0.6"
-  resolved "https://registry.yarnpkg.com/jest-docblock/-/jest-docblock-22.0.6.tgz#f187fb2c67eec0999e569d563092125283084f9e"
-  dependencies:
-    detect-newline "^2.1.0"
 
 jest-environment-jsdom@^21.2.1:
   version "21.2.1"
@@ -3835,18 +3819,7 @@ jest-get-type@^21.2.0:
   version "21.2.0"
   resolved "https://registry.yarnpkg.com/jest-get-type/-/jest-get-type-21.2.0.tgz#f6376ab9db4b60d81e39f30749c6c466f40d4a23"
 
-jest-haste-map@22.0.3:
-  version "22.0.3"
-  resolved "https://registry.yarnpkg.com/jest-haste-map/-/jest-haste-map-22.0.3.tgz#c9ecb5c871c5465d4bde4139e527fa0dc784aa2d"
-  dependencies:
-    fb-watchman "^2.0.0"
-    graceful-fs "^4.1.11"
-    jest-docblock "^22.0.3"
-    jest-worker "^22.0.3"
-    micromatch "^2.3.11"
-    sane "^2.0.0"
-
-jest-haste-map@^21.2.0:
+jest-haste-map@^21, jest-haste-map@^21.2.0:
   version "21.2.0"
   resolved "https://registry.yarnpkg.com/jest-haste-map/-/jest-haste-map-21.2.0.tgz#1363f0a8bb4338f24f001806571eff7a4b2ff3d8"
   dependencies:
@@ -3976,18 +3949,6 @@ jest-validate@^21.2.1:
     jest-get-type "^21.2.0"
     leven "^2.1.0"
     pretty-format "^21.2.1"
-
-jest-worker@22.0.3:
-  version "22.0.3"
-  resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-22.0.3.tgz#30433faca67814a8f80559f75ab2ceaa61332fd2"
-  dependencies:
-    merge-stream "^1.0.1"
-
-jest-worker@^22.0.3:
-  version "22.0.6"
-  resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-22.0.6.tgz#1998ac7ab24a6eee4deddec76efe7742f2651504"
-  dependencies:
-    merge-stream "^1.0.1"
 
 jest@21.2.1:
   version "21.2.1"
@@ -4518,24 +4479,14 @@ methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
 
-metro-core@0.24.4, metro-core@^0.24.1:
-  version "0.24.4"
-  resolved "https://registry.yarnpkg.com/metro-core/-/metro-core-0.24.4.tgz#98fb7dd6abf8ea13af3e6f5a6080b7600e98d842"
-
-metro-source-map@0.24.4:
-  version "0.24.4"
-  resolved "https://registry.yarnpkg.com/metro-source-map/-/metro-source-map-0.24.4.tgz#b56c2ec94629d44c15304fd886d40d23ea970073"
-  dependencies:
-    source-map "^0.5.6"
-
-metro@^0.24.1:
-  version "0.24.4"
-  resolved "https://registry.yarnpkg.com/metro/-/metro-0.24.4.tgz#e67ed4a4992219992cd2d12792a0401b98e16f0c"
+metro-bundler@^0.20.0:
+  version "0.20.3"
+  resolved "https://registry.yarnpkg.com/metro-bundler/-/metro-bundler-0.20.3.tgz#0ded01b64e8963117017b106f75b83cfc34f3656"
   dependencies:
     absolute-path "^0.0.0"
     async "^2.4.0"
     babel-core "^6.24.1"
-    babel-generator "^6.26.0"
+    babel-generator "^6.24.1"
     babel-plugin-external-helpers "^6.18.0"
     babel-preset-es2015-node "^6.1.1"
     babel-preset-fbjs "^2.1.4"
@@ -4544,24 +4495,19 @@ metro@^0.24.1:
     babylon "^6.18.0"
     chalk "^1.1.1"
     concat-stream "^1.6.0"
-    connect "^2.8.3"
     core-js "^2.2.2"
     debug "^2.2.0"
     denodeify "^1.2.1"
     fbjs "^0.8.14"
-    fs-extra "^1.0.0"
     graceful-fs "^4.1.3"
     image-size "^0.6.0"
-    jest-docblock "22.0.3"
-    jest-haste-map "22.0.3"
-    jest-worker "22.0.3"
+    jest-docblock "^21"
+    jest-haste-map "^21"
     json-stable-stringify "^1.0.1"
     json5 "^0.4.0"
     left-pad "^1.1.3"
     lodash "^4.16.6"
     merge-stream "^1.0.1"
-    metro-core "0.24.4"
-    metro-source-map "0.24.4"
     mime-types "2.1.11"
     mkdirp "^0.5.1"
     request "^2.79.0"
@@ -4569,11 +4515,10 @@ metro@^0.24.1:
     source-map "^0.5.6"
     temp "0.8.3"
     throat "^4.1.0"
-    uglify-es "^3.1.9"
+    uglify-es "^3.1.8"
     wordwrap "^1.0.0"
     write-file-atomic "^1.2.0"
     xpipe "^1.0.5"
-    yargs "^9.0.0"
 
 micromatch@^2.1.5, micromatch@^2.3.11:
   version "2.3.11"
@@ -5452,9 +5397,9 @@ react-deep-force-update@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-2.1.1.tgz#8ea4263cd6455a050b37445b3f08fd839d86e909"
 
-react-devtools-core@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-3.0.0.tgz#f683e19f0311108f97dbb5b29d948323a1bf7c03"
+react-devtools-core@^2.5.0:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-2.5.2.tgz#f97bec5afae5d9318d16778065e0c214c4d5714c"
   dependencies:
     shell-quote "^1.6.1"
     ws "^2.0.3"
@@ -5486,19 +5431,15 @@ react-native-localization@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/react-native-localization/-/react-native-localization-0.2.1.tgz#c7c15694098a8f7ff53ef87c7e806138a2c3a96c"
 
-react-native-navigation@^1.1.236:
-  version "1.1.236"
-  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.236.tgz#4babbfee14d9f865186f763248ffa54da68ad7fd"
+react-native-navigation@^1.1.342:
+  version "1.1.342"
+  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-1.1.342.tgz#c2e2fbf136ed306bbd14a60ac3560d648f1e2e72"
   dependencies:
     lodash "4.x.x"
 
-react-native-os@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-os/-/react-native-os-1.1.0.tgz#bfbe1c44d8a5b14a6f3a3a405d8ada6f547a516e"
-
-react-native@^0.52.0:
-  version "0.52.0"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.52.0.tgz#9784663a2aa40b30c87d4c9c06ef26cf8d419d91"
+react-native@0.51.0:
+  version "0.51.0"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.51.0.tgz#fe25934b3030fd323f3ca1a70f034133465955ed"
   dependencies:
     absolute-path "^0.0.0"
     art "^0.10.0"
@@ -5527,8 +5468,7 @@ react-native@^0.52.0:
     graceful-fs "^4.1.3"
     inquirer "^3.0.6"
     lodash "^4.16.6"
-    metro "^0.24.1"
-    metro-core "^0.24.1"
+    metro-bundler "^0.20.0"
     mime "^1.3.4"
     minimist "^1.2.0"
     mkdirp "^0.5.1"
@@ -5542,7 +5482,7 @@ react-native@^0.52.0:
     promise "^7.1.1"
     prop-types "^15.5.8"
     react-clone-referenced-element "^1.0.1"
-    react-devtools-core "3.0.0"
+    react-devtools-core "^2.5.0"
     react-timer-mixin "^0.13.2"
     regenerator-runtime "^0.11.0"
     rimraf "^2.5.4"
@@ -6684,7 +6624,7 @@ ua-parser-js@^0.7.9:
   version "0.7.14"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.14.tgz#110d53fa4c3f326c121292bbeac904d2e03387ca"
 
-uglify-es@^3.1.9:
+uglify-es@^3.1.8:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.3.7.tgz#d1249af668666aba7cb1163e277455be9eb393cf"
   dependencies:
