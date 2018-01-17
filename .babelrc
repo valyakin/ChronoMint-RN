@@ -6,7 +6,6 @@
     "functional-hmr",
     ["module-resolver", {
       "alias": {
-        "src": "./src",
         "macaddress": "./src/macaddress.js",
         "stream": "./node_modules/stream",
         "crypto": "./node_modules/crypto-js",
