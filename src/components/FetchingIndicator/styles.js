@@ -1,6 +1,6 @@
 /* @flow */
 import { StyleSheet } from 'react-native'
-import { UNIT, BACKGROUND } from 'src/constants/styles'
+import { UNIT, COLOR_BACKGROUND } from '../../constants/styles'
 
 export default StyleSheet.create({
   container: {
@@ -26,6 +26,6 @@ export default StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    color: BACKGROUND
+    color: COLOR_BACKGROUND
   }
 })

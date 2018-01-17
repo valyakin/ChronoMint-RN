@@ -1,11 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "src/*": ["./src/*"],
-      "components": ["./src/components"]
-    },
-    "jsx": "preserve",
+    "jsx": "react-native",
     "allowSyntheticDefaultImports": true
   },
   "exclude": [

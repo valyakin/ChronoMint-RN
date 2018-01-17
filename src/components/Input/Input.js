@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { View, TextInput } from 'react-native'
-import Text from 'src/components/Text'
+import Text from '../../components/Text'
 import styles from './styles'
 
 export default class Input extends React.Component {
@@ -12,18 +12,20 @@ export default class Input extends React.Component {
   }
   
   render () {
-    const { label } = this.props
-    const theme = styles(this.props.theme)
+    const { label, isDark, style, ...restProps } = this.props
 
     return (
       <View
         style={[
-          theme.container,
-          this.props.style
+          isDark ? styles.containerDark : styles.container,
+          style
         ]}
       >
-        <Text style={theme.label}>{label}</Text>
-        <TextInput style={theme.input} />
+        <Text style={isDark ? styles.labelDark : styles.label}>{label}</Text>
+        <TextInput
+          style={isDark ? styles.inputDark : styles.input}
+          {...restProps}
+        />
       </View>
     )
   }

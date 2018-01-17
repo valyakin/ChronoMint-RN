@@ -1,32 +1,28 @@
-import themeFactory from 'src/utils/themeFactory'
+// @flow
 import { StyleSheet } from 'react-native'
-import { BACKGROUND_DARK, UNIT, BACKGROUND_LIGHT } from 'src/constants/styles'
+import { UNIT, COLOR_BACKGROUND_LIGHT } from '../../constants/styles'
 
-export default themeFactory({
+export default StyleSheet.create({
   container: {
     padding: UNIT,
+  },
+  containerDark: {
+    padding: UNIT,
+    backgroundColor: 'rgba(255, 255, 255, .1)'
   },
   label: {
     fontSize: 12,
   },
+  labelDark: {
+    fontSize: 12,
+    color: COLOR_BACKGROUND_LIGHT,
+    opacity: .8,
+  },
   input: {
     fontSize: 14,
-  }
-}, {
-  dark: {
-    container: {
-      backgroundColor: 'rgba(255, 255, 255, .1)',
-      borderTopWidth: StyleSheet.hairlineWidth,
-      borderTopColor: BACKGROUND_DARK,
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: BACKGROUND_DARK,
-    },
-    label: {
-      color: BACKGROUND_LIGHT,
-      opacity: .8,
-    },
-    input: {
-      color: BACKGROUND_LIGHT
-    }
+  },
+  inputDark: {
+    fontSize: 14,
+    color: COLOR_BACKGROUND_LIGHT
   }
 })

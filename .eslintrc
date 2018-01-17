@@ -1,3 +1,6 @@
 {
-  "extends": ["plugin:chronobank-react/recommended"]
+  "extends": ["plugin:chronobank-react/recommended"],
+  "rules": {
+    "react/prop-types": 0
+  }
 }
