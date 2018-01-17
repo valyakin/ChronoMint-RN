@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "jsx": "react-native",
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
