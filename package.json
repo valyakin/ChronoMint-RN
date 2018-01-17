@@ -6,7 +6,8 @@
     "test": "jest",
     "ios": "react-native run-ios --simulator 'iPhone SE'",
     "android": "react-native run-android",
-    "storybook": "storybook start -p 7007"
+    "storybook": "storybook start -p 7007",
+    "haul": "haul"
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1",
