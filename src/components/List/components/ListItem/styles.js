@@ -1,7 +1,8 @@
-import themeFactory from 'src/utils/themeFactory'
-import { LINE, UNIT, FOREGROUND, BACKGROUND_LIGHT } from 'src/constants/styles'
+// @flow
+import { StyleSheet } from 'react-native'
+import { LINE, UNIT, COLOR_FOREGROUND, COLOR_BACKGROUND_LIGHT } from '../../../../constants/styles'
 
-export default themeFactory({
+export default StyleSheet.create({
   container: {
     height: 6 * UNIT,
     flexDirection: 'row',
@@ -21,18 +22,13 @@ export default themeFactory({
     justifyContent: 'flex-end'
   },
   text: {
+    color: COLOR_FOREGROUND,
     flex: 1,
     textAlign: 'left'
-  }
-}, {
-  dark: {
-    text: {
-      color: BACKGROUND_LIGHT
-    }
   },
-  light: {
-    text: {
-      color: FOREGROUND
-    }
+  textDark: {
+    color: COLOR_BACKGROUND_LIGHT,
+    flex: 1,
+    textAlign: 'left'
   }
 })

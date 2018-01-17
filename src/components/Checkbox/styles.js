@@ -1,22 +1,20 @@
-import themeFactory from 'src/utils/themeFactory'
-import { UNIT, FOREGROUND, BACKGROUND_LIGHT } from 'src/constants/styles'
+// @flow
+import { StyleSheet } from 'react-native'
+import { COLOR_BACKGROUND_LIGHT, UNIT, COLOR_FOREGROUND } from '../../constants/styles'
 
-export default themeFactory({
+export default StyleSheet.create({
   container: {
-    padding: 2 * UNIT,
+    padding: UNIT,
     flexDirection: 'row',
     alignItems: 'center'
   },
   label: {
-    color: FOREGROUND
+    color: COLOR_FOREGROUND
+  },
+  labelDark: {
+    color: COLOR_BACKGROUND_LIGHT
   },
   checkboxContainer: {
     marginRight: UNIT
-  }
-}, {
-  dark: {
-    label: {
-      color: BACKGROUND_LIGHT
-    }
   }
 })

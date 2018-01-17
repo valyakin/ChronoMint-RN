@@ -1,30 +1,32 @@
+/* @flow */
 /*==============================================================================
 COLORS
 ==============================================================================*/
-export const BACKGROUND = '#FBFBFE'
-export const BACKGROUND_LIGHT = '#FFFFFF'
-export const BACKGROUND_DARK = '#CCCCDF'
-export const FOREGROUND = '#00005f'
-export const FOREGROUND_LIGHT = '#66669F'
-export const FOREGROUND_LIGHTER = '#768fff'
-export const FOREGROUND_LIGHTEST = '#CCCCDF'
+export const COLOR_BACKGROUND = '#FBFBFE'
+export const COLOR_BACKGROUND_LIGHT = '#FFFFFF'
+export const COLOR_BACKGROUND_DARK = '#CCCCDF'
+export const COLOR_FOREGROUND = '#00005f'
+export const COLOR_FOREGROUND_LIGHT = '#66669F'
+export const COLOR_FOREGROUND_LIGHTER = '#768fff'
+export const COLOR_FOREGROUND_LIGHTEST = '#CCCCDF'
 
-export const GRAY_LIGHT = '#f7f9ff'
-export const GRAY = '#e9efff'
-export const GRAY_DARK = '#ccccdf'
+export const COLOR_GRAY_LIGHT = '#f7f9ff'
+export const COLOR_GRAY = '#e9efff'
+export const COLOR_GRAY_DARK = '#ccccdf'
 
-export const PRIMARY = '#2962ff'
-export const PRIMARY_DARKEST = '#05326A'
+export const COLOR_PRIMARY = '#2962ff'
+export const COLOR_PRIMARY_DARKEST = '#05326A'
 
-export const GREEN = '#00c853'
-export const RED = '#ff1744'
+export const COLOR_GREEN = '#00c853'
+export const COLOR_RED = '#ff1744'
+export const COLOR_ORANGE = '#FFAB00'
 
 export const SHADOW_DARK = 'rgba(0, 0, 0, 0.24)'
 export const SHADOW_LIGHT = 'rgba(0, 0, 0, 0.12)'
 
-export const LHT_COLOR = '#17579c'
-export const ETH_COLOR = '#161240'
-export const TIME_COLOR = '#4a8fb9'
+export const COLOR_LHT = '#17579c'
+export const COLOR_ETH_COLOR = '#161240'
+export const COLOR_TIME = '#4a8fb9'
 
 /*==============================================================================
 DIMENSIONS
@@ -39,5 +41,5 @@ export const RADIUS_XL = 12
 FONTS
 ==============================================================================*/
 export const FONT_SIZE = 1.75 * UNIT
-export const MEDIUM_FONT = '600'
-export const BOLD_FONT = 'bold'
+export const FONT_MEDIUM = '600'
+export const FONT_BOLD = 'bold'
