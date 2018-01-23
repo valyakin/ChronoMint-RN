@@ -1,7 +1,7 @@
 /* @flow */
 import registerScreens from '../utils/registerScreens'
-// import { store } from 'src/redux/configureStore'
-// import { Provider } from 'react-redux'
+import { store } from '../redux/configureStore'
+import { Provider } from 'react-redux'
 import SplashScreen from './SplashScreen'
 import OptionSelector from './Login/OptionSelector'
 import LoginSettings from './Login/LoginSettings'
@@ -33,6 +33,6 @@ const screens = {
 /**
  * @typeof screens
  */
-const screenIds = registerScreens(screens, '')
+const screenIds = registerScreens(screens, '', store, Provider)
 
 export default screenIds

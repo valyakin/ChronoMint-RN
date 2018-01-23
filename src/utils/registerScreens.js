@@ -5,7 +5,7 @@ type ScreenList = {
   [screenId: string]: any | ScreenList
 }
 
-const registerScreens = (screenList: ScreenList , groupId?: string): ScreenList => {
+const registerScreens = (screenList: ScreenList , groupId?: string, store?: any, Provider?: any): ScreenList => {
   const result: ScreenList = {}
   
   Object.entries(screenList).forEach(([id, screenItem]) => {
@@ -13,12 +13,12 @@ const registerScreens = (screenList: ScreenList , groupId?: string): ScreenList 
 
     if (typeof screenItem === 'object') {
       // $FlowFixMe
-      result[id] = registerScreens(screenItem, screenId)
+      result[id] = registerScreens(screenItem, screenId, store, Provider)
 
       return
     }
 
-    Navigation.registerComponent(screenId, () => screenItem)
+    Navigation.registerComponent(screenId, () => screenItem, store, Provider)
     result[id] = screenId
   })
 
