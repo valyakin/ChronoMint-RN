@@ -1,15 +1,9 @@
-/* @flow */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ImageBackground, Dimensions, StatusBar } from 'react-native'
+import { ImageBackground } from 'react-native'
+import scenes from './'
 
-const { width, height } = Dimensions.get('window')
-
-type Props = {
-  navigator: Object
-}
-
-export default class SplashScreen extends React.Component<Props> {
+export default class SplashScreen extends React.Component {
   static propTypes = {
     navigator: PropTypes.object
   }
@@ -17,23 +11,23 @@ export default class SplashScreen extends React.Component<Props> {
   static navigatorStyle = {
     navBarHidden: true,
     statusBarHidden: true,
-    statusBarTextColorScheme: 'dark'
+    statusBarTextColorScheme: 'light'
+  }
+
+  handleLoadEnd = () => {
+    this.props.navigator.resetTo({
+      screen: scenes.Login.OptionSelector,
+      animationType: 'fade'
+    })
   }
 
   render () {
     return (
       <ImageBackground
         source={require('../assets/images/splash.png')}
-        style={{ width, height }}
-        onLoadEnd={() => {
-          this.props.navigator.resetTo({
-            screen: 'LoginScreen.OptionSelector',
-            animationType: 'fade'
-          })
-        }}
-      >
-        <StatusBar barStyle='light-content' />
-      </ImageBackground>
+        style={{ flex: 1 }}
+        onLoadEnd={this.handleLoadEnd}
+      />
     )
   }
 }
