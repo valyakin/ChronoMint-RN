@@ -6,10 +6,12 @@
     "functional-hmr",
     ["module-resolver", {
       "alias": {
-        "src": "./src",
         "macaddress": "./src/macaddress.js",
-        "stream": "./node_modules/stream",
-        "crypto": "./node_modules/crypto-js",
+        "vm": "./node_modules/vm-browserify",
+        "http": "./node_modules/stream-http",
+        "zlib": "./node_modules/browserify-zlib",
+        "stream": "./node_modules/stream-browserify",
+        "crypto": "./node_modules/node-libs-react-native/node_modules/react-native-crypto",
         "^redux/ui(.*)$": "./src/redux/ui\\1",
         "utils/IPFS.*$": "./src/utils/IPFS",
         "^redux/(.+)$": "@chronobank/mint/src/redux/\\1",

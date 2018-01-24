@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.reactnativenavigation.NavigationApplication;
 import com.facebook.react.ReactApplication;
+import com.bitgo.randombytes.RandomBytesPackage;
 import com.hieuvp.fingerprint.ReactNativeFingerprintScannerPackage;
 import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;

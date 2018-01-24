@@ -10,10 +10,13 @@
     "haul": "haul"
   },
   "dependencies": {
+    "browserify-zlib": "^0.2.0",
     "chronobank-smart-contracts": "^1.1.43",
     "crypto-js": "^3.1.9-1",
     "immutable": "^3.8.2",
     "moment": "^2.20.1",
+    "node-libs-react-native": "olegdizus/node-libs-react-native",
+    "promisify-node-callback": "^1.0.2",
     "prop-types": "^15.6.0",
     "react": "16.0.0-beta.5",
     "react-native": "0.51.0",
@@ -22,11 +25,12 @@
     "react-native-fingerprint-scanner": "^2.2.1",
     "react-native-localization": "^0.2.1",
     "react-native-navigation": "^1.1.342",
+    "react-native-randombytes": "^3.0.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-immutable": "^4.0.0",
-    "stream": "^0.0.2",
-    "zlib": "^1.0.5"
+    "stream-browserify": "^2.0.1",
+    "vm-browserify": "^0.0.4"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.1",
