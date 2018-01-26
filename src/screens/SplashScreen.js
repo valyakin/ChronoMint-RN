@@ -7,7 +7,7 @@ export default class SplashScreen extends React.Component {
   static propTypes = {
     navigator: PropTypes.object
   }
-  
+
   static navigatorStyle = {
     navBarHidden: true,
     statusBarHidden: true,

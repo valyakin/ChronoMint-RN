@@ -6018,9 +6018,13 @@ semaphore@>=1.0.1, semaphore@^1.0.3:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/semaphore/-/semaphore-1.1.0.tgz#aaad8b86b20fe8e9b32b16dc2ee682a8cd26a8aa"
 
-"semver@2 || 3 || 4 || 5", semver@5.x, semver@^5.0.1, semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.4.1, semver@~5.4.1:
+"semver@2 || 3 || 4 || 5", semver@5.x, semver@^5.0.1, semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@~5.4.1:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.4.1.tgz#e059c09d8571f0540823733433505d3a2f00b18e"
+
+semver@^5.4.1:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
 
 send@0.13.2:
   version "0.13.2"
@@ -6704,8 +6708,8 @@ ua-parser-js@^0.7.9:
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.14.tgz#110d53fa4c3f326c121292bbeac904d2e03387ca"
 
 uglify-es@^3.1.8:
-  version "3.3.7"
-  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.3.7.tgz#d1249af668666aba7cb1163e277455be9eb393cf"
+  version "3.3.8"
+  resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.3.8.tgz#f2c68e6cff0d0f9dc9577e4da207151c2e753b7e"
   dependencies:
     commander "~2.13.0"
     source-map "~0.6.1"

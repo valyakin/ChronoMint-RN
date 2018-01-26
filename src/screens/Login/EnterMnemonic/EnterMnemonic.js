@@ -16,10 +16,26 @@ type Props = {
   }
 }
 
-class EnterMnemonic extends React.Component<Props, {}> {
+type State = {
+  mnemonic: string
+}
+
+class EnterMnemonic extends React.Component<Props, State> {
   static screenOptions = {
     title: strings.title,
     subtitle: strings.subtitle
+  }
+
+  state = {
+    mnemonic: ''
+  }
+
+  handleLogin = () => {
+    this.props.onLogin(this.state.mnemonic)
+  }
+
+  handleMnemonicChange = (mnemonic) => {
+    this.setState({ mnemonic })
   }
 
   handleGenerateMnemonic = () => {
@@ -37,6 +53,7 @@ class EnterMnemonic extends React.Component<Props, {}> {
           label={strings.mnemonic}
           style={styles.input}
           multiline
+          onChangeText={this.handleMnemonicChange}
         />
         <Checkbox
           isDark
@@ -48,6 +65,7 @@ class EnterMnemonic extends React.Component<Props, {}> {
           <Button
             isDark
             label={strings.login}
+            onPress={this.handleLogin}
           />
           <Button
             isDark
