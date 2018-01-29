@@ -16,6 +16,7 @@
     "immutable": "^3.8.2",
     "moment": "^2.20.1",
     "node-libs-react-native": "olegdizus/node-libs-react-native",
+    "path-browserify": "^0.0.0",
     "promisify-node-callback": "^1.0.2",
     "prop-types": "^15.6.0",
     "react": "16.0.0-beta.5",
