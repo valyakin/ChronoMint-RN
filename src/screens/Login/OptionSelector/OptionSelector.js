@@ -85,11 +85,15 @@ class OptionSelector extends React.Component<Props, {}> {
       ethereumProvider.setEngine(ethereum, nem)
       console.log('Eth')
       bccProvider.setEngine(bcc)
+      console.log('bcc')
       btcProvider.setEngine(btc)
+      console.log('btc')
       btgProvider.setEngine(btg)
+      console.log('btg')
       ltcProvider.setEngine(ltc)
-      nemProvider.setEngine(nem)
-      this.handleLogin()
+      console.log('ltc')
+      // nemProvider.setEngine(nem)
+      await this.handleLogin()
     } catch (e) {
       // eslint-disable-next-line
       console.error('error', e.message)
@@ -112,10 +116,18 @@ class OptionSelector extends React.Component<Props, {}> {
         this.props.selectedProviderId,
         this.props.selectedNetworkId
       )
-      this.props.login(this.props.selectedAccount)
+      
+      await this.props.login(this.props.selectedAccount)
+      
+      this.handleWallet()
     }
   }
 
+  handleWallet = () => {
+    this.props.navigator.push({
+      screen: screens.Wallet
+    })
+  }
   handleMnemonicLogin = (mnemonicKey) => {
     this.props.loading()
     this.props.clearErrors()

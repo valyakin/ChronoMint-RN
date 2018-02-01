@@ -13,6 +13,7 @@ import WalletFile from './Login/WalletFile'
 import GenerateWallet from './Login/GenerateWallet'
 import EnterPin from './Login/EnterPin'
 import EnterPrivate from './Login/EnterPrivate'
+import Wallet from './Wallet/Wallet'
 
 const screens = {
   SplashScreen,
@@ -27,7 +28,8 @@ const screens = {
     GenerateWallet,
     EnterPin,
     EnterPrivate
-  }
+  },
+  Wallet
 }
 
 /**

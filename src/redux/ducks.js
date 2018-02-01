@@ -17,6 +17,8 @@ import * as ui from './ui'
 import * as voting from '@chronobank/mint/src/redux/voting'
 import * as wallet from '@chronobank/mint/src/redux/wallet'
 import * as watcher from '@chronobank/mint/src/redux/watcher'
+import * as tokens from '@chronobank/mint/src/redux/tokens'
+import * as assetsHolder from '@chronobank/mint/src/redux/assetsHolder'
 
 const Login = {
   monitor,
@@ -41,5 +43,7 @@ export default {
   watcher,
   market,
   assetsManager,
+  tokens,
+  assetsHolder,
   ...Login,
 }
