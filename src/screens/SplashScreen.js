@@ -1,13 +1,8 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { ImageBackground } from 'react-native'
-import scenes from './'
+// import scenes from './'
 
 export default class SplashScreen extends React.Component {
-  static propTypes = {
-    navigator: PropTypes.object
-  }
-
   static navigatorStyle = {
     navBarHidden: true,
     statusBarHidden: true,
@@ -15,10 +10,10 @@ export default class SplashScreen extends React.Component {
   }
 
   handleLoadEnd = () => {
-    this.props.navigator.resetTo({
-      screen: scenes.Login.OptionSelector,
-      animationType: 'fade'
-    })
+    // this.props.navigator.resetTo({
+    //   screen: scenes.Login.OptionSelector,
+    //   animationType: 'fade'
+    // })
   }
 
   render () {

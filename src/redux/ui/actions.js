@@ -1,9 +1,9 @@
 import moment from 'moment'
-import { setLocale } from 'platform/i18n'
+// import { setLocale } from 'platform/i18n'
 import ls from 'utils/LocalStorage'
 import ipfs from 'utils/IPFS'
-import userMonitorService from 'user/monitorService'
-import { modalsOpen } from 'redux/modals/actions'
+import userMonitorService from '@chronobank/mint/src/user/monitorService'
+import { modalsOpen } from '@chronobank/mint/src/redux/modals/actions'
 // import ConfirmTxDialog from 'components/dialogs/ConfirmTxDialog/ConfirmTxDialog'
 // import UserActiveDialog from 'components/dialogs/UserActiveDialog/UserActiveDialog'
 
@@ -35,7 +35,7 @@ export const showConfirmTxModal = () => (dispatch) => new Promise((resolve) => {
 export const changeMomentLocale = (locale, dispatch) => {
   moment.locale(locale)
   ls.setLocale(locale)
-  dispatch(setLocale(locale))
+  // dispatch(setLocale(locale))
 }
 
 export const download = (hash, name) => async () => {

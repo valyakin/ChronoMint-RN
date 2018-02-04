@@ -2,7 +2,6 @@
 import registerScreens from '../utils/registerScreens'
 import { store } from '../redux/configureStore'
 import { Provider } from 'react-redux'
-import SplashScreen from './SplashScreen'
 import OptionSelector from './Login/OptionSelector'
 import LoginSettings from './Login/LoginSettings'
 import SelectNetwork from './Login/SelectNetwork'
@@ -16,7 +15,6 @@ import EnterPrivate from './Login/EnterPrivate'
 import Wallet from './Wallet/Wallet'
 
 const screens = {
-  SplashScreen,
   Login: {
     OptionSelector,
     LoginSettings,

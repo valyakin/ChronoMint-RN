@@ -1,7 +1,7 @@
 package io.chronobank.chronomintapp;
 
 import android.support.annotation.Nullable;
-
+import com.bitgo.randombytes.RandomBytesPackage;
 import com.reactnativenavigation.NavigationApplication;
 import com.facebook.react.ReactApplication;
 import com.bitgo.randombytes.RandomBytesPackage;
@@ -29,7 +29,8 @@ public class MainApplication extends NavigationApplication {
           new ReactNativeFingerprintScannerPackage(),
           new ReactNativeDocumentPicker(),
           new RNDeviceInfo(),
-          new ReactNativeLocalizationPackage()
+          new ReactNativeLocalizationPackage(),
+          new RandomBytesPackage()
     );
   }
 

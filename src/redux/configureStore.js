@@ -5,7 +5,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 // import { reducer as formReducer } from 'redux-form/immutable'
 // import { loadTranslations, setLocale, i18nReducer, I18n } from 'platform/i18n'
 // import moment from 'moment'
-import { composeWithDevTools } from 'remote-redux-devtools'
+// import { composeWithDevTools } from 'remote-redux-devtools'
 import saveAccountMiddleWare from '@chronobank/mint/src/redux/session/saveAccountMiddleWare'
 // import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux'
 import thunk from 'redux-thunk'
@@ -81,10 +81,10 @@ const configureStore = () => {
   }
 
   // const composeEnhancers = __DEV__ ? composeWithDevTools({ realtime: true }) : compose
-  const composeEnhancers = composeWithDevTools({ realtime: true })
+  // const composeEnhancers = composeWithDevTools({ realtime: true })
 
   // noinspection JSUnresolvedVariable,JSUnresolvedFunction
-  const createStoreWithMiddleware = composeEnhancers(
+  const createStoreWithMiddleware = compose(
     applyMiddleware(
       thunk,
       // routerMiddleware(historyEngine),

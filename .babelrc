@@ -1,9 +1,12 @@
 {
-  "presets": ["react-native"],
+  "presets": ["react-native", "env"],
   "sourceMaps": true,
   "plugins": [
     "transform-decorators-legacy",
     "functional-hmr",
+    "add-module-exports",
+    "transform-new-target",
+    "transform-class-properties",
     ["module-resolver", {
       "alias": {
         "macaddress": "./src/macaddress.js",
