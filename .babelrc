@@ -27,6 +27,8 @@
         "services": "@chronobank/mint/src/services",
         "dao": "@chronobank/mint/src/dao",
         "models": "@chronobank/mint/src/models",
+        "utils/LocalStorage": "./src/utils/LocalStorage",
+        "utils/SessionStorage": "./src/utils/SessionStorage",
         "utils": "@chronobank/mint/src/utils",
         "platform": "@chronobank/mint/src/platform",
         "market": "@chronobank/mint/src/market",

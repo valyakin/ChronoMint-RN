@@ -11,8 +11,6 @@
   },
   "dependencies": {
     "browserify-zlib": "^0.2.0",
-    "chronobank-smart-contracts": "^1.1.43",
-    "crypto-js": "^3.1.9-1",
     "immutable": "^3.8.2",
     "moment": "^2.20.1",
     "node-libs-react-native": "olegdizus/node-libs-react-native",
@@ -51,6 +49,7 @@
     "flow-bin": "^0.63.1",
     "haul": "^1.0.0-beta.12",
     "jest": "21.2.1",
+    "react-router-redux": "^4.0.8",
     "react-test-renderer": "16.0.0-beta.5",
     "redux-thunk": "^2.2.0",
     "remote-redux-devtools": "^0.5.12"
