@@ -7,6 +7,7 @@
     "add-module-exports",
     "transform-new-target",
     "transform-class-properties",
+    "transform-object-set-prototype-of-to-assign",
     ["module-resolver", {
       "alias": {
         "macaddress": "./src/macaddress.js",
