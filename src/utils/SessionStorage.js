@@ -6,14 +6,14 @@ class SessionStorage {
    * @private
    */
   static _getFromSS (key: string) {
-    // try {
-    //   if (isW) {
-    //     return JSON.parse(window.sessionStorage.getItem(key))
-    //   }
-    // } catch (e) {
-    //   // eslint-disable-next-line
-    //   console.warn(`SessionStorage: parse error`, e)
-    // }
+    try {
+      if (isW) {
+        return JSON.parse(window.sessionStorage.getItem(key))
+      }
+    } catch (e) {
+      // eslint-disable-next-line
+      console.warn(`SessionStorage: parse error`, e)
+    }
   }
 
   /**
@@ -22,9 +22,9 @@ class SessionStorage {
    * @private
    */
   static _setToSS (key: string, data: any) {
-    // if (isW) {
-    //   window.sessionStorage.setItem(key, JSON.stringify(data))
-    // }
+    if (isW) {
+      window.sessionStorage.setItem(key, JSON.stringify(data))
+    }
   }
 
   /**
@@ -32,9 +32,9 @@ class SessionStorage {
    * @param key
    */
   static _removeFromSS (key: string) {
-    // if (isW) {
-    //   window.sessionStorage.removeItem(key)
-    // }
+    if (isW) {
+      window.sessionStorage.removeItem(key)
+    }
   }
 
   static getAccount () {
