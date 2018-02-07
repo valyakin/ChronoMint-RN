@@ -1,0 +1,91 @@
+@import '~styles/partials/variables';
+@import '~styles/partials/mixins';
+
+.header {
+  background-color: $color-panel-bg-3;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  padding: 24px 16px;
+  height: 180px;
+}
+
+.title {
+  font-size: 34px;
+}
+
+.body {
+  padding: 27px 16px 24px;
+}
+
+.tableHead {
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.row {
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  :global {
+    .Preloader__root {
+      justify-content: left;
+    }
+  }
+}
+
+.left {
+  @include ellipsis;
+  flex-grow: 1;
+}
+
+.right {
+  display: flex;
+  flex-direction: row;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  justify-content: flex-end;
+}
+
+.tableHeadElem {
+  opacity: 0.5;
+  font-size: 16px;
+  color: $color-primary-0;
+}
+
+.action {
+  color: $color-panel-bg-5;
+  margin-right: 10px;
+}
+
+.evenRow {
+  background-color: $color-primary-light;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.detail {
+  display: flex;
+  align-items: flex-start;
+  font-size: 14px;
+}
+
+.detailKey {
+  font-weight: bold;
+}
+
+.detailValue {
+  margin-left: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemTitle {
+  margin-bottom: 5px;
+  font-size: 18px;
+}
