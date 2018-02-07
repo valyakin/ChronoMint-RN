@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`watcher actions should dispatch cbeWatcher 1`] = `
+[
+  {
+    "type": "watcher/CBE"
+  }
+]
+`;
+
+exports[`watcher actions should dispatch watcher 1`] = `
+[
+  {
+    "type": "AssetsManager/GET_ASSETS_MANAGER_COUNTS_START"
+  },
+  {
+    "type": "AssetsManager/GET_TRANSACTIONS_START"
+  },
+  {
+    "isInited": true,
+    "type": "market/INIT"
+  },
+  {
+    "type": "watcher/USER"
+  }
+]
+`;
