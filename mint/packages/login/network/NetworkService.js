@@ -234,6 +234,7 @@ class NetworkService extends EventEmitter {
   }
 
   async checkTestRPC (providerUrl) {
+    return false
     const web3 = new Web3()
     web3.setProvider(new web3.providers.HttpProvider(providerUrl || TESTRPC_URL))
     const web3Provider = new Web3Provider(web3)

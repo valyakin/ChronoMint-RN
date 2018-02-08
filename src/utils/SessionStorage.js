@@ -1,4 +1,5 @@
 // const isW = window.hasOwnProperty('sessionStorage')
+const isW = false
 
 class SessionStorage {
   /**

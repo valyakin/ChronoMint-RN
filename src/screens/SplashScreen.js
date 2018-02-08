@@ -13,7 +13,7 @@ export default class SplashScreen extends React.Component {
     const networkService = require('@chronobank/login/network/NetworkService').default
     const { store } = require('../redux/configureStore')
     const { bootstrap } = require('redux/session/actions')
-    const scenes = require('./')
+    const scenes = require('./').default
 
     networkService.connectStore(store)
 
