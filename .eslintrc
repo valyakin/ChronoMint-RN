@@ -3,7 +3,13 @@
   "plugins": [
     "flowtype"
   ],
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
+  },
   "rules": {
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "global-require": 0
   }
 }
