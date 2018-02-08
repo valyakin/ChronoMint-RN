@@ -4,7 +4,9 @@ import android.support.annotation.Nullable;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.reactnativenavigation.NavigationApplication;
 import com.facebook.react.ReactApplication;
-import com.bitgo.randombytes.RandomBytesPackage;
+import com.peel.react.rnos.RNOSModule;
+import com.tradle.react.UdpSocketsModule;
+import com.peel.react.TcpSocketsModule;
 import com.hieuvp.fingerprint.ReactNativeFingerprintScannerPackage;
 import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -29,18 +31,17 @@ public class MainApplication extends NavigationApplication {
           new ReactNativeFingerprintScannerPackage(),
           new ReactNativeDocumentPicker(),
           new RNDeviceInfo(),
+          new RNOSModule(),
           new ReactNativeLocalizationPackage(),
           new RandomBytesPackage()
     );
   }
 
-  @Nullable
   @Override
   public List<ReactPackage> createAdditionalReactPackages() {
       return getPackages();
   }
 
-  @Nullable
   @Override
   public String getJSMainModuleName() {
     return "index";
