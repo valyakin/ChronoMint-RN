@@ -1,22 +1,27 @@
 import React from 'react'
 import { ImageBackground } from 'react-native'
-import { bootstrap } from 'redux/session/actions'
-import { store } from '../redux/configureStore'
-import scenes from './'
 
 export default class SplashScreen extends React.Component {
   static navigatorStyle = {
     navBarHidden: true,
     statusBarHidden: true,
-    statusBarTextColorScheme: 'light'
+    statusBarTextColorScheme: 'light',
   }
-
+  
   handleLoadEnd = async () => {
+    window.web3 = require('web3')
+    const networkService = require('@chronobank/login/network/NetworkService').default
+    const { store } = require('../redux/configureStore')
+    const { bootstrap } = require('redux/session/actions')
+    const scenes = require('./')
+
+    networkService.connectStore(store)
+
     await store.dispatch(bootstrap())
     
     this.props.navigator.resetTo({
       screen: scenes.Login.OptionSelector,
-      animationType: 'fade'
+      animationType: 'fade',
     })
   }
 

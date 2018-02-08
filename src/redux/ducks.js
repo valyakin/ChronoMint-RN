@@ -1,28 +1,28 @@
 import * as network from '@chronobank/login/redux/network'
 import * as monitor from '@chronobank/login/redux/monitor'
-import * as assetsManager from '@chronobank/mint/src/redux/assetsManager'
-import * as drawer from '@chronobank/mint/src/redux/drawer'
-import * as exchange from '@chronobank/mint/src/redux/exchange'
-import * as locs from '@chronobank/mint/src/redux/locs'
-import * as mainWallet from '@chronobank/mint/src/redux/mainWallet'
-import * as market from '@chronobank/mint/src/redux/market'
-import * as modals from '@chronobank/mint/src/redux/modals'
-import * as multisigWallet from '@chronobank/mint/src/redux/multisigWallet'
-import * as notifier from '@chronobank/mint/src/redux/notifier'
-import * as operations from '@chronobank/mint/src/redux/operations'
-import * as rewards from '@chronobank/mint/src/redux/rewards'
-import * as session from '@chronobank/mint/src/redux/session'
-import * as settings from '@chronobank/mint/src/redux/settings'
+import * as assetsManager from 'redux/assetsManager'
+import * as drawer from 'redux/drawer'
+import * as exchange from 'redux/exchange'
+import * as locs from 'redux/locs'
+import * as mainWallet from 'redux/mainWallet'
+import * as market from 'redux/market'
+import * as modals from 'redux/modals'
+import * as multisigWallet from 'redux/multisigWallet'
+import * as notifier from 'redux/notifier'
+import * as operations from 'redux/operations'
+import * as rewards from 'redux/rewards'
+import * as session from 'redux/session'
+import * as settings from 'redux/settings'
+import * as voting from 'redux/voting'
+import * as wallet from 'redux/wallet'
+import * as watcher from 'redux/watcher'
+import * as tokens from 'redux/tokens'
+import * as assetsHolder from 'redux/assetsHolder'
 import * as ui from './ui'
-import * as voting from '@chronobank/mint/src/redux/voting'
-import * as wallet from '@chronobank/mint/src/redux/wallet'
-import * as watcher from '@chronobank/mint/src/redux/watcher'
-import * as tokens from '@chronobank/mint/src/redux/tokens'
-import * as assetsHolder from '@chronobank/mint/src/redux/assetsHolder'
 
 const Login = {
   monitor,
-  network
+  network,
 }
 
 export default {
