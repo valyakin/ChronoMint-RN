@@ -10,23 +10,23 @@ type CautionTextProps = {
 }
 
 const CautionItem = ({ text }: CautionTextProps) =>
-  <View style={styles.item}>
+  (<View style={styles.item}>
     <Text style={styles.bullet}>•</Text>
     <Text style={styles.text}>{text}</Text>
-  </View>
+   </View>)
 
 const Cautions = () =>
-  <View style={styles.container}>
+  (<View style={styles.container}>
     <Image
       style={styles.image}
       source={require('../../assets/images/alert.png')}
     />
     <View style={styles.list}>
-      <CautionItem text={strings.keepItSafe}/>
-      <CautionItem text={strings.makeBackup}/>
-      <CautionItem text={strings.dontShare}/>
-      <CautionItem text={strings.dontLose}/>
+      <CautionItem text={strings.keepItSafe} />
+      <CautionItem text={strings.makeBackup} />
+      <CautionItem text={strings.dontShare} />
+      <CautionItem text={strings.dontLose} />
     </View>
-  </View>
+   </View>)
 
 export default Cautions

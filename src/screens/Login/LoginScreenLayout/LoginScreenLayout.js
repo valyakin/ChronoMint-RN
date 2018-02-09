@@ -29,26 +29,26 @@ export default class LoginSceneLayout extends React.Component<Props> {
     navBarTransparent: true,
     navBarButtonColor: 'white',
     topBarElevationShadowEnabled: false,
-    statusBarTextColorScheme: 'light'
+    statusBarTextColorScheme: 'light',
   }
 
   static navigatorButtons = {
     rightButtons: [
       {
         icon: require('../../../assets/icons/tune.png'),
-        id: 'loginSettings'
-      }
-    ]
+        id: 'loginSettings',
+      },
+    ],
   }
 
   componentDidMount () {
     const { navigator } = this.props
 
-    navigator.setOnNavigatorEvent(({type, id}) => {
+    navigator.setOnNavigatorEvent(({ type, id }) => {
       if (type === 'NavBarButtonPress' && id === 'loginSettings') {
         navigator.push({
           screen: screens.Login.LoginSettings,
-          backButtonTitle: 'Login'
+          backButtonTitle: 'Login',
         })
       }
     })
@@ -59,9 +59,8 @@ export default class LoginSceneLayout extends React.Component<Props> {
       title,
       subtitle,
       hasLogo,
-      hasFetchingStatus
+      hasFetchingStatus,
     } = this.props.screenOptions || {}
-
 
     return (
       <ImageBackground

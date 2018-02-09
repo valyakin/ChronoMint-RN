@@ -4,5 +4,5 @@ export default {
   'mnemonic': 'Мнемонический ключ',
   'saveOnDevice': 'Сохранить кошелек на устройстве',
   'login': 'Войти',
-  'generateMnemonic': 'Создать мнемонический ключ'
+  'generateMnemonic': 'Создать мнемонический ключ',
 }

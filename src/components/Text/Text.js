@@ -13,7 +13,7 @@ const Text = (props: TextProps) => (
     {...props}
     style={[
       styles.text,
-      props.style
+      props.style,
     ]}
   >
     {props.children}

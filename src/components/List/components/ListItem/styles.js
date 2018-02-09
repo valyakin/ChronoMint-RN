@@ -6,29 +6,29 @@ export default StyleSheet.create({
   container: {
     height: 6 * UNIT,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   leftSection: {
     width: LINE,
-    marginHorizontal: UNIT
+    marginHorizontal: UNIT,
   },
   rightSection: {
-    marginHorizontal: UNIT
+    marginHorizontal: UNIT,
   },
   arrow: {
     marginRight: 2 * UNIT,
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   text: {
     color: COLOR_FOREGROUND,
     flex: 1,
-    textAlign: 'left'
+    textAlign: 'left',
   },
   textDark: {
     color: COLOR_BACKGROUND_LIGHT,
     flex: 1,
-    textAlign: 'left'
-  }
+    textAlign: 'left',
+  },
 })

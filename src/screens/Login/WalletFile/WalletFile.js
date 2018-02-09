@@ -17,13 +17,13 @@ class OptionSelector extends React.Component<Props, {}> {
   static screenOptions = {
     title: strings.title,
     subtitle: strings.subtitle,
-    hasLogo: false
+    hasLogo: false,
   }
 
   handleUploadWallet = () => {
     DocumentPicker.show(
       {
-        filetype: [DocumentPickerUtil.allFiles()]
+        filetype: [DocumentPickerUtil.allFiles()],
       },
       (err, res) => {
         err && console.error(err)
@@ -34,7 +34,7 @@ class OptionSelector extends React.Component<Props, {}> {
 
   handleGenerateWallet = () => this.props.navigator.push({
     screen: screens.Login.GenerateWallet,
-    backButtonTitle: 'Wallet'
+    backButtonTitle: 'Wallet',
   })
 
   render () {
@@ -46,14 +46,14 @@ class OptionSelector extends React.Component<Props, {}> {
             key: strings.uploadWallet,
             icon: require('../../../assets/icons/clip.png'),
             hasArrow: true,
-            onPress: this.handleUploadWallet
+            onPress: this.handleUploadWallet,
           },
           {
             key: strings.generateWallet,
             icon: require('../../../assets/icons/wallet.png'),
             hasArrow: true,
-            onPress: this.handleGenerateWallet
-          }
+            onPress: this.handleGenerateWallet,
+          },
         ]}
       />
     )

@@ -5,19 +5,19 @@ import { StyleSheet } from 'react-native'
 export default StyleSheet.create({
   actions: {
     margin: UNIT,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   input: {
     height: 6 * UNIT,
-    marginBottom: 2 * UNIT
+    marginBottom: 2 * UNIT,
   },
   attentionText: {
     color: COLOR_BACKGROUND_LIGHT,
     margin: 2 * UNIT,
     fontSize: 2 * UNIT,
-    fontWeight: FONT_MEDIUM
+    fontWeight: FONT_MEDIUM,
   },
   downloadButton: {
-    flex: 1
-  }
+    flex: 1,
+  },
 })

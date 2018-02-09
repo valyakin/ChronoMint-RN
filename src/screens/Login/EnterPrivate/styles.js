@@ -4,9 +4,9 @@ import { UNIT } from '../../../constants/styles'
 
 export default StyleSheet.create({
   input: {
-    height: 10 * UNIT
+    height: 10 * UNIT,
   },
   actions: {
-    margin: 2 * UNIT
-  }
+    margin: 2 * UNIT,
+  },
 })

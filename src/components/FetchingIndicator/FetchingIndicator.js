@@ -10,7 +10,7 @@ type FetchingStatus = 'FETCHING' | 'SYNCING' | 'SYNCED'
 export const STATUS = {
   'FETCHING': 'FETCHING',
   'SYNCING': 'SYNCING',
-  'SYNCED': 'SYNCED'
+  'SYNCED': 'SYNCED',
 }
 
 type FetchingIndicatorProps = {
@@ -24,7 +24,7 @@ const FetchingIndicator = (props: FetchingIndicatorProps) => {
   const bulletStyle = {
     [STATUS.FETCHING]: styles.bulletFetching,
     [STATUS.SYNCING]: styles.bulletSyncing,
-    [STATUS.SYNCED]: styles.bulletSynced
+    [STATUS.SYNCED]: styles.bulletSynced,
   }[status]
   
   return (
@@ -36,7 +36,7 @@ const FetchingIndicator = (props: FetchingIndicatorProps) => {
 }
 
 FetchingIndicator.defaultProps = {
-  status: STATUS.FETCHING
+  status: STATUS.FETCHING,
 }
 
 export default FetchingIndicator

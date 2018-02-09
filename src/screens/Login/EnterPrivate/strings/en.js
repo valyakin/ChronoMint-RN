@@ -3,5 +3,5 @@ export default {
   'subtitle': 'Enter private key:',
   'private': 'Private key',
   'saveOnDevice': 'Save wallet on device',
-  'login': 'Log in'
+  'login': 'Log in',
 }

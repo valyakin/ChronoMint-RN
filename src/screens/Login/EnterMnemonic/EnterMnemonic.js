@@ -36,7 +36,7 @@ class EnterMnemonic extends React.Component<Props, State> {
   }
 
   handleMnemonicChange = (mnemonic) => {
-    console.log({mnemonic})
+    console.log({ mnemonic })
     this.setState({ mnemonic })
   }
 

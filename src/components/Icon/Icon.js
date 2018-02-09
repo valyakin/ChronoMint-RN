@@ -7,7 +7,7 @@ import styles from './styles'
 export default class Icon extends React.Component {
   static propTypes = {
     source: PropTypes.number.isRequired,
-    style: PropTypes.any
+    style: PropTypes.any,
   }
 
   render () {
@@ -16,7 +16,7 @@ export default class Icon extends React.Component {
       <View
         style={[
           styles.container,
-          style
+          style,
         ]}
       >
         <Image

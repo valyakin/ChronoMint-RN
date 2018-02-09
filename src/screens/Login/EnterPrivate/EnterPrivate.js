@@ -12,7 +12,7 @@ import styles from './styles'
 class EnterPrivate extends React.Component<{}, {}> {
   static screenOptions = {
     title: strings.title,
-    subtitle: strings.subtitle
+    subtitle: strings.subtitle,
   }
   
   render () {

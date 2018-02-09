@@ -6,7 +6,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 64,
-    backgroundColor: COLOR_BACKGROUND
+    backgroundColor: COLOR_BACKGROUND,
   },
   title: {
     fontSize: 34,
@@ -15,7 +15,7 @@ export default StyleSheet.create({
     marginTop: 2 * UNIT,
     marginBottom: UNIT,
     color: '#00005F',
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
   },
   subtitle: {
     color: COLOR_FOREGROUND,
@@ -23,6 +23,6 @@ export default StyleSheet.create({
     lineHeight: 30,
     alignSelf: 'flex-start',
     opacity: .6,
-    fontSize: 20
+    fontSize: 20,
   },
 })

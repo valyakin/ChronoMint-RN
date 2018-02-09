@@ -25,7 +25,7 @@ export const getKey = ({ provider, network, pinCode, isFingerprintCorrect }) =>
     const { key } = getEncryptedKeys(getState(), provider, network)[0]
 
     if (!key) {
-      return { error: 'No stored keys available'}
+      return { error: 'No stored keys available' }
     }
 
     if (!isFingerprintCorrect) { 

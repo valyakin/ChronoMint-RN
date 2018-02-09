@@ -4,5 +4,5 @@ export default {
   'mnemonicKey': 'Mnemonic key',
   'walletFile': 'Wallet file',
   'privateKey': 'Private key',
-  'uPort': 'uPort'
+  'uPort': 'uPort',
 }

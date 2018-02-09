@@ -6,6 +6,6 @@ export default StyleSheet.create({
     width: 3 * UNIT,
     height: 3 * UNIT,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 })

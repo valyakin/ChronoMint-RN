@@ -8,7 +8,7 @@ export default class Input extends React.Component {
   static propTypes = {
     label: PropTypes.string,
     theme: PropTypes.string,
-    style: PropTypes.any
+    style: PropTypes.any,
   }
   
   render () {
@@ -18,7 +18,7 @@ export default class Input extends React.Component {
       <View
         style={[
           isDark ? styles.containerDark : styles.container,
-          style
+          style,
         ]}
       >
         <Text style={isDark ? styles.labelDark : styles.label}>{label}</Text>

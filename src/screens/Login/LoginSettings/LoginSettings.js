@@ -14,17 +14,17 @@ type LoginSettingsProps = {
 
 class LoginSettings extends React.Component<LoginSettingsProps, {}> {
   static screenOptions = {
-    title: 'Settings'
+    title: 'Settings',
   }
 
   handleSelectNetwork = () => this.props.navigator.push({
     screen: screens.Login.SelectNetwork,
-    backButtonTitle: 'Settings'
+    backButtonTitle: 'Settings',
   })
 
   handleChangeLanguage = () => this.props.navigator.push({
     screen: screens.Login.ChangeLanguage,
-    backButtonTitle: 'Settings'
+    backButtonTitle: 'Settings',
   })
 
   handleFaq = () => {
@@ -41,21 +41,21 @@ class LoginSettings extends React.Component<LoginSettingsProps, {}> {
               key: 'Network',
               hasArrow: true,
               icon: require('../../../assets/icons/network.png'),
-              onPress: this.handleSelectNetwork
+              onPress: this.handleSelectNetwork,
             },
             {
               key: 'Language',
               hasArrow: true,
               icon: require('../../../assets/icons/comment.png'),
               value: 'English',
-              onPress: this.handleChangeLanguage
+              onPress: this.handleChangeLanguage,
             },
             {
               key: 'FAQ',
               hasArrow: true,
               icon: require('../../../assets/icons/help-circle.png'),
-              onPress: this.handleFaq
-            }
+              onPress: this.handleFaq,
+            },
           ]}
         />
       </View>

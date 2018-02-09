@@ -10,23 +10,23 @@ export default StyleSheet.create({
     paddingHorizontal: 4 * UNIT,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   containerDisabled: {
-    backgroundColor: '#6A75BC'
+    backgroundColor: '#6A75BC',
   },
   leftSection: {
-    marginRight: UNIT
+    marginRight: UNIT,
   },
   rightSection: {
-    marginLeft: UNIT
+    marginLeft: UNIT,
   },
   label: {
     color: COLOR_FOREGROUND,
-    height: LINE
+    height: LINE,
   }, 
   labelDark: {
     color: COLOR_BACKGROUND_LIGHT,
-    height: LINE
-  }
+    height: LINE,
+  },
 })

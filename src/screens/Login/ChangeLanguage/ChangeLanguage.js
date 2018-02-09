@@ -8,7 +8,7 @@ import strings from './strings'
 
 class ChangeLanguage extends React.Component<{}, {}> {
   static screenOptions = {
-    title: strings.language
+    title: strings.language,
   }
 
   render () {
@@ -18,12 +18,12 @@ class ChangeLanguage extends React.Component<{}, {}> {
           data={[
             {
               key: 'English',
-              isChecked: true
+              isChecked: true,
             },
             {
               key: 'Русский',
-              isChecked: false
-            }
+              isChecked: false,
+            },
           ]}
         />
       </View>

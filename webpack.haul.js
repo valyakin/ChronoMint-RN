@@ -1,3 +1,3 @@
-module.exports = ({ platform }) => ({
+module.exports = () => ({
   entry: `./index.js`,
-});
+})

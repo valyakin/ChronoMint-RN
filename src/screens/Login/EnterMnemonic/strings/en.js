@@ -4,5 +4,5 @@ export default {
   'mnemonic': 'Mnemonic key',
   'saveOnDevice': 'Save wallet on device',
   'login': 'Log in',
-  'generateMnemonic': 'Generate mnemonic key'
+  'generateMnemonic': 'Generate mnemonic key',
 }

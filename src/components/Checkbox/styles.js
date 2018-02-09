@@ -6,15 +6,15 @@ export default StyleSheet.create({
   container: {
     padding: UNIT,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   label: {
-    color: COLOR_FOREGROUND
+    color: COLOR_FOREGROUND,
   },
   labelDark: {
-    color: COLOR_BACKGROUND_LIGHT
+    color: COLOR_BACKGROUND_LIGHT,
   },
   checkboxContainer: {
-    marginRight: UNIT
-  }
+    marginRight: UNIT,
+  },
 })

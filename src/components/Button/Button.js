@@ -13,7 +13,7 @@ type LeftSectionProps = {
 }
 
 const LeftSection = (props: LeftSectionProps) => {
-  const {icon, iconPosition} = props
+  const { icon, iconPosition } = props
 
   if (!icon) {
     return null
@@ -36,7 +36,7 @@ type LabelProps = {
 }
 
 const Label = (props: LabelProps) => {
-  const {label, isDark} = props
+  const { label, isDark } = props
 
   if (!label) {
     return null
@@ -78,7 +78,7 @@ class Button extends React.Component<Props, {}> {
         style={[
           styles.container,
           ( isDisabled && styles.containerDisabled ),
-          style
+          style,
         ]}
         activeOpacity={isDisabled ? 1 : 0.2}
         onPress={this.handlePress}

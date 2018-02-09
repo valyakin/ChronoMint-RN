@@ -18,21 +18,21 @@ type PinBulletProps = {
 }
 
 const PinBullet = (props: PinBulletProps) =>
-  <View
+  (<View
     style={[
       styles.pinBullet,
-      props.isActive && styles.pinBulletActive
+      props.isActive && styles.pinBulletActive,
     ]}
-  />
+  />)
 
 const FingerprintButton = (props) =>
-  <TouchableOpacity
+  (<TouchableOpacity
     onPress={props.onPress}
   >
     <Image
       source={require('../../../assets/icons/fingerprint.png')}
     />
-  </TouchableOpacity>
+   </TouchableOpacity>)
 
 type Props = {
   navigator: {
@@ -45,7 +45,7 @@ class EnterPin extends React.Component<Props, {}> {
     title: strings.title,
     subtitle: strings.subtitle,
     hasFetchingStatus: false,
-    hasLogo: true
+    hasLogo: true,
   }
 
   handleFingerprintPress = () => {
@@ -60,7 +60,7 @@ class EnterPin extends React.Component<Props, {}> {
   }
 
   state = {
-    pin: ''
+    pin: '',
   }
 
   handleEnterPin = (pin) => {
@@ -71,10 +71,10 @@ class EnterPin extends React.Component<Props, {}> {
   }
 
   makeBulletsArray = makeArray((index, activeBullet) =>
-    <PinBullet
+    (<PinBullet
       key={index}
       isActive={index <= activeBullet}
-    />
+    />)
   )
 
   render () { 

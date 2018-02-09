@@ -18,16 +18,16 @@ type State = {
 class GenerateMnemonic extends React.Component<{}, State> {
   static screenOptions = {
     title: strings.title,
-    subtitle: strings.subtitle
+    subtitle: strings.subtitle,
   }
 
   state = {
-    userConfirm: false
+    userConfirm: false,
   }
 
   toggleUserConfirm = () => {
     this.setState({
-      userConfirm: !this.state.userConfirm
+      userConfirm: !this.state.userConfirm,
     })
   }
   

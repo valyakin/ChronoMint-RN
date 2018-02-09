@@ -4,12 +4,12 @@ import { COLOR_BACKGROUND_LIGHT, UNIT } from '../../../constants/styles'
 
 export default StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   bulletsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginVertical: 4 * UNIT
+    marginVertical: 4 * UNIT,
   },
   pinBullet: {
     marginHorizontal: UNIT,
@@ -17,15 +17,15 @@ export default StyleSheet.create({
     height: UNIT,
     borderRadius: 0.5 * UNIT,
     backgroundColor: COLOR_BACKGROUND_LIGHT,
-    opacity: .4
+    opacity: .4,
   },
   pinBulletActive: {
-    opacity: 1
+    opacity: 1,
   },
   bottomActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 2 * UNIT
-  }
+    padding: 2 * UNIT,
+  },
 })

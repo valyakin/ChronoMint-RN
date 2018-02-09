@@ -8,22 +8,22 @@ export default StyleSheet.create({
   },
   bullet: {
     color: COLOR_ORANGE,
-    paddingRight: 2 * UNIT
+    paddingRight: 2 * UNIT,
   },
   container: {
     flexDirection: 'row',
-    marginHorizontal: 2 * UNIT
+    marginHorizontal: 2 * UNIT,
   },
   list: {
     flex: 1,
-    marginRight: 3 * UNIT
+    marginRight: 3 * UNIT,
   },
   image: {
     marginTop: 0.5 * UNIT,
-    marginRight: 3 * UNIT
+    marginRight: 3 * UNIT,
   },
   text: {
     color: COLOR_BACKGROUND_LIGHT,
     fontSize: 2 * UNIT,
-  }
+  },
 })

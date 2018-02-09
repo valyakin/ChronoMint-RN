@@ -8,7 +8,7 @@ import strings from './strings'
 
 class SelectNetwork extends React.Component<{}, {}> {
   static screenOptions = {
-    title: strings.network
+    title: strings.network,
   }
 
   render () {
@@ -20,27 +20,27 @@ class SelectNetwork extends React.Component<{}, {}> {
               data: [
                 {
                   key: strings.mainnet,
-                  isChecked: true
+                  isChecked: true,
                 },
                 {
                   key: strings.rinkeby,
-                  isChecked: false
+                  isChecked: false,
                 },
                 {
                   key: strings.kovan,
-                  isChecked: false
-                }
-              ]
+                  isChecked: false,
+                },
+              ],
             },
             {
               title: '',
               data: [
                 {
                   key: strings.useLocalNode,
-                  switchOptions: {}
-                }
-              ]
-            }
+                  switchOptions: {},
+                },
+              ],
+            },
           ]}
         />
       </View>

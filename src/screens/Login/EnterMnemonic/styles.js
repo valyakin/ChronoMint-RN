@@ -4,12 +4,12 @@ import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   actions: {
-    margin: 2 * UNIT
+    margin: 2 * UNIT,
   },
   input: {
-    height: 10 * UNIT
+    height: 10 * UNIT,
   },
   generateButton: {
-    backgroundColor: 'transparent'
-  }
+    backgroundColor: 'transparent',
+  },
 })

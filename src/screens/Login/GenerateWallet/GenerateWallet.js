@@ -17,18 +17,18 @@ type State = {
 class GenerateWallet extends React.Component<{}, State> {
   static screenOptions = {
     title: strings.title,
-    subtitle: strings.subtitle
+    subtitle: strings.subtitle,
   }
 
   state = {
-    userConfirm: false
+    userConfirm: false,
   }
 
   toggleUserConfirm = () => {
     const { userConfirm } = this.state
 
     this.setState({
-      userConfirm: !userConfirm
+      userConfirm: !userConfirm,
     })
   } 
   

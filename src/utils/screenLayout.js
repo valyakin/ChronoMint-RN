@@ -8,13 +8,13 @@ const screenLayout = (Layout) => (ScreenContent) => {
   
   const ScreenWrapper = (props) => (
     <Layout screenOptions={ScreenContent.screenOptions || {}} navigator={props.navigator} >
-      <ScreenContent {...props}/>
+      <ScreenContent {...props} />
     </Layout>
   )
 
   ScreenWrapper.navigatorStyle = {
     ...(Layout.navigatorStyle || {}),
-    ...(ScreenContent.navigatorStyle || {})
+    ...(ScreenContent.navigatorStyle || {}),
   }
 
   ScreenWrapper.navigatorButtons = ScreenContent.navigatorButtons || Layout.navigatorButtons

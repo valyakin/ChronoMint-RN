@@ -21,11 +21,11 @@ export default class LoginSettingsLayout extends React.Component<LoginSettingsLa
     navBarTransparent: true,
     navBarButtonColor: '#00005F',
     topBarElevationShadowEnabled: false,
-    statusBarTextColorScheme: 'dark'
+    statusBarTextColorScheme: 'dark',
   }
 
   static childContextTypes = {
-    theme: PropTypes.string
+    theme: PropTypes.string,
   }
 
   getChildContext () {

@@ -8,7 +8,7 @@ export default StyleSheet.create({
   },
   containerDark: {
     padding: UNIT,
-    backgroundColor: 'rgba(255, 255, 255, .1)'
+    backgroundColor: 'rgba(255, 255, 255, .1)',
   },
   label: {
     fontSize: 12,
@@ -23,6 +23,6 @@ export default StyleSheet.create({
   },
   inputDark: {
     fontSize: 14,
-    color: COLOR_BACKGROUND_LIGHT
-  }
+    color: COLOR_BACKGROUND_LIGHT,
+  },
 })

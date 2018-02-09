@@ -4,5 +4,5 @@ export default {
   'mnemonicKey': 'Mnemonic key',
   'walletFile': 'Файл кошелька',
   'privateKey': 'Приватный ключ',
-  'uPort': 'uPort'
+  'uPort': 'uPort',
 }
