@@ -82,6 +82,7 @@
     "eslint-plugin-chronobank-react": "github:chronobank/eslint-plugin-chronobank-react",
     "eslint-plugin-flowtype": "^2.42.0",
     "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-react-native": "^3.2.1",
     "flow-bin": "^0.65.0",
     "jest": "22.2.0",
     "react-test-renderer": "16.2.0",
