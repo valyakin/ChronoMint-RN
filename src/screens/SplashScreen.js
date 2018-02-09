@@ -1,5 +1,5 @@
 import React from 'react'
-import { ImageBackground } from 'react-native'
+import { ImageBackground, Alert } from 'react-native'
 
 export default class SplashScreen extends React.Component {
   static navigatorStyle = {

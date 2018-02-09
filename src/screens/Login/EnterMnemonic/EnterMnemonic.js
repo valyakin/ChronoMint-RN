@@ -23,25 +23,27 @@ type State = {
 class EnterMnemonic extends React.Component<Props, State> {
   static screenOptions = {
     title: strings.title,
-    subtitle: strings.subtitle
+    subtitle: strings.subtitle,
   }
 
   state = {
-    mnemonic: ''
+    mnemonic: '',
   }
 
   handleLogin = () => {
+    console.log('===LOGIN===')
     this.props.onLogin(this.state.mnemonic)
   }
 
   handleMnemonicChange = (mnemonic) => {
+    console.log({mnemonic})
     this.setState({ mnemonic })
   }
 
   handleGenerateMnemonic = () => {
     this.props.navigator.push({
       screen: screens.Login.GenerateMnemonic,
-      backButtonTitle: 'Mnemonic'
+      backButtonTitle: 'Mnemonic',
     })
   }
   

@@ -5,6 +5,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "ios": "react-native run-ios --simulator 'iPhone SE'",
+    "contracts:compile": "cd node_modules/chronobank-smart-contracts && node --max_old_space_size=8000 ../truffle/build/cli.bundled.js compile --all",
     "android": "react-native run-android"
   },
   "dependencies": {
@@ -12,7 +13,8 @@
     "axios": "^0.17.1",
     "babel-plugin-transform-exponentiation-operator": "^6.24.1",
     "bignumber.js": "^6.0.0",
-    "bitcoinjs-lib": "chronobank/bitcoinjs-lib#opt-in-bitcoincash-sighash",
+    "bip39": "^2.5.0",
+    "bitcoinjs-lib": "^3.3.2",
     "browserify-zlib": "~0.1.4",
     "chronobank-smart-contracts": "https://github.com/ChronoBank/SmartContracts#release/release-1.1.45",
     "coinselect": "^3.1.11",
@@ -21,6 +23,7 @@
     "core-js": "^2.5.3",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.1",
+    "ethereumjs-wallet": "^0.6.0",
     "events": "^1.0.0",
     "https-browserify": "~0.0.0",
     "immutable": "^3.8.2",
@@ -61,6 +64,8 @@
     "url": "~0.10.1",
     "util": "~0.10.3",
     "vm-browserify": "0.0.4",
+    "web3": "^0.20.1",
+    "web3-provider-engine": "13.3.3",
     "webstomp-client": "^1.2.0"
   },
   "devDependencies": {

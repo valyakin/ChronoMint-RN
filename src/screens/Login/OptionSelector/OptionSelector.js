@@ -6,7 +6,6 @@ import networkService from '@chronobank/login/network/NetworkService'
 import { addError, clearErrors, loading, DUCK_NETWORK } from '@chronobank/login/redux/network/actions'
 import { bccProvider, btcProvider, btgProvider, ltcProvider } from '@chronobank/login/network/BitcoinProvider'
 import { ethereumProvider } from '@chronobank/login/network/EthereumProvider'
-import { nemProvider } from '@chronobank/login/network/NemProvider'
 import { login } from 'redux/session/actions'
 import Web3 from 'web3'
 import web3Utils from '@chronobank/login/network/Web3Utils'
@@ -86,9 +85,14 @@ class OptionSelector extends React.Component<Props, {}> {
   }
 
   handleMnemonicLogin = (mnemonicKey) => {
+    console.log('MNEMONIC LOGIN', mnemonicKey)
     this.props.loading()
+    console.log('LOADING...')
     this.props.clearErrors()
-    const provider = mnemonicProvider.getMnemonicProvider(mnemonicKey, this.props.getProviderSettings())
+    console.log('CLEAR ERRORS')
+    const providerSettings = this.props.getProviderSettings()
+    console.log('PROVIDER SETTINGS', providerSettings)
+    const provider = mnemonicProvider.getMnemonicProvider(mnemonicKey, providerSettings)
     console.log({ provider })
     this.setupAndLogin(provider)
   }
@@ -100,6 +104,20 @@ class OptionSelector extends React.Component<Props, {}> {
       onLogin: this.handleMnemonicLogin,
     },
   })
+
+  handleWalletFile = () => this.props.navigator.push({
+    screen: screens.Login.WalletFile,
+    backButtonTitle: 'Login',
+  })
+
+  handlePrivateKey = () => this.props.navigator.push({
+    screen: screens.Login.EnterPrivate,
+    backButtonTitle: 'Login',
+  })
+
+  handleUPort = () => {
+
+  }
 
   async setupAndLogin ({ ethereum, btc, bcc, btg, ltc, nem }) {
     console.log({
@@ -143,20 +161,6 @@ class OptionSelector extends React.Component<Props, {}> {
     const providerUrl = this.props.getProviderURL()
     web3Provider.setProvider(web3Utils.createStatusEngine(providerUrl))
     web3Provider.resolve()
-  }
-
-  handleWalletFile = () => this.props.navigator.push({
-    screen: screens.Login.WalletFile,
-    backButtonTitle: 'Login',
-  })
-
-  handlePrivateKey = () => this.props.navigator.push({
-    screen: screens.Login.EnterPrivate,
-    backButtonTitle: 'Login',
-  })
-
-  handleUPort = () => {
-
   }
 
   render () {

@@ -5,9 +5,9 @@ import Text from '../../components/Text/Text'
 
 const Wallet = (props) => {
   return (
-    <View>
+    <View style={{ backgroundColor: 'white' }}>
       <Text>Wallet</Text>
-      {props.addresses.toArray().map(address => {
+      {props.addresses.toArray().map((address) => {
         const walletId = address.get('id')
         const walletAddress = address.get('address')
 
@@ -22,7 +22,7 @@ const Wallet = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  addresses: state.get('mainWallet').get('addresses').get('list')
+  addresses: state.get('mainWallet').get('addresses').get('list'),
 })
 
 export default connect(

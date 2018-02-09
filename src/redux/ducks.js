@@ -1,5 +1,4 @@
 import * as network from '@chronobank/login/redux/network'
-import * as monitor from '@chronobank/login/redux/monitor'
 import * as assetsManager from 'redux/assetsManager'
 import * as drawer from 'redux/drawer'
 import * as exchange from 'redux/exchange'
@@ -21,7 +20,6 @@ import * as assetsHolder from 'redux/assetsHolder'
 import * as ui from './ui'
 
 const Login = {
-  monitor,
   network,
 }
 
