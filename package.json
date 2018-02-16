@@ -88,6 +88,10 @@
     "react-test-renderer": "16.2.0",
     "remote-redux-devtools": "^0.5.12"
   },
+  "resolutions": {
+    "inherits": "olegdizus/inherits",
+    "bn.js": "4.11.8"
+  },
   "rnpm": {
     "assets": [
       "./src/assets/fonts/"
