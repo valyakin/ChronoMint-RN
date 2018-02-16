@@ -1,5 +1,5 @@
 import bitcoin from 'bitcoinjs-lib'
-// import nemSdk from 'nem-sdk'
+import nemSdk from 'nem-sdk'
 import bigi from 'bigi'
 import wallet from 'ethereumjs-wallet'
 import { byEthereumNetwork } from './NetworkProvider'

@@ -1,5 +1,5 @@
 import bip39 from 'bip39'
-// import nem from 'nem-sdk'
+import nem from 'nem-sdk'
 import xor from 'buffer-xor'
 
 export default class NemWallet {

@@ -103,7 +103,7 @@ export default class VotingManagerDAO extends AbstractMultisigContractDAO {
           ])
 
           const hash = this._c.bytes32ToIPFSHash(bytesHashes[ i ])
-          const { title, description, options, files } = await ipfs.get(hash)
+          const { title, description, options, files } = await ipfs.get(hash, 10000) // wait 10s
           const poll = new PollModel({
             id: pollId,
             owner: owners[ i ],
@@ -149,6 +149,10 @@ export default class VotingManagerDAO extends AbstractMultisigContractDAO {
     const votingManagerDAO = await contractsManagerDAO.getVotingManagerDAO()
     const polls = await votingManagerDAO.getPollsDetails([ pollId ], account)
     return polls.item(pollId)
+  }
+
+  getVoteLimitInPercent () {
+    return this._call('getVotesPercent')
   }
 
   /** @private */

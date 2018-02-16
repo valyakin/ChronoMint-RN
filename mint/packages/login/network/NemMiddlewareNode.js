@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-// import nem from 'nem-sdk'
+import nem from 'nem-sdk'
 import NemAbstractNode, { NemBalance, NemTx } from './NemAbstractNode'
 
 export default class NemMiddlewareNode extends NemAbstractNode {

@@ -67,7 +67,7 @@ const MAINNET_BASE = {
   bitcoinCash: 'bitcoin',
   bitcoinGold: 'bitcoingold',
   litecoin: 'litecoin',
-  // nem: 'mainnet',
+  nem: 'mainnet',
 }
 
 const RINKEBY_BASE = {
@@ -79,7 +79,7 @@ const RINKEBY_BASE = {
   bitcoinCash: 'testnet',
   // bitcoinGold: 'bitcoingold_testnet',
   litecoin: 'litecoin_testnet',
-  // nem: 'testnet',
+  nem: 'testnet',
 }
 
 const LOCALHOST_BASE = {
@@ -140,7 +140,7 @@ if (process.env.NODE_ENV === 'development') {
     bitcoinCash: 'testnet',
     // bitcoinGold: 'bitcoingold_testnet',
     litecoin: 'litecoin_testnet',
-    // nem: 'testnet',
+    nem: 'testnet',
   })
 }
 
@@ -152,7 +152,7 @@ export const infuraLocalNetwork = {
   bitcoinCash: 'testnet',
   // bitcoinGold: 'bitcoingold_testnet',
   litecoin: 'litecoin_testnet',
-  // nem: 'testnet',
+  nem: 'testnet',
 }
 
 export const providerMap = {
@@ -228,7 +228,13 @@ export const getScannerById = (networkId, providerId, api = false) => {
 export const getBlockExplorerUrl = (networkId, providerId, txHash, blockchain) => {
   try {
     const isTestnet = isTestingNetwork(networkId, providerId)
-    let baseUrl = blockExplorersMap[ blockchain ][ isTestnet ? 'testnet' : 'mainnet' ]
+    const explorers = blockExplorersMap[ blockchain ]
+    if (!explorers) {
+      // TODO @ipavlenko: We have no TX history & TX explorers for some blockchains, for NEM for example
+      // Public installations have no https support.
+      return null
+    }
+    let baseUrl = explorers[ isTestnet ? 'testnet' : 'mainnet' ]
     if (Array.isArray(baseUrl)) {
       baseUrl = baseUrl[ 0 ]
     }

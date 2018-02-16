@@ -69,7 +69,8 @@ export default {
     owners: 'владельцев',
     youHave: 'Вы имеете',
     multisignatureWallets: 'Мульти кошельков',
-    switchMultisignatureWallet: 'Сменить мульти кошелёк',
+    createMultisignatureWallet: 'Создать мульти кошелек',
+    changeMultisignatureWallet: 'Сменить мульти кошелёк',
     switchToMultisignatureWallet: 'Переключить на мульти кошелёк',
     switchToMainWallet: 'Переключить на основной кошелёк',
     pendingTransfers: 'Проводимые переводы',
@@ -77,8 +78,8 @@ export default {
     transaction: 'Транзакция',
     actions: 'Действия',
     value: 'Сумма',
-    revoke: 'ОТОЗВАТЬ',
-    sign: 'ПОДПИСАТЬ',
+    revoke: 'Отзвать',
+    sign: 'Подписать',
   },
   exchange: {
     tokens: 'Обмен токенов',
@@ -211,6 +212,7 @@ export default {
         icon: 'Иконка (TODO)',
         errors: {
           invalidAddress: 'Не могу найти валидный ERC20 контракт по этому адресу',
+          addressInUse: 'Этот адрес уже используется',
           symbolInUse: 'Этот символ уже используется',
           invalidSymbol: 'Символ может содержать только от 2 до 4 букв A-Z',
         },
@@ -276,6 +278,10 @@ export default {
         name: 'Имя',
         email: 'E-mail',
         company: 'Компания',
+      },
+      errors: {
+        saveInIPFSError: 'Сохранение данныx в IPFS, завершилось с ошибкой, повторите попытку. Это бесплатно.',
+        repeatButtonName: 'Повторить сохранение в IPFS',
       },
     },
     Ethereum: {
@@ -446,12 +452,16 @@ export default {
         owner: 'Новый менеджер',
       },
       removeOwner: {
-        title: 'Удалить мееджера',
+        title: 'Удалить менеджера',
         owner: 'Адрес',
       },
       kill: {
         title: 'Удалить кошелек',
         to: 'Перевести средства на адрес',
+      },
+      changeRequirement: {
+        title: 'Изменить количество подписей',
+        requiredSignatures: 'Новое значение',
       },
     },
     PollInterface: {
@@ -463,6 +473,9 @@ export default {
       },
       [ pollInterface.TX_END_POLL ]: {
         title: 'Завершить голосование',
+      },
+      [ pollInterface.TX_VOTE ]: {
+        title: 'Проголосовать',
       },
     },
     VotingManager: {
@@ -489,6 +502,7 @@ export default {
     moreThanOrEqual: 'Должно быть больше или равно %{limit}',
     limitDepositOnMainnet: 'В сети mainnet депозит TIME временно ограничен в размере 1 TIME',
     invalidLatinString: 'Строка должна иметь только латинские символы (A-z)',
+    mustBeUnique: 'Значение должно быть уникальным',
 
     // TODO @bshevchenko: errors domain only for common cases. Move out entries below to the appropriate domains
     cantSentToYourself: 'Невозможно отправить токены самому себе',
@@ -521,6 +535,11 @@ export default {
       title: 'Копирование адреса',
       controlTitle: 'Адрес',
       description: 'Нажмите CTRL + C или ⌘ + C чтобы скопировать адрес',
+    },
+    copyPrivateKey: {
+      title: 'Копирование приватного ключа',
+      controlTitle: 'Приватный ключ',
+      description: 'Нажмите CTRL + C или ⌘ + C чтобы скопировать приватный ключ',
     },
   },
   poll: {
@@ -668,25 +687,13 @@ export default {
         value: 'Сумма',
       },
       DepositTokens: {
+        depositTime: 'Пополнить депозит',
         amount: 'Сумма',
         yourSymbolBalance: 'Ваш баланс %{symbol}',
         yourSymbolDeposit: 'Ваш депозит %{symbol}',
         symbolHolderAllowance: '%{symbol} allowance держателя',
         requireTime: 'Запросить TIME',
         withdraw: 'Вывести',
-      },
-      SendTokens: {
-        fast: 'Быстро',
-        slow: 'Медленно',
-        balance: 'Баланс',
-        recipientAddress: 'Адрес получателя',
-        amount: 'Сумма',
-        feeRate: 'Комиссия: %{multiplier} от средней (%{total} sat/byte)',
-        gasPrice: 'Цена газа: %{multiplier} of среднего (%{total} Gwei)',
-        approve: 'Подтвердить',
-        revoke: 'Отозвать',
-        allowance: 'allowance',
-        send: 'Отправить',
       },
       RewardsPeriod: {
         rewardsPeriodIndex: 'Бонусный период #%{index}',
@@ -772,7 +779,7 @@ export default {
         editPoll: 'Редактировать Голосование',
         newPoll: 'Новое Голосование',
         pollTitle: 'Название голосования',
-        pollDescriptions: 'Описание голосования',
+        pollDescription: 'Описание голосования',
         voteLimit: 'Лимит в TIME за один вариант',
         finishedDate: 'Дата окончания',
         addAttachments: 'Добавить Вложения',
