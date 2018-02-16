@@ -1,11 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View } from 'react-native'
-import Text from '../../components/Text/Text'
+import { View, StyleSheet } from 'react-native'
+import Text from '../../components/Text'
+import { COLOR_BACKGROUND } from '../../constants/styles'
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: COLOR_BACKGROUND,
+  },
+})
 
 const Wallet = (props) => {
   return (
-    <View style={{ backgroundColor: 'white' }}>
+    <View style={styles.container}>
       <Text>Wallet</Text>
       {props.addresses.toArray().map((address) => {
         const walletId = address.get('id')

@@ -4,6 +4,10 @@ import { FlatList, SectionList, View, Text } from 'react-native'
 import ListItem from './components/ListItem'
 import styles from './styles'
 
+type Props = {
+  isDark?: boolean,
+}
+
 const SectionHeader = ({ title }) => (
   <View style={styles.sectionHeader}>
     <Text>
@@ -12,7 +16,7 @@ const SectionHeader = ({ title }) => (
   </View>
 )
 
-export default class List extends React.Component {
+export default class List extends React.Component<Props, {}> {
 
   renderItem = ({ item }) => (
     <ListItem

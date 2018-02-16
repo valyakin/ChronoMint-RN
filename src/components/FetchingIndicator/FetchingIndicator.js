@@ -3,7 +3,7 @@ import React from 'react'
 import { View } from 'react-native'
 import styles from './styles'
 import strings from './strings'
-import Text from '../Text/Text'
+import Text from '../Text'
 
 type FetchingStatus = 'FETCHING' | 'SYNCING' | 'SYNCED'
 
@@ -14,7 +14,7 @@ export const STATUS = {
 }
 
 type FetchingIndicatorProps = {
-  status: FetchingStatus,
+  status?: FetchingStatus,
   style?: number | Object
 }
 

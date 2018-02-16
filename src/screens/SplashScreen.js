@@ -1,6 +1,11 @@
 import React from 'react'
-import { ImageBackground, Alert } from 'react-native'
+import { ImageBackground, StyleSheet } from 'react-native'
 
+const styles = StyleSheet.create({
+  splash: {
+    flex: 1,
+  },
+})
 export default class SplashScreen extends React.Component {
   static navigatorStyle = {
     navBarHidden: true,
@@ -29,7 +34,7 @@ export default class SplashScreen extends React.Component {
     return (
       <ImageBackground
         source={require('../assets/images/splash.png')}
-        style={{ flex: 1 }}
+        style={styles.splash}
         onLoadEnd={this.handleLoadEnd}
       />
     )

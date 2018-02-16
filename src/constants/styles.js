@@ -5,6 +5,7 @@ COLORS
 export const COLOR_BACKGROUND = '#FBFBFE'
 export const COLOR_BACKGROUND_LIGHT = '#FFFFFF'
 export const COLOR_BACKGROUND_DARK = '#CCCCDF'
+export const COLOR_BACKGROUND_DIM = 'rgba(255, 255, 255, .1)'
 export const COLOR_FOREGROUND = '#00005f'
 export const COLOR_FOREGROUND_LIGHT = '#66669F'
 export const COLOR_FOREGROUND_LIGHTER = '#768fff'
@@ -27,6 +28,8 @@ export const SHADOW_LIGHT = 'rgba(0, 0, 0, 0.12)'
 export const COLOR_LHT = '#17579c'
 export const COLOR_ETH_COLOR = '#161240'
 export const COLOR_TIME = '#4a8fb9'
+
+export const COLOR_TRANSPARENT = 'transparent'
 
 /*==============================================================================
 DIMENSIONS

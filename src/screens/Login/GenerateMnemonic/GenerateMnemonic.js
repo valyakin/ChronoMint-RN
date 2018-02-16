@@ -8,7 +8,7 @@ import LoginSceneLayout from '../LoginScreenLayout'
 import sceneLayout from '../../../utils/screenLayout'
 import strings from './strings'
 import styles from './styles'
-import Text from '../../../components/Text/Text'
+import Text from '../../../components/Text'
 import Cautions from '../../../components/Cautions/Cautions'
 
 type State = {
@@ -25,7 +25,7 @@ class GenerateMnemonic extends React.Component<{}, State> {
     userConfirm: false,
   }
 
-  toggleUserConfirm = () => {
+  handleUserConfirm = () => {
     this.setState({
       userConfirm: !this.state.userConfirm,
     })
@@ -50,7 +50,7 @@ class GenerateMnemonic extends React.Component<{}, State> {
           <Checkbox
             isDark
             isChecked={this.state.userConfirm}
-            onPress={this.toggleUserConfirm}
+            onPress={this.handleUserConfirm}
             label={strings.understand}
           />
           <Button

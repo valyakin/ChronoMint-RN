@@ -1,9 +1,9 @@
 // @flow
 import React from 'react'
-import { TouchableOpacity, View } from 'react-native'
-import Icon from '../Icon'
-import Text from '../Text'
-import styles from './styles'
+import { TouchableOpacity, View, StyleSheet } from 'react-native'
+import { UNIT, COLOR_BACKGROUND_LIGHT, COLOR_FOREGROUND, LINE } from '../constants/styles'
+import Icon from './Icon'
+import Text from './Text'
 
 type IconPosition = 'left' | 'right' | 'top' | 'bottom'
 
@@ -89,5 +89,32 @@ class Button extends React.Component<Props, {}> {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    margin: UNIT,
+    borderRadius: 10,
+    backgroundColor: '#2962FF',
+    paddingVertical: UNIT,
+    paddingHorizontal: 4 * UNIT,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  containerDisabled: {
+    backgroundColor: '#6A75BC',
+  },
+  leftSection: {
+    marginRight: UNIT,
+  },
+  label: {
+    color: COLOR_FOREGROUND,
+    height: LINE,
+  }, 
+  labelDark: {
+    color: COLOR_BACKGROUND_LIGHT,
+    height: LINE,
+  },
+})
 
 export default Button
