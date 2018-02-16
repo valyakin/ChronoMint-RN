@@ -78,8 +78,8 @@ export default {
     transaction: 'Transaction',
     actions: 'Actions',
     value: 'Value',
-    revoke: 'REVOKE',
-    sign: 'SIGN',
+    revoke: 'Revoke',
+    sign: 'Sign',
   },
   exchange: {
     tokens: 'Exchange tokens',
@@ -209,6 +209,7 @@ export default {
         icon: 'Icon (TODO)',
         errors: {
           invalidAddress: 'Can\'t find valid ERC20 contract by this address',
+          addressInUse: 'This address is already in use',
           symbolInUse: 'This symbol is already in use',
           invalidSymbol: 'Symbol can only contain from 2 to 4 A-Z letters',
         },
@@ -274,6 +275,10 @@ export default {
         name: 'Name',
         email: 'Email',
         company: 'Company',
+      },
+      errors: {
+        saveInIPFSError: 'Save data in the IPFS ended with an error, please try again. It`s free.',
+        repeatButtonName: 'repeat save in IPFS',
       },
     },
     Ethereum: {
@@ -451,6 +456,10 @@ export default {
         title: 'Kill wallet',
         to: 'Transfer tokens to',
       },
+      changeRequirement: {
+        title: 'Change required signatures',
+        requiredSignatures: 'New value',
+      },
     },
     PollInterface: {
       [ pollInterface.TX_ACTIVATE_POLL ]: {
@@ -461,6 +470,9 @@ export default {
       },
       [ pollInterface.TX_END_POLL ]: {
         title: 'End Poll',
+      },
+      [ pollInterface.TX_VOTE ]: {
+        title: 'Vote',
       },
     },
     VotingManager: {
@@ -487,6 +499,7 @@ export default {
     moreThanOrEqual: 'Should be more or equal than %{limit}',
     limitDepositOnMainnet: 'Deposit TIME is temporarily limited to 1 TIME on the main network',
     invalidLatinString: 'String must have only Latin characters (A-z)',
+    mustBeUnique: 'Value must be unique',
 
     // TODO @bshevchenko: errors domain only for common cases. Move out entries below to the appropriate domains
     cantSentToYourself: 'Can\'t send tokens to yourself',
@@ -517,6 +530,11 @@ export default {
       title: 'Copy address',
       controlTitle: 'Address',
       description: 'Press CTRL + C or ⌘ + C to copy address to clipboard',
+    },
+    copyPrivateKey: {
+      title: 'Copy private key',
+      controlTitle: 'Private key',
+      description: 'Press CTRL + C or ⌘ + C to copy private key to clipboard',
     },
   },
   poll: {
@@ -679,25 +697,13 @@ export default {
         value: 'Value',
       },
       DepositTokens: {
+        depositTime: 'Deposit Time',
         amount: 'Amount',
         yourSymbolBalance: 'Your %{symbol} balance',
         yourSymbolDeposit: 'Your %{symbol} deposit',
         symbolHolderAllowance: '%{symbol} holder allowance',
         requireTime: 'Require TIME',
         withdraw: 'Withdraw',
-      },
-      SendTokens: {
-        fast: 'Fast',
-        slow: 'Slow',
-        balance: 'Balance',
-        recipientAddress: 'Recipient address',
-        amount: 'Amount',
-        feeRate: 'Fee: %{multiplier} of average (%{total} sat/byte)',
-        gasPrice: 'Gas Price: %{multiplier} of average (%{total} Gwei)',
-        approve: 'Approve',
-        revoke: 'Revoke',
-        allowance: 'Allowance',
-        send: 'Send',
       },
       RewardsPeriod: {
         rewardsPeriodIndex: 'Bonus period #%{index}',
@@ -780,7 +786,7 @@ export default {
         editPoll: 'Edit Poll',
         newPoll: 'New Poll',
         pollTitle: 'Poll title',
-        pollDescriptions: 'Poll description',
+        pollDescription: 'Poll description',
         voteLimit: 'Vote Limit in TIME per option',
         finishedDate: 'Finished date',
         addAttachments: 'Add Attachments',

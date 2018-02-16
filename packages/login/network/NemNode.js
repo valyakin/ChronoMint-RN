@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import nem from 'nem-sdk'
+import nem from 'nem-sdk'
 import NemMiddlewareNode from './NemMiddlewareNode'
 
 export const NEM_MAINNET_NODE = new NemMiddlewareNode({
@@ -34,8 +34,8 @@ export const NEM_MAINNET_NODE = new NemMiddlewareNode({
     user: 'rabbitmq_user',
     password: '38309100024',
     channels: {
-      balance: '/exchange/events/mainnet-nem-middleware-chronobank-io_balance',
-      transaction: '/exchange/events/mainnet-nem-middleware-chronobank-io_transaction',
+      balance: '/exchange/events/mainnet-nem-middleware-02-chronobank-io_balance',
+      transaction: '/exchange/events/mainnet-nem-middleware-02-chronobank-io_transaction',
     },
   },
   trace: true,

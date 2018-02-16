@@ -9,6 +9,7 @@ import truffleContract from 'truffle-contract'
 import ipfs from 'utils/IPFS'
 import web3Converter from 'utils/Web3Converter'
 import EventEmitter from 'events'
+import AdditionalActionModel from '../models/AdditionalActionModel'
 
 export const DEFAULT_GAS = 4700000
 const DEFAULT_OK_CODES = [resultCodes.OK, true]
@@ -33,8 +34,9 @@ export const DEFAULT_TX_OPTIONS = {
   addDryRunFrom: null,
   addDryRunOkCodes: [],
   allowNoReturn: false,
-  feeMultiplier: 1,
-  noGasLimit: false,
+  useDefaultGasLimit: false,
+  additionalAction: null,
+  feeMultiplier: null,
 }
 
 export default class AbstractContractDAO extends EventEmitter {
@@ -400,7 +402,7 @@ export default class AbstractContractDAO extends EventEmitter {
     args: Array = [],
     infoArgs: Object | AbstractModel = null,
     value: BigNumber = new BigNumber(0),
-    options = DEFAULT_TX_OPTIONS
+    options = DEFAULT_TX_OPTIONS,
   ): Object {
 
     const {
@@ -408,6 +410,7 @@ export default class AbstractContractDAO extends EventEmitter {
       addDryRunOkCodes,
       allowNoReturn,
       useDefaultGasLimit,
+      additionalAction,
       feeMultiplier,
     } = Object.assign({}, DEFAULT_TX_OPTIONS, options)
 
@@ -425,24 +428,22 @@ export default class AbstractContractDAO extends EventEmitter {
       func,
       args: displayArgs,
       value,
+      additionalAction,
+      params: args,
     })
 
     /** ESTIMATE GAS */
-    const estimateGas = async () => {
-      const { gasFee, gasLimit } = await this._estimateGas(func, args, value, feeMultiplier)
-      tx = tx.setGas(gasFee)
-      AbstractContractDAO.txGas(tx)
-      return gasLimit
+    const estimateGas = (func, args, value) => {
+      return this._estimateGas(func, args, value)
     }
 
     let gasLimit = null
 
     /** START */
     try {
-      [gasLimit] = await Promise.all([
-        estimateGas(),
-        AbstractContractDAO.txStart(tx),
-      ])
+      tx = await AbstractContractDAO.txStart(tx, estimateGas, feeMultiplier)
+      gasLimit = tx.gasLimit()
+      args = tx.params()
 
       const txParams = {
         from: this.getAccount(),
@@ -492,7 +493,7 @@ export default class AbstractContractDAO extends EventEmitter {
       /** OUT OF GAS ERROR HANDLING WHEN TX WAS ALREADY MINED */
       if (typeof result === 'object' && result.hasOwnProperty('receipt')) {
         const gasPrice = new BigNumber(await this._web3Provider.getGasPrice())
-        tx = tx.setGas(gasPrice.mul(feeMultiplier).mul(result.receipt.gasUsed), true)
+        tx = tx.setGas(gasPrice.mul(result.receipt.gasUsed), true)
 
         if (tx.estimateGasLaxity().gt(0)) {
           // uncomment line below if you want to log estimate gas laxity
@@ -546,12 +547,12 @@ export default class AbstractContractDAO extends EventEmitter {
         console.warn(e)
       }
 
-      throw devError
+      throw userError
     }
   }
 
   /** @private */
-  async _estimateGas (func: string, args = [], value = null, feeMultiplier = 1): number | Object {
+  async _estimateGas (func: string, args = [], value = null): number | Object {
     const deployed = await this.contract
     if (!deployed.hasOwnProperty(func)) {
       throw this._error('_estimateGas func not found', func)
@@ -568,7 +569,7 @@ export default class AbstractContractDAO extends EventEmitter {
 
     const gasPriceBN = new BigNumber(gasPrice)
     const gasLimit = process.env.NODE_ENV === 'development' ? DEFAULT_GAS : estimatedGas + 1
-    const gasFee = gasPriceBN.mul(gasLimit).mul(feeMultiplier)
+    const gasFee = gasPriceBN.mul(gasLimit)
 
     return { gasLimit, gasFee }
   }

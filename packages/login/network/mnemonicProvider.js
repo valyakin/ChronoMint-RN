@@ -1,6 +1,6 @@
 import bip39 from 'bip39'
 import bitcoin from 'bitcoinjs-lib'
-// import nemSdk from 'nem-sdk'
+import nemSdk from 'nem-sdk'
 import hdKey from 'ethereumjs-wallet/hdkey'
 import { byEthereumNetwork } from './NetworkProvider'
 import { createBCCEngine, createBTCEngine, createLTCEngine, createBTGEngine } from './BitcoinUtils'
