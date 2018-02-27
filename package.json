@@ -9,6 +9,7 @@
     "android": "react-native run-android"
   },
   "dependencies": {
+    "@chronobank/login": "*",
     "assert": "^1.1.1",
     "axios": "^0.17.1",
     "babel-plugin-transform-exponentiation-operator": "^6.24.1",

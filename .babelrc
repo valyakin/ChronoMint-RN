@@ -9,8 +9,6 @@
       "root": ["./src", "./mint/src"],
       "extensions": [".js", ".ios.js", ".android.js"],
       "alias": {
-        "chronobank/mint": "./mint",
-        "chronobank/login": "./mint/packages/login",
         "crypto": "react-native-crypto",
         "zlib": "browserify-zlib",
         "console": "console-browserify",
