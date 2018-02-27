@@ -1,4 +1,4 @@
-import * as network from 'chronobank/login/redux/network'
+import * as network from '@chronobank/login/redux/network'
 import * as assetsManager from 'redux/assetsManager'
 import * as drawer from 'redux/drawer'
 import * as exchange from 'redux/exchange'
