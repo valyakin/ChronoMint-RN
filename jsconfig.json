@@ -3,9 +3,7 @@
     "jsx": "react-native",
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "*": ["src/*", "./mint/*"],
-      "chronobank/mint/*": ["./mint/*"],
-      "chronobank/login/*": ["./mint/packages/login/*"]
+      "*": ["src/*", "./mint/src/*"]
     }
   },
   "exclude": [

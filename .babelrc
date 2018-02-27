@@ -7,7 +7,6 @@
     "transform-exponentiation-operator",
     ["module-resolver", {
       "root": ["./src", "./mint/src"],
-      "extensions": [".js", ".ios.js", ".android.js"],
       "alias": {
         "crypto": "react-native-crypto",
         "zlib": "browserify-zlib",
