@@ -15,7 +15,7 @@ export default class SplashScreen extends React.Component {
   
   handleLoadEnd = async () => {
     window.web3 = require('web3')
-    const networkService = require('chronobank/login/network/NetworkService').default
+    const networkService = require('@chronobank/login/network/NetworkService').default
     const { store } = require('../redux/configureStore')
     const { bootstrap } = require('redux/session/actions')
     const scenes = require('./').default
@@ -23,7 +23,7 @@ export default class SplashScreen extends React.Component {
     networkService.connectStore(store)
 
     await store.dispatch(bootstrap())
-    
+
     this.props.navigator.resetTo({
       screen: scenes.Login.OptionSelector,
       animationType: 'fade',

@@ -10,6 +10,7 @@ import ChangeLanguage from './Login/ChangeLanguage'
 import EnterMnemonic from './Login/EnterMnemonic'
 import GenerateMnemonic from './Login/GenerateMnemonic'
 import WalletFile from './Login/WalletFile'
+import EnterWalletPassword from './Login/EnterWalletPassword'
 import GenerateWallet from './Login/GenerateWallet'
 import EnterPin from './Login/EnterPin'
 import EnterPrivate from './Login/EnterPrivate'
@@ -26,6 +27,7 @@ const screens = {
     GenerateMnemonic,
     WalletFile,
     GenerateWallet,
+    EnterWalletPassword,
     EnterPin,
     EnterPrivate,
   },

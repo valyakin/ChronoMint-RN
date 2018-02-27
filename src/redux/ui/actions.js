@@ -3,7 +3,7 @@ import moment from 'moment'
 import ls from 'utils/LocalStorage'
 import ipfs from 'utils/IPFS'
 // import userMonitorService from 'chronobank/mint/src/user/monitorService'
-import { modalsOpen } from 'chronobank/mint/src/redux/modals/actions'
+import { modalsOpen } from '@chronobank/mint/src/redux/modals/actions'
 // import ConfirmTxDialog from 'components/dialogs/ConfirmTxDialog/ConfirmTxDialog'
 // import UserActiveDialog from 'components/dialogs/UserActiveDialog/UserActiveDialog'
 

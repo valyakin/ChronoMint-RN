@@ -9,24 +9,34 @@ import screenLayout from '../../../utils/screenLayout'
 import strings from './strings'
 import styles from './styles'
 
-class EnterPrivate extends React.Component<{}, {}> {
+type Props = {
+  wallet: {},
+  onLogin: (wallet: {}, password: string) => void
+}
+
+type State = {
+  password: string,
+  isPending: boolean
+}
+
+class EnterWalletPassword extends React.Component<Props, State> {
   static screenOptions = {
     title: strings.title,
     subtitle: strings.subtitle,
   }
 
   state = {
-    privateKey: '',
+    password: '',
     isPending: false,
   }
   
   handlePress = () => {
     this.setState({ isPending: true })
-    this.props.onLogin(this.state.privateKey)
+    this.props.onLogin(this.props.wallet, this.state.password)
   }
 
-  handleInput = (privateKey) => {
-    this.setState({ privateKey })
+  handleInput = (password) => {
+    this.setState({ password })
   }
 
   render () {
@@ -60,4 +70,4 @@ class EnterPrivate extends React.Component<{}, {}> {
   }
 }
 
-export default screenLayout(LoginScreenLayout)(EnterPrivate)
+export default screenLayout(LoginScreenLayout)(EnterWalletPassword)

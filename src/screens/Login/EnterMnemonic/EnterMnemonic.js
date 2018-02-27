@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react'
-import { View } from 'react-native'
+import { View, ActivityIndicator } from 'react-native'
 import Checkbox from '../../../components/Checkbox'
 import Input from '../../../components/Input'
 import Button from '../../../components/Button'
@@ -28,15 +28,15 @@ class EnterMnemonic extends React.Component<Props, State> {
 
   state = {
     mnemonic: '',
+    isPending: false,
   }
 
   handleLogin = () => {
-    console.log('===LOGIN===')
+    this.setState({ isPending: true })
     this.props.onLogin(this.state.mnemonic)
   }
 
   handleMnemonicChange = (mnemonic) => {
-    console.log({ mnemonic })
     this.setState({ mnemonic })
   }
 
@@ -64,11 +64,14 @@ class EnterMnemonic extends React.Component<Props, State> {
         <View 
           style={styles.actions}
         >
-          <Button
-            isDark
-            label={strings.login}
-            onPress={this.handleLogin}
-          />
+          { this.state.isPending ? 
+            <ActivityIndicator /> :
+            <Button
+              isDark
+              label={strings.login}
+              onPress={this.handleLogin}
+            />
+          }
           <Button
             isDark
             icon={require('../../../assets/icons/mnemonic.png')}

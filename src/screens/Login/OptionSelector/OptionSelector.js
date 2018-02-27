@@ -1,15 +1,18 @@
 /* @flow */
 import * as React from 'react'
 import { connect } from 'react-redux'
-import mnemonicProvider from 'chronobank/login/network/mnemonicProvider'
-import networkService from 'chronobank/login/network/NetworkService'
-import { addError, clearErrors, loading, DUCK_NETWORK } from 'chronobank/login/redux/network/actions'
-import { bccProvider, btcProvider, btgProvider, ltcProvider } from 'chronobank/login/network/BitcoinProvider'
-import { ethereumProvider } from 'chronobank/login/network/EthereumProvider'
+import mnemonicProvider from '@chronobank/login/network/mnemonicProvider'
+import networkService from '@chronobank/login/network/NetworkService'
+import { addError, clearErrors, loading, DUCK_NETWORK } from '@chronobank/login/redux/network/actions'
+import { bccProvider, btcProvider, btgProvider, ltcProvider } from '@chronobank/login/network/BitcoinProvider'
+import { ethereumProvider } from '@chronobank/login/network/EthereumProvider'
+import { nemProvider } from '@chronobank/login/network/NemProvider'
 import { login } from 'redux/session/actions'
 import Web3 from 'web3'
-import web3Utils from 'chronobank/login/network/Web3Utils'
-import web3Provider from 'chronobank/login/network/Web3Provider'
+import web3Utils from '@chronobank/login/network/Web3Utils'
+import web3Provider from '@chronobank/login/network/Web3Provider'
+import privateKeyProvider from '@chronobank/login/network/privateKeyProvider'
+import walletProvider from '@chronobank/login/network/walletProvider'
 import List from '../../../components/List/List'
 import screenLayout from '../../../utils/screenLayout'
 import LoginScreenLayout from '../LoginScreenLayout'
@@ -51,7 +54,7 @@ class OptionSelector extends React.Component<Props, {}> {
   }
 
   componentWillMount () {
-    this.props.selectProvider(4)
+    this.props.selectProvider(2)
     this.props.selectNetwork(4)
     this.resolveNetwork()
   }
@@ -71,9 +74,9 @@ class OptionSelector extends React.Component<Props, {}> {
         this.props.selectedProviderId,
         this.props.selectedNetworkId
       )
-      
+
       await this.props.login(this.props.selectedAccount)
-      
+
       this.handleWallet()
     }
   }
@@ -85,16 +88,22 @@ class OptionSelector extends React.Component<Props, {}> {
   }
 
   handleMnemonicLogin = (mnemonicKey) => {
-    console.log('MNEMONIC LOGIN', mnemonicKey)
     this.props.loading()
-    console.log('LOADING...')
     this.props.clearErrors()
-    console.log('CLEAR ERRORS')
     const providerSettings = this.props.getProviderSettings()
-    console.log('PROVIDER SETTINGS', providerSettings)
     const provider = mnemonicProvider.getMnemonicProvider(mnemonicKey, providerSettings)
-    console.log({ provider })
     this.setupAndLogin(provider)
+  }
+
+  handlePrivateKeyLogin = (privateKey) => {
+    this.props.loading()
+    this.props.clearErrors()
+    try {
+      const provider = privateKeyProvider.getPrivateKeyProvider(privateKey, networkService.getProviderSettings())
+      this.setupAndLogin(provider)
+    } catch (e) {
+      this.props.addError(e.message)
+    }
   }
 
   handleMnemonicKey = () => this.props.navigator.push({
@@ -108,49 +117,53 @@ class OptionSelector extends React.Component<Props, {}> {
   handleWalletFile = () => this.props.navigator.push({
     screen: screens.Login.WalletFile,
     backButtonTitle: 'Login',
+    passProps: {
+      onLogin: this.handleWalletUpload,
+    },
   })
 
   handlePrivateKey = () => this.props.navigator.push({
     screen: screens.Login.EnterPrivate,
     backButtonTitle: 'Login',
+    passProps: {
+      onLogin: this.handlePrivateKeyLogin,
+    },
   })
+
+  handleWalletUpload = (wallet, password) => {
+    this.props.loading()
+    this.props.clearErrors()
+    try {
+      const provider = walletProvider.getProvider(wallet, password, networkService.getProviderSettings())
+      this.setupAndLogin(provider)
+    } catch (e) {
+      this.props.addError(e.message)
+    }
+  }
 
   handleUPort = () => {
 
   }
 
   async setupAndLogin ({ ethereum, btc, bcc, btg, ltc, nem }) {
-    console.log({
-      providerId: this.props.selectedProviderId,
-      networkId: this.props.selectedNetworkId,
-    })
     // setup
     const web3 = new Web3()
     web3Provider.setWeb3(web3)
     web3Provider.setProvider(ethereum.getProvider())
 
-    console.log({ ethereum, btc, bcc, btg, ltc, nem })
     // login
     try {
       await this.props.loadAccounts()
-      console.log('Accounts loaded')
       await this.props.selectAccount(this.props.accounts[ 0 ])
-      console.log('Selected account: ', this.props.selectedAccount)
-      ethereumProvider.setEngine(ethereum, nem)
-      console.log('Eth')
+      ethereumProvider.setEngine(ethereum)
       bccProvider.setEngine(bcc)
-      console.log('bcc')
       btcProvider.setEngine(btc)
-      console.log('btc')
       btgProvider.setEngine(btg)
-      console.log('btg')
       ltcProvider.setEngine(ltc)
-      console.log('ltc')
-      // nemProvider.setEngine(nem)
+      nemProvider.setEngine(nem)
       await this.handleLogin()
     } catch (e) {
       // eslint-disable-next-line
-      console.error('error', e.message)
       this.props.addError(e.message)
     }
   }
@@ -159,7 +172,8 @@ class OptionSelector extends React.Component<Props, {}> {
     const web3 = new Web3()
     web3Provider.setWeb3(web3)
     const providerUrl = this.props.getProviderURL()
-    web3Provider.setProvider(web3Utils.createStatusEngine(providerUrl))
+    const statusEngine = web3Utils.createStatusEngine(providerUrl)
+    web3Provider.setProvider(statusEngine)
     web3Provider.resolve()
   }
 

@@ -196,7 +196,7 @@ export class EthereumDAO extends AbstractTokenDAO {
     filter.watch(async (e, r) => {
       if (e) {
         // eslint-disable-next-line
-        console.error('EthereumDAO watchTransfer', e)
+        console.error('EthereumDAO watchTransfer', e, r)
         return
       }
       const block = await this._web3Provider.getBlock(r, true)

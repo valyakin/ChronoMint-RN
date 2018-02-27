@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
 const Wallet = (props) => {
   return (
     <View style={styles.container}>
-      <Text>Wallet</Text>
-      {props.addresses.toArray().map((address) => {
+      <Text>Wallet:</Text>
+      {props.addresses.map((address) => {
         const walletId = address.get('id')
         const walletAddress = address.get('address')
 
@@ -24,12 +24,24 @@ const Wallet = (props) => {
           </Text>
         ) : null
       })}
+      <Text>Balances:</Text>
+      {props.balances.map((balance) => {
+        const balanceId = balance.get('id')
+        const balanceAmount = balance.get('amout')
+
+        return (
+          <Text key={balanceId}>
+            {balanceId}: {balanceAmount || 0}
+          </Text>
+        )
+      })}
     </View>
   )
 }
 
 const mapStateToProps = (state) => ({
-  addresses: state.get('mainWallet').get('addresses').get('list'),
+  balances: state.get('mainWallet').get('balances').get('list').toArray(),
+  addresses: state.get('mainWallet').get('addresses').get('list').toArray(),
 })
 
 export default connect(
