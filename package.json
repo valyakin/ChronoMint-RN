@@ -1,7 +1,7 @@
 {
   "name": "chronomintrn",
   "version": "0.0.1",
-  "license": "GPL-3.0-only",
+  "license": "GPL-3.0",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
@@ -50,7 +50,7 @@
     "react-native-navigation": "^1.1.371",
     "react-native-os": "Robdel12/react-native-os",
     "react-native-randombytes": "^3.0.0",
-    "react-native-tcp": "^3.2.1",
+    "react-native-tcp": "olegdizus/react-native-tcp",
     "react-native-udp": "^2.1.0",
     "react-redux": "^5.0.6",
     "readable-stream": "1.0.33",
