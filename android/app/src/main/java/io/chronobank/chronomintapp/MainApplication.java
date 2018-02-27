@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.reactnativenavigation.NavigationApplication;
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
 import com.peel.react.rnos.RNOSModule;
 import com.tradle.react.UdpSocketsModule;
 import com.peel.react.TcpSocketsModule;
@@ -31,6 +32,7 @@ public class MainApplication extends NavigationApplication {
           new ReactNativeFingerprintScannerPackage(),
           new ReactNativeDocumentPicker(),
           new RNDeviceInfo(),
+          new RNFSPackage(),
           new RNOSModule(),
           new ReactNativeLocalizationPackage(),
           new RandomBytesPackage()
