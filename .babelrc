@@ -1,5 +1,6 @@
 {
   "presets": ["react-native"],
+  "sourceMaps": "inline",
   "plugins": [
     "transform-decorators-legacy",
     "functional-hmr",
