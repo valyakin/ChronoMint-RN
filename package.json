@@ -94,6 +94,7 @@
   },
   "resolutions": {
     "inherits": "olegdizus/inherits",
+    "macaddress": "olegdizus/node-macaddress",
     "bn.js": "4.11.8"
   },
   "rnpm": {
