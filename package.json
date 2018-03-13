@@ -38,7 +38,7 @@
     "promisify-node-callback": "^1.0.2",
     "querystring-es3": "~0.2.0",
     "react": "16.2.0",
-    "react-native": "0.53.0",
+    "react-native": "0.54.0",
     "react-native-crypto": "^2.1.2",
     "react-native-device-info": "^0.14.0",
     "react-native-document-picker": "^2.1.0",
@@ -87,7 +87,7 @@
     "eslint-plugin-flowtype": "^2.42.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-react-native": "^3.2.1",
-    "flow-bin": "0.63.0",
+    "flow-bin": "0.65.0",
     "jest": "22.2.0",
     "react-test-renderer": "16.2.0",
     "remote-redux-devtools": "^0.5.12"

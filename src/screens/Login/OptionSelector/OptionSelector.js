@@ -53,7 +53,7 @@ class OptionSelector extends React.Component<Props, {}> {
     hasLogo: true,
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.props.selectProvider(2)
     this.props.selectNetwork(4)
     this.resolveNetwork()
