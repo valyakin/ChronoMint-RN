@@ -4,4 +4,4 @@ console.ignoredYellowBox = [
   'Warning: componentWillReceiveProps',
 ]
 
-require('./src/index.js')
+require('./src/app.js')
