@@ -1,7 +1,8 @@
 /* @flow */
 import * as React from 'react'
 import { View, Text, Image, StyleSheet } from 'react-native'
-import { COLOR_BACKGROUND, COLOR_RED } from '../../constants/styles'
+import images from '../assets/images'
+import colors from '../utils/colors'
 
 type Token = { id: string, amount: number }
 
@@ -34,30 +35,30 @@ const WalletImage = ({ image, mode }: IconProps) => (
   <View style={styles.walletImageContainer}>
     { (mode === 'default') && (
       <Image
-        source={require('../../assets/images/wallet-badge-default.png')}
+        source={images.walletBadgeDefault}
         style={styles.walletBadge}
-        resizeMode='contain'
       />
     )}
     { (mode === 'shared') && (
       <Image
-        source={require('../../assets/images/wallet-badge-shared.png')}
+        source={images.walletBadgeShared}
         style={styles.walletBadge}
-        resizeMode='contain'
       />
     )}
     { (mode === 'locked') && (
       <Image
-        source={require('../../assets/images/wallet-badge-locked.png')}
+        source={images.walletBadgeLocked}
         style={styles.walletBadge}
-        resizeMode='contain'
       />
     )}
     { image ? (
       <Image source={image} />
     ) : (
       <View style={styles.walletImageShape}>
-        <Image source={require('../../assets/images/wallet.png')} />
+        <Image
+          source={images.wallet}
+          style={styles.walletImage}
+        />
       </View>
     )}
   </View>
@@ -66,7 +67,7 @@ const WalletImage = ({ image, mode }: IconProps) => (
 const Transactions = ({ transactions }) => !transactions ? null : (
   !transactions[1] ? (
     <Image
-      source={require('../../assets/images/transaction-receiving.png')}
+      source={images.transactionReceiving}
     />
   ) : (
     <View style={styles.transactionsNumberContainer}>
@@ -94,7 +95,7 @@ const Exchange = ({ exchange }: ExchangeType) => !exchange ? null : (
   </Text>
 ) 
 
-export default class WalletItem extends React.Component<Props, {}> {
+export default class WalletsListItem extends React.Component<Props, {}> {
   render () {
     const { title, address, balance } = this.props
     return (
@@ -125,7 +126,7 @@ export default class WalletItem extends React.Component<Props, {}> {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLOR_BACKGROUND,
+    backgroundColor: colors.background,
     borderRadius: 4,
     padding: 8,
     marginHorizontal: 16,
@@ -141,14 +142,14 @@ const styles = StyleSheet.create({
   transactionsNumberContainer: {
     height: 20,
     minWidth: 20,
-    backgroundColor: COLOR_RED,
+    backgroundColor: colors.red,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
   },
   transactionsNumber: {
-    color: COLOR_BACKGROUND,
+    color: colors.background,
     fontWeight: '900',
   },
   content: {
@@ -168,12 +169,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#614DBA',
   },
+  walletImage: {
+    tintColor: colors.background,
+  },
   walletBadge: {
     position: 'absolute',
     zIndex: 1,
     left: -4,
     width: 20,
     height: 20,
+    resizeMode: 'contain',
   },
   title: {
     marginTop: 8,

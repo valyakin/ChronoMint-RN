@@ -184,25 +184,25 @@ class OptionSelector extends React.Component<Props, {}> {
         data={[
           {
             key: strings.mnemonicKey,
-            icon: require('../../../assets/icons/mnemonic.png'),
+            icon: require('../assets/icons/mnemonic.png'),
             hasArrow: true,
             onPress: this.handleMnemonicKey,
           },
           {
             key: strings.walletFile,
-            icon: require('../../../assets/icons/wallet.png'),
+            icon: require('../assets/icons/wallet.png'),
             hasArrow: true,
             onPress: this.handleWalletFile,
           },
           {
             key: strings.privateKey,
-            icon: require('../../../assets/icons/key.png'),
+            icon: require('../assets/icons/key.png'),
             hasArrow: true,
             onPress: this.handlePrivateKey,
           },
           {
             key: strings.uPort,
-            icon: require('../../../assets/icons/uport.png'),
+            icon: require('../assets/icons/uport.png'),
             hasArrow: true,
             onPress: this.handleUPort,
           },

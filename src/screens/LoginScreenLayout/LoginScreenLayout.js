@@ -4,7 +4,6 @@ import { View, ImageBackground } from 'react-native'
 import Logo from '../../../components/Logo'
 import Text from '../../../components/Text'
 import FetchingIndicator from '../../../components/FetchingIndicator'
-import screens from '../../'
 import styles from './styles'
 
 type ScreenOptions = {
@@ -47,7 +46,7 @@ export default class LoginSceneLayout extends React.Component<Props> {
     navigator.setOnNavigatorEvent(({ type, id }) => {
       if (type === 'NavBarButtonPress' && id === 'loginSettings') {
         navigator.push({
-          screen: screens.Login.LoginSettings,
+          screen: 'Login.LoginSettings',
           backButtonTitle: 'Login',
         })
       }

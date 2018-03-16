@@ -1,8 +1,9 @@
 /* @flow */
 import * as React from 'react'
 import { SectionList } from 'react-native'
-import SectionHeader from '../../components/SectionHeader/SectionHeader'
-import WalletItem from '../../components/WalletItem/WalletItem'
+import SectionHeader from '../components/SectionHeader'
+import WalletsListItem from '../components/WalletsListItem'
+import images from '../assets/images'
 
 export default class WalletsScreen extends React.Component {
   constructor (props) {
@@ -29,7 +30,7 @@ export default class WalletsScreen extends React.Component {
 
   keyExtractor = (item) => item.title
 
-  renderItem = ({ item }) => <WalletItem {...item} />
+  renderItem = ({ item }) => <WalletsListItem {...item} />
 
   renderSectionHeader = ({ section }) => <SectionHeader {...section} />
 
@@ -54,7 +55,7 @@ const walletSections = [
       address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
       balance: { currency: 'BTC', amount: 15.2045 },
       exchange: { currency: 'USD', amount: 121600 },
-      image: require('../../assets/images/wallet-bitcoin.png'),
+      image: images.walletBitcoin,
       transactions: [
         { status: 'receiving' },
       ],

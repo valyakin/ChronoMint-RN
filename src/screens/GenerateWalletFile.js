@@ -24,7 +24,7 @@ class GenerateWallet extends React.Component<{}, State> {
     userConfirm: false,
   }
 
-  toggleUserConfirm = () => {
+  handleUserConfirm = () => {
     const { userConfirm } = this.state
 
     this.setState({
@@ -49,7 +49,7 @@ class GenerateWallet extends React.Component<{}, State> {
           <Checkbox
             isDark
             isChecked={userConfirm}
-            onPress={this.toggleUserConfirm}
+            onPress={this.handleUserConfirm}
             label={strings.understand}
           />
           <Button

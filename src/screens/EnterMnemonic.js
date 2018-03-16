@@ -6,7 +6,6 @@ import Input from '../../../components/Input'
 import Button from '../../../components/Button'
 import LoginScreenLayout from '../LoginScreenLayout'
 import screenLayout from '../../../utils/screenLayout'
-import screens from '../../'
 import strings from './strings'
 import styles from './styles'
 
@@ -42,7 +41,7 @@ class EnterMnemonic extends React.Component<Props, State> {
 
   handleGenerateMnemonic = () => {
     this.props.navigator.push({
-      screen: screens.Login.GenerateMnemonic,
+      screen: 'Login.GenerateMnemonic',
       backButtonTitle: 'Mnemonic',
     })
   }

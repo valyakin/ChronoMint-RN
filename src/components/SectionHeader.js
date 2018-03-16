@@ -1,7 +1,7 @@
 /* @flow */
 import * as React from 'react'
 import { Text, StyleSheet } from 'react-native'
-import { COLOR_BACKGROUND, UNIT, COLOR_FOREGROUND } from '../../constants/styles'
+import colors from '../utils/colors'
 
 type Props = {
   title: string
@@ -19,10 +19,10 @@ export default class SectionHeader extends React.Component<Props, void> {
 
 const styles = StyleSheet.create({
   title: {
-    paddingHorizontal: 2 * UNIT,
-    paddingVertical: 1.5 * UNIT,
-    color: COLOR_BACKGROUND,
-    backgroundColor: COLOR_FOREGROUND,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    color: colors.background,
+    backgroundColor: colors.foreground,
     fontWeight: '900',
   },
 })

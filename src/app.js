@@ -1,16 +1,21 @@
 import { Navigation } from 'react-native-navigation'
-import './shim'
-import screens from './screens'
+// import { Provider } from 'react-redux'
+// import { store } from './redux/configureStore'
+import './utils/shim'
+import registerScreens from './screens/registerScreens'
+import images from './assets/images'
+
+registerScreens()
 
 Navigation.startSingleScreenApp({
   screen: {
-    screen: screens.Wallets,
+    screen: 'WalletsList',
     title: 'My wallets',
     navigatorButtons: {
       leftButtons: [
         {
           id: 'drawer',
-          icon: require('./assets/icons/burger.png'),
+          icon: images.burger,
         },
       ],
     },
@@ -24,7 +29,7 @@ Navigation.startSingleScreenApp({
   },
   drawer: {
     left: {
-      screen: screens.Drawer,
+      screen: 'Drawer',
       fixedWidth: 320,
     },
     animationType: 'parallax',
