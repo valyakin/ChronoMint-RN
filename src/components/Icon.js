@@ -1,7 +1,6 @@
 /* @flow */
 import React from 'react'
 import { View, Image, StyleSheet } from 'react-native'
-import { UNIT } from '../constants/styles'
 
 const Icon = ({ source, style }: any) => (
   <View
@@ -18,8 +17,8 @@ const Icon = ({ source, style }: any) => (
 
 const styles = StyleSheet.create({
   container: {
-    width: 3 * UNIT,
-    height: 3 * UNIT,
+    width: 24,
+    height: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },

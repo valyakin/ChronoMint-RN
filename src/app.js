@@ -1,13 +1,13 @@
 import { Navigation } from 'react-native-navigation'
-// import { Provider } from 'react-redux'
+import { Provider } from 'react-redux'
 import I18n from 'react-native-i18n'
-import './i18n'
-// import { store } from './redux/configureStore'
+import './utils/i18n'
+import { store } from './redux/configureStore'
 import './utils/shim'
 import registerScreens from './screens/registerScreens'
 import images from './assets/images'
 
-registerScreens()
+registerScreens(store, Provider)
 
 Navigation.startSingleScreenApp({
   screen: {

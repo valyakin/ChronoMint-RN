@@ -5,7 +5,7 @@ import checkboxChecked from './images/checkbox-checked.png'
 import checkbox from './images/checkbox.png'
 import chevronLeft from './images/chevron-left.png'
 import chevronRight from './images/chevron-right.png'
-import clip from './images/clip.png'
+import paperclip from './images/paperclip.png'
 import comment from './images/comment.png'
 import fingerprint from './images/fingerprint.png'
 import gradient from './images/gradient.png'
@@ -32,7 +32,7 @@ export default {
   checkbox,
   chevronLeft,
   chevronRight,
-  clip,
+  paperclip,
   comment,
   fingerprint,
   gradient,

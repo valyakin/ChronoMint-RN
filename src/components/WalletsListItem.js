@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#614DBA',
+    backgroundColor: colors.primary,
   },
   walletImage: {
     tintColor: colors.background,
@@ -195,12 +195,12 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   tokens: {
-    color: '#7F7F7F',
+    color: colors.foregroundLighter,
     fontWeight: '200',
     marginTop: 4,
   },
   exchange: {
-    color: '#7F7F7F',
+    color: colors.foregroundLighter,
     fontWeight: '200',
     marginTop: 4,
   },

@@ -1,13 +1,22 @@
 /* @flow */
 import * as React from 'react'
-import { View, TouchableOpacity, Image, Alert, TextInput, KeyboardAvoidingView } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Alert,
+  TextInput,
+  KeyboardAvoidingView,
+  StyleSheet,
+} from 'react-native'
 import FingerprintScanner from 'react-native-fingerprint-scanner'
-import screenLayout from '../../../utils/screenLayout'
-import LoginScreenLayout from '../LoginScreenLayout'
-import FetchingIndicator from '../../../components/FetchingIndicator/FetchingIndicator'
-import Spacer from '../../../components/Spacer'
-import strings from './strings'
-import styles from './styles'
+import I18n from 'react-native-i18n'
+import screenLayout from '../utils/screenLayout'
+import LoginScreenLayout from './LoginScreenLayout'
+import FetchingIndicator from '../components/FetchingIndicator'
+import Spacer from '../components/Spacer'
+import colors from '../utils/colors'
+import images from '../assets/images'
 
 const makeArray = (callback) =>
   (times, ...rest) =>
@@ -25,14 +34,13 @@ const PinBullet = (props: PinBulletProps) =>
     ]}
   />)
 
-const FingerprintButton = (props) =>
-  (<TouchableOpacity
-    onPress={props.onPress}
-  >
+const FingerprintButton = (props) => (
+  <TouchableOpacity onPress={props.onPress}>
     <Image
-      source={require('../../../assets/icons/fingerprint.png')}
+      source={images.fingerprint}
     />
-   </TouchableOpacity>)
+  </TouchableOpacity>
+)
 
 type Props = {
   navigator: {
@@ -40,12 +48,16 @@ type Props = {
   }
 }
 
-class EnterPin extends React.Component<Props, {}> {
+class EnterPinCode extends React.Component<Props, {}> {
   static screenOptions = {
-    title: strings.title,
-    subtitle: strings.subtitle,
+    title: I18n.t('EnterPinCode.title'),
+    subtitle: I18n.t('EnterPinCode.subtitle'),
     hasFetchingStatus: false,
     hasLogo: true,
+  }
+
+  state = {
+    pin: '',
   }
 
   handleFingerprintPress = () => {
@@ -57,10 +69,6 @@ class EnterPin extends React.Component<Props, {}> {
       .catch((error) => {
         Alert.alert(error.message)
       })
-  }
-
-  state = {
-    pin: '',
   }
 
   handleEnterPin = (pin) => {
@@ -87,7 +95,7 @@ class EnterPin extends React.Component<Props, {}> {
           autoFocus
           keyboardType='numeric'
           onChangeText={this.handleEnterPin}
-          style={{ opacity: 0 }}
+          style={styles.pinInput}
         />
         <Spacer />
         <View style={styles.bottomActions}>
@@ -101,4 +109,35 @@ class EnterPin extends React.Component<Props, {}> {
   }
 }
 
-export default screenLayout(LoginScreenLayout)(EnterPin)
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  bulletsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 32,
+  },
+  pinBullet: {
+    marginHorizontal: 8,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.backgroundLight,
+    opacity: .4,
+  },
+  pinBulletActive: {
+    opacity: 1,
+  },
+  pinInput: {
+    opacity: 0,
+  },
+  bottomActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+  },
+})
+
+export default screenLayout(LoginScreenLayout)(EnterPinCode)

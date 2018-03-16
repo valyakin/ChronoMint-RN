@@ -1,18 +1,17 @@
 /* @flow */
 import React from 'react'
-import { View, ActivityIndicator } from 'react-native'
-import Checkbox from '../../../components/Checkbox'
-import Input from '../../../components/Input'
-import Button from '../../../components/Button'
-import LoginScreenLayout from '../LoginScreenLayout'
-import screenLayout from '../../../utils/screenLayout'
-import strings from './strings'
-import styles from './styles'
+import { View, ActivityIndicator, StyleSheet } from 'react-native'
+import I18n from 'react-native-i18n'
+import Checkbox from '../components/Checkbox'
+import Input from '../components/Input'
+import Button from '../components/Button'
+import LoginScreenLayout from './LoginScreenLayout'
+import screenLayout from '../utils/screenLayout'
 
-class EnterPrivate extends React.Component<{}, {}> {
+class EnterPrivateKey extends React.Component<{}, {}> {
   static screenOptions = {
-    title: strings.title,
-    subtitle: strings.subtitle,
+    title: I18n.t('EnterPrivateKey.title'),
+    subtitle: I18n.t('EnterPrivateKey.subtitle'),
   }
 
   state = {
@@ -33,14 +32,14 @@ class EnterPrivate extends React.Component<{}, {}> {
     return (
       <View>
         <Input
-          label={strings.private}
+          label={I18n.t('EnterPrivateKey.private')}
           style={styles.input}
           multiline
           isDark
           onChangeText={this.handleInput}
         />
         <Checkbox
-          label={strings.saveOnDevice}
+          label={I18n.t('EnterPrivateKey.saveOnDevice')}
           isDark
         />
         <View 
@@ -49,7 +48,7 @@ class EnterPrivate extends React.Component<{}, {}> {
           { this.state.isPending ? 
             <ActivityIndicator /> :
             <Button
-              label={strings.login}
+              label={I18n.t('EnterPrivateKey.login')}
               isDark
               onPress={this.handlePress}
             />
@@ -60,4 +59,13 @@ class EnterPrivate extends React.Component<{}, {}> {
   }
 }
 
-export default screenLayout(LoginScreenLayout)(EnterPrivate)
+const styles = StyleSheet.create({
+  input: {
+    height: 80,
+  },
+  actions: {
+    margin: 16,
+  },
+})
+
+export default screenLayout(LoginScreenLayout)(EnterPrivateKey)

@@ -1,13 +1,12 @@
 /* @flow */
 import React from 'react'
-import { View, ActivityIndicator } from 'react-native'
-import Checkbox from '../../../components/Checkbox'
-import Input from '../../../components/Input'
-import Button from '../../../components/Button'
-import LoginScreenLayout from '../LoginScreenLayout'
-import screenLayout from '../../../utils/screenLayout'
-import strings from './strings'
-import styles from './styles'
+import { View, ActivityIndicator, StyleSheet } from 'react-native'
+import I18n from 'react-native-i18n'
+import Checkbox from '../components/Checkbox'
+import Input from '../components/Input'
+import Button from '../components/Button'
+import LoginScreenLayout from './LoginScreenLayout'
+import screenLayout from '../utils/screenLayout'
 
 type Props = {
   wallet: {},
@@ -21,8 +20,8 @@ type State = {
 
 class EnterWalletPassword extends React.Component<Props, State> {
   static screenOptions = {
-    title: strings.title,
-    subtitle: strings.subtitle,
+    title: I18n.t('EnterWalletPassword.title'),
+    subtitle: I18n.t('EnterWalletPassword.subtitle'),
   }
 
   state = {
@@ -43,14 +42,14 @@ class EnterWalletPassword extends React.Component<Props, State> {
     return (
       <View>
         <Input
-          label={strings.private}
+          label={I18n.t('EnterWalletPassword.private')}
           style={styles.input}
           multiline
           isDark
           onChangeText={this.handleInput}
         />
         <Checkbox
-          label={strings.saveOnDevice}
+          label={I18n.t('EnterWalletPassword.saveOnDevice')}
           isDark
         />
         <View 
@@ -59,7 +58,7 @@ class EnterWalletPassword extends React.Component<Props, State> {
           { this.state.isPending ? 
             <ActivityIndicator /> :
             <Button
-              label={strings.login}
+              label={I18n.t('EnterWalletPassword.login')}
               isDark
               onPress={this.handlePress}
             />
@@ -69,5 +68,14 @@ class EnterWalletPassword extends React.Component<Props, State> {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  input: {
+    height: 80,
+  },
+  actions: {
+    margin: 16,
+  },
+})
 
 export default screenLayout(LoginScreenLayout)(EnterWalletPassword)

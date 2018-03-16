@@ -5,7 +5,7 @@ import SectionHeader from '../components/SectionHeader'
 import WalletsListItem from '../components/WalletsListItem'
 import images from '../assets/images'
 
-export default class WalletsScreen extends React.Component {
+export default class WalletsList extends React.Component {
   constructor (props) {
     super(props)
 

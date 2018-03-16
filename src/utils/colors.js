@@ -6,19 +6,21 @@ export default {
   backgroundDim: 'rgba(255, 255, 255, .1)',
   foreground: '#242045',
   foregroundLight: '#66669F',
-  foregroundLighter: '#768fff',
+  foregroundLighter: '#7F7F7F',
   foregroundLightest: '#CCCCDF',
   
   grayLight: '#f7f9ff',
   gray: '#e9efff',
   grayDark: '#ccccdf',
   
-  primary: '#2962ff',
+  primary: '#614DBA',
   primaryDarkest: '#05326A',
   
   green: '#00c853',
   red: '#C25451',
   orange: '#FFAB00',
+  blue: '#2962FF',
+  blueDark: '#6A75BC',
   
   shadowDark: 'rgba(0, 0, 0, 0.24)',
   shadowLight: 'rgba(0, 0, 0, 0.12)',

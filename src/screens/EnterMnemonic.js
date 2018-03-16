@@ -1,13 +1,14 @@
 /* @flow */
 import React from 'react'
-import { View, ActivityIndicator } from 'react-native'
-import Checkbox from '../../../components/Checkbox'
-import Input from '../../../components/Input'
-import Button from '../../../components/Button'
-import LoginScreenLayout from '../LoginScreenLayout'
-import screenLayout from '../../../utils/screenLayout'
-import strings from './strings'
-import styles from './styles'
+import { View, ActivityIndicator, StyleSheet } from 'react-native'
+import I18n from 'react-native-i18n'
+import Checkbox from '../components/Checkbox'
+import Input from '../components/Input'
+import Button from '../components/Button'
+import LoginScreenLayout from './LoginScreenLayout'
+import screenLayout from '../utils/screenLayout'
+import images from '../assets/images'
+import colors from '../utils/colors'
 
 type Props = {
   navigator: {
@@ -21,8 +22,8 @@ type State = {
 
 class EnterMnemonic extends React.Component<Props, State> {
   static screenOptions = {
-    title: strings.title,
-    subtitle: strings.subtitle,
+    title: I18n.t('EnterMnemonic.title'),
+    subtitle: I18n.t('EnterMnemonic.subtitle'),
   }
 
   state = {
@@ -51,14 +52,14 @@ class EnterMnemonic extends React.Component<Props, State> {
       <View>
         <Input
           isDark
-          label={strings.mnemonic}
+          label={I18n.t('EnterMnemonic.mnemonic')}
           style={styles.input}
           multiline
           onChangeText={this.handleMnemonicChange}
         />
         <Checkbox
           isDark
-          label={strings.saveOnDevice}
+          label={I18n.t('EnterMnemonic.saveOnDevice')}
         />
         <View 
           style={styles.actions}
@@ -67,15 +68,15 @@ class EnterMnemonic extends React.Component<Props, State> {
             <ActivityIndicator /> :
             <Button
               isDark
-              label={strings.login}
+              label={I18n.t('EnterMnemonic.login')}
               onPress={this.handleLogin}
             />
           }
           <Button
             isDark
-            icon={require('../../../assets/icons/mnemonic.png')}
+            icon={images.mnemonic}
             style={styles.generateButton}
-            label={strings.generateMnemonic}
+            label={I18n.t('EnterMnemonic.generateMnemonic')}
             onPress={this.handleGenerateMnemonic}
           />
         </View>
@@ -83,5 +84,17 @@ class EnterMnemonic extends React.Component<Props, State> {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  actions: {
+    margin: 16,
+  },
+  input: {
+    height: 80,
+  },
+  generateButton: {
+    backgroundColor: colors.transparent,
+  },
+})
 
 export default screenLayout(LoginScreenLayout)(EnterMnemonic)

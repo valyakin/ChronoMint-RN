@@ -1,23 +1,22 @@
 /* @flow */
 import React from 'react'
-import { View } from 'react-native'
-import Checkbox from '../../../components/Checkbox'
-import Input from '../../../components/Input'
-import Button from '../../../components/Button'
-import LoginSceneLayout from '../LoginScreenLayout'
-import sceneLayout from '../../../utils/screenLayout'
-import strings from './strings'
-import styles from './styles'
-import Cautions from '../../../components/Cautions/Cautions'
+import { View, StyleSheet } from 'react-native'
+import I18n from 'react-native-i18n'
+import Checkbox from '../components/Checkbox'
+import Input from '../components/Input'
+import Button from '../components/Button'
+import LoginSceneLayout from './LoginScreenLayout'
+import sceneLayout from '../utils/screenLayout'
+import Cautions from '../components/Cautions'
 
 type State = {
   userConfirm: boolean
 }
 
-class GenerateWallet extends React.Component<{}, State> {
+class GenerateWalletFile extends React.Component<{}, State> {
   static screenOptions = {
-    title: strings.title,
-    subtitle: strings.subtitle,
+    title: I18n.t('GenerateWalletFile.title'),
+    subtitle: I18n.t('GenerateWalletFile.subtitle'),
   }
 
   state = {
@@ -39,7 +38,7 @@ class GenerateWallet extends React.Component<{}, State> {
       <View>
         <Input
           isDark
-          label={strings.password}
+          label={I18n.t('GenerateWalletFile.password')}
           style={styles.input}
         />
         <Cautions />
@@ -50,13 +49,13 @@ class GenerateWallet extends React.Component<{}, State> {
             isDark
             isChecked={userConfirm}
             onPress={this.handleUserConfirm}
-            label={strings.understand}
+            label={I18n.t('GenerateWalletFile.understand')}
           />
           <Button
             isDark
             isDisabled={!userConfirm}
             style={styles.downloadButton}
-            label={strings.downloadWallet}
+            label={I18n.t('GenerateWalletFile.downloadWallet')}
           />
         </View>
       </View>
@@ -64,4 +63,16 @@ class GenerateWallet extends React.Component<{}, State> {
   }
 }
 
-export default sceneLayout(LoginSceneLayout)(GenerateWallet)
+const styles =  StyleSheet.create({
+  actions: {
+    margin: 8,
+    flexDirection: 'row',
+  },
+  input: {
+    height: 48,
+    marginBottom: 16,
+  },
+  downloadButton: { flex: 1 },
+})
+
+export default sceneLayout(LoginSceneLayout)(GenerateWalletFile)

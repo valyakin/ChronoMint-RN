@@ -1,9 +1,8 @@
 /* @flow */
 import React from 'react'
 import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
-import { View, TextInput, StyleSheet } from 'react-native'
-import { UNIT, COLOR_BACKGROUND_LIGHT, COLOR_BACKGROUND_DIM } from '../constants/styles'
-import Text from './Text'
+import { View, TextInput, StyleSheet, Text } from 'react-native'
+import colors from '../utils/colors'
 
 type Props = {
   label?: string,
@@ -28,18 +27,18 @@ const Input = ({ label, isDark, style, ...restProps }: Props) => (
 
 const styles = StyleSheet.create({
   container: {
-    padding: UNIT,
+    padding: 8,
   },
   containerDark: {
-    padding: UNIT,
-    backgroundColor: COLOR_BACKGROUND_DIM,
+    padding: 8,
+    backgroundColor: colors.backgroundDim,
   },
   label: {
     fontSize: 12,
   },
   labelDark: {
     fontSize: 12,
-    color: COLOR_BACKGROUND_LIGHT,
+    color: colors.backgroundLight,
     opacity: .8,
   },
   input: {
@@ -47,7 +46,7 @@ const styles = StyleSheet.create({
   },
   inputDark: {
     fontSize: 14,
-    color: COLOR_BACKGROUND_LIGHT,
+    color: colors.backgroundLight,
   },
 })
 

@@ -1,8 +1,8 @@
 /* @flow */
 import React from 'react'
-import { Image, TouchableOpacity, StyleSheet } from 'react-native'
-import { COLOR_BACKGROUND_LIGHT, UNIT, COLOR_FOREGROUND } from '../constants/styles'
-import Text from './Text'
+import { Image, TouchableOpacity, StyleSheet, Text } from 'react-native'
+import images from '../assets/images'
+import colors from '../utils/colors'
 
 type Props = {
   label: string,
@@ -13,8 +13,8 @@ type Props = {
 
 const checkboxIcon = (isChecked) => {
   return isChecked ?
-    require('../assets/icons/checkbox-checked.png') :
-    require('../assets/icons/checkbox.png')
+    images.checkboxChecked :
+    images.checkbox
 }
 
 const Checkbox = ({ label, isDark, isChecked, onPress }: Props) => (
@@ -37,18 +37,18 @@ const Checkbox = ({ label, isDark, isChecked, onPress }: Props) => (
 
 const styles = StyleSheet.create({
   container: {
-    padding: UNIT,
+    padding: 8,
     flexDirection: 'row',
     alignItems: 'center',
   },
   label: {
-    color: COLOR_FOREGROUND,
+    color: colors.foreground,
   },
   labelDark: {
-    color: COLOR_BACKGROUND_LIGHT,
+    color: colors.backgroundLight,
   },
   checkboxContainer: {
-    marginRight: UNIT,
+    marginRight: 8,
   },
 })
 

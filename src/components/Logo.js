@@ -1,10 +1,11 @@
 /* @flow */
 import React from 'react'
 import { Image } from 'react-native'
+import images from '../assets/images'
 
 const Logo = (props: {}) => (
   <Image
-    source={require('../assets/images/logo.png')}
+    source={images.logo}
     {...props}
   />
 )

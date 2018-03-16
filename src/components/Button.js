@@ -1,9 +1,8 @@
 // @flow
 import React from 'react'
-import { TouchableOpacity, View, StyleSheet } from 'react-native'
-import { UNIT, COLOR_BACKGROUND_LIGHT, COLOR_FOREGROUND, LINE } from '../constants/styles'
+import { TouchableOpacity, View, StyleSheet, Text } from 'react-native'
 import Icon from './Icon'
-import Text from './Text'
+import colors from '../utils/colors'
 
 type IconPosition = 'left' | 'right' | 'top' | 'bottom'
 
@@ -92,28 +91,28 @@ class Button extends React.Component<Props, {}> {
 
 const styles = StyleSheet.create({
   container: {
-    margin: UNIT,
+    margin: 8,
     borderRadius: 10,
-    backgroundColor: '#2962FF',
-    paddingVertical: UNIT,
-    paddingHorizontal: 4 * UNIT,
+    backgroundColor: colors.blue,
+    paddingVertical: 8,
+    paddingHorizontal: 32,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
   containerDisabled: {
-    backgroundColor: '#6A75BC',
+    backgroundColor: colors.blueDark,
   },
   leftSection: {
-    marginRight: UNIT,
+    marginRight: 8,
   },
   label: {
-    color: COLOR_FOREGROUND,
-    height: LINE,
+    color: colors.foreground,
+    height: 24,
   }, 
   labelDark: {
-    color: COLOR_BACKGROUND_LIGHT,
-    height: LINE,
+    color: colors.backgroundLight,
+    height: 24,
   },
 })
 

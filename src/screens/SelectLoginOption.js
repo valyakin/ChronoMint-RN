@@ -1,23 +1,34 @@
 /* @flow */
 import * as React from 'react'
 import { connect } from 'react-redux'
-import mnemonicProvider from '@chronobank/login/network/mnemonicProvider'
-import networkService from '@chronobank/login/network/NetworkService'
-import { addError, clearErrors, loading, DUCK_NETWORK } from '@chronobank/login/redux/network/actions'
-import { bccProvider, btcProvider, btgProvider, ltcProvider } from '@chronobank/login/network/BitcoinProvider'
-import { ethereumProvider } from '@chronobank/login/network/EthereumProvider'
-import { nemProvider } from '@chronobank/login/network/NemProvider'
-import { login } from 'redux/session/actions'
+import I18n from 'react-native-i18n'
+import mnemonicProvider from 'chronobank/login/network/mnemonicProvider'
+import networkService from 'chronobank/login/network/NetworkService'
+import {
+  addError,
+  clearErrors,
+  loading,
+  DUCK_NETWORK,
+} from 'chronobank/login/redux/network/actions'
+import {
+  bccProvider,
+  btcProvider,
+  btgProvider,
+  ltcProvider,
+} from 'chronobank/login/network/BitcoinProvider'
+import { ethereumProvider } from 'chronobank/login/network/EthereumProvider'
+import { nemProvider } from 'chronobank/login/network/NemProvider'
+import { bootstrap, login } from 'redux/session/actions'
 import Web3 from 'web3'
-import web3Utils from '@chronobank/login/network/Web3Utils'
-import web3Provider from '@chronobank/login/network/Web3Provider'
-import privateKeyProvider from '@chronobank/login/network/privateKeyProvider'
-import walletProvider from '@chronobank/login/network/walletProvider'
-import List from '../../../components/List/List'
-import screenLayout from '../../../utils/screenLayout'
-import LoginScreenLayout from '../LoginScreenLayout'
-import screens from '../../'
-import strings from './strings'
+import web3Utils from 'chronobank/login/network/Web3Utils'
+import web3Provider from 'chronobank/login/network/Web3Provider'
+import privateKeyProvider from 'chronobank/login/network/privateKeyProvider'
+import walletProvider from 'chronobank/login/network/walletProvider'
+import List from '../components/List'
+import screenLayout from '../utils/screenLayout'
+import LoginScreenLayout from './LoginScreenLayout'
+import { store } from '../redux/configureStore'
+import images from '../assets/images'
 
 type Props = {
   navigator: {
@@ -47,16 +58,22 @@ type Props = {
 
 class OptionSelector extends React.Component<Props, {}> {
   static screenOptions = {
-    title: strings.login,
-    subtitle: strings.selectOptions,
+    title: I18n.t('SelectLoginOption.login'),
+    subtitle: I18n.t('SelectLoginOption.selectOptions'),
     hasFetchingStatus: true,
     hasLogo: true,
   }
 
   componentDidMount () {
-    this.props.selectProvider(2)
-    this.props.selectNetwork(4)
-    this.resolveNetwork()
+    window.web3 = Web3
+
+    networkService.connectStore(store)
+
+    store.dispatch(bootstrap()).then(() => {
+      this.props.selectProvider(2)
+      this.props.selectNetwork(4)
+      this.resolveNetwork()
+    })
   }
 
   async handleLogin () {
@@ -83,7 +100,7 @@ class OptionSelector extends React.Component<Props, {}> {
 
   handleWallet = () => {
     this.props.navigator.push({
-      screen: screens.Wallet,
+      screen: 'WalletsList',
     })
   }
 
@@ -107,7 +124,7 @@ class OptionSelector extends React.Component<Props, {}> {
   }
 
   handleMnemonicKey = () => this.props.navigator.push({
-    screen: screens.Login.EnterMnemonic,
+    screen: 'EnterMnemonic',
     backButtonTitle: 'Login',
     passProps: {
       onLogin: this.handleMnemonicLogin,
@@ -115,7 +132,7 @@ class OptionSelector extends React.Component<Props, {}> {
   })
 
   handleWalletFile = () => this.props.navigator.push({
-    screen: screens.Login.WalletFile,
+    screen: 'PickWalletFile',
     backButtonTitle: 'Login',
     passProps: {
       onLogin: this.handleWalletUpload,
@@ -123,7 +140,7 @@ class OptionSelector extends React.Component<Props, {}> {
   })
 
   handlePrivateKey = () => this.props.navigator.push({
-    screen: screens.Login.EnterPrivate,
+    screen: 'EnterPrivateKey',
     backButtonTitle: 'Login',
     passProps: {
       onLogin: this.handlePrivateKeyLogin,
@@ -183,26 +200,26 @@ class OptionSelector extends React.Component<Props, {}> {
         isDark
         data={[
           {
-            key: strings.mnemonicKey,
-            icon: require('../assets/icons/mnemonic.png'),
+            key: I18n.t('SelectLoginOption.mnemonicKey'),
+            icon: images.mnemonic,
             hasArrow: true,
             onPress: this.handleMnemonicKey,
           },
           {
-            key: strings.walletFile,
-            icon: require('../assets/icons/wallet.png'),
+            key: I18n.t('SelectLoginOption.walletFile'),
+            icon: images.wallet,
             hasArrow: true,
             onPress: this.handleWalletFile,
           },
           {
-            key: strings.privateKey,
-            icon: require('../assets/icons/key.png'),
+            key: I18n.t('SelectLoginOption.privateKey'),
+            icon: images.key,
             hasArrow: true,
             onPress: this.handlePrivateKey,
           },
           {
-            key: strings.uPort,
-            icon: require('../assets/icons/uport.png'),
+            key: I18n.t('SelectLoginOption.uPort'),
+            icon: images.uport,
             hasArrow: true,
             onPress: this.handleUPort,
           },
