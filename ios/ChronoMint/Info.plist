@@ -36,18 +36,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Clear Sans Bold Italic.ttf</string>
-		<string>Clear Sans Bold.ttf</string>
-		<string>Clear Sans Italic.ttf</string>
-		<string>Clear Sans Light.ttf</string>
-		<string>Clear Sans Medium Italic.ttf</string>
-		<string>Clear Sans Medium.ttf</string>
-		<string>Clear Sans Thin.ttf</string>
-		<string>Clear Sans.ttf</string>
-	</array>
+	<string></string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
