@@ -1,5 +1,7 @@
 import { Navigation } from 'react-native-navigation'
 // import { Provider } from 'react-redux'
+import I18n from 'react-native-i18n'
+import './i18n'
 // import { store } from './redux/configureStore'
 import './utils/shim'
 import registerScreens from './screens/registerScreens'
@@ -10,7 +12,7 @@ registerScreens()
 Navigation.startSingleScreenApp({
   screen: {
     screen: 'WalletsList',
-    title: 'My wallets',
+    title: I18n.t('WalletsList.title'),
     navigatorButtons: {
       leftButtons: [
         {
