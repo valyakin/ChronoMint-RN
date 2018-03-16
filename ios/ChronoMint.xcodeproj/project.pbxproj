@@ -43,7 +43,6 @@
 		7CE32D4E1F8FBDA300553485 /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE32D4C1F8FBD8600553485 /* libReactNativeNavigation.a */; };
 		7CEA816C2012099C003D028D /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		7CEBC2B61FAB680000F9B831 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CEBC2B31FAB671C00F9B831 /* libRNDeviceInfo.a */; };
-		7CEBC2B71FAB680700F9B831 /* libReactNativeLocalization.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CEBC2AC1FAB670B00F9B831 /* libReactNativeLocalization.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		9431C9884A9A4BEFAD284D51 /* libTcpSockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4ADDB85D864457088F36D71 /* libTcpSockets.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -389,13 +388,6 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = ReactNativeFingerprintScanner;
 		};
-		7CEBC2AB1FAB670B00F9B831 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7CEBC2A71FAB670B00F9B831 /* ReactNativeLocalization.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7B5D9D0A1B6AD0EA00CF3A83;
-			remoteInfo = ReactNativeLocalization;
-		};
 		7CEBC2B21FAB671C00F9B831 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7CEBC2AD1FAB671C00F9B831 /* RNDeviceInfo.xcodeproj */;
@@ -462,7 +454,6 @@
 		72FC89D8C392407B8DA6C4F1 /* libRNI18n-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNI18n-tvOS.a"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7CE32D471F8FBD8600553485 /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
-		7CEBC2A71FAB670B00F9B831 /* ReactNativeLocalization.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeLocalization.xcodeproj; path = "../node_modules/react-native-localization/ReactNativeLocalization.xcodeproj"; sourceTree = "<group>"; };
 		7CEBC2AD1FAB671C00F9B831 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		8220CB7852EA4880B04A1D64 /* libReactNativeFingerprintScanner.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeFingerprintScanner.a; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -470,7 +461,6 @@
 		88EFCCEAE495416A92E31254 /* libRNOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNOS.a; sourceTree = "<group>"; };
 		906369BE987A40CCB4E0CA4C /* TcpSockets.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = TcpSockets.xcodeproj; path = "../node_modules/react-native-tcp/ios/TcpSockets.xcodeproj"; sourceTree = "<group>"; };
 		96204FCDB74D4417B1948B84 /* libUdpSockets.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libUdpSockets.a; sourceTree = "<group>"; };
-		97633D1A6E37441487C33D98 /* ReactNativeLocalization.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeLocalization.xcodeproj; path = "../node_modules/react-native-localization/ReactNativeLocalization.xcodeproj"; sourceTree = "<group>"; };
 		986D77EEB5C5466891367789 /* Clear Sans Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Clear Sans Bold.ttf"; path = "../src/assets/fonts/Clear Sans Bold.ttf"; sourceTree = "<group>"; };
 		99E8F613E9E2488F9018175F /* libRNRandomBytes.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRandomBytes.a; sourceTree = "<group>"; };
 		9FC9EAFD67284DD68D9BEB12 /* libRNDocumentPicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDocumentPicker.a; sourceTree = "<group>"; };
@@ -497,7 +487,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CEBC2B71FAB680700F9B831 /* libReactNativeLocalization.a in Frameworks */,
 				7CEBC2B61FAB680000F9B831 /* libRNDeviceInfo.a in Frameworks */,
 				7CE32D4E1F8FBDA300553485 /* libReactNativeNavigation.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -782,14 +771,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7CEBC2A81FAB670B00F9B831 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				7CEBC2AC1FAB670B00F9B831 /* libReactNativeLocalization.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		7CEBC2AE1FAB671C00F9B831 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -803,7 +784,6 @@
 			isa = PBXGroup;
 			children = (
 				7CEBC2AD1FAB671C00F9B831 /* RNDeviceInfo.xcodeproj */,
-				7CEBC2A71FAB670B00F9B831 /* ReactNativeLocalization.xcodeproj */,
 				7CE32D471F8FBD8600553485 /* ReactNativeNavigation.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -825,7 +805,6 @@
 				692FCC9C32C84641B9F46687 /* RNOS.xcodeproj */,
 				099AA02DCE10453098B39322 /* RNFS.xcodeproj */,
 				F9D3554DEB5541FD8BAE3AF6 /* RNI18n.xcodeproj */,
-				97633D1A6E37441487C33D98 /* ReactNativeLocalization.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1055,10 +1034,6 @@
 				{
 					ProductGroup = 7CEA816720120948003D028D /* Products */;
 					ProjectRef = 84CAF3BDC12E4471B63C4E5E /* ReactNativeFingerprintScanner.xcodeproj */;
-				},
-				{
-					ProductGroup = 7CEBC2A81FAB670B00F9B831 /* Products */;
-					ProjectRef = 7CEBC2A71FAB670B00F9B831 /* ReactNativeLocalization.xcodeproj */;
 				},
 				{
 					ProductGroup = 7CE32D481F8FBD8600553485 /* Products */;
@@ -1428,13 +1403,6 @@
 			fileType = archive.ar;
 			path = libReactNativeFingerprintScanner.a;
 			remoteRef = 7CEA816A20120948003D028D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		7CEBC2AC1FAB670B00F9B831 /* libReactNativeLocalization.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libReactNativeLocalization.a;
-			remoteRef = 7CEBC2AB1FAB670B00F9B831 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		7CEBC2B31FAB671C00F9B831 /* libRNDeviceInfo.a */ = {
