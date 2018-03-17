@@ -16,7 +16,7 @@ export default {
   primary: '#614DBA',
   primaryDarkest: '#05326A',
   
-  green: '#00c853',
+  green: '#68CC8E',
   red: '#C25451',
   orange: '#FFAB00',
   blue: '#2962FF',
