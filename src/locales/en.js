@@ -75,4 +75,11 @@ export default {
     dontShare: 'Don\'t share it with anyone!',
     dontLose: 'Don\'t lose it! It cannot be recovered if you lose it.',
   },
+  AddWallet: {
+    title: 'Add a wallet',
+    bitcoinWallet: 'Bitcoin wallet',
+    litecoinWallet: 'Litecoint wallet',
+    ethereumWallet: 'Ethereum wallet',
+    nemWallet: 'NEM wallet',
+  },
 }

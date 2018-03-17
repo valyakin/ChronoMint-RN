@@ -1,6 +1,7 @@
 /* @flow */
 import * as React from 'react'
 import { FlatList, Text, View, StyleSheet, Image } from 'react-native'
+import I18n from 'react-native-i18n'
 import colors from '../utils/colors'
 import images from '../assets/images'
 
@@ -18,7 +19,7 @@ const Item = ({ title, image }) => (
 
 export default class AddWallet extends React.Component {
 
-  keyExtractor = ({ title }) => title
+  keyExtractor = ({ id }) => id
 
   renderItem = ({ item }) => <Item {...item} />
 
@@ -62,8 +63,24 @@ const styles = StyleSheet.create({
 })
 
 const data = [
-  { title: 'Bitcoin Wallet', image: images.walletBitcoin },
-  { title: 'Litecoin Wallet', image: images.walletLitecoin },
-  { title: 'Etherium Wallet', image: images.walletEtherium },
-  { title: 'Nem Wallet', image: images.walletNem },
+  {
+    id: 'bitcoin',
+    title: I18n.t('AddWallet.bitcoinWallet'),
+    image: images.walletBitcoin,
+  },
+  {
+    id: 'litecoin',
+    title: I18n.t('AddWallet.litecoinWallet'),
+    image: images.walletLitecoin,
+  },
+  {
+    id: 'ethereum',
+    title: I18n.t('AddWallet.ethereumWallet'),
+    image: images.walletEthereum,
+  },
+  {
+    id: 'nem',
+    title: I18n.t('AddWallet.nemWallet'),
+    image: images.walletNem,
+  },
 ]

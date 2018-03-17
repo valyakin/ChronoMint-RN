@@ -1,6 +1,7 @@
 /* @flow */
 import * as React from 'react'
 import { SectionList } from 'react-native'
+import I18n from 'react-native-i18n'
 import SectionHeader from '../components/SectionHeader'
 import WalletsListItem from '../components/WalletsListItem'
 import images from '../assets/images'
@@ -29,7 +30,7 @@ export default class WalletsList extends React.Component {
     if (type === 'NavBarButtonPress' && id === 'addWallet') {
       this.props.navigator.push({
         screen: 'AddWallet',
-        title: 'Add a wallet',
+        title: I18n.t('AddWallet.title'),
       })
     }
   }
