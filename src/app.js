@@ -20,6 +20,12 @@ Navigation.startSingleScreenApp({
           icon: images.burger,
         },
       ],
+      rightButtons : [
+        {
+          id: 'addWallet',
+          icon: images.plus, 
+        },
+      ],
     },
   },
   appStyle: {

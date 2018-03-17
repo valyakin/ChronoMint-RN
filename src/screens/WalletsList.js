@@ -26,6 +26,12 @@ export default class WalletsList extends React.Component {
     if (type === 'NavBarButtonPress' && id === 'drawer') {
       this.props.navigator.toggleDrawer()
     }
+    if (type === 'NavBarButtonPress' && id === 'addWallet') {
+      this.props.navigator.push({
+        screen: 'AddWallet',
+        title: 'Add a wallet',
+      })
+    }
   }
 
   keyExtractor = (item) => item.title

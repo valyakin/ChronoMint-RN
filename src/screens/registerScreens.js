@@ -13,6 +13,7 @@ import EnterPinCode from './EnterPinCode'
 import EnterPrivateKey from './EnterPrivateKey'
 import WalletsList from './WalletsList'
 import Drawer from './Drawer'
+import AddWallet from './AddWallet'
 
 export default function registerScreens (store, Provider) {
   Navigation.registerComponent('SelectLoginOption', () => SelectLoginOption, store, Provider)
@@ -28,4 +29,5 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('EnterPrivateKey', () => EnterPrivateKey, store, Provider)
   Navigation.registerComponent('WalletsList', () => WalletsList, store, Provider)
   Navigation.registerComponent('Drawer', () => Drawer, store, Provider)
+  Navigation.registerComponent('AddWallet', () => AddWallet, store, Provider)
 }
