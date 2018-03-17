@@ -82,4 +82,14 @@ export default {
     ethereumWallet: 'Ethereum wallet',
     nemWallet: 'NEM wallet',
   },
+  Drawer: {
+    wallets: 'Wallets',
+    deposits: 'Deposits',
+    exchange: 'Exchange',
+    voting: 'Voting',
+    bonuses: 'Bonuses',
+    assets: 'My Assets',
+    portfolio: 'Portfolio',
+    mainAddress: 'Main address',
+  },
 }
