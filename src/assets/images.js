@@ -25,7 +25,7 @@ export default {
   walletBadgeShared: require('./images/wallet-badge-shared.png'),
   walletBitcoin: require('./images/wallet-bitcoin.png'),
   walletLitecoin: require('./images/wallet-litecoin.png'),
-  walletEtherium: require('./images/wallet-etherium.png'),
+  walletEthereum: require('./images/wallet-ethereum.png'),
   walletNem: require('./images/wallet-nem.png'),
   wallet: require('./images/wallet.png'),
 }
