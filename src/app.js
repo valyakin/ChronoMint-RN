@@ -34,6 +34,7 @@ Navigation.startSingleScreenApp({
     navBarButtonColor: '#FFFFFF',
     statusBarTextColorScheme: 'light',
     screenBackgroundColor: '#242045',
+    hideBackButtonTitle: true,
   },
   drawer: {
     left: {
