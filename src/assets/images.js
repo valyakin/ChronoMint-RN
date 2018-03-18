@@ -27,6 +27,8 @@ export default {
   portfolio: require('./images/portfolio.png'),
   profilePhoto1: require('./images/profile-photo-1.jpg'),
   qr: require('./images/qr.png'),
+  receive: require('./images/receive.png'),
+  send: require('./images/send.png'),
   splash: require('./images/splash.png'),
   transactionReceiving: require('./images/transaction-receiving.png'),
   tune: require('./images/tune.png'),
