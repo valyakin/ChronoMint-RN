@@ -1,8 +1,9 @@
 /* @flow */
 import * as React from 'react'
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import images from '../assets/images'
 import colors from '../utils/colors'
+import WalletImage from './WalletImage'
 
 type Token = { id: string, amount: number }
 
@@ -25,44 +26,6 @@ type Props = {
   image?: number,
   mode?: WalletMode,
 }
-
-type IconProps = {
-  image?: number,
-  mode?: WalletMode,
-}
-
-const WalletImage = ({ image, mode }: IconProps) => (
-  <View style={styles.walletImageContainer}>
-    { (mode === 'default') && (
-      <Image
-        source={images.walletBadgeDefault}
-        style={styles.walletBadge}
-      />
-    )}
-    { (mode === 'shared') && (
-      <Image
-        source={images.walletBadgeShared}
-        style={styles.walletBadge}
-      />
-    )}
-    { (mode === 'locked') && (
-      <Image
-        source={images.walletBadgeLocked}
-        style={styles.walletBadge}
-      />
-    )}
-    { image ? (
-      <Image source={image} />
-    ) : (
-      <View style={styles.walletImageShape}>
-        <Image
-          source={images.wallet}
-          style={styles.walletImage}
-        />
-      </View>
-    )}
-  </View>
-)
 
 const Transactions = ({ transactions }) => !transactions ? null : (
   !transactions[1] ? (
@@ -96,15 +59,24 @@ const Exchange = ({ exchange }: ExchangeType) => !exchange ? null : (
 ) 
 
 export default class WalletsListItem extends React.Component<Props, {}> {
+  handlePress = () => {
+    this.props.navigator.push({
+      screen: 'Wallet',
+    })
+  }
   render () {
     const { title, address, balance } = this.props
     return (
-      <View style={styles.container}>
+      <TouchableOpacity style={styles.container} onPress={this.handlePress}>
         <View style={styles.transactions}>
           <Transactions transactions={this.props.transactions} />
         </View>
         <View style={styles.content}>
-          <WalletImage image={this.props.image} mode={this.props.mode} />
+          <WalletImage
+            image={this.props.image}
+            walletMode={this.props.mode}
+            style={styles.image}
+          />
           <View style={styles.contentColumn}>
             <Text style={styles.title}>
               {title}
@@ -119,7 +91,7 @@ export default class WalletsListItem extends React.Component<Props, {}> {
             <Exchange exchange={this.props.exchange} />
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 }
@@ -148,6 +120,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
   },
+  image: {
+    marginRight: 16,
+    marginLeft: 8,
+  },
   transactionsNumber: {
     color: colors.background,
     fontWeight: '900',
@@ -157,28 +133,6 @@ const styles = StyleSheet.create({
   },
   contentColumn: {
     flex: 1,
-  },
-  walletImageContainer: {
-    marginHorizontal: 16,
-  },
-  walletImageShape: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-  },
-  walletImage: {
-    tintColor: colors.background,
-  },
-  walletBadge: {
-    position: 'absolute',
-    zIndex: 1,
-    left: -4,
-    width: 20,
-    height: 20,
-    resizeMode: 'contain',
   },
   title: {
     marginTop: 8,

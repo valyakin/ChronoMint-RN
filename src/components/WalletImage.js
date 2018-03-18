@@ -5,8 +5,8 @@ import { badges } from '../utils/globals'
 import colors from '../utils/colors'
 import images from '../assets/images'
 
-const WalletImage = ({ image, walletMode, shapeStyle, imageStyle }: WalletImageProps) => (
-  <View>
+const WalletImage = ({ image, walletMode, shapeStyle, imageStyle, style }: WalletImageProps) => (
+  <View style={style}>
     { walletMode && <Image source={badges[walletMode]} style={styles.walletBadge} /> }
     { (typeof image !== 'undefined') ?
       <Image source={image} /> :

@@ -12,7 +12,7 @@ registerScreens(store, Provider)
 Navigation.startSingleScreenApp({
   screen: {
     screen: 'WalletsList',
-    title: I18n.t('WalletsList.title'),
+    title: I18n.t('Wallet.title'),
     navigatorButtons: {
       leftButtons: [
         {

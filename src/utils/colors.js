@@ -4,7 +4,7 @@ export default {
   backgroundLight: '#FFFFFF',
   backgroundDark: '#CCCCDF',
   backgroundDim: 'rgba(255, 255, 255, .1)',
-  foreground: '#242045',
+  foreground: '#333333',
   foregroundLight: '#66669F',
   foregroundLighter: '#7F7F7F',
   foregroundLightest: '#CCCCDF',
@@ -14,7 +14,7 @@ export default {
   grayDark: '#ccccdf',
   
   primary: '#614DBA',
-  primaryDark: '#786AB7',
+  primaryLight: '#786AB7',
   primaryDarkest: '#05326A',
   
   green: '#68CC8E',

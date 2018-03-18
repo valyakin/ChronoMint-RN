@@ -1,4 +1,7 @@
 export default {
+  usd: 'USD',
+  eth: 'ETH',
+  btc: 'BTC',
   WalletsList: {
     title: 'My wallets',
   },
@@ -91,5 +94,17 @@ export default {
     assets: 'My Assets',
     portfolio: 'Portfolio',
     mainAddress: 'Main address',
+  },
+  Wallet: {
+    title: 'My shared wallet',
+    signNewWalletOwner: 'Sign a new wallet owner\n{{address}}',
+    revoke: 'Revoke',
+    sign: 'Sign',
+    send: 'Send',
+    receive: 'Receive',
+  },
+  TransactionsList: {
+    receiving: 'Receiving from',
+    sending: 'Sending to',
   },
 }

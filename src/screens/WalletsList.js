@@ -37,7 +37,7 @@ export default class WalletsList extends React.Component {
 
   keyExtractor = (item) => item.title
 
-  renderItem = ({ item }) => <WalletsListItem {...item} />
+  renderItem = ({ item }) => <WalletsListItem {...item} navigator={this.props.navigator} />
 
   renderSectionHeader = ({ section }) => <SectionHeader {...section} />
 

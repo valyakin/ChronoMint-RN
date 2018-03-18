@@ -13,7 +13,11 @@ import LoginSettings from './LoginSettings'
 import PickWalletFile from './PickWalletFile'
 import SelectLoginOption from './SelectLoginOption'
 import SelectNetwork from './SelectNetwork'
+import Wallet from './Wallet'
+import WalletOwners from './WalletOwners'
 import WalletsList from './WalletsList'
+import WalletTemplates from './WalletTemplates'
+import WalletTokens from './WalletTokens'
 
 export default function registerScreens (store, Provider) {
   Navigation.registerComponent('AddWallet', () => AddWallet, store, Provider)
@@ -29,5 +33,9 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('PickWalletFile', () => PickWalletFile, store, Provider)
   Navigation.registerComponent('SelectLoginOption', () => SelectLoginOption, store, Provider)
   Navigation.registerComponent('SelectNetwork', () => SelectNetwork, store, Provider)
+  Navigation.registerComponent('Wallet', () => Wallet, store, Provider)
+  Navigation.registerComponent('WalletOwners', () => WalletOwners, store, Provider)
   Navigation.registerComponent('WalletsList', () => WalletsList, store, Provider)
+  Navigation.registerComponent('WalletTemplates', () => WalletTemplates, store, Provider)
+  Navigation.registerComponent('WalletTokens', () => WalletTokens, store, Provider)
 }

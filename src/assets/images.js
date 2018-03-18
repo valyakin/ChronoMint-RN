@@ -44,4 +44,5 @@ export default {
   walletEthereum: require('./images/wallet-ethereum.png'),
   walletLitecoin: require('./images/wallet-litecoin.png'),
   walletNem: require('./images/wallet-nem.png'),
+  walletTime: require('./images/wallet-time.png'),
 }
