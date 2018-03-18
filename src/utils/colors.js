@@ -14,6 +14,7 @@ export default {
   grayDark: '#ccccdf',
   
   primary: '#614DBA',
+  primaryDark: '#786AB7',
   primaryDarkest: '#05326A',
   
   green: '#68CC8E',
