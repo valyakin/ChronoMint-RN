@@ -60,10 +60,17 @@ const Exchange = ({ exchange }: ExchangeType) => !exchange ? null : (
 
 export default class WalletsListItem extends React.Component<Props, {}> {
   handlePress = () => {
-    this.props.navigator.push({
+    const { navigator, mode, address, token } = this.props
+    navigator.push({
       screen: 'Wallet',
+      passProps: {
+        mode,
+        address,
+        token,
+      },
     })
   }
+
   render () {
     const { title, address, balance } = this.props
     return (

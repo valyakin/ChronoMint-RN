@@ -6793,6 +6793,10 @@ react-native-randombytes@^3.0.0:
     buffer "^4.9.1"
     sjcl "^1.0.3"
 
+react-native-segment-controller@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-segment-controller/-/react-native-segment-controller-1.0.0.tgz#940dff7f25531c4fcdc690a71e5def38bece67c9"
+
 react-native-tcp@olegdizus/react-native-tcp:
   version "3.3.0"
   resolved "https://codeload.github.com/olegdizus/react-native-tcp/tar.gz/ea9927cc21e422cbb520590b31eb84a2d69c1812"

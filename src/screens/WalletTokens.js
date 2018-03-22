@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { FlatList, View, Image, Text, StyleSheet } from 'react-native'
 import I18n from 'react-native-i18n'
-import { Tabs } from './Wallet'
 import colors from '../utils/colors'
 import images from '../assets/images'
 
@@ -13,15 +12,12 @@ export default class WalletTokens extends React.Component {
 
   render () {
     return (
-      <View style={styles.screenView}>
-        <Tabs navigator={this.props.navigator} />
-        <FlatList
-          data={tokens}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-          style={styles.list}
-        />
-      </View>
+      <FlatList
+        data={tokens}
+        renderItem={this.renderItem}
+        keyExtractor={this.keyExtractor}
+        style={styles.list}
+      />
     )
   }
 }

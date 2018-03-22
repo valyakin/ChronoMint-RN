@@ -7,6 +7,21 @@ import WalletsListItem from '../components/WalletsListItem'
 import images from '../assets/images'
 
 export default class WalletsList extends React.Component {
+  static navigatorButtons = {
+    leftButtons: [
+      {
+        id: 'drawer',
+        icon: images.burger,
+      },
+    ],
+    rightButtons : [
+      {
+        id: 'addWallet',
+        icon: images.plus, 
+      },
+    ],
+  }
+  
   constructor (props) {
     super(props)
 
@@ -39,7 +54,7 @@ export default class WalletsList extends React.Component {
 
   renderItem = ({ item }) => <WalletsListItem {...item} navigator={this.props.navigator} />
 
-  renderSectionHeader = ({ section }) => <SectionHeader {...section} />
+  renderSectionHeader = ({ section }) => <SectionHeader {...section} isDark />
 
   render () {
     return (
@@ -63,6 +78,7 @@ const walletSections = [
       balance: { currency: 'BTC', amount: 15.2045 },
       exchange: { currency: 'USD', amount: 121600 },
       image: images.walletBitcoin,
+      token: 'btc',
       transactions: [
         { status: 'receiving' },
       ],

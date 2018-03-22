@@ -5,28 +5,13 @@ import './utils/shim'
 import './utils/i18n'
 import { store } from './redux/configureStore'
 import registerScreens from './screens/registerScreens'
-import images from './assets/images'
 
 registerScreens(store, Provider)
 
 Navigation.startSingleScreenApp({
   screen: {
-    screen: 'WalletsList',
+    screen: 'SelectLoginOption',
     title: I18n.t('Wallet.title'),
-    navigatorButtons: {
-      leftButtons: [
-        {
-          id: 'drawer',
-          icon: images.burger,
-        },
-      ],
-      rightButtons : [
-        {
-          id: 'addWallet',
-          icon: images.plus, 
-        },
-      ],
-    },
   },
   appStyle: {
     navBarBackgroundColor: '#614DBA',

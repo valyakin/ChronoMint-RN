@@ -12,7 +12,6 @@ import com.peel.react.TcpSocketsModule;
 import com.hieuvp.fingerprint.ReactNativeFingerprintScannerPackage;
 import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 
@@ -35,7 +34,6 @@ public class MainApplication extends NavigationApplication {
           new RNDeviceInfo(),
           new RNFSPackage(),
           new RNOSModule(),
-          new ReactNativeLocalizationPackage(),
           new RandomBytesPackage()
     );
   }

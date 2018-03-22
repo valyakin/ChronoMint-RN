@@ -10,8 +10,8 @@ export default Separator
 const styles = StyleSheet.create({
   separator: {
     backgroundColor: colors.gray,
-    minHeight: 1,
-    minWidth: 1,
+    minHeight: StyleSheet.hairlineWidth,
+    minWidth: StyleSheet.hairlineWidth,
     flexGrow: 0,
     flexShrink: 0,
     alignSelf: 'stretch',

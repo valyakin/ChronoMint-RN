@@ -18,6 +18,14 @@ import WalletOwners from './WalletOwners'
 import WalletsList from './WalletsList'
 import WalletTemplates from './WalletTemplates'
 import WalletTokens from './WalletTokens'
+import Send from './Send'
+import AddStandardWallet from './AddStandardWallet'
+import AddTimeLockedWallet from './AddTimeLockedWallet'
+import Add2FAWallet from './Add2FAWallet'
+import AddMultiSignatureWallet from './AddMultiSignatureWallet'
+import AddAdvancedWallet from './AddAdvancedWallet'
+import AddTokenToAdvancedWallet from './AddTokenToAdvancedWallet'
+import AddEthereumWallet from './AddEthereumWallet'
 
 export default function registerScreens (store, Provider) {
   Navigation.registerComponent('AddWallet', () => AddWallet, store, Provider)
@@ -38,4 +46,12 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('WalletsList', () => WalletsList, store, Provider)
   Navigation.registerComponent('WalletTemplates', () => WalletTemplates, store, Provider)
   Navigation.registerComponent('WalletTokens', () => WalletTokens, store, Provider)
+  Navigation.registerComponent('Send', () => Send, store, Provider)
+  Navigation.registerComponent('AddStandardWallet', () => AddStandardWallet, store, Provider)
+  Navigation.registerComponent('AddTimeLockedWallet', () => AddTimeLockedWallet, store, Provider)
+  Navigation.registerComponent('Add2FAWallet', () => Add2FAWallet, store, Provider)
+  Navigation.registerComponent('AddMultiSignatureWallet', () => AddMultiSignatureWallet, store, Provider)
+  Navigation.registerComponent('AddAdvancedWallet', () => AddAdvancedWallet, store, Provider)
+  Navigation.registerComponent('AddTokenToAdvancedWallet', () => AddTokenToAdvancedWallet, store, Provider)
+  Navigation.registerComponent('AddEthereumWallet', () => AddEthereumWallet, store, Provider)
 }

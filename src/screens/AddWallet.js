@@ -1,27 +1,39 @@
 /* @flow */
 import * as React from 'react'
-import { FlatList, Text, View, StyleSheet, Image } from 'react-native'
+import { FlatList, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import I18n from 'react-native-i18n'
+import Separator from '../components/Separator'
 import colors from '../utils/colors'
 import images from '../assets/images'
 
-const Separator = () => <View style={styles.separator} />
+class Item extends React.Component {
+  handlePress = () => {
+    this.props.navigator.push({
+      screen: 'AddEthereumWallet',
+    })
+  }
+  render () {
+    const { title, image } = this.props
 
-const Item = ({ title, image }) => (
-  <View style={styles.itemContainer}>
-    { (typeof image !== 'undefined') &&
-      <Image source={image} style={styles.itemImage} />
-    }
-    <Text style={styles.itemTitle}>{title}</Text>
-    <Image source={images.chevronRight} />
-  </View>
-)
-
+    return (
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={this.handlePress}
+      >
+        { (typeof image !== 'undefined') &&
+          <Image source={image} style={styles.itemImage} />
+        }
+        <Text style={styles.itemTitle}>{title}</Text>
+        <Image source={images.chevronRight} />
+      </TouchableOpacity>
+    )
+  }
+}
 export default class AddWallet extends React.Component {
 
   keyExtractor = ({ id }) => id
 
-  renderItem = ({ item }) => <Item {...item} />
+  renderItem = ({ item }) => <Item {...item} navigator={this.props.navigator} />
 
   render () {
     return (
@@ -40,10 +52,6 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: colors.background,
     flex: 1,
-  },
-  separator: {
-    backgroundColor: colors.gray,
-    height: 1,
   },
   itemContainer: {
     margin: 24,

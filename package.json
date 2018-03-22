@@ -50,6 +50,7 @@
     "react-native-navigation": "^1.1.371",
     "react-native-os": "Robdel12/react-native-os",
     "react-native-randombytes": "^3.0.0",
+    "react-native-segment-controller": "^1.0.0",
     "react-native-tcp": "olegdizus/react-native-tcp",
     "react-native-udp": "^2.1.0",
     "react-redux": "^5.0.6",

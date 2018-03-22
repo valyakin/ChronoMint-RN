@@ -38,7 +38,6 @@
 		45EB191363CF4B9ABF46B625 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FC9EAFD67284DD68D9BEB12 /* libRNDocumentPicker.a */; };
 		4889076CE2A94FB6BB999372 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F315DDDA5DDF446B92B4CE96 /* libRNFS.a */; };
 		56240342DCC24B3DA8EBCC02 /* libReactNativeFingerprintScanner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8220CB7852EA4880B04A1D64 /* libReactNativeFingerprintScanner.a */; };
-		5DD81C5A6B5F468FBCBE8574 /* libReactNativeLocalization.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A178CC8282A487D90BBC7C5 /* libReactNativeLocalization.a */; };
 		641A307990204963BFD45C18 /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 99E8F613E9E2488F9018175F /* libRNRandomBytes.a */; };
 		7CE32D4E1F8FBDA300553485 /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE32D4C1F8FBD8600553485 /* libReactNativeNavigation.a */; };
 		7CEA816C2012099C003D028D /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -509,7 +508,6 @@
 				3CBE9C1D74D5447B9F48DE1D /* libRNOS.a in Frameworks */,
 				4889076CE2A94FB6BB999372 /* libRNFS.a in Frameworks */,
 				F9E945462E3F4D2DAFCAD807 /* libRNI18n.a in Frameworks */,
-				5DD81C5A6B5F468FBCBE8574 /* libReactNativeLocalization.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1677,6 +1675,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.chronobank.chronomintapp;
 				PRODUCT_NAME = ChronoMint;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1711,6 +1710,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.chronobank.chronomintapp;
 				PRODUCT_NAME = ChronoMint;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

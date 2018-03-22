@@ -1,6 +1,6 @@
 /* @flow */
 import * as React from 'react'
-import { Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import colors from '../utils/colors'
 
 type Props = {
@@ -9,20 +9,42 @@ type Props = {
 
 export default class SectionHeader extends React.Component<Props, void> {
   render () {
+    const { title, isDark, style } = this.props
+    
+    if (isDark) {
+      return (
+        <Text style={[ styles.titleDark, style ]}>
+          {title.toUpperCase()}
+        </Text>
+      )
+    }
+
     return (
-      <Text style={styles.title}>
-        {this.props.title.toUpperCase()}
-      </Text>
+      <View style={[ styles.container, style ]}>
+        <Text style={styles.title}>
+          {title.toUpperCase()}
+        </Text>
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  title: {
+  titleDark: {
     paddingHorizontal: 16,
     paddingVertical: 12,
     color: colors.background,
     backgroundColor: colors.foreground,
     fontWeight: '900',
+  },
+  container: {
+    backgroundColor: '#EFEFF3',
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 6,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderTopColor: '#C7C7CC',
+    borderBottomColor: '#C7C7CC',
   },
 })
