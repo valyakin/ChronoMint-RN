@@ -5,16 +5,13 @@ import { createStore, applyMiddleware, compose } from 'redux'
 // import { reducer as formReducer } from 'redux-form/immutable'
 // import { loadTranslations, setLocale, i18nReducer, I18n } from 'platform/i18n'
 // import moment from 'moment'
-// import saveAccountMiddleWare from '@chronobank/mint/src/redux/session/saveAccountMiddleWare'
-// import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux'
+import { composeWithDevTools } from 'remote-redux-devtools'
+import saveAccountMiddleWare from 'redux/session/saveAccountMiddleWare'
 import thunk from 'redux-thunk'
 // import ls from 'utils/LocalStorage'
-import * as ducks from './ducks'
-// import { globalWatcher } from 'redux/watcher/actions'
-// import routingReducer from './routing'
+// import { globalWatcher } from '@chronobank/mint/src/redux/watcher/actions'
 import { SESSION_DESTROY } from 'redux/session/actions'
-
-// const historyEngine = process.env.NODE_ENV === 'standalone' ? createMemoryHistory() : browserHistory
+import * as ducks from './ducks'
 
 const getNestedReducers = (ducks) => {
   let reducers = {}
@@ -25,20 +22,6 @@ const getNestedReducers = (ducks) => {
 
   return reducers
 }
-
-// Create enhanced history object for router
-// const createSelectLocationState = () => {
-//   let prevRoutingState,
-//     prevRoutingStateJS
-//   return (state) => {
-//     const routingState = state.get('routing') // or state.routing
-//     if (typeof prevRoutingState === 'undefined' || prevRoutingState !== routingState) {
-//       prevRoutingState = routingState
-//       prevRoutingStateJS = routingState.toJS()
-//     }
-//     return prevRoutingStateJS
-//   }
-// }
 
 // add noised action here
 // const IGNORED_ACTIONS = [
@@ -60,9 +43,6 @@ const configureStore = () => {
   const initialState = new Immutable.Map()
 
   const appReducer = combineReducers({
-    // form: formReducer,
-    // i18n: i18nReducer,
-    // routing: routingReducer,
     ...getNestedReducers(ducks),
   })
 
@@ -79,16 +59,16 @@ const configureStore = () => {
     return appReducer(state, action)
   }
 
+  const composeEnhancers = __DEV__ ? composeWithDevTools({ realtime: true }) : compose
+  // const composeEnhancers = composeWithDevTools({ realtime: true })
+
   // noinspection JSUnresolvedVariable,JSUnresolvedFunction
-  const createStoreWithMiddleware = compose(
+  const createStoreWithMiddleware = composeEnhancers(
     applyMiddleware(
       thunk,
       // routerMiddleware(historyEngine),
-      // saveAccountMiddleWare
-    ),
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-      ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__()
-      : (f) => f,
+      saveAccountMiddleWare
+    )
   )(createStore)
 
   return createStoreWithMiddleware(
@@ -99,10 +79,6 @@ const configureStore = () => {
 
 export const store = configureStore()
 // store.dispatch(globalWatcher())
-
-// export const history = syncHistoryWithStore(historyEngine, store, {
-//   selectLocationState: createSelectLocationState(),
-// })
 
 // export const DUCK_I18N = 'i18n'
 

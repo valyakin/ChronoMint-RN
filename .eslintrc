@@ -1,6 +1,25 @@
 {
   "extends": ["plugin:chronobank-react/recommended"],
+  "plugins": [
+    "flowtype",
+    "react-native"
+  ],
+  "ecmaFeatures": {
+    "jsx": true
+  },
+  "env": {
+    "react-native/react-native": true
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
+  },
   "rules": {
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "global-require": 0,
+    "react-native/no-unused-styles": 2,
+    "react-native/split-platform-components": 2,
+    "react-native/no-inline-styles": 2
   }
 }

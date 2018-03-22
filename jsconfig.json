@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "jsx": "react-native",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "*": ["src/*", "./mint/src/*"],
+      "chronobank/login/*": ["./mint/packages/login/*"]
+    }
   },
   "exclude": [
     "node_modules"
