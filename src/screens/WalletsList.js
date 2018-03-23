@@ -40,7 +40,7 @@ export default class WalletsList extends React.Component {
   
   onNavigatorEvent = ({ type, id }) => {
     if (type === 'NavBarButtonPress' && id === 'drawer') {
-      this.props.navigator.toggleDrawer()
+      this.props.navigator.toggleDrawer({ side: 'left' })
     }
     if (type === 'NavBarButtonPress' && id === 'addWallet') {
       this.props.navigator.push({
