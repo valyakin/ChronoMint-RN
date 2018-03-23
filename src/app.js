@@ -24,7 +24,6 @@ Navigation.startSingleScreenApp({
   drawer: {
     left: {
       screen: 'Drawer',
-      fixedWidth: 320,
     },
     animationType: 'parallax',
   },
