@@ -1,8 +1,9 @@
-import { Navigation } from 'react-native-navigation'
-import screens from './src/screens'
+// eslint-disable-next-line no-console
+console.ignoredYellowBox = [
+  'Warning: componentWillMount',
+  'Warning: componentWillReceiveProps',
+  'Warning: componentWillUpdate',
+  'Can\'t restore local session',
+]
 
-Navigation.startSingleScreenApp({
-  screen: {
-    screen: screens.SplashScreen
-  }
-})
+require('./src/app.js')

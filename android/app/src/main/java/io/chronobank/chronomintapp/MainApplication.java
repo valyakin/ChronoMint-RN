@@ -1,13 +1,17 @@
 package io.chronobank.chronomintapp;
 
 import android.support.annotation.Nullable;
-
+import com.bitgo.randombytes.RandomBytesPackage;
 import com.reactnativenavigation.NavigationApplication;
 import com.facebook.react.ReactApplication;
+import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
+import com.rnfs.RNFSPackage;
+import com.peel.react.rnos.RNOSModule;
+import com.tradle.react.UdpSocketsModule;
+import com.peel.react.TcpSocketsModule;
 import com.hieuvp.fingerprint.ReactNativeFingerprintScannerPackage;
 import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 
@@ -28,17 +32,17 @@ public class MainApplication extends NavigationApplication {
           new ReactNativeFingerprintScannerPackage(),
           new ReactNativeDocumentPicker(),
           new RNDeviceInfo(),
-          new ReactNativeLocalizationPackage()
+          new RNFSPackage(),
+          new RNOSModule(),
+          new RandomBytesPackage()
     );
   }
 
-  @Nullable
   @Override
   public List<ReactPackage> createAdditionalReactPackages() {
       return getPackages();
   }
 
-  @Nullable
   @Override
   public String getJSMainModuleName() {
     return "index";

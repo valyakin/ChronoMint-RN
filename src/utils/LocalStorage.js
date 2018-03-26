@@ -1,6 +1,6 @@
-import { AsyncStorage } from 'react-native'
+// import { AsyncStorage } from 'react-native'
 import { LOCAL_ID, LOCAL_PROVIDER_ID } from '@chronobank/login/network/settings'
-import logger from 'src/utils/logger'
+// import logger from 'src/utils/logger'
 
 class Storage {
   /**

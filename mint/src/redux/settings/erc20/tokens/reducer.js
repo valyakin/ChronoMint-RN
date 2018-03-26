@@ -1,0 +1,25 @@
+import TokenModel from 'models/tokens/TokenModel'
+import * as a from './actions'
+
+const initialState = {
+  selected: new TokenModel(),
+  formFetching: false,
+  isFetched: false,
+}
+
+export default (state = initialState, action) => {
+  switch (action.type) {
+    case a.TOKENS_FORM:
+      return {
+        ...state,
+        selected: action.token,
+      }
+    case a.TOKENS_FORM_FETCH:
+      return {
+        ...state,
+        formFetching: !(action.end || false),
+      }
+    default:
+      return state
+  }
+}

@@ -1,24 +1,24 @@
 // import ipfsAPI from 'ipfs-api'
-// import promisify from 'promisify-node-callback'
+import promisify from 'promisify-node-callback'
 import FileCollection from 'models/FileSelect/FileCollection'
 import FileModel, { fileConfig } from 'models/FileSelect/FileModel'
 
-const DEFAULT_CONFIG = {
-  host: 'ipfs.infura.io',
-  port: 5001,
-  protocol: 'https',
-}
+// const DEFAULT_CONFIG = {
+//   host: 'ipfs.infura.io',
+//   port: 5001,
+//   protocol: 'https',
+// }
 
 type webkitURL = {
   createObjectURL: Function
 }
 
 class IPFS {
-  constructor (config) {
-    this._api = ipfsAPI(config || DEFAULT_CONFIG)
+  constructor () {
+    this._api = {}
   }
 
-  getAPI (): ipfsAPI {
+  getAPI () {
     return this._api
   }
 
