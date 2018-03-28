@@ -18,6 +18,7 @@
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
     "browserify-zlib": "~0.1.4",
+    "capture-stack-trace": "^1.0.0",
     "chronobank-smart-contracts": "1.1.45",
     "coinselect": "^3.1.11",
     "console-browserify": "^1.1.0",
