@@ -1,7 +1,13 @@
 /* @flow */
 import * as React from 'react'
-import { View, Text, ImageBackground, StyleSheet, Platform } from 'react-native'
-import Logo from '../components/Logo'
+import {
+  View,
+  Text,
+  ImageBackground,
+  StyleSheet,
+  Platform,
+  Image,
+} from 'react-native'
 import FetchingIndicator from '../components/FetchingIndicator'
 import images from '../assets/images'
 import colors from '../utils/colors'
