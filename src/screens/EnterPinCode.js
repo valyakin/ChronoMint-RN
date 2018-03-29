@@ -35,7 +35,7 @@ const PinBullet = (props: PinBulletProps) =>
 const FingerprintButton = (props) => (
   <TouchableOpacity onPress={props.onPress}>
     <Image
-      source={require('../images/fingerprint.png')}
+      source={require('../images/bio.png')}
     />
   </TouchableOpacity>
 )

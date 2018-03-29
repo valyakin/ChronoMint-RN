@@ -102,14 +102,14 @@ const walletTypes = [
   },
   {
     id: 'timeLocked',
-    image: require('../images/wallet-time-locked.png'),
+    image: require('../images/type-time-locked-circle-small.png'),
     title: 'Time Locked',
     description: 'Make this wallet active for transactions on specific date and time.',
     screen: 'AddTimeLockedWallet',
   },
   {
     id: 'twoFA',
-    image: require('../images/wallet-2fa.png'),
+    image: require('../images/type-2fa-circle-small.png'),
     title: '2 Factor Authentucation',
     description: 'Protect your Wallet from unauthorized access by enabling two-factor authentication.',
     screen: 'Add2FAWallet',
@@ -117,14 +117,14 @@ const walletTypes = [
   {
     id: 'multisignature',
     title: 'Multi-Signature',
-    image: require('../images/wallet-multisig.png'),
+    image: require('../images/type-shared-circle-small.png'),
     description: 'Make the wallet controlled by multiple owners.',
     screen: 'AddMultiSignatureWallet',
   },
   {
     id: 'advanced',
     title: 'Advanced',
-    image: require('../images/wallet-advanced.png'),
+    image: require('../images/type-advanced-circle-small.png'),
     description: 'Make the wallet with custom tokens.',
     screen: 'AddAdvancedWallet',
   },
