@@ -48,7 +48,7 @@ const Label = (props: LabelProps) => {
   )
 }
 
-type Props = {
+type ButtonProps = {
   label?: string,
   icon?: number,
   isDark?: boolean,
@@ -58,7 +58,7 @@ type Props = {
   iconPosition?: IconPosition
 }
 
-class Button extends React.Component<Props, {}> {
+class Button extends React.Component<ButtonProps, {}> {
   handlePress = (event: MouseEvent) => {
     const { isDisabled, onPress } = this.props
 

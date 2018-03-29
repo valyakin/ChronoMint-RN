@@ -4,7 +4,7 @@ import { View, Image, Text, StyleSheet, FlatList } from 'react-native'
 import I18n from 'react-native-i18n'
 import colors from '../utils/colors'
 
-export default class TransactionsList extends React.Component<Props> {
+export default class TransactionsList extends React.Component<TransactionsListProps> {
   keyExtractor = ({ id }) => id
 
   renderItem = ({ item }) => <TransactionItem {...item} /> 
@@ -88,7 +88,7 @@ const transactionImages = {
   },
 }
 
-type Props = {
+type TransactionsListProps = {
   transactions?: Array<TransactionProps> 
 }
 
