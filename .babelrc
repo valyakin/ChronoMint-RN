@@ -9,7 +9,6 @@
     ["module-resolver", {
       "root": ["./src", "./mint/src"],
       "alias": {
-        "chronobank/login": "./mint/packages/login",
         "crypto": "react-native-crypto",
         "zlib": "browserify-zlib",
         "console": "console-browserify",

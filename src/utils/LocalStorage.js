@@ -1,6 +1,10 @@
-// import { AsyncStorage } from 'react-native'
-import { LOCAL_ID, LOCAL_PROVIDER_ID } from '@chronobank/login/network/settings'
-// import logger from 'src/utils/logger'
+/* eslint-disable no-underscore-dangle */
+import { AsyncStorage } from 'react-native'
+import {
+  LOCAL_ID,
+  LOCAL_PROVIDER_ID,
+} from '../../mint/packages/login/network/settings'
+import logger from '../utils/logger'
 
 class Storage {
   /**

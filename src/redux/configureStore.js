@@ -6,11 +6,10 @@ import { createStore, applyMiddleware, compose } from 'redux'
 // import { loadTranslations, setLocale, i18nReducer, I18n } from 'platform/i18n'
 // import moment from 'moment'
 import { composeWithDevTools } from 'remote-redux-devtools'
-import saveAccountMiddleWare from 'redux/session/saveAccountMiddleWare'
-import thunk from 'redux-thunk'
+import saveAccountMiddleWare from './session/saveAccountMiddleWare'
 // import ls from 'utils/LocalStorage'
 // import { globalWatcher } from '@chronobank/mint/src/redux/watcher/actions'
-import { SESSION_DESTROY } from 'redux/session/actions'
+import { SESSION_DESTROY } from './session/actions'
 import * as ducks from './ducks'
 
 const getNestedReducers = (ducks) => {
