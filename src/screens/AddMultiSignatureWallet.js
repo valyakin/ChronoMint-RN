@@ -15,6 +15,7 @@ import colors from '../utils/colors'
 import images from '../assets/images'
 
 export default class AddTimeLockedWallet extends React.Component {
+  // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
     leftButtons: [
       {
@@ -111,7 +112,7 @@ const WalletOwner = ({ name, address, image }) => (
       <Text style={styles.walletOwnerName}>
         {name}
       </Text>
-      <Text style={styles.walletOwnerAddress}>
+      <Text>
         {address}
       </Text>
     </View>

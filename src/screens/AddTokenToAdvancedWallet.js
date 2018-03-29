@@ -5,6 +5,7 @@ import Separator from '../components/Separator'
 import colors from '../utils/colors'
 
 export default class AddTokenToAdvancedWallet extends React.Component {
+  // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
     leftButtons: [
       {

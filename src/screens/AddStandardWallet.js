@@ -4,6 +4,7 @@ import { View, TextInput, StyleSheet } from 'react-native'
 import colors from '../utils/colors'
 
 export default class AddStandardWallet extends React.Component {
+  // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
     leftButtons: [
       {

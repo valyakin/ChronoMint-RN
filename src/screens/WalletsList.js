@@ -7,6 +7,7 @@ import WalletsListItem from '../components/WalletsListItem'
 import images from '../assets/images'
 
 export default class WalletsList extends React.Component {
+  // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
     leftButtons: [
       {

@@ -4,7 +4,8 @@ import { Text, ScrollView, StyleSheet, Image } from 'react-native'
 import colors from '../utils/colors'
 import images from '../assets/images'
 
-export default class AddTimeLockedWallet extends React.Component {
+export default class Download2FAApp extends React.Component {
+  // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
     leftButtons: [
       {
