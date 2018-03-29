@@ -4,9 +4,9 @@ import { View, Text, TextInput, StyleSheet, Image } from 'react-native'
 import SectionHeader from '../components/SectionHeader'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 export default class AddTimeLockedWallet extends React.Component {
+  // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
     leftButtons: [
       {
@@ -46,13 +46,13 @@ export default class AddTimeLockedWallet extends React.Component {
         <View style={styles.selector}>
           <Text style={styles.selectorLabel}>Date:&nbsp;</Text>
           <Text style={styles.selectorValue}>20-02-2018</Text>
-          <Image source={images.chevronDown} style={styles.selectorImage} />
+          <Image source={require('../images/chevron-down.png')} style={styles.selectorImage} />
         </View>
         <Separator />
         <View style={styles.selector}>
           <Text style={styles.selectorLabel}>Time:&nbsp;</Text>
           <Text style={styles.selectorValue}>10:30 PM</Text>
-          <Image source={images.chevronDown} style={styles.selectorImage} />
+          <Image source={require('../images/chevron-down.png')} style={styles.selectorImage} />
         </View>
         <View style={styles.descriptionContainer}>
           <Text style={styles.description}>

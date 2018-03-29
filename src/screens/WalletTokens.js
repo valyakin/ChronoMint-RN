@@ -3,7 +3,6 @@ import * as React from 'react'
 import { FlatList, View, Image, Text, StyleSheet } from 'react-native'
 import I18n from 'react-native-i18n'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 export default class WalletTokens extends React.Component {
   keyExtractor = ({ id }) => id
@@ -44,9 +43,6 @@ class Token extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  screenView: {
-    flex: 1,
-  },
   list: {
     paddingVertical: 16,
     flexGrow: 1,
@@ -83,13 +79,13 @@ const tokens = [
       currency: 'USD',
       amount: 10000,
     },
-    image: images.walletEthereum,
+    image: require('../images/coin-ethereum-small.png'),
   },
   {
     id: 'TIME',
     symbol: 'TIME',
     value: 10,
-    image: images.walletTime,
+    image: require('../images/coin-time-small.png'),
     balance: {
       currency: 'USD',
       amount: 10000,

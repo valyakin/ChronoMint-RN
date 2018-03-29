@@ -7,6 +7,7 @@ const Separator = ({ style }) => <View style={[styles.separator, style ]} />
 
 export default Separator
 
+// noinspection JSSuspiciousNameCombination
 const styles = StyleSheet.create({
   separator: {
     backgroundColor: colors.gray,

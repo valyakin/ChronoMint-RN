@@ -5,7 +5,6 @@ import I18n from 'react-native-i18n'
 import List from '../components/List'
 import screenLayout from '../utils/screenLayout'
 import LoginSettingsLayout from './LoginSettingsLayout'
-import images from '../assets/images'
 
 type LoginSettingsProps = {
   navigator: {
@@ -41,20 +40,20 @@ class LoginSettings extends React.Component<LoginSettingsProps, {}> {
             {
               key: I18n.t('LoginSettings.network'),
               hasArrow: true,
-              icon: images.network,
+              icon: require('../images/network.png'),
               onPress: this.handleSelectNetwork,
             },
             {
               key: I18n.t('LoginSettings.language'),
               hasArrow: true,
-              icon: images.comment,
+              icon: require('../images/comment.png'),
               value: 'English',
               onPress: this.handleChangeLanguage,
             },
             {
               key: I18n.t('LoginSettings.faq'),
               hasArrow: true,
-              icon: images.helpCircle,
+              icon: require('../images/help-circle.png'),
               onPress: this.handleFaq,
             },
           ]}

@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-import images from '../assets/images'
 import colors from '../utils/colors'
 import Separator from '../components/Separator'
 import WalletTransactions from './WalletTransactions'
@@ -93,54 +92,14 @@ export default class Wallet extends React.Component {
         <View style={styles.actions}>
           <ActionButton
             title={I18n.t('Wallet.send')}
-            image={images.send}
+            image={require('../images/send-ios.png')}
             onPress={this.handleSend}
           />
           <ActionButton
             title={I18n.t('Wallet.receive')}
-            image={images.receive}
+            image={require('../images/receive-ios.png')}
           />
         </View>
-      </View>
-    )
-  }
-}
-
-export class Tabs extends React.Component {
-
-  handleTokens = () => {
-    this.props.navigator.pop({ animationType: 'fade' })
-    this.props.navigator.push({ screen: 'WalletTokens', animationType: 'fade' })
-  }
-
-  handleOwners = () => {
-    this.props.navigator.pop({ animationType: 'fade' })
-    this.props.navigator.push({ screen: 'WalletOwners', animationType: 'fade' })
-  }
-
-  handleTemplates = () => {
-    this.props.navigator.pop({ animationType: 'fade' })
-    this.props.navigator.push({ screen: 'WalletTemplates', animationType: 'fade' })
-  }
-
-  render () {
-    return (
-      <View style={styles.tabsContainer}>  
-        <Text style={styles.tabItem}>
-          Transactions
-        </Text>
-        <Separator style={styles.separator} />
-        <Text style={styles.tabItem} onPress={this.handleTokens}>
-          Tokens
-        </Text>
-        <Separator style={styles.separator} />
-        <Text style={styles.tabItem} onPress={this.handleOwners}>
-          Owners
-        </Text>
-        <Separator style={styles.separator} />
-        <Text style={styles.tabItem} onPress={this.handleTemplates}>
-          Templates
-        </Text>
       </View>
     )
   }

@@ -1,7 +1,6 @@
 /* @flow */
 import React from 'react'
 import { Image, TouchableOpacity, StyleSheet, Text } from 'react-native'
-import images from '../assets/images'
 import colors from '../utils/colors'
 
 type Props = {
@@ -13,8 +12,8 @@ type Props = {
 
 const checkboxIcon = (isChecked) => {
   return isChecked ?
-    images.checkboxChecked :
-    images.checkbox
+    require('../images/checkbox-checked.png') :
+    require('../images/checkbox.png')
 }
 
 const Checkbox = ({ label, isDark, isChecked, onPress }: Props) => (

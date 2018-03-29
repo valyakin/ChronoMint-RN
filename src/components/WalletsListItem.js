@@ -1,7 +1,6 @@
 /* @flow */
 import * as React from 'react'
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import images from '../assets/images'
 import colors from '../utils/colors'
 import WalletImage from './WalletImage'
 
@@ -11,9 +10,9 @@ type Transaction = { status?: 'receiving' | null }
 
 type ExchangeType = { currency: string, amount: number }
 
-type WalletMode = 'default' | 'shared' | 'locked'
+type WalletMode = '2fa' | 'shared' | 'timeLocked'
 
-type Props = {
+type WalletListItemProps = {
   title: string,
   address: string,
   balance: {
@@ -30,7 +29,7 @@ type Props = {
 const Transactions = ({ transactions }) => !transactions ? null : (
   !transactions[1] ? (
     <Image
-      source={images.transactionReceiving}
+      source={require('../images/indicator-receiving-25.png')}
     />
   ) : (
     <View style={styles.transactionsNumberContainer}>
@@ -54,11 +53,11 @@ const TokensList = ({ tokens }) => !(tokens || [])[0] ? null : (
 
 const Exchange = ({ exchange }: ExchangeType) => !exchange ? null : (
   <Text style={styles.exchange}>
-    {exchange.currency} {exchange.amount.tol}
+    {exchange.currency} {exchange.amount}
   </Text>
 ) 
 
-export default class WalletsListItem extends React.Component<Props, {}> {
+export default class WalletsListItem extends React.Component<WalletListItemProps, {}> {
   handlePress = () => {
     const { navigator, mode, address, token } = this.props
     navigator.push({

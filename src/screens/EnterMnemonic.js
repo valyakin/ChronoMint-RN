@@ -7,7 +7,6 @@ import Input from '../components/Input'
 import Button from '../components/Button'
 import LoginScreenLayout from './LoginScreenLayout'
 import screenLayout from '../utils/screenLayout'
-import images from '../assets/images'
 import colors from '../utils/colors'
 
 type Props = {
@@ -74,7 +73,7 @@ class EnterMnemonic extends React.Component<Props, State> {
           }
           <Button
             isDark
-            icon={images.mnemonic}
+            icon={require('../images/mnemonic.png')}
             style={styles.generateButton}
             label={I18n.t('EnterMnemonic.generateMnemonic')}
             onPress={this.handleGenerateMnemonic}

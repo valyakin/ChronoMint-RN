@@ -13,9 +13,9 @@ import {
 import SectionHeader from '../components/SectionHeader'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 export default class AddTimeLockedWallet extends React.Component {
+  // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
     leftButtons: [
       {
@@ -131,12 +131,12 @@ const tokens = [
   {
     id: 'eth',
     title: 'Ethereum',
-    image: images.walletEthereum,
+    image: require('../images/coin-bitcoin-small.png'),
     isChecked: true,
   },
   {
     id: 'time',
     title: 'Time',
-    image: images.walletTime,
+    image: require('../images/coin-time-small.png'),
   },
 ]

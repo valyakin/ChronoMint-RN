@@ -14,9 +14,7 @@ import I18n from 'react-native-i18n'
 import screenLayout from '../utils/screenLayout'
 import LoginScreenLayout from './LoginScreenLayout'
 import FetchingIndicator from '../components/FetchingIndicator'
-import Spacer from '../components/Spacer'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 const makeArray = (callback) =>
   (times, ...rest) =>
@@ -37,14 +35,14 @@ const PinBullet = (props: PinBulletProps) =>
 const FingerprintButton = (props) => (
   <TouchableOpacity onPress={props.onPress}>
     <Image
-      source={images.fingerprint}
+      source={require('../images/bio.png')}
     />
   </TouchableOpacity>
 )
 
 type Props = {
   navigator: {
-    push: ({ screen: React.Node }) => void
+    push: () => void
   }
 }
 
@@ -97,7 +95,7 @@ class EnterPinCode extends React.Component<Props, {}> {
           onChangeText={this.handleEnterPin}
           style={styles.pinInput}
         />
-        <Spacer />
+        <View style={styles.spacer} />
         <View style={styles.bottomActions}>
           <FetchingIndicator />
           <FingerprintButton
@@ -113,6 +111,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  spacer: { flex: 1 },
   bulletsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

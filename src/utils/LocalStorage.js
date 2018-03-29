@@ -1,32 +1,37 @@
-// import { AsyncStorage } from 'react-native'
-import { LOCAL_ID, LOCAL_PROVIDER_ID } from '@chronobank/login/network/settings'
-// import logger from 'src/utils/logger'
+/* eslint-disable no-underscore-dangle */
+import { AsyncStorage } from 'react-native'
+import {
+  LOCAL_ID,
+  LOCAL_PROVIDER_ID,
+} from '../../mint/packages/login/network/settings'
+import logger from '../utils/logger'
 
 class Storage {
   /**
    * Fetches key and passes the result to callback, along with an Error if there is any.
    * @param {string} key 
-   * @callback callback
+   * @param {callback} callback
    */
-  getItem = async (key, callback) => {
-    return await AsyncStorage.getItem(key, callback)
+  getItem = (key, callback) => {
+    return AsyncStorage.getItem(key, callback)
   }
 
   /**
    * Sets value for key and calls callback on completion, along with an Error if there is any.
    * @param {string} key
    * @param {string} value
-   * @callback callback
+   * @param {callback} callback
    */
-  setItem = async (key, value, callback) => {
-    return await AsyncStorage.setItem(key, value, callback)
+  setItem = (key, value, callback) => {
+    return AsyncStorage.setItem(key, value, callback)
   }
 
   /**
    * @param {string} key
+   * @param {Function} callback
    */
-  removeItem = async (key, callback) => {
-    return await AsyncStorage.removeItem(key, callback)
+  removeItem = (key, callback) => {
+    return AsyncStorage.removeItem(key, callback)
   }
 
 }
@@ -65,9 +70,9 @@ const _getFromLS = async (key) => {
  * @param {string} key
  * @param {Object} data
  */
-const _setToLS = async (key, data) => {
+const _setToLS = (key, data) => {
   if (hasLocalStorage) {
-    return await storage.setItem(key, JSON.stringify(data))
+    return storage.setItem(key, JSON.stringify(data))
   }
 }
 
@@ -75,9 +80,9 @@ const _setToLS = async (key, data) => {
  * 
  * @param {string} key 
  */
-const _removeFromLS = async (key) => {
+const _removeFromLS = (key) => {
   if (hasLocalStorage) {
-    return await storage.removeItem(key)
+    return storage.removeItem(key)
   }
 }
 
@@ -121,28 +126,28 @@ class LocalStorage {
     _localAccount = null
     _locale = this.getLocale()
     if (provider === LOCAL_PROVIDER_ID && network === LOCAL_ID) {
-      this.setLocalAccount(account)
+      LocalStorage.setLocalAccount(account)
     }
     _memoryWithToken = _getFromLS(_token) || {}
   }
 
-  isSession () {
+  static isSession () {
     return !!_token
   }
 
-  getToken () {
+  static getToken () {
     return _token
   }
 
-  getNetwork () {
+  static getNetwork () {
     return _network
   }
 
-  getProvider () {
+  static getProvider () {
     return _provider
   }
 
-  destroySession () {
+  static destroySession () {
     _account = null
     _provider = null
     _network = null
@@ -155,20 +160,20 @@ class LocalStorage {
     logger.info('LocalStorage: session destroyed')
   }
 
-  setLocalAccount (account) {
+  static setLocalAccount (account) {
     _localAccount = account
 
     _setToLS(TEST_RPC_ACCOUNT, account)
   }
 
-  getLocalAccount = async () => {
-    return _localAccount || await _getFromLS(TEST_RPC_ACCOUNT)
+  getLocalAccount = () => {
+    return _localAccount || _getFromLS(TEST_RPC_ACCOUNT)
   }
 
   // TODO @dkchv: remove this! Use state.get('session').account instead
   // TODO @bshevchenko: I've removed @deprecated to hide confusing IDE inspections, we should provide complete and...
   // TODO @bshevchenko: ...proper solution for all cases before marking this method as deprecated.
-  getAccount () {
+  static getAccount () {
     if (!_token) {
       logger.warn('getAccount', ERROR_NO_TOKEN)
 
@@ -182,7 +187,7 @@ class LocalStorage {
    * Set locale directly
    * @param {string} locale 
    */
-  setLocale (locale) {
+  static setLocale (locale) {
     _locale = locale
     _setToLS(LOCALE, locale)
   }
@@ -194,11 +199,11 @@ class LocalStorage {
   /**
    * @param {string} url 
    */
-  setLastURL (url) {
+  static setLastURL (url) {
     return _set(LAST_URL, url)
   }
 
-  getLastURL () {
+  static getLastURL () {
     return _get(LAST_URL)
   }
 }

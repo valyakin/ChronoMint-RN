@@ -2,10 +2,9 @@
 import * as React from 'react'
 import { View, Image, Text, StyleSheet, FlatList } from 'react-native'
 import I18n from 'react-native-i18n'
-import images from '../assets/images'
 import colors from '../utils/colors'
 
-export default class TransactionsList extends React.Component<Props> {
+export default class TransactionsList extends React.Component<TransactionsListProps> {
   keyExtractor = ({ id }) => id
 
   renderItem = ({ item }) => <TransactionItem {...item} /> 
@@ -35,7 +34,6 @@ class TransactionItem extends React.Component<TransactionProps> {
       <View style={styles.item}>
         <Image
           source={transactionImages[type][confirmations]}
-          style={styles.transactionImage}
         />
         <View>
           <Text />
@@ -49,7 +47,7 @@ class TransactionItem extends React.Component<TransactionProps> {
           {'\n'}
           {address}
         </Text>
-        <Text style={[ styles.transactionValue, transactionValueStyles[type] ]}>
+        <Text style={transactionValueStyles[type]}>
           {I18n.toCurrency(value, { precision: 2, unit: ` ${symbol} ` })}
         </Text>
       </View>
@@ -83,14 +81,14 @@ const transactionValueStyles = StyleSheet.create({
 
 const transactionImages = {
   receiving: {
-    1: images.transactionReceiving1,
+    1: require('../images/receiving-25-circle-small.png'),
   },
   sending: {
-    1: images.transactionSending1,
+    1: require('../images/sending-25-circle-small.png'),
   },
 }
 
-type Props = {
+type TransactionsListProps = {
   transactions?: Array<TransactionProps> 
 }
 

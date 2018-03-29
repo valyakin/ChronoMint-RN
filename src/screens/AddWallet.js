@@ -4,7 +4,6 @@ import { FlatList, Text, StyleSheet, Image, TouchableOpacity } from 'react-nativ
 import I18n from 'react-native-i18n'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 class Item extends React.Component {
   handlePress = () => {
@@ -24,7 +23,7 @@ class Item extends React.Component {
           <Image source={image} style={styles.itemImage} />
         }
         <Text style={styles.itemTitle}>{title}</Text>
-        <Image source={images.chevronRight} />
+        <Image source={require('../images/chevron-right.png')} />
       </TouchableOpacity>
     )
   }
@@ -74,21 +73,21 @@ const data = [
   {
     id: 'bitcoin',
     title: I18n.t('AddWallet.bitcoinWallet'),
-    image: images.walletBitcoin,
+    image: require('../images/coin-bitcoin-big.png'),
   },
   {
     id: 'litecoin',
     title: I18n.t('AddWallet.litecoinWallet'),
-    image: images.walletLitecoin,
+    image: require('../images/coin-litecoin-big.png'),
   },
   {
     id: 'ethereum',
     title: I18n.t('AddWallet.ethereumWallet'),
-    image: images.walletEthereum,
+    image: require('../images/coin-ethereum-big.png'),
   },
   {
     id: 'nem',
     title: I18n.t('AddWallet.nemWallet'),
-    image: images.walletNem,
+    image: require('../images/coin-nem-big.png'),
   },
 ]

@@ -1,20 +1,20 @@
 class Logger {
-  log () {
+  static log () {
     if (!__DEV__) return
     console.log(arguments) // eslint-disable-line
   }
   
-  warn () {
+  static warn () {
     if (!__DEV__) return
     console.warn(arguments) // eslint-disable-line
   }
 
-  error () {
+  static error () {
     if (!__DEV__) return
     console.error(arguments) // eslint-disable-line
   }
 
-  info () {
+  static info () {
     if (!__DEV__) return
     console.info(arguments) // eslint-disable-line
   }

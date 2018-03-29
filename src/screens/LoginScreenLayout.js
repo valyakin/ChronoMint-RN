@@ -1,9 +1,14 @@
 /* @flow */
 import * as React from 'react'
-import { View, Text, ImageBackground, StyleSheet, Platform } from 'react-native'
-import Logo from '../components/Logo'
+import {
+  View,
+  Text,
+  ImageBackground,
+  StyleSheet,
+  Platform,
+  Image,
+} from 'react-native'
 import FetchingIndicator from '../components/FetchingIndicator'
-import images from '../assets/images'
 import colors from '../utils/colors'
 
 type ScreenOptions = {
@@ -34,7 +39,7 @@ export default class LoginSceneLayout extends React.Component<Props> {
   static navigatorButtons = {
     rightButtons: [
       {
-        icon: images.tune,
+        icon: require('../images/tune.png'),
         id: 'loginSettings',
       },
     ],
@@ -63,10 +68,15 @@ export default class LoginSceneLayout extends React.Component<Props> {
 
     return (
       <ImageBackground
-        source={images.gradient}
+        source={require('../images/gradient.png')}
         style={styles.container}
       >
-        { hasLogo && <Logo style={styles.logo} /> }
+        { hasLogo && (
+          <Image
+            source={require('../images/logo.png')}
+            style={styles.logo}
+          />
+        ) }
         { title && <Text style={styles.title}>{title}</Text> }
         { subtitle && <Text style={styles.subtitle}>{subtitle}</Text> }
         <View style={styles.contentArea} >

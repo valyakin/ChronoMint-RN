@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import Separator from '../components/Separator'
 import SectionHeader from '../components/SectionHeader'
-import images from '../assets/images'
 import colors from '../utils/colors'
 
 export default class Send extends React.Component {
@@ -38,7 +37,10 @@ export default class Send extends React.Component {
           </Text>
         </View>
         <View style={styles.formBody}>
-          <Image source={images.walletTime} style={styles.tokenImage} />
+          <Image
+            source={require('../images/coin-time-small.png')}
+            style={styles.tokenImage}
+          />
           <Input placeholder='Recipient Address' />
           <Input placeholder='Amount, TIME' />
           <Text style={styles.sendBalance}>USD 0.00</Text>
@@ -64,7 +66,7 @@ const TokenSelector = () => (
     <Text style={styles.tokenSelectorLabel}>
       TIME
     </Text>
-    <Image source={images.chevronDown} />
+    <Image source={require('../images/chevron-down.png')} />
   </View>
 )
 

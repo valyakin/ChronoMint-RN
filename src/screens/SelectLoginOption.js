@@ -2,33 +2,32 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import I18n from 'react-native-i18n'
-import mnemonicProvider from 'chronobank/login/network/mnemonicProvider'
-import networkService from 'chronobank/login/network/NetworkService'
+import Web3 from 'web3'
+import mnemonicProvider from '../../mint/packages/login/network/mnemonicProvider'
+import networkService from '../../mint/packages/login/network/NetworkService'
 import {
   addError,
   clearErrors,
   loading,
   DUCK_NETWORK,
-} from 'chronobank/login/redux/network/actions'
+} from '../../mint/packages/login/redux/network/actions'
 import {
   bccProvider,
   btcProvider,
   btgProvider,
   ltcProvider,
-} from 'chronobank/login/network/BitcoinProvider'
-import { ethereumProvider } from 'chronobank/login/network/EthereumProvider'
-import { nemProvider } from 'chronobank/login/network/NemProvider'
-import { bootstrap, login } from 'redux/session/actions'
-import Web3 from 'web3'
-import web3Utils from 'chronobank/login/network/Web3Utils'
-import web3Provider from 'chronobank/login/network/Web3Provider'
-import privateKeyProvider from 'chronobank/login/network/privateKeyProvider'
-import walletProvider from 'chronobank/login/network/walletProvider'
+} from '../../mint/packages/login/network/BitcoinProvider'
+import { ethereumProvider } from '../../mint/packages/login/network/EthereumProvider'
+import { nemProvider } from '../../mint/packages/login/network/NemProvider'
+import { bootstrap, login } from '../redux/session/actions'
+import web3Utils from '../../mint/packages/login/network/Web3Utils'
+import web3Provider from '../../mint/packages/login/network/Web3Provider'
+import privateKeyProvider from '../../mint/packages/login/network/privateKeyProvider'
+import walletProvider from '../../mint/packages/login/network/walletProvider'
 import List from '../components/List'
 import screenLayout from '../utils/screenLayout'
 import LoginScreenLayout from './LoginScreenLayout'
 import { store } from '../redux/configureStore'
-import images from '../assets/images'
 
 type Props = {
   navigator: {
@@ -204,25 +203,25 @@ class OptionSelector extends React.Component<Props, {}> {
         data={[
           {
             key: I18n.t('SelectLoginOption.mnemonicKey'),
-            icon: images.mnemonic,
+            icon: require('../images/mnemonic.png'),
             hasArrow: true,
             onPress: this.handleMnemonicKey,
           },
           {
             key: I18n.t('SelectLoginOption.walletFile'),
-            icon: images.wallet,
+            icon: require('../images/wallet.png'),
             hasArrow: true,
             onPress: this.handleWalletFile,
           },
           {
             key: I18n.t('SelectLoginOption.privateKey'),
-            icon: images.key,
+            icon: require('../images/private-key.png'),
             hasArrow: true,
             onPress: this.handlePrivateKey,
           },
           {
             key: I18n.t('SelectLoginOption.uPort'),
-            icon: images.uport,
+            icon: require('../images/uport.png'),
             hasArrow: true,
             onPress: this.handleUPort,
           },
