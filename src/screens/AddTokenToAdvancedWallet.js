@@ -3,7 +3,6 @@ import * as React from 'react'
 import { View, TextInput, StyleSheet, Text } from 'react-native'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
-import Spacer from '../components/Spacer'
 
 export default class AddTokenToAdvancedWallet extends React.Component {
   static navigatorButtons = {
@@ -83,7 +82,7 @@ export default class AddTokenToAdvancedWallet extends React.Component {
           />
         </View>
         <Separator />
-        <Spacer />
+        <View style={styles.spacer} />
         <View style={styles.bottomAction}>
           <Text style={styles.bottomActionText}>Upload Logo</Text>
         </View>
@@ -98,6 +97,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     flex: 1,
   },
+  spacer: { flex: 1 },
   inputContainer: {
     paddingVertical: 10,
     paddingHorizontal: 20,

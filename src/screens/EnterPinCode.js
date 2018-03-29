@@ -14,7 +14,6 @@ import I18n from 'react-native-i18n'
 import screenLayout from '../utils/screenLayout'
 import LoginScreenLayout from './LoginScreenLayout'
 import FetchingIndicator from '../components/FetchingIndicator'
-import Spacer from '../components/Spacer'
 import colors from '../utils/colors'
 import images from '../assets/images'
 
@@ -97,7 +96,7 @@ class EnterPinCode extends React.Component<Props, {}> {
           onChangeText={this.handleEnterPin}
           style={styles.pinInput}
         />
-        <Spacer />
+        <View style={styles.spacer} />
         <View style={styles.bottomActions}>
           <FetchingIndicator />
           <FingerprintButton
@@ -113,6 +112,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  spacer: { flex: 1 },
   bulletsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
