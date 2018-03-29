@@ -43,7 +43,7 @@ const FingerprintButton = (props) => (
 
 type Props = {
   navigator: {
-    push: ({ screen: React.Node }) => void
+    push: () => void
   }
 }
 

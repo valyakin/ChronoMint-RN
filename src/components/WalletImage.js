@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
 
 type WalletImageProps = {
   image?: number,
-  walletMode?: 'default' | 'shared' | 'locked',
-  shapeStyle?: StyleSheet.NamedStyles,
-  imageStyle?: StyleSheet.NamedStyles,
+  walletMode?: '2fa' | 'shared' | 'timeLocked',
+  shapeStyle?: any,
+  imageStyle?: any,
 }

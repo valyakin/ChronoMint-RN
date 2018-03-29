@@ -106,46 +106,6 @@ export default class Wallet extends React.Component {
   }
 }
 
-export class Tabs extends React.Component {
-
-  handleTokens = () => {
-    this.props.navigator.pop({ animationType: 'fade' })
-    this.props.navigator.push({ screen: 'WalletTokens', animationType: 'fade' })
-  }
-
-  handleOwners = () => {
-    this.props.navigator.pop({ animationType: 'fade' })
-    this.props.navigator.push({ screen: 'WalletOwners', animationType: 'fade' })
-  }
-
-  handleTemplates = () => {
-    this.props.navigator.pop({ animationType: 'fade' })
-    this.props.navigator.push({ screen: 'WalletTemplates', animationType: 'fade' })
-  }
-
-  render () {
-    return (
-      <View style={styles.tabsContainer}>  
-        <Text style={styles.tabItem}>
-          Transactions
-        </Text>
-        <Separator style={styles.separator} />
-        <Text style={styles.tabItem} onPress={this.handleTokens}>
-          Tokens
-        </Text>
-        <Separator style={styles.separator} />
-        <Text style={styles.tabItem} onPress={this.handleOwners}>
-          Owners
-        </Text>
-        <Separator style={styles.separator} />
-        <Text style={styles.tabItem} onPress={this.handleTemplates}>
-          Templates
-        </Text>
-      </View>
-    )
-  }
-}
-
 const styles = StyleSheet.create({
   screenView: { flex: 1 },
   tabsContainer: {

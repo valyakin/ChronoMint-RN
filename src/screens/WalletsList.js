@@ -94,7 +94,7 @@ const walletSections = [
         { id: 'ETH', amount: 10 },
         { id: 'TIME', amount: 10 },
       ],
-      mode: 'default',
+      mode: '2fa',
     },
     {
       title: 'My Shared Wallet',
@@ -120,7 +120,7 @@ const walletSections = [
         { id: 'TIME', amount: 10 },
         { id: 'TIME', amount: 10 },
       ],
-      mode: 'locked',
+      mode: 'timeLocked',
     },
   ] },
 ]

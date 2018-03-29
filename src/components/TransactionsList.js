@@ -35,7 +35,6 @@ class TransactionItem extends React.Component<TransactionProps> {
       <View style={styles.item}>
         <Image
           source={transactionImages[type][confirmations]}
-          style={styles.transactionImage}
         />
         <View>
           <Text />
@@ -49,7 +48,7 @@ class TransactionItem extends React.Component<TransactionProps> {
           {'\n'}
           {address}
         </Text>
-        <Text style={[ styles.transactionValue, transactionValueStyles[type] ]}>
+        <Text style={transactionValueStyles[type]}>
           {I18n.toCurrency(value, { precision: 2, unit: ` ${symbol} ` })}
         </Text>
       </View>

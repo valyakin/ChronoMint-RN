@@ -1,6 +1,6 @@
 /* @flow */
 import * as React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import colors from '../utils/colors'
 import Separator from './Separator'
 
@@ -77,8 +77,8 @@ const styles = StyleSheet.create({
 type Props = {
   title: string,
   actions: Array<ActionProps>,
-  style: ViewStyle,
-  contentContainerStyle: ViewStyle,
+  style: any,
+  contentContainerStyle: any,
 }
 
 type ActionProps = {

@@ -48,9 +48,6 @@ class Template extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  screenView: {
-    flex: 1,
-  },
   list: {
     paddingVertical: 16,
     flexGrow: 1,

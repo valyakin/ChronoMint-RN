@@ -16,6 +16,7 @@ import SelectNetwork from './SelectNetwork'
 import Wallet from './Wallet'
 import WalletOwners from './WalletOwners'
 import WalletsList from './WalletsList'
+import Download2FAApp from './Download2FAApp'
 import WalletTemplates from './WalletTemplates'
 import WalletTokens from './WalletTokens'
 import Send from './Send'
@@ -54,4 +55,5 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('AddAdvancedWallet', () => AddAdvancedWallet, store, Provider)
   Navigation.registerComponent('AddTokenToAdvancedWallet', () => AddTokenToAdvancedWallet, store, Provider)
   Navigation.registerComponent('AddEthereumWallet', () => AddEthereumWallet, store, Provider)
+  Navigation.registerComponent('Download2FAApp', () => Download2FAApp, store, Provider)
 }

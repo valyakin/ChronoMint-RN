@@ -11,9 +11,9 @@ type Transaction = { status?: 'receiving' | null }
 
 type ExchangeType = { currency: string, amount: number }
 
-type WalletMode = 'default' | 'shared' | 'locked'
+type WalletMode = '2fa' | 'shared' | 'timeLocked'
 
-type Props = {
+type WalletListItemProps = {
   title: string,
   address: string,
   balance: {
@@ -54,11 +54,11 @@ const TokensList = ({ tokens }) => !(tokens || [])[0] ? null : (
 
 const Exchange = ({ exchange }: ExchangeType) => !exchange ? null : (
   <Text style={styles.exchange}>
-    {exchange.currency} {exchange.amount.tol}
+    {exchange.currency} {exchange.amount}
   </Text>
 ) 
 
-export default class WalletsListItem extends React.Component<Props, {}> {
+export default class WalletsListItem extends React.Component<WalletListItemProps, {}> {
   handlePress = () => {
     const { navigator, mode, address, token } = this.props
     navigator.push({
