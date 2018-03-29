@@ -7,7 +7,8 @@
     "test": "jest",
     "ios": "react-native run-ios --simulator 'iPhone SE'",
     "contracts:compile": "cd node_modules/chronobank-smart-contracts && node --max_old_space_size=8000 ../truffle/build/cli.bundled.js compile --all",
-    "android": "react-native run-android"
+    "android": "react-native run-android",
+    "prepare": "patch-package"
   },
   "dependencies": {
     "assert": "^1.1.1",
@@ -18,6 +19,7 @@
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
     "browserify-zlib": "~0.1.4",
+    "capture-stack-trace": "^1.0.0",
     "chronobank-smart-contracts": "1.1.45",
     "coinselect": "^3.1.11",
     "console-browserify": "^1.1.0",
@@ -90,6 +92,8 @@
     "eslint-plugin-react-native": "^3.2.1",
     "flow-bin": "0.65.0",
     "jest": "22.2.0",
+    "patch-package": "^5.1.1",
+    "postinstall-prepare": "^1.0.1",
     "react-test-renderer": "16.2.0",
     "remote-redux-devtools": "^0.5.12"
   },

@@ -164,14 +164,17 @@ class OptionSelector extends React.Component<Props, {}> {
   async setupAndLogin ({ ethereum, btc, bcc, btg, ltc, nem }) {
     // setup
     const web3 = new Web3()
+    const eProvider = ethereum.getProvider()
+
     web3Provider.setWeb3(web3)
-    web3Provider.setProvider(ethereum.getProvider())
+    web3Provider.setProvider(eProvider)
+    web3Provider.reinit(web3, eProvider)
 
     // login
     try {
       await this.props.loadAccounts()
       await this.props.selectAccount(this.props.accounts[ 0 ])
-      ethereumProvider.setEngine(ethereum)
+      ethereumProvider.setEngine(ethereum, nem)
       bccProvider.setEngine(bcc)
       btcProvider.setEngine(btc)
       btgProvider.setEngine(btg)
