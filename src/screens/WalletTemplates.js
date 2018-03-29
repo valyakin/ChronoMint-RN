@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { FlatList, View, Image, Text, StyleSheet } from 'react-native'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 export default class WalletTemplates extends React.Component {
   keyExtractor = ({ id }) => id
@@ -89,6 +88,6 @@ const templates = [
     value: 0.1,
     title: 'Subscription payment',
     address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-    image: images.walletEthereum,
+    image: require('../images/coin-ethereum-small.png'),
   },
 ]

@@ -28,7 +28,6 @@ import List from '../components/List'
 import screenLayout from '../utils/screenLayout'
 import LoginScreenLayout from './LoginScreenLayout'
 import { store } from '../redux/configureStore'
-import images from '../assets/images'
 
 type Props = {
   navigator: {
@@ -201,25 +200,25 @@ class OptionSelector extends React.Component<Props, {}> {
         data={[
           {
             key: I18n.t('SelectLoginOption.mnemonicKey'),
-            icon: images.mnemonic,
+            icon: require('../images/mnemonic.png'),
             hasArrow: true,
             onPress: this.handleMnemonicKey,
           },
           {
             key: I18n.t('SelectLoginOption.walletFile'),
-            icon: images.wallet,
+            icon: require('../images/wallet.png'),
             hasArrow: true,
             onPress: this.handleWalletFile,
           },
           {
             key: I18n.t('SelectLoginOption.privateKey'),
-            icon: images.key,
+            icon: require('../images/private-key.png'),
             hasArrow: true,
             onPress: this.handlePrivateKey,
           },
           {
             key: I18n.t('SelectLoginOption.uPort'),
-            icon: images.uport,
+            icon: require('../images/uport.png'),
             hasArrow: true,
             onPress: this.handleUPort,
           },

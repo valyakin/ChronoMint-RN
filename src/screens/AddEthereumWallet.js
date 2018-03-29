@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import Separator from '../components/Separator'
-import images from '../assets/images'
 import colors from '../utils/colors'
 
 export default class AddEthereumWallet extends React.Component {
@@ -57,7 +56,7 @@ class Item extends React.Component {
           <Text style={styles.itemDescription}>{description}</Text>
         </View>
         <Image
-          source={images.chevronRight}
+          source={require('../images/chevron-right.png')}
           style={styles.itemChevron}
         />
       </TouchableOpacity>
@@ -97,20 +96,20 @@ const styles = StyleSheet.create({
 const walletTypes = [
   {
     id: 'standard',
-    image: images.walletCircle,
+    image: require('../images/wallet-circle.png'),
     title: 'Standard wallet',
     screen: 'AddStandardWallet',
   },
   {
     id: 'timeLocked',
-    image: images.walletTimeLocked,
+    image: require('../images/wallet-time-locked.png'),
     title: 'Time Locked',
     description: 'Make this wallet active for transactions on specific date and time.',
     screen: 'AddTimeLockedWallet',
   },
   {
     id: 'twoFA',
-    image: images.wallet2FA,
+    image: require('../images/wallet-2fa.png'),
     title: '2 Factor Authentucation',
     description: 'Protect your Wallet from unauthorized access by enabling two-factor authentication.',
     screen: 'Add2FAWallet',
@@ -118,14 +117,14 @@ const walletTypes = [
   {
     id: 'multisignature',
     title: 'Multi-Signature',
-    image: images.walletMultisig,
+    image: require('../images/wallet-multisig.png'),
     description: 'Make the wallet controlled by multiple owners.',
     screen: 'AddMultiSignatureWallet',
   },
   {
     id: 'advanced',
     title: 'Advanced',
-    image: images.walletAdvanced,
+    image: require('../images/wallet-advanced.png'),
     description: 'Make the wallet with custom tokens.',
     screen: 'AddAdvancedWallet',
   },

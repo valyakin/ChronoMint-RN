@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import I18n from 'react-native-i18n'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 const CurrentNetwork = ({ network }) => (
   <View style={styles.currentNetworkContainer}>
@@ -47,17 +46,17 @@ export default class Drawer extends React.Component {
       >
         <CurrentNetwork network='Rinkeby (test network)' />
         <Image
-          source={images.profilePhoto1}
+          source={require('../images/profile-photo-1.jpg')}
           style={styles.profilePhoto}
         />
         <View style={styles.separator} />
         <View style={styles.account}>
           <Text style={styles.accountName}>Account name</Text>
           <TouchableOpacity style={styles.accountAction}>
-            <Image source={images.cog} />
+            <Image source={require('../images/cog.png')} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.accountAction}>
-            <Image source={images.onOff} />
+            <Image source={require('../images/on-off.png')} />
           </TouchableOpacity>
         </View>
         <FlatList
@@ -78,10 +77,10 @@ export default class Drawer extends React.Component {
             </Text>
           </View>
           <TouchableOpacity style={styles.accountAction}>
-            <Image source={images.qr} />
+            <Image source={require('../images/qr.png')} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.accountAction}>
-            <Image source={images.copy} />
+            <Image source={require('../images/copy.png')} />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -184,36 +183,36 @@ const menuItems = [
   {
     id: 'wallets',
     title: I18n.t('Drawer.wallets'),
-    image: images.wallet,
+    image: require('../images/wallet.png'),
   },
   {
     id: 'deposits',
     title: I18n.t('Drawer.deposits'),
-    image: images.deposit,
+    image: require('../images/deposit.png'),
   },
   {
     id: 'exchange',
     title: I18n.t('Drawer.exchange'),
-    image: images.exchange,
+    image: require('../images/exchange.png'),
   },
   {
     id: 'voting',
     title: I18n.t('Drawer.voting'),
-    image: images.checkFilled,
+    image: require('../images/voting.png'),
   },
   {
     id: 'bonuses',
     title: I18n.t('Drawer.bonuses'),
-    image: images.gift,
+    image: require('../images/bonuses.png'),
   },
   {
     id: 'assets',
     title: I18n.t('Drawer.assets'),
-    image: images.portfolio,
+    image: require('../images/assets.png'),
   },
   {
     id: 'portfolio',
     title: I18n.t('Drawer.portfolio'),
-    image: images.pieChart,
+    image: require('../images/stats.png'),
   },
 ]

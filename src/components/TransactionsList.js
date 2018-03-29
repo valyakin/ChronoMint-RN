@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { View, Image, Text, StyleSheet, FlatList } from 'react-native'
 import I18n from 'react-native-i18n'
-import images from '../assets/images'
 import colors from '../utils/colors'
 
 export default class TransactionsList extends React.Component<Props> {
@@ -82,10 +81,10 @@ const transactionValueStyles = StyleSheet.create({
 
 const transactionImages = {
   receiving: {
-    1: images.transactionReceiving1,
+    1: require('../images/receiving-25-circle-small.png'),
   },
   sending: {
-    1: images.transactionSending1,
+    1: require('../images/sending-25-circle-small.png'),
   },
 }
 

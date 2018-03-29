@@ -7,7 +7,6 @@ import List from '../components/List'
 import screenLayout from '../utils/screenLayout'
 import LoginScreenLayout from './LoginScreenLayout'
 import logger from '../utils/logger'
-import images from '../assets/images'
 
 type Props = {
   navigator: {
@@ -61,13 +60,13 @@ class WalletFile extends React.Component<Props, {}> {
         data={[
           {
             key: I18n.t('PickWalletFile.pickWalletFile'),
-            icon: images.paperclip,
+            icon: require('../images/paperclip.png'),
             hasArrow: true,
             onPress: this.handleUploadWallet,
           },
           {
             key: I18n.t('PickWalletFile.generateWalletFile'),
-            icon: images.wallet,
+            icon: require('../images/wallet.png'),
             hasArrow: true,
             onPress: this.handleGenerateWallet,
           },

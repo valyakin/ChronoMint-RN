@@ -7,7 +7,6 @@ import WalletAlert from '../components/WalletAlert'
 import TransactionsList from '../components/TransactionsList'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 export default class WalletTransactions extends React.Component {
   static defaultProps = {
@@ -35,7 +34,7 @@ export default class WalletTransactions extends React.Component {
           contentContainerStyle={styles.walletAlertContent}
         >
           <Image
-            source={images.profile}
+            source={require('../images/profile-circle-small.png')}
             style={styles.walletAlertImage}
           />
           <Text style={styles.walletAlertText}>

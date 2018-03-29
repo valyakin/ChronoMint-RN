@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { Text, ScrollView, StyleSheet, Image } from 'react-native'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 export default class Download2FAApp extends React.Component {
   // noinspection JSUnusedGlobalSymbols
@@ -23,7 +22,7 @@ export default class Download2FAApp extends React.Component {
   render () {
     return (
       <ScrollView contentContainerStyle={styles.scrollView} bounces={false}>
-        <Image source={images.twoFA} />
+        <Image source={require('../images/2fa.jpg')} />
         <Text style={styles.header}>
           Download App to enable two-factor authentication
         </Text>
@@ -36,7 +35,7 @@ export default class Download2FAApp extends React.Component {
         <Text style={styles.text}>
           Install <Text style={styles.bold}>Google Authenticator</Text>  with the link provided below and then tap Proceed.
         </Text>
-        <Image source={images.appStore} style={styles.appStore} />
+        <Image source={require('../images/appstore.png')} style={styles.appStore} />
       </ScrollView>
     )
   }

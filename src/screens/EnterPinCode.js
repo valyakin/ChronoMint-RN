@@ -15,7 +15,6 @@ import screenLayout from '../utils/screenLayout'
 import LoginScreenLayout from './LoginScreenLayout'
 import FetchingIndicator from '../components/FetchingIndicator'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 const makeArray = (callback) =>
   (times, ...rest) =>
@@ -36,7 +35,7 @@ const PinBullet = (props: PinBulletProps) =>
 const FingerprintButton = (props) => (
   <TouchableOpacity onPress={props.onPress}>
     <Image
-      source={images.fingerprint}
+      source={require('../images/fingerprint.png')}
     />
   </TouchableOpacity>
 )

@@ -4,7 +4,6 @@ import { SectionList } from 'react-native'
 import I18n from 'react-native-i18n'
 import SectionHeader from '../components/SectionHeader'
 import WalletsListItem from '../components/WalletsListItem'
-import images from '../assets/images'
 
 export default class WalletsList extends React.Component {
   // noinspection JSUnusedGlobalSymbols
@@ -12,13 +11,13 @@ export default class WalletsList extends React.Component {
     leftButtons: [
       {
         id: 'drawer',
-        icon: images.burger,
+        icon: require('../images/burger.png'),
       },
     ],
     rightButtons : [
       {
         id: 'addWallet',
-        icon: images.plus, 
+        icon: require('../images/plus.png'),
       },
     ],
   }
@@ -78,7 +77,7 @@ const walletSections = [
       address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
       balance: { currency: 'BTC', amount: 15.2045 },
       exchange: { currency: 'USD', amount: 121600 },
-      image: images.walletBitcoin,
+      image: require('../images/coin-bitcoin-big.png'),
       token: 'btc',
       transactions: [
         { status: 'receiving' },

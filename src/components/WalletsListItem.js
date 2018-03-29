@@ -1,7 +1,6 @@
 /* @flow */
 import * as React from 'react'
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import images from '../assets/images'
 import colors from '../utils/colors'
 import WalletImage from './WalletImage'
 
@@ -30,7 +29,7 @@ type WalletListItemProps = {
 const Transactions = ({ transactions }) => !transactions ? null : (
   !transactions[1] ? (
     <Image
-      source={images.transactionReceiving}
+      source={require('../images/indicator-receiving-25.png')}
     />
   ) : (
     <View style={styles.transactionsNumberContainer}>

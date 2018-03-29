@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-import images from '../assets/images'
 import colors from '../utils/colors'
 import Separator from '../components/Separator'
 import WalletTransactions from './WalletTransactions'
@@ -93,12 +92,12 @@ export default class Wallet extends React.Component {
         <View style={styles.actions}>
           <ActionButton
             title={I18n.t('Wallet.send')}
-            image={images.send}
+            image={require('../images/send-ios.png')}
             onPress={this.handleSend}
           />
           <ActionButton
             title={I18n.t('Wallet.receive')}
-            image={images.receive}
+            image={require('../images/receive-ios.png')}
           />
         </View>
       </View>

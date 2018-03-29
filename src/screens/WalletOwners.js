@@ -2,7 +2,6 @@
 import * as React from 'react'
 import { FlatList, View, Image, Text, StyleSheet } from 'react-native'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 export default class WalletOwners extends React.Component {
   keyExtractor = ({ id }) => id
@@ -71,13 +70,13 @@ const styles = StyleSheet.create({
 const owners = [
   {
     id: '0',
-    image: images.profile,
+    image: require('../images/profile-circle-small.png'),
     name: 'You',
     address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
   },
   {
     id: '1',
-    image: images.profile,
+    image: require('../images/profile-circle-small.png'),
     name: 'Owner name',
     address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
   },

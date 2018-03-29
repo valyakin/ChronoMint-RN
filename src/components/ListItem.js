@@ -3,7 +3,6 @@ import React from 'react'
 import { View, TouchableOpacity, Switch, Text, StyleSheet } from 'react-native'
 import Icon from './Icon'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 type Props = {
   icon?: number,
@@ -20,7 +19,7 @@ export default class ListItem extends React.Component<Props, {}> {
     const { icon } = this.props
 
     if (this.props.isChecked) {
-      return <Icon source={images.check} />
+      return <Icon source={require('../images/check.png')} />
     }
     if (icon && icon.prototype && icon.prototype.isReactComponent) {
       return icon
@@ -39,7 +38,7 @@ export default class ListItem extends React.Component<Props, {}> {
     if (hasArrow) {
       return (
         <Icon
-          source={images.chevronRight}
+          source={require('../images/chevron-right.png')}
           style={styles.arrow}
         />
       )

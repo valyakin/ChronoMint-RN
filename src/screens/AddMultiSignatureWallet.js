@@ -12,7 +12,6 @@ import {
 import SectionHeader from '../components/SectionHeader'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
-import images from '../assets/images'
 
 export default class AddTimeLockedWallet extends React.Component {
   // noinspection JSUnusedGlobalSymbols
@@ -67,7 +66,10 @@ export default class AddTimeLockedWallet extends React.Component {
         <Separator />
         <View style={styles.addAddress} >
           <View style={styles.plusButtonRound}>
-            <Image source={images.plus} style={styles.plusButtonRoundImage} />
+            <Image
+              source={require('../images/plus.png')}
+              style={styles.plusButtonRoundImage}
+            />
           </View>
           <TextInput
             placeholderTextColor='#7F7F7F'
@@ -124,7 +126,7 @@ const walletOwners = [
     id: 'you',
     name: 'You',
     address: '0x19e7e376e7c213b7e7e7e46cc70a5dd086daff2as',
-    image: images.profile,
+    image: require('../images/profile-circle-small.png'),
   },
 ]
 
