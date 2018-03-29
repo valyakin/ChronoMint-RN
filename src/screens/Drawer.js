@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 10,
     margin: 16,
+    marginTop: 30,
   },
   profilePhoto: {
     width: 98,
