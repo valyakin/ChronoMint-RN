@@ -12,7 +12,10 @@
   },
   "settings": {
     "import/resolver": {
-      "babel-module": {}
+      "babel-module": {
+        "root": ["./src", "./mint/src"],
+        "paths": ["./src", "./mint/src"]
+      }
     }
   },
   "rules": {

@@ -95,7 +95,7 @@
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
     "react-test-renderer": "16.2.0",
-    "remote-redux-devtools": "^0.5.12"
+    "redux-devtools-extension": "^2.13.2"
   },
   "resolutions": {
     "inherits": "olegdizus/inherits",
