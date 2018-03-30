@@ -4,15 +4,15 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import colors from '../utils/colors'
 import WalletImage from './WalletImage'
 
-type Token = { id: string, amount: number }
+export type Token = { id: string, amount: number }
 
-type Transaction = { status?: 'receiving' | null }
+export type Transaction = { status?: 'receiving' | null }
 
-type ExchangeType = { currency: string, amount: number }
+export type ExchangeType = { currency: string, amount: number }
 
-type WalletMode = '2fa' | 'shared' | 'timeLocked'
+export type WalletMode = '2fa' | 'shared' | 'timeLocked'
 
-type WalletListItemProps = {
+export type WalletListItemProps = {
   title: string,
   address: string,
   balance: {
@@ -26,7 +26,7 @@ type WalletListItemProps = {
   mode?: WalletMode,
 }
 
-const Transactions = ({ transactions }) => !transactions ? null : (
+const Transactions = ({ transactions }: Transaction[]) => !transactions ? null : (
   !transactions[1] ? (
     <Image
       source={require('../images/indicator-receiving-25.png')}
@@ -40,7 +40,7 @@ const Transactions = ({ transactions }) => !transactions ? null : (
   )
 )
 
-const TokensList = ({ tokens }) => !(tokens || [])[0] ? null : (
+const TokensList = ({ tokens }: Token[]) => !(tokens || [])[0] ? null : (
   <Text style={styles.tokens}>
     {tokens[0].id} {tokens[0].amount.toFixed(2)}
     {tokens[1] && ', '}
