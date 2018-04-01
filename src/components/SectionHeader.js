@@ -3,11 +3,11 @@ import * as React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import colors from '../utils/colors'
 
-type Props = {
+type SectionHeaderProps = {
   title: string
 }
 
-export default class SectionHeader extends React.Component<Props, void> {
+export default class SectionHeader extends React.Component<SectionHeaderProps, void> {
   render () {
     const { title, isDark, style } = this.props
     

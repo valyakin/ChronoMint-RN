@@ -14,59 +14,8 @@ import WalletsListItem, {
 import { getSectionedBalances } from 'redux/session/selectors'
 import BalanceModel from 'models/tokens/BalanceModel'
 
-const walletSections = [
-  { title: 'Bitcoin wallets', data: [
-    {
-      title: 'Bitcoin Wallet',
-      address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-      balance: { currency: 'BTC', amount: 15.2045 },
-      exchange: { currency: 'USD', amount: 121600 },
-      image: require('../images/coin-bitcoin-big.png'),
-      token: 'btc',
-      transactions: [
-        { status: 'receiving' },
-      ],
-    },
-  ] },
-  { title: 'Ethereum wallets', data: [
-    {
-      title: 'My Wallet',
-      address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-      balance: { currency: 'USD', amount: 1000 },
-      tokens: [
-        { id: 'ETH', amount: 10 },
-        { id: 'TIME', amount: 10 },
-      ],
-      mode: '2fa',
-    },
-    {
-      title: 'My Shared Wallet',
-      address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-      balance: { currency: 'USD', amount: 32020.41 },
-      tokens: [
-        { id: 'ETH', amount: 21 },
-        { id: 'TIME', amount: 521.20 },
-      ],
-      transactions: [
-        { status: 'receiving' },
-        { status: 'receiving' },
-      ],
-      mode: 'shared',
-    },
-    {
-      title: 'My Locked Wallet',
-      address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-      balance: { currency: 'USD', amount: 32020.41 },
-      tokens: [
-        { id: 'ETH', amount: 21 },
-        { id: 'TIME', amount: 10 },
-        { id: 'TIME', amount: 10 },
-        { id: 'TIME', amount: 10 },
-      ],
-      mode: 'timeLocked',
-    },
-  ] },
-]
+// TODO: add fallback for coins' icons
+//import { TOKEN_ICONS } from 'assets'
 
 type WalletListSection = {
   data: BalanceModel[],
@@ -134,16 +83,14 @@ export default class WalletsList extends PureComponent<WalletsListProps, Wallets
   keyExtractor = (item) => item.title
 
   renderItem = ({ item }) => {
-  
-   return <WalletsListItem {...item} navigator={this.props.navigator} />
+    return <WalletsListItem {...item} navigator={this.props.navigator} />
   }
 
   renderSectionHeader = ({ section }) => <SectionHeader {...section} isDark />
 
   render () {
-    // console.log(this.props.walletSections)
     return (
-      (this.state.refreshing || !this.props.walletSections.length) ? 
+      (this.state.refreshing || !this.props.walletSections.length) ?
         <ActivityIndicator /> :
         <SectionList
           renderItem={this.renderItem}

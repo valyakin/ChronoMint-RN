@@ -88,7 +88,6 @@ export const getSectionedBalances = () => createSelector(
   [ getCurrentWallet, getProfile, getTokens, getBalances, getTransactions, getAddresses, getMarketPrices ],
   (wallet, profile, tokens, balances, transactions, addresses, marketPrices) => {
 
-
     /**
      * Go through all available addresses and fill in initial structure
      * 
@@ -99,19 +98,23 @@ export const getSectionedBalances = () => createSelector(
     const preapareDataObject = () => {
       addresses.items().map( (addr: AddressModel) => {
         const addrJsData = addr.toJS()
-        // console.log(addrJsData)
         if (addrJsData.address) {
           const walletId = addrJsData.id
           const walletAddress = addrJsData.address
           // wallet.item.address may be equal to null (like BTG in Rinkeby/Infura)
           if (walletAddress) {
             walletSections[walletId] = {
-              id: walletId,
-              address: walletAddress,
               title: [walletId, 'Wallet'].join(' '),
-              currency: 'USD', // FIXME: hardcoded
-              balance: 0,
-              tokens: [],
+              data: [{
+                id: walletId,
+                address: walletAddress,
+                balance: {
+                  currency: 'USD', // FIXME: hardcoded
+                  amount: 0,
+                },
+                tokens: [],
+                mode: null,
+              }],
             }
           }
         }
@@ -123,134 +126,31 @@ export const getSectionedBalances = () => createSelector(
     balances.items().map( (balance: BalanceModel) => {
       const balanceSymbol: string = balance.symbol()
       const balanceToken: TokenModel = tokens.item(balanceSymbol)
-      const balanceTokenJs = balanceToken.toJS()
+      const balanceTokenId = balanceToken.id()
       const balanceTokenBlockchain = balanceToken.blockchain()
-      // const balanceAddress: AddressModel = addresses.item(balanceTokenBlockchain)
       const balanceAmount: number = balance.amount()
-      // console.log('balanceSymbol:')
-      // console.log(balanceSymbol)
-      // console.log('balanceToken:')
-      // console.log(balanceToken.toJS())
-      // console.log('+balance.amount():')
-      // console.log(+balance.amount())
 
       if (walletSections.hasOwnProperty(balanceTokenBlockchain)) {
-        console.log('marketPrices.hasOwnProperty(balanceTokenJs.id)', marketPrices.hasOwnProperty(balanceTokenJs.id))
-        const addAmount = (marketPrices.hasOwnProperty(balanceTokenJs.id)) ? (balanceAmount * marketPrices[balanceTokenJs.id].USD) : 0
-        console.log('ADDING:', addAmount)
-        console.log(marketPrices)
-        walletSections[balanceTokenBlockchain].balance += addAmount
-        walletSections[balanceTokenBlockchain].tokens.push({
+        const addAmount = (marketPrices.hasOwnProperty(balanceTokenId)) ? (balanceToken.removeDecimals(balanceAmount).toNumber() * marketPrices[balanceTokenId].USD) : 0
+        walletSections[balanceTokenBlockchain].data[0].balance.amount += addAmount
+        walletSections[balanceTokenBlockchain].data[0].tokens.push({
           currency: balance.symbol(),
-          balance: balanceToken.removeDecimals(balanceAmount).toNumber(),
+          amount: balanceToken.removeDecimals(balanceAmount).toNumber(),
+          id: balanceToken.id(),
+          iconIpfsHash: balanceToken.icon() || null, // TODO: to insert default icon
         })
+      }
+
+    })
+
+    // Remove all sections with empty tokens' list
+    Object.keys(walletSections).map( (blockchainName) => {
+      if (walletSections[blockchainName].data[0].tokens && !walletSections[blockchainName].data[0].tokens.length) {
+        delete(walletSections[blockchainName])
       }
     })
 
-
-    console.log('Result')
-    console.log(walletSections)
-    // console.log(marketPrices)
-
-
-
-// 
-// 
-// 
-    // const collections = wallet.balances().items()
-    //   .map((balance) => ({
-    //     balance,
-    //     token: tokens.item(balance.symbol()),
-    //   }))
-    //   .filter(({ token }) => {
-    //     if (!token.isFetched()) {
-    //       return false
-    //     }
-    //     let profileToken
-    //     profileTokens.map((item) => {
-    //       if (isTokenChecked(token, item)) {
-    //         profileToken = item
-    //       }
-    //     })
-    //     if (MANDATORY_TOKENS.includes(token.symbol())) {
-    //       return true
-    //     }
-    //     return profileToken ? profileToken.show : !token.isOptional()
-    //   })
-    //   .map(({ balance }) => balance)
-    //   .reduce((groupedBalances, balance) => {
-    //     const tokenId: string = tokens.item(balance.id())
-    //     const blockchainName: string = tokenId.blockchain()
-    //     // console.log(blockchainName)
-    //     groupedBalances[blockchainName] = groupedBalances[blockchainName] || []
-    //     // console.log(groupedBalances)
-    //     groupedBalances[blockchainName].push(balance)
-    //     return groupedBalances
-    //   }, Object.create(null))
-
-    // console.log('collections:', collections)
-    // return Object.keys(collections).reduce((walletSections, sectionName) => {
-    //   return [
-    //     ...walletSections, 
-    //     {
-    //       title: sectionName,
-    //       data: collections[sectionName],
-    //     },
-    //   ]
-    // }, [])
-    return [
-      { title: 'Bitcoin wallets', data: [
-        {
-          title: 'Bitcoin Wallet',
-          address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-          balance: { currency: 'BTC', amount: 15.2045 },
-          exchange: { currency: 'USD', amount: 121600 },
-          image: 33,
-          token: 'btc',
-          transactions: [
-            { status: 'receiving' },
-          ],
-        },
-      ] },
-      { title: 'Ethereum wallets', data: [
-        {
-          title: 'My Wallet',
-          address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-          balance: { currency: 'USD', amount: 1000 },
-          tokens: [
-            { id: 'ETH', amount: 10 },
-            { id: 'TIME', amount: 10 },
-          ],
-          mode: '2fa',
-        },
-        {
-          title: 'My Shared Wallet',
-          address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-          balance: { currency: 'USD', amount: 32020.41 },
-          tokens: [
-            { id: 'ETH', amount: 21 },
-            { id: 'TIME', amount: 521.20 },
-          ],
-          transactions: [
-            { status: 'receiving' },
-            { status: 'receiving' },
-          ],
-          mode: 'shared',
-        },
-        {
-          title: 'My Locked Wallet',
-          address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-          balance: { currency: 'USD', amount: 32020.41 },
-          tokens: [
-            { id: 'ETH', amount: 21 },
-            { id: 'TIME', amount: 10 },
-            { id: 'TIME', amount: 10 },
-            { id: 'TIME', amount: 10 },
-          ],
-          mode: 'timeLocked',
-        },
-      ] },
-    ]
+    return Object.keys(walletSections).map((key) => walletSections[key])
   }
 )
 

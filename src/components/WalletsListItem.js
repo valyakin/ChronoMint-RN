@@ -40,16 +40,27 @@ const Transactions = ({ transactions }: Transaction[]) => !transactions ? null :
   )
 )
 
-const TokensList = ({ tokens }: Token[]) => !(tokens || [])[0] ? null : (
-  <Text style={styles.tokens}>
-    {tokens[0].id} {tokens[0].amount.toFixed(2)}
-    {tokens[1] && ', '}
-    {tokens[2] ?
-      `+ ${tokens.length - 1} more` :
-      `${tokens[1].id} ${tokens[1].amount.toFixed(2)}`
-    }
-  </Text>
-)
+const TokensList = ({ tokens }: Token[]) => {
+  if (!tokens || !tokens.length) {
+    return null
+  }
+
+  const tLength = tokens.length
+  let tokensText = [tokens[0].id, tokens[0].amount.toFixed(2)].join(' ')
+  if (tLength === 2) {
+    const secondTokenText = [tokens[1].id, tokens[1].amount.toFixed(2)].join(' ')
+    tokensText = [tokensText, secondTokenText].join(', ')
+  }
+  if (tLength > 2) {
+    const moreTokenText = [tLength - 1, 'more'].join(' ')
+    tokensText = [tokensText, moreTokenText].join(', ')
+  }
+  return (
+    <Text style={styles.tokens}>
+      {tokensText}
+    </Text>
+  )
+}
 
 const Exchange = ({ exchange }: ExchangeType) => !exchange ? null : (
   <Text style={styles.exchange}>
