@@ -52,7 +52,7 @@ const TokensList = ({ tokens }: Token[]) => {
     tokensText = [tokensText, secondTokenText].join(', ')
   }
   if (tLength > 2) {
-    const moreTokenText = [tLength - 1, 'more'].join(' ')
+    const moreTokenText = ['+', tLength - 1, 'more'].join(' ')
     tokensText = [tokensText, moreTokenText].join(', ')
   }
   return (
