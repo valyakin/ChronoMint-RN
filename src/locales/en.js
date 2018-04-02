@@ -135,4 +135,22 @@ export default {
     title: 'Confirm recovery phrase',
     done: 'Done',
   },
+  GenerateMnemonic: {
+    title: 'Write down recovery phrase',
+    description: 'You can use the phrase shown below to restore or login to your wallet by using additional wallet\'s login options.',
+    warningTitle: 'Important!\nRead the security guidelines',
+    warningItem1Title: 'Don\'t share your mnemonic phrase with someone you don\'t trust.',
+    warningItem1Content: 'Double check services you\'re giving your mnemonic to and don\'t share your phrase with anyone.',
+    confirm: 'Confirm phrase',
+    warnings: {
+      1: {
+        title: 'Don\'t share your mnemonic phrase with someone you don\'t trust.',
+        content: 'Double check services you\'re giving your mnemonic to and don\'t share your phrase with anyone.',
+      },
+      2: {
+        title: 'Don\'t loose your key.',
+        content: 'We do not store this information and Your account will be lost together with all your funds and history.',
+      },
+    },
+  },
 } 

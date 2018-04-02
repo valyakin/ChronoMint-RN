@@ -5,85 +5,127 @@
  * @flow
  */
 import React from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import I18n from 'react-native-i18n'
-import Checkbox from '../components/Checkbox'
-import Input from '../components/Input'
-import Button from '../components/Button'
-import LoginSceneLayout from './LoginScreenLayout'
-import sceneLayout from '../utils/screenLayout'
-import Cautions from '../components/Cautions'
-import colors from '../utils/colors'
+import PrimaryButton from '../components/PrimaryButton'
 
-type State = {
-  userConfirm: boolean
-}
-
-class GenerateMnemonic extends React.Component<{}, State> {
-  static screenOptions = {
-    title: I18n.t('GenerateMnemonic.title'),
-    subtitle: I18n.t('GenerateMnemonic.subtitle'),
-  }
-
-  state = {
-    userConfirm: false,
-  }
-
-  handleUserConfirm = () => {
-    this.setState({
-      userConfirm: !this.state.userConfirm,
+export default class GenerateMnemonic extends React.Component {
+  handleConfirm = () => {
+    this.props.navigator.push({
+      screen: 'ConfirmMnemonic',
     })
   }
-  
+
+  renderWarningItem = (item, index) => (
+    <WarningItem
+      key={`warning${index}`}
+      warning={index + 1}
+    />
+  )
+
   render () {
     return (
       <View>
-        <Input
-          isDark
-          label={I18n.t('GenerateMnemonic.mnemonic')}
-          style={styles.input}
-          editable={false}
-          defaultValue='session double sketch deposit balcony supply alpha fossil daring aunt pen hour'
-          multiline
-        />
-        <Text style={styles.attentionText}>{I18n.t('GenerateMnemonic.copyMnemonic')}</Text>
-        <Cautions />
-        <View 
-          style={styles.actions}
-        >
-          <Checkbox
-            isDark
-            isChecked={this.state.userConfirm}
-            onPress={this.handleUserConfirm}
-            label={I18n.t('GenerateMnemonic.understand')}
-          />
-          <Button
-            isDark
-            isDisabled={!this.state.userConfirm}
-            style={styles.continueButton}
-            label={I18n.t('GenerateMnemonic.continue')}
-          />
+        <Text style={styles.description}>
+          {I18n.t('GenerateMnemonic.description')}
+        </Text>
+        <View style={styles.mnemonicContainer}>
+          <Text style={styles.mnemonic}>
+            {this.props.mnemonic}
+          </Text>
         </View>
+        <View style={styles.warningContainer}>
+          <Text style={styles.warningTitle}>
+            {I18n.t('GenerateMnemonic.warningTitle')}
+          </Text>
+          {new Array(2).fill(0).map(this.renderWarningItem)}
+        </View>
+        <PrimaryButton
+          label={I18n.t('GenerateMnemonic.confirm').toUpperCase()}
+          style={styles.primaryButton}
+        />
+      </View>
+    )
+  }
+}
+
+class WarningItem extends React.Component {
+  render () {
+    const { warning } = this.props
+
+    return (
+      <View style={styles.warningItem}>
+        <Text style={styles.warningNumber}>{warning}.</Text>
+        <Text style={styles.warningItemContent}>
+          <Text style={styles.warningItemTitle}>
+            {I18n.t(['GenerateMnemonic', 'warnings', warning, 'title'])}
+          </Text>
+          &nbsp;
+          {I18n.t(['GenerateMnemonic', 'warnings', warning, 'content'])}
+        </Text>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  actions: {
-    margin: 8,
-    flexDirection: 'row',
-  },
-  input: {
-    height: 80,
-  },
-  attentionText: {
-    color: colors.backgroundLight,
-    margin: 16,
+  description: {
+    color: '#A3A3CC',
     fontSize: 16,
-    fontWeight: '700',
+    margin: 20,
   },
-  continueButton: { flex: 1 },
+  warningContainer: {
+    backgroundColor: '#302D59',
+    marginHorizontal: 20,
+    marginVertical: 10,
+    borderRadius: 3,
+    paddingBottom: 30,
+    borderTopColor: '#FFB54E',
+    borderTopWidth: 5,
+  },
+  warningTitle: {
+    color: 'white',
+    fontSize: 22,
+    fontWeight: '900',
+    marginHorizontal: 20,
+    marginTop: 30,
+    marginBottom: 10,
+  },
+  warningItem: {
+    flexDirection: 'row',
+    marginVertical: 10,
+    marginHorizontal: 20,
+  },
+  warningNumber: {
+    marginRight: 5,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  warningItemTitle: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  warningItemContent: {
+    color: '#A3A3CC',
+    fontSize: 16,
+    flex: 1,
+  },
+  mnemonicContainer: {
+    backgroundColor: '#302D59',
+    marginHorizontal: 20,
+    marginVertical: 10,
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+  },
+  mnemonic: {
+    color: '#FFB54E',
+    fontSize: 16,
+    fontWeight: '900',
+    borderRadius: 3,
+  },
+  primaryButton: {
+    marginHorizontal: 30,
+  },
 })
-
-export default sceneLayout(LoginSceneLayout)(GenerateMnemonic)
