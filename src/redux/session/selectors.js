@@ -104,7 +104,7 @@ export const getSectionedBalances = () => createSelector(
           // wallet.item.address may be equal to null (like BTG in Rinkeby/Infura)
           if (walletAddress) {
             walletSections[walletId] = {
-              title: [walletId, 'Wallet'].join(' '),
+              title: [walletId, 'Wallets'].join(' '),
               data: [{
                 id: walletId,
                 address: walletAddress,
@@ -137,7 +137,8 @@ export const getSectionedBalances = () => createSelector(
           currency: balance.symbol(),
           amount: balanceToken.removeDecimals(balanceAmount).toNumber(),
           id: balanceToken.id(),
-          iconIpfsHash: balanceToken.icon() || null, // TODO: to insert default icon
+          iconIpfsHash: balanceToken.icon() || null, // TODO: to insert default icon,
+          title: [balanceTokenBlockchain, 'Wallet'].join(' '), // FIXME: where to get token's name`?
         })
       }
 
