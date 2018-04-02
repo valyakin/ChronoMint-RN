@@ -123,4 +123,12 @@ export default {
     mismatchPasswords: 'Passwords do not match',
     invalidPassword: 'Password is not valid',
   },
+  WalletBackup: {
+    title: 'Wallet Back-up',
+    subtitle: 'Get you wallet back up phrase and use it as a recovery option.',
+    usePinProtection: 'Use PIN protection',
+    backupWallet: 'Back-up my wallet',
+    or: 'or',
+    later: 'Backup later',
+  },
 }

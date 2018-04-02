@@ -22,6 +22,7 @@ import Drawer from './Drawer'
 import SelectToken from './SelectToken'
 import Send from './Send'
 import Wallet from './Wallet'
+import WalletBackup from './WalletBackup'
 import WalletOwners from './WalletOwners'
 import WalletsApp from './WalletsApp'
 import WalletsList from './WalletsList'
@@ -44,6 +45,7 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('SelectToken', () => SelectToken, store, Provider)
   Navigation.registerComponent('Send', () => Send, store, Provider)
   Navigation.registerComponent('Wallet', () => Wallet, store, Provider)
+  Navigation.registerComponent('WalletBackup', () => screenLayout(LoginScreenLayout)(WalletBackup), store, Provider)
   Navigation.registerComponent('WalletOwners', () => WalletOwners, store, Provider)
   Navigation.registerComponent('WalletsApp', () => WalletsApp, store, Provider)
   Navigation.registerComponent('WalletsList', () => WalletsList, store, Provider)
