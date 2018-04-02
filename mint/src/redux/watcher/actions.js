@@ -14,6 +14,7 @@ import { watchInitCBE } from 'redux/settings/user/cbe/actions'
 import { DUCK_TOKENS, initTokens } from 'redux/tokens/actions'
 import { showConfirmTxModal, watchInitUserMonitor } from 'redux/ui/actions'
 import { watchInitPolls } from 'redux/voting/actions'
+import { initMultisigWalletManager } from 'redux/multisigWallet/actions'
 
 export const DUCK_WATCHER = 'watcher'
 
@@ -69,6 +70,7 @@ export const globalWatcher = () => async (dispatch) => {
 export const watcher = () => async (dispatch) => {
   dispatch(initTokens())
   dispatch(initMainWallet())
+  dispatch(initMultisigWalletManager())
   dispatch(watchPlatformManager())
   dispatch(watchInitTokens())
   dispatch(watchInitMonitor())
