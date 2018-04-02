@@ -133,12 +133,12 @@ export const getSectionedBalances = () => createSelector(
       if (walletSections.hasOwnProperty(balanceTokenBlockchain)) {
         const addAmount = (marketPrices.hasOwnProperty(balanceTokenId)) ? (balanceToken.removeDecimals(balanceAmount).toNumber() * marketPrices[balanceTokenId].USD) : 0
         walletSections[balanceTokenBlockchain].data[0].balance.amount += addAmount
+        walletSections[balanceTokenBlockchain].data[0].title = [balanceTokenBlockchain, 'Wallet'].join(' ') // FIXME: where to get token's name`?
         walletSections[balanceTokenBlockchain].data[0].tokens.push({
           currency: balance.symbol(),
           amount: balanceToken.removeDecimals(balanceAmount).toNumber(),
           id: balanceToken.id(),
           iconIpfsHash: balanceToken.icon() || null, // TODO: to insert default icon,
-          title: [balanceTokenBlockchain, 'Wallet'].join(' '), // FIXME: where to get token's name`?
         })
       }
 
