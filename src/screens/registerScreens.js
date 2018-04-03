@@ -7,6 +7,7 @@
 import { Navigation } from 'react-native-navigation'
 import screenLayout from '../utils/screenLayout'
 import LoginScreenLayout from '../components/LoginScreenLayout'
+import AccountPassword from './AccountPassword'
 import Add2FAWallet from './Add2FAWallet'
 import AddAdvancedWallet from './AddAdvancedWallet'
 import AddEthereumWallet from './AddEthereumWallet'
@@ -34,6 +35,7 @@ import WalletTemplates from './WalletTemplates'
 import WalletTokens from './WalletTokens'
 
 export default function registerScreens (store, Provider) {
+  Navigation.registerComponent('AccountPassword', () => screenLayout(LoginScreenLayout)(AccountPassword), store, Provider)
   Navigation.registerComponent('Add2FAWallet', () => Add2FAWallet, store, Provider)
   Navigation.registerComponent('AddAdvancedWallet', () => AddAdvancedWallet, store, Provider)
   Navigation.registerComponent('AddEthereumWallet', () => AddEthereumWallet, store, Provider)

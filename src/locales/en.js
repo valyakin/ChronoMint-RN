@@ -8,6 +8,8 @@ export default {
   usd: 'USD',
   eth: 'ETH',
   btc: 'BTC',
+  or: 'or',
+  copyright: 'Copyright ©2018 LaborX Australia Pty Ltd. All Rights Reserved.',
   WalletsList: {
     title: 'My wallets',
   },
@@ -164,5 +166,11 @@ export default {
     importNew: 'Import new',
     or: 'or',
     createNew: 'Create a new wallet',
+  },
+  AccountPassword: {
+    login: 'Log in',
+    enterPassword: 'Enter password',
+    recoverUsingMnemonic: 'Recover using mnemonic',
+    or: 'common.or',
   },
 } 
