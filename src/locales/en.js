@@ -153,4 +153,9 @@ export default {
       },
     },
   },
+  EnterPin: {
+    setupTitle: 'Setup PIN',
+    confirmTitle: 'Confirm PIN',
+    pinsNotMatch: 'PINs did not match',
+  },
 } 
