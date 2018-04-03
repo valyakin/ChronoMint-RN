@@ -8,7 +8,8 @@ import React from 'react'
 import { StyleSheet, Switch, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import I18n from 'react-native-i18n'
-import { setUsePinProtection } from 'redux/sensitive/actions'
+import mnemonicProvider from '../../mint/packages/login/network/mnemonicProvider'
+import { setUsePinProtection } from '../redux/sensitive/actions'
 import PrimaryButton from '../components/PrimaryButton'
 import Separator from '../components/Separator'
 import TextButton from '../components/TextButton'
@@ -20,12 +21,13 @@ class WalletBackup extends React.Component<WalletBackupProps, {}> {
   }
 
   handleBackupWallet = () => {
+    const mnemonic = mnemonicProvider.generateMnemonic()
+
     this.props.navigator.push({
       screen: 'GenerateMnemonic',
       title: I18n.t('GenerateMnemonic.title'),
       passProps: {
-        mnemonic: 'radio cat potato tree android rotor influence chrono adelaide chrome collective fire',
-        usePinProtection: this.state.usePinProtection,
+        mnemonic,
       },
     })
   }

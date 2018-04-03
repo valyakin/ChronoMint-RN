@@ -6,15 +6,10 @@
  */
 import * as React from 'react'
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native'
-import { connect } from 'react-redux'
 import I18n from 'react-native-i18n'
 import PrimaryButton from '../components/PrimaryButton'
+import { MNEMONIC_LENGTH } from '../utils/globals'
 
-const mapStateToProps = (state) => ({
-  usePinProtection: state.get('sensitive').usePinProtection,
-})
-
-@connect(mapStateToProps)
 export default class ConfirmMnemonic extends React.Component {
   constructor (props) {
     super(props)
@@ -36,18 +31,18 @@ export default class ConfirmMnemonic extends React.Component {
   }
   
   handleWord = (word) => {
-    const { words, mnemonic } = this.state
-    
-    if (mnemonic.length === 10) {
-      this.handleDone()
-    }
-    
-    words.splice(words.indexOf(word), 1)
-    words.push(1)
-    
-    this.setState({
-      mnemonic: [...mnemonic, word],
-      words: [...words],
+    this.setState(({ words, mnemonic }) => {
+      words.splice(words.indexOf(word), 1)
+      words.push(1)
+      
+      return {
+        mnemonic: [...mnemonic, word],
+        words: [...words],
+      }
+    }, () => {
+      if (this.state.mnemonic.length === MNEMONIC_LENGTH) {
+        this.handleDone()
+      }
     })
   }
   
@@ -55,6 +50,15 @@ export default class ConfirmMnemonic extends React.Component {
     mnemonic: [],
     words: this.props.mnemonic.split(' ').sort(() => Math.random() - 0.5),
   })
+
+  createInitialState = () => ({
+    mnemonic: [],
+    words: this.props.mnemonic.split(' ').sort(() => Math.random() - 0.5),
+  })
+
+  addError = (error) => {
+    alert(error)
+  }
 
   resetState = () => {
     this.setState({ 
@@ -66,10 +70,10 @@ export default class ConfirmMnemonic extends React.Component {
   keyExtractor = (word, index) => index
   
   renderWord = ({ item }) => <Word word={item} onPress={this.handleWord} />
-
+  
   render () {
     const { words } = this.state
-
+    
     return (
       <View>
         <View style={styles.mnemonicContainer}>

@@ -24,3 +24,5 @@ export const indicators = {
 }
 
 export const PIN_LENGTH = 4
+
+export const MNEMONIC_LENGTH = 12

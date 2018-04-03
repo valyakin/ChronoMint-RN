@@ -13,6 +13,10 @@ export default class GenerateMnemonic extends React.Component {
   handleConfirm = () => {
     this.props.navigator.push({
       screen: 'ConfirmMnemonic',
+      title: I18n.t('ConfirmMnemonic.title'),
+      passProps: {
+        mnemonic: this.props.mnemonic,
+      },
     })
   }
 
@@ -43,6 +47,7 @@ export default class GenerateMnemonic extends React.Component {
         <PrimaryButton
           label={I18n.t('GenerateMnemonic.confirm').toUpperCase()}
           style={styles.primaryButton}
+          onPress={this.handleConfirm}
         />
       </View>
     )

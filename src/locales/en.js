@@ -134,6 +134,7 @@ export default {
   ConfirmMnemonic: {
     title: 'Confirm recovery phrase',
     done: 'Done',
+    wrongMnemonicError: 'Wrong mnemonic. Try again',
   },
   GenerateMnemonic: {
     title: 'Write down recovery phrase',
