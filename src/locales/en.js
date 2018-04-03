@@ -159,4 +159,10 @@ export default {
     confirmTitle: 'Confirm PIN',
     pinsNotMatch: 'PINs did not match',
   },
+  SelectAccount: {
+    title: 'My addresses',
+    importNew: 'Import new',
+    or: 'or',
+    createNew: 'Create a new wallet',
+  },
 } 

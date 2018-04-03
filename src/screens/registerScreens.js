@@ -15,10 +15,14 @@ import AddStandardWallet from './AddStandardWallet'
 import AddTimeLockedWallet from './AddTimeLockedWallet'
 import AddTokenToAdvancedWallet from './AddTokenToAdvancedWallet'
 import AddWallet from './AddWallet'
+import ConfirmMnemonic from './ConfirmMnemonic'
 import ConfirmSend from './ConfirmSend'
 import CreateWallet from './CreateWallet'
 import Download2FAApp from './Download2FAApp'
 import Drawer from './Drawer'
+import EnterPin from './EnterPin'
+import GenerateMnemonic from './GenerateMnemonic'
+import SelectAccount from './SelectAccount'
 import SelectToken from './SelectToken'
 import Send from './Send'
 import Wallet from './Wallet'
@@ -38,10 +42,14 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('AddTimeLockedWallet', () => AddTimeLockedWallet, store, Provider)
   Navigation.registerComponent('AddTokenToAdvancedWallet', () => AddTokenToAdvancedWallet, store, Provider)
   Navigation.registerComponent('AddWallet', () => AddWallet, store, Provider)
+  Navigation.registerComponent('ConfirmMnemonic', () => screenLayout(LoginScreenLayout)(ConfirmMnemonic), store, Provider)
   Navigation.registerComponent('ConfirmSend', () => ConfirmSend, store, Provider)
   Navigation.registerComponent('CreateWallet', () => screenLayout(LoginScreenLayout)(CreateWallet), store, Provider)
   Navigation.registerComponent('Download2FAApp', () => Download2FAApp, store, Provider)
   Navigation.registerComponent('Drawer', () => Drawer, store, Provider)
+  Navigation.registerComponent('EnterPin', () => screenLayout(LoginScreenLayout)(EnterPin), store, Provider)
+  Navigation.registerComponent('GenerateMnemonic', () => screenLayout(LoginScreenLayout)(GenerateMnemonic), store, Provider)
+  Navigation.registerComponent('SelectAccount', () => screenLayout(LoginScreenLayout)(SelectAccount), store, Provider)
   Navigation.registerComponent('SelectToken', () => SelectToken, store, Provider)
   Navigation.registerComponent('Send', () => Send, store, Provider)
   Navigation.registerComponent('Wallet', () => Wallet, store, Provider)

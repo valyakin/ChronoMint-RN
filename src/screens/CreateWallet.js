@@ -107,7 +107,10 @@ class CreateWallet extends React.Component<CreateWalletProps, CreateWalletState>
   }
 
   handleUseWallet = () => {
-    this.props.navigator.push({ screen: 'SelectAccount' })
+    this.props.navigator.push({
+      screen: 'SelectAccount',
+      title: I18n.t('SelectAccount.title'),
+    })
   }
 
   handleWallet = () => {
