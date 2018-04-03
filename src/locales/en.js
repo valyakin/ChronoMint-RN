@@ -131,4 +131,8 @@ export default {
     or: 'or',
     later: 'Backup later',
   },
-}
+  ConfirmMnemonic: {
+    title: 'Confirm recovery phrase',
+    done: 'Done',
+  },
+} 
