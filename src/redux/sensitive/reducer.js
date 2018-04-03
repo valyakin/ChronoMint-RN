@@ -4,19 +4,19 @@
  *
  * @flow
  */
-import * as actions from './actions.js'
+/* eslint-disable import/prefer-default-export */
+import { types } from './actions'
 
 const initialState = {
-  keys: [],
+  usePinProtection: true,
 }
 
 export const sensitive = (state = initialState, { type, payload }) => {
   switch (type) {
-    case actions.KEY_ADD:
-      return  {
-        ...state,
-        keys: [ payload ],
-      }
+    case types.SET_USE_PIN_PROTECTION: return {
+      ...state,
+      usePinProtection: payload,
+    }
     default:
       return state
   }

@@ -4,7 +4,6 @@
  *
  * @flow
  */
- 
 import * as assetsHolder from 'redux/assetsHolder'
 import * as assetsManager from 'redux/assetsManager'
 import * as drawer from 'redux/drawer'
@@ -24,8 +23,8 @@ import * as ui from 'redux/ui'
 import * as voting from 'redux/voting'
 import * as wallet from 'redux/wallet'
 import * as watcher from 'redux/watcher'
-
 import * as network from '../../mint/packages/login/redux/network/'
+import * as sensitive from './sensitive'
 
 export {
   assetsHolder,
@@ -41,6 +40,7 @@ export {
   notifier,
   operations,
   rewards,
+  sensitive,
   session,
   settings,
   tokens,

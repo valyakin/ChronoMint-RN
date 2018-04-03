@@ -6,41 +6,38 @@
  */
 import * as React from 'react'
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native'
+import { connect } from 'react-redux'
 import I18n from 'react-native-i18n'
 import PrimaryButton from '../components/PrimaryButton'
 
-const fillArrayToLength = (length, fillValue, arr) =>
-  Object.values({ ...Array(length).fill(fillValue), ...arr })
+const mapStateToProps = (state) => ({
+  usePinProtection: state.get('sensitive').usePinProtection,
+})
 
+@connect(mapStateToProps)
 export default class ConfirmMnemonic extends React.Component {
-  state = {
-    mnemonic: [],
-    words: fillArrayToLength(12, 1, [
-      'fire',
-      'cat',
-      'rotor',
-      'android',
-      'potato',
-      'influence',
-      'tree',
-      'chrome',
-      'collective',
-      'adelaide',
-      'chrono',
-    ]),
+  constructor (props) {
+    super(props)
+
+    this.state = this.createInitialState()
   }
 
   handleDone = () => {
-    const { usePin, navigator } = this.props
-
+    const { usePinProtection, navigator, mnemonic } = this.props
+    
+    if (mnemonic !== this.state.mnemonic.join(' ')) {
+      this.addError(I18n.t('ConfirmMnemonic.wrongMnemonicError'))
+      return this.resetState()
+    }
+    
     navigator.push({
-      screen: usePin ? 'SetupPin' : 'WalletsList',
+      screen: usePinProtection ? 'EnterPin' : 'WalletsList',
     })
   }
-
+  
   handleWord = (word) => {
     const { words, mnemonic } = this.state
-
+    
     if (mnemonic.length === 10) {
       this.handleDone()
     }
@@ -53,9 +50,19 @@ export default class ConfirmMnemonic extends React.Component {
       words: [...words],
     })
   }
+  
+  createInitialState = () => ({
+    mnemonic: [],
+    words: this.props.mnemonic.split(' ').sort(() => Math.random() - 0.5),
+  })
 
-  fillWords = () => fillArrayToLength(this.state.words, 12, 1)
-
+  resetState = () => {
+    this.setState({ 
+      mnemonic: [],
+      words: this.props.mnemonic.split(' ').sort(() => Math.random() - 0.5),
+    })
+  }
+  
   keyExtractor = (word, index) => index
   
   renderWord = ({ item }) => <Word word={item} onPress={this.handleWord} />
