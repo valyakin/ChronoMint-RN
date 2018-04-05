@@ -70,6 +70,24 @@ export const getMarketPrices = (state) => {
   }
 }
 
+export const getMainWalletStore = (state) => {
+  return state.get(DUCK_MAIN_WALLET)
+}
+
+export const getMainWallet = () => createSelector(
+  [ getMainWalletStore ],
+  (mainWallet: TMainWalletModel) => {
+    return mainWallet
+  }
+)
+
+export const getWTokens = () => createSelector(
+  [ getTokens ],
+  (tokens: TTokensCollection) => {
+    return tokens
+  }
+)
+
 type TComparator = (item1: TItemToCompare, item2: TItemToCompare) => number
 type TItemToCompare = {
   balance: TBalanceModel,

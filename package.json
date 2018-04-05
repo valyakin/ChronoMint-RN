@@ -15,7 +15,7 @@
     "asyncstorage-down": "^4.0.1",
     "axios": "^0.17.1",
     "babel-plugin-transform-exponentiation-operator": "^6.24.1",
-    "bignumber.js": "^6.0.0",
+    "bignumber.js": "^4.1.0",
     "bip39": "^2.5.0",
     "bitcoinjs-lib": "^3.3.2",
     "browserify-zlib": "~0.1.4",
@@ -96,7 +96,8 @@
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
     "react-test-renderer": "16.2.0",
-    "redux-devtools-extension": "^2.13.2"
+    "redux-devtools-extension": "^2.13.2",
+    "redux-logger": "^3.0.6"
   },
   "resolutions": {
     "inherits": "olegdizus/inherits",

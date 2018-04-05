@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import colors from '../utils/colors'
 import Separator from './Separator'
 
-const WalletAlertAction = ({ title, onPress, isMain }: ActionProps) => (
+const WalletAlertAction = ({ title, onPress, isMain }: WalletAlertActionProps) => (
   <TouchableOpacity
     style={styles.action}
     onPress={onPress || (() => {})}
@@ -15,7 +15,8 @@ const WalletAlertAction = ({ title, onPress, isMain }: ActionProps) => (
   </TouchableOpacity>
 )
 
-export default class WalletAlert extends React.Component<Props> {
+export default class WalletAlert extends React.Component<WalletAlertProps> {
+
   renderActionButton = (item, index, actions) => ([
     <WalletAlertAction {...item} key={item.id} />,
     (index < actions.length - 1) && <Separator key={index} />,
@@ -74,15 +75,16 @@ const styles = StyleSheet.create({
   },
 })
 
-type Props = {
-  title: string,
-  actions: Array<ActionProps>,
-  style: any,
+type WalletAlertProps = {
+  actions: WalletAlertActionProps[],
+  children?: React.Node,
   contentContainerStyle: any,
+  style: any,
+  title: string,
 }
 
-type ActionProps = {
-  title: string,
-  onPress: () => void,
+type WalletAlertActionProps = {
   isMain?: boolean,
+  title: string,
+  onPress?: () => void,
 }

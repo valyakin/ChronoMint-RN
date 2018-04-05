@@ -40,7 +40,7 @@ const Transactions = ({ transactions }: { transactions?: TTransactionList }) => 
   )
 )
 
-const TokensList = ({ tokens }: { tokens?: TTokenList }) => {
+const TokensList = ({ tokens }: {tokens?: TTokenList}) => {
   if (!tokens || !tokens.length) {
     return null
   }
@@ -55,6 +55,7 @@ const TokensList = ({ tokens }: { tokens?: TTokenList }) => {
     const moreTokenText = ['+', tLength - 1, 'more'].join(' ')
     tokensText = [tokensText, moreTokenText].join(', ')
   }
+
   return (
     <Text style={styles.tokens}>
       {tokensText}
@@ -68,31 +69,26 @@ const Exchange = ({ exchange }: { exchange?: TExchange }) => !exchange ? null : 
   </Text>
 ) 
 
-export default class WalletsListItem extends React.Component<TWallet & { navigator: any }, {}> {
+export default class WalletsListItem extends React.Component<{ wallet: TWallet, navigator: any }> {
 
   handlePress = (): void => {
-    const { navigator, mode, address, tokens, balance } = this.props
+
+    const {
+      navigator,
+      wallet,
+    } = this.props
+
     navigator.push({
       screen: 'Wallet',
       passProps: {
-        mode,
-        address,
-        tokens,
-        balance,
+        wallet: wallet,
       },
     })
   }
 
   render () {
     const {
-      address,
-      balance,
-      exchange,
-      image,
-      mode,
-      title,
-      tokens,
-      transactions,
+      wallet,
     } = this.props
 
     return (
@@ -101,26 +97,26 @@ export default class WalletsListItem extends React.Component<TWallet & { navigat
         onPress={this.handlePress}
       >
         <View style={styles.transactions}>
-          <Transactions transactions={transactions} />
+          <Transactions transactions={wallet.transactions} />
         </View>
         <View style={styles.content}>
           <WalletImage
-            image={image}
-            walletMode={mode}
+            image={wallet.image}
+            walletMode={wallet.mode}
             style={styles.image}
           />
           <View style={styles.contentColumn}>
             <Text style={styles.title}>
-              {title}
+              {wallet.title}
             </Text>
             <Text style={styles.address}>
-              {address}
+              {wallet.address}
             </Text>
             <Text style={styles.balance}>
-              {balance.currency} {balance.amount.toFixed(2)}
+              {wallet.balance.currency} {wallet.balance.amount.toFixed(2)}
             </Text>
-            <TokensList tokens={tokens} />
-            <Exchange exchange={exchange} />
+            <TokensList tokens={wallet.tokens} />
+            <Exchange exchange={wallet.exchange} />
           </View>
         </View>
       </TouchableOpacity>

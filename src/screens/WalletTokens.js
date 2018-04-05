@@ -9,16 +9,22 @@ import {
 } from 'react-native'
 import I18n from 'react-native-i18n'
 import colors from '../utils/colors'
+import {
+  type TBalance,
+  type TToken,
+  type TWallet,
+} from '../types'
 
-export default class WalletTokens extends React.Component {
-  keyExtractor = ({ id }) => id
+export default class WalletTokens extends React.Component<{ wallet: TWallet }> {
 
-  renderItem = ({ item }) => <Token {...item} />
+  keyExtractor = (id: string) => id
+
+  renderItem = (item: TToken) => <Token token={item} balance={this.props.wallet.balance} />
 
   render () {
     return (
       <FlatList
-        data={this.props.tokens}
+        data={this.props.wallet.tokens}
         renderItem={this.renderItem}
         keyExtractor={this.keyExtractor}
         style={styles.list}
@@ -27,16 +33,17 @@ export default class WalletTokens extends React.Component {
   }
 }
 
-class Token extends React.Component {
+class Token extends React.Component<{ token: TToken, balance: TBalance }> {
   render () {
-    const { image, symbol, value, balance } = this.props
+    const { id, amount, image } = this.props.token
+    const { balance } = this.props
     return (
       <View style={styles.token}>
         { image && <Image source={image} style={styles.image} /> }
         <Text style={styles.value}>
-          {symbol}
+          {id}
           &nbsp;
-          {I18n.toNumber(value, { precision: 2 })}
+          {I18n.toNumber(amount, { precision: 2 })}
         </Text>
         <Text style={styles.balance}>
           {balance.currency}

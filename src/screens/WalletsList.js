@@ -67,13 +67,6 @@ export default class WalletsList extends PureComponent {
     refreshing: false,
   }
 
-  /**
-   * Alexey Ozerov: for the further development
-   */
-  // componentDidMount () {
-  //   this.props.getAccountTransactions()
-  // }
-
   handleRefresh = () => {
     this.setState({ refreshing: true })
 
@@ -94,16 +87,11 @@ export default class WalletsList extends PureComponent {
 
   keyExtractor = ( section: TWalletSection ) => section.title
 
-  renderItem = ({ item }: { item: TWallet }) => <WalletsListItem {...item} navigator={this.props.navigator} />
+  renderItem = ({ item }: { item: TWallet }) => <WalletsListItem wallet={item} navigator={this.props.navigator} />
 
   renderSectionHeader = ({ section }: { section: TWalletSection}) => <SectionHeader title={section.title} isDark />
 
   render () {
-    // return (
-    //   <ActivityIndicator />
-    // // )
-    // console.log('Props:')
-    // console.log(this.props)
 
     if (this.state.refreshing || !(this.props.walletSections && this.props.walletSections.length)) {
       return <ActivityIndicator />

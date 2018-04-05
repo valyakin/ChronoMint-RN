@@ -16,30 +16,39 @@ import colors from '../utils/colors'
 import {
   type TBalance,
   type TWalletMode,
+  type TWallet,
 } from '../types'
 
-export default class WalletTransactions extends React.Component {
-  // static defaultProps = {
-  //   address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-  //   mode: 'shared',
-  //   balance: { id: 'usd', amount: 32020.41 },
-  // }
+export default class WalletTransactions extends React.Component<{ wallet: TWallet }> {
 
   render () {
-    const { address, mode, balance } = this.props
+    const {
+      address,
+      balance,
+      mode,
+      tokens,
+    } = this.props.wallet
+
     return (
       <ScrollView style={styles.mainSection}>
         <DetailsSection
-          walletMode={mode}
+          mode={mode}
           balance={balance}
           address={address}
+          tokensLength={tokens && tokens.length || 0}
         />
         <WalletAlert
           title='23 February 2018'
           style={styles.walletAlert}
           actions={[
-            { id: 'revoke', title: I18n.t('Wallet.revoke') },
-            { id: 'sign', title: I18n.t('Wallet.sign'), isMain: true },
+            {
+              id: 'revoke',
+              title: I18n.t('Wallet.revoke'),
+            }, {
+              id: 'sign',
+              title: I18n.t('Wallet.sign'),
+              isMain: true,
+            },
           ]}
           contentContainerStyle={styles.walletAlertContent}
         >
@@ -67,18 +76,20 @@ export default class WalletTransactions extends React.Component {
 
 const DetailsSection = (
   {
-    walletMode,
+    mode,
     address,
     balance,
-  }: { 
-    walletMode: TWalletMode,
+    tokensLength,
+  }: {
+    mode?: TWalletMode,
     address: string, 
-    balance: TBalance
+    balance: TBalance,
+    tokensLength: number,
   }
 ) => (
   <View style={styles.walletDetailsSection}>
     <WalletImage
-      walletMode={walletMode}
+      walletMode={mode}
       shapeStyle={styles.walletImageShape}
       imageStyle={styles.walletImageIcon}
     />
@@ -88,7 +99,7 @@ const DetailsSection = (
       {I18n.toNumber(balance.amount, { precision: 2 })}
     </Text>
     <Text style={styles.walletDetails}>
-      36 Tokens, 3 Owners
+      {tokensLength} Tokens
     </Text>
   </View>
 )

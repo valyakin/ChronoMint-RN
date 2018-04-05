@@ -15,16 +15,20 @@ import WalletOwners from './WalletOwners'
 import WalletTokens from './WalletTokens'
 import WalletTemplates from './WalletTemplates'
 
-// import {
-//   type TWallet,
-// } from '../types'
+import {
+  type TTokenList,
+  type TWallet,
+} from '../types'
 
 type ActionButtonProps = {
   title: string,
   image: number,
   onPress: () => void,
 }
-// type TTabs = 'transactions' | 'tokens' | 'owners' | 'templates'
+/**
+ * Tabs IDs for Wallet screen. Used to switch between tabs.
+ */
+type TTabs = 'transactions' | 'tokens' | 'owners' | 'templates'
 
 const ActionButton = ({ title, image, onPress }: ActionButtonProps) => (
   <TouchableOpacity
@@ -38,7 +42,7 @@ const ActionButton = ({ title, image, onPress }: ActionButtonProps) => (
   </TouchableOpacity>
 )
 
-export default class Wallet extends React.Component {
+export default class Wallet extends React.Component<{ wallet: TWallet, navigator: any }, { tab: TTabs }> {
   state = {
     tab: 'transactions',
   }
@@ -60,16 +64,24 @@ export default class Wallet extends React.Component {
   }
 
   handleSend = (): void => {
-    // this.props.navigator.push({ screen: 'Send' })
+    const {
+      // navigator,
+      wallet,
+    } = this.props
     this.props.navigator.push({
       screen: 'Send',
-      passProps: { ...this.props },
+      title: 'Send tokens',
+      passProps: {
+        wallet: wallet,
+      },
     })
   }
 
+  handleNothing = () => {}
+
   render () {
     const { tab } = this.state
-    const { mode } = this.props
+    const { mode } = this.props.wallet
     
     return (
       <View style={styles.screenView}>
@@ -78,12 +90,18 @@ export default class Wallet extends React.Component {
             Transactions
           </Text>
           <Separator style={styles.separator} />
-          { this.props.token !== 'btc' && ([
-            <Text style={styles.tabItem} onPress={this.handleTokens} key='0'>
-              Tokens
-            </Text>,
-            <Separator style={styles.separator} key='1' />,
-          ])}
+          {/* Alexey Ozerov: Do not understand a logic here. We have tokens - array, which one should be compared with btc?
+            this.props.wallet.token !== 'btc' && ([
+              <Text
+                style={styles.tabItem}
+                onPress={this.handleTokens}
+                key='0'
+              >
+                Tokens
+              </Text>,
+              <Separator style={styles.separator} key='1' />,
+            ])
+          */}
           { mode === 'shared' && ([
             <Text style={styles.tabItem} onPress={this.handleOwners} key='0'>
               Owners
@@ -94,7 +112,7 @@ export default class Wallet extends React.Component {
             Templates
           </Text>
         </View>
-        { tab === 'transactions' && <WalletTransactions {...this.props} />}
+        { tab === 'transactions' && <WalletTransactions wallet={this.props.wallet} />}
         { tab === 'tokens' && <WalletTokens {...this.props} />}
         { tab === 'owners' && <WalletOwners {...this.props} />}
         { tab === 'templates' && <WalletTemplates {...this.props} />}
@@ -107,6 +125,7 @@ export default class Wallet extends React.Component {
           <ActionButton
             title={I18n.t('Wallet.receive')}
             image={require('../images/receive-ios.png')}
+            onPress={this.handleNothing}
           />
         </View>
       </View>

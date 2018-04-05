@@ -1,39 +1,199 @@
 /* @flow */
 import * as React from 'react'
+import { connect } from 'react-redux'
 import {
-  View,
-  ScrollView,
-  Text,
   Image,
-  TextInput,
+  ScrollView,
   Slider,
   StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native'
+import BigNumber from 'bignumber.js'
 import Separator from '../components/Separator'
 import SectionHeader from '../components/SectionHeader'
 import colors from '../utils/colors'
+import {
+  type TToken,
+  type TWallet,
+  type TTokenModel,
+  type TAmountModel,
+  type TMainWalletModel,
+  type TTokensCollection,
+} from '../types'
+import { mainTransfer } from '../../mint/src/redux/mainWallet/actions'
+import Amount from '../../mint/src/models/Amount'
+import { getMainWallet, getWTokens } from '../redux/session/selectors'
 
-export default class Send extends React.Component {
+type SendProps = {
+  wallet: TWallet;
+  navigator: any; // FIXME: use correct flow type for this
+  mainWallet: TMainWalletModel;
+  tokensDuck: TTokensCollection;
+  mainTransfer: (
+    token: TTokenModel,
+    amount: TAmountModel,
+    recipient: string,
+    feeMultiplier: number,
+  ) => {}
+}
+
+type SendStat = {
+  selectedToken: TToken;
+}
+
+const mapStateToProps = (state): TMainWalletModel => ({
+  mainWallet: getMainWallet()(state),
+  tokensDuck: getWTokens()(state),
+})
+
+const mapDispatchToProps  = (dispatch) => {
+  return {
+    // TODO: for further developemnt
+    // mainApprove: (
+    //   token: TTokenModel,
+    //   amount: TAmountModel,
+    //   spender: string,
+    //   feeMultiplier: number,
+    // ) => dispatch(mainApprove(token, amount, spender, feeMultiplier)),
+    mainTransfer: (
+      token: TTokenModel,
+      amount: TAmountModel,
+      recipient: string,
+      feeMultiplier: number,
+    ) => dispatch(mainTransfer(token, amount, recipient, feeMultiplier)),
+  }
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
+export default class Send extends React.Component<SendProps, SendStat> {
+
+  // noinspection JSUnusedGlobalSymbols
+  static navigatorButtons = {
+    leftButtons: [
+      {
+        id: 'cancel',
+      },
+    ],
+    rightButtons: [
+      {
+        title: 'Send',
+        id: 'send',
+      },
+   
+    ],
+  }
+
+  constructor (props: SendProps) {
+    super(props)
+
+    this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)
+  }
+
+  state = {
+    selectedToken: (this.props.wallet.tokens && this.props.wallet.tokens[0]) || { id: 'ETH', amount: 0 },
+  }
+
+  handleNavigatorEvent = ({ type, id }) => {
+    if (type === 'NavBarButtonPress') {
+      switch (id) {
+        case 'cancel': {
+          this.props.navigator.pop()
+          break
+        }
+        case 'send': {
+          // console.log(this.props.mainWallet.tokens())
+          // console.log(this.props.mainWallet.tokens().items('ETH'))
+          // const tokensCollection = this.props.mainWallet
+          // console.log(tokensCollection)
+          const token: TTokenModel = this.props.tokensDuck.item(this.state.selectedToken.id)
+          console.log(token.toJS())
+          const toSendBigNumber: BigNumber = new BigNumber('0.00001')
+          console.log(toSendBigNumber)
+          const bnWithDecimals: TAmountModel = token.addDecimals(toSendBigNumber)
+          console.log(bnWithDecimals)
+          const amountToSend: TAmountModel = new Amount(bnWithDecimals, this.state.selectedToken.id)
+          console.log(amountToSend)
+          const recipient: string = '0x1563915e194d8cfba1943570603f7606a3115508'
+          const feeMultiplier = token.fee()
+          console.log(token, amountToSend, recipient, feeMultiplier)
+          this.props.mainTransfer(token, amountToSend, recipient, feeMultiplier)
+          break
+        }
+      }
+    }
+  }
+
+  // FIXME: to move 'this.props.mainTransfer' call from handleNavigatorEvent to external method
+  //
+  // handleSubmit = (values) => {
+  //   const { wallet, tokens } = this.props
+  //   const { action, symbol, amount, recipient, feeMultiplier } = values.toJS()
+  //   const token = tokens.item(symbol)
+
+  //   const value = new Amount(token.addDecimals(amount), symbol)
+
+  //   // TODO: No multisig wallets here.
+  //   // See to the handleSubmit methiod at mint/src/components/dashboard/SendTokens/SendTokens.jsx
+  //   switch (action) {
+  //     case ACTION_APPROVE:
+  //       this.props.mainApprove(token, value, recipient, feeMultiplier)
+  //       break
+  //     case ACTION_TRANSFER:
+  //         this.props.mainTransfer(token, value, recipient, feeMultiplier)
+  //         break
+  //   }
+  // }
+
+  handleSubmitSuccess = () => {
+    this.props.navigator.pop()
+  }
+
+  handlePressOnTokenSelector = (): void => {
+    this.props.navigator.push({
+      screen: 'SelectToken',
+      title: 'Select Token',
+      passProps: {
+        // navigator: this.props.navigator,
+        tokens: this.props.wallet.tokens,
+        onPressAction: (data: TToken) => {
+          this.setState({ selectedToken: data })
+        },
+      },
+    })
+  }
+
   render () {
+    const { wallet } = this.props
     return (
       <ScrollView
         style={styles.scrollView}
       >
         <View style={styles.formHeader}>
           <Text style={styles.walletTitle}>
-            MyWallet
+            {wallet.title}
           </Text>
           <Text style={styles.walletAddress}>
-            n4XmX91N5FfccY678vaG1ELNtXh6skVES7
+            {wallet.address}
           </Text>
           <Separator style={styles.separatorDark} />
-          <TokenSelector />
+          <TokenSelector
+            selectedToken={this.state.selectedToken}
+            onPress={this.handlePressOnTokenSelector}
+          />
           <Separator style={styles.separatorDark} />
           <Text style={styles.walletValue}>
-            TIME 4.00
+            {
+              [
+                this.state.selectedToken.id,
+                this.state.selectedToken.amount,
+              ].join(' ')
+            }
           </Text>
           <Text style={styles.walletBalance}>
-            USD 160.9
+            {wallet.balance.currency} {wallet.balance.amount}
           </Text>
         </View>
         <View style={styles.formBody}>
@@ -42,7 +202,7 @@ export default class Send extends React.Component {
             style={styles.tokenImage}
           />
           <Input placeholder='Recipient Address' />
-          <Input placeholder='Amount, TIME' />
+          <Input placeholder={`Amount, ${this.state.selectedToken.id}`} />
           <Text style={styles.sendBalance}>USD 0.00</Text>
           <SectionHeader title='Fee' />
           <FeeSlider />
@@ -61,14 +221,22 @@ export default class Send extends React.Component {
   }
 }
 
-const TokenSelector = () => (
-  <View style={styles.tokenSelector}>
-    <Text style={styles.tokenSelectorLabel}>
-      TIME
-    </Text>
-    <Image source={require('../images/chevron-down.png')} />
-  </View>
-)
+const TokenSelector = ({ onPress, selectedToken }: { onPress?: () => void, selectedToken: TToken}) => {
+
+  return (
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+      <View style={styles.tokenSelector}>
+        {
+          selectedToken && selectedToken.id &&
+            <Text style={styles.tokenSelectorLabel}>
+              {selectedToken.id} {selectedToken.amount}
+            </Text>
+        }
+        <Image source={require('../images/chevron-right.png')} />
+      </View>
+    </TouchableOpacity>
+  )
+}
 
 const Input = (props) => (
   <TextInput

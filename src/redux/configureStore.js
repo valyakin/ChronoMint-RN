@@ -7,6 +7,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 // import moment from 'moment'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import { createLogger as rCreateLogger } from 'redux-logger'
 import saveAccountMiddleWare from './session/saveAccountMiddleWare'
 // import ls from 'utils/LocalStorage'
 // import { globalWatcher } from '@chronobank/mint/src/redux/watcher/actions'
@@ -62,12 +63,17 @@ const configureStore = () => {
   const composeEnhancers = __DEV__ ? composeWithDevTools({ realtime: true }) : compose
   // const composeEnhancers = composeWithDevTools({ realtime: true })
 
+  const rLogger = rCreateLogger({
+    collapse: true,
+  });
+
   // noinspection JSUnresolvedVariable,JSUnresolvedFunction
   const createStoreWithMiddleware = composeEnhancers(
     applyMiddleware(
       thunk,
       // routerMiddleware(historyEngine),
-      saveAccountMiddleWare
+      saveAccountMiddleWare,
+      // rLogger
     )
   )(createStore)
 
