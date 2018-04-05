@@ -15,11 +15,16 @@ import WalletOwners from './WalletOwners'
 import WalletTokens from './WalletTokens'
 import WalletTemplates from './WalletTemplates'
 
+// import {
+//   type TWallet,
+// } from '../types'
+
 type ActionButtonProps = {
   title: string,
   image: number,
   onPress: () => void,
 }
+// type TTabs = 'transactions' | 'tokens' | 'owners' | 'templates'
 
 const ActionButton = ({ title, image, onPress }: ActionButtonProps) => (
   <TouchableOpacity
@@ -54,8 +59,12 @@ export default class Wallet extends React.Component {
     this.setState({ tab: 'templates' })
   }
 
-  handleSend = () => {
-    this.props.navigator.push({ screen: 'Send' })
+  handleSend = (): void => {
+    // this.props.navigator.push({ screen: 'Send' })
+    this.props.navigator.push({
+      screen: 'Send',
+      passProps: { ...this.props },
+    })
   }
 
   render () {

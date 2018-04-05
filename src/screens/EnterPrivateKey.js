@@ -15,7 +15,7 @@ class EnterPrivateKey extends React.Component<{}, {}> {
   }
 
   state = {
-    privateKey: '',
+    privateKey: '1111111111111111111111111111111111111111111111111111111111111111',
     isPending: false,
   }
   
@@ -37,6 +37,7 @@ class EnterPrivateKey extends React.Component<{}, {}> {
           multiline
           isDark
           onChangeText={this.handleInput}
+          value='1111111111111111111111111111111111111111111111111111111111111111'
         />
         <Checkbox
           label={I18n.t('EnterPrivateKey.saveOnDevice')}

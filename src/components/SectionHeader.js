@@ -1,15 +1,18 @@
 /* @flow */
 import * as React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
 import colors from '../utils/colors'
 
 type SectionHeaderProps = {
-  title: string
+  title: string,
+  isDark?: boolean,
+  style?: StyleObj,
 }
 
 export default class SectionHeader extends React.Component<SectionHeaderProps, void> {
   render () {
-    const { title, isDark, style } = this.props
+    const { title, isDark = false, style } = this.props
     
     if (isDark) {
       return (

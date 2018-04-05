@@ -3,7 +3,7 @@ import * as React from 'react'
 import { FlatList, View, Image, Text, StyleSheet } from 'react-native'
 import colors from '../utils/colors'
 
-export default class WalletTemplates extends React.Component {
+export default class WalletTemplates extends React.Component<{}> {
   keyExtractor = ({ id }) => id
 
   renderItem = ({ item }) => <Template {...item} />
@@ -20,7 +20,7 @@ export default class WalletTemplates extends React.Component {
   }
 }
 
-class Template extends React.Component {
+class Template extends React.Component<{}> {
   render () {
     const { image, symbol, value, title, address } = this.props
     return (

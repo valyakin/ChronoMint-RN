@@ -1,19 +1,29 @@
 /* @flow */
 import * as React from 'react'
-import { View, ScrollView, StyleSheet, Image, Text } from 'react-native'
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import I18n from 'react-native-i18n'
 import WalletImage from '../components/WalletImage'
 import WalletAlert from '../components/WalletAlert'
 import TransactionsList from '../components/TransactionsList'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
+import {
+  type TBalance,
+  type TWalletMode,
+} from '../types'
 
 export default class WalletTransactions extends React.Component {
-  static defaultProps = {
-    address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-    mode: 'shared',
-    balance: { id: 'usd', amount: 32020.41 },
-  }
+  // static defaultProps = {
+  //   address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
+  //   mode: 'shared',
+  //   balance: { id: 'usd', amount: 32020.41 },
+  // }
 
   render () {
     const { address, mode, balance } = this.props
@@ -55,7 +65,17 @@ export default class WalletTransactions extends React.Component {
   }
 }
 
-const DetailsSection = ({ walletMode, address, balance }) => (
+const DetailsSection = (
+  {
+    walletMode,
+    address,
+    balance,
+  }: { 
+    walletMode: TWalletMode,
+    address: string, 
+    balance: TBalance
+  }
+) => (
   <View style={styles.walletDetailsSection}>
     <WalletImage
       walletMode={walletMode}
@@ -64,7 +84,7 @@ const DetailsSection = ({ walletMode, address, balance }) => (
     />
     <Text style={styles.address}>{address}</Text>
     <Text style={styles.balance}>
-      {I18n.t(balance.id)}&nbsp;
+      USD&nbsp;
       {I18n.toNumber(balance.amount, { precision: 2 })}
     </Text>
     <Text style={styles.walletDetails}>

@@ -1,32 +1,32 @@
 /* @flow */
 import * as React from 'react'
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import colors from '../utils/colors'
 import WalletImage from './WalletImage'
 
-export type Token = { id: string, amount: number }
+/**
+ * Alexey Ozerov:
+ * I know that there is the following syntax available:
+ * import type { TExchange, TTokenList } from '../types'
+ * 
+ * But in this case IDE's (VSCode) hints stop working. :-(
+ * See how it should looks:
+ * http://ozerov.pro/root/apitracker/uploads/18e05f3575ed0141a933bd77eaf3682f/Screen_Shot_2018-04-04_at_16.02.24.png
+ */
+import {
+  type TExchange,
+  type TTokenList,
+  type TTransactionList,
+  type TWallet,
+} from '../types'
 
-export type Transaction = { status?: 'receiving' | null }
-
-export type ExchangeType = { currency: string, amount: number }
-
-export type WalletMode = '2fa' | 'shared' | 'timeLocked'
-
-export type WalletListItemProps = {
-  title: string,
-  address: string,
-  balance: {
-    currency: string,
-    amount: number
-  },
-  transactions?: Transaction[],
-  tokens?: Token[],
-  exchange?: ExchangeType,
-  image?: number,
-  mode?: WalletMode,
-}
-
-const Transactions = ({ transactions }: Transaction[]) => !transactions ? null : (
+const Transactions = ({ transactions }: { transactions?: TTransactionList }) => !transactions ? null : (
   !transactions[1] ? (
     <Image
       source={require('../images/indicator-receiving-25.png')}
@@ -40,7 +40,7 @@ const Transactions = ({ transactions }: Transaction[]) => !transactions ? null :
   )
 )
 
-const TokensList = ({ tokens }: Token[]) => {
+const TokensList = ({ tokens }: { tokens?: TTokenList }) => {
   if (!tokens || !tokens.length) {
     return null
   }
@@ -62,36 +62,51 @@ const TokensList = ({ tokens }: Token[]) => {
   )
 }
 
-const Exchange = ({ exchange }: ExchangeType) => !exchange ? null : (
+const Exchange = ({ exchange }: { exchange?: TExchange }) => !exchange ? null : (
   <Text style={styles.exchange}>
     {exchange.currency} {exchange.amount}
   </Text>
 ) 
 
-export default class WalletsListItem extends React.Component<WalletListItemProps, {}> {
-  handlePress = () => {
-    const { navigator, mode, address, token } = this.props
+export default class WalletsListItem extends React.Component<TWallet & { navigator: any }, {}> {
+
+  handlePress = (): void => {
+    const { navigator, mode, address, tokens, balance } = this.props
     navigator.push({
       screen: 'Wallet',
       passProps: {
         mode,
         address,
-        token,
+        tokens,
+        balance,
       },
     })
   }
 
   render () {
-    const { title, address, balance } = this.props
+    const {
+      address,
+      balance,
+      exchange,
+      image,
+      mode,
+      title,
+      tokens,
+      transactions,
+    } = this.props
+
     return (
-      <TouchableOpacity style={styles.container} onPress={this.handlePress}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={this.handlePress}
+      >
         <View style={styles.transactions}>
-          <Transactions transactions={this.props.transactions} />
+          <Transactions transactions={transactions} />
         </View>
         <View style={styles.content}>
           <WalletImage
-            image={this.props.image}
-            walletMode={this.props.mode}
+            image={image}
+            walletMode={mode}
             style={styles.image}
           />
           <View style={styles.contentColumn}>
@@ -104,8 +119,8 @@ export default class WalletsListItem extends React.Component<WalletListItemProps
             <Text style={styles.balance}>
               {balance.currency} {balance.amount.toFixed(2)}
             </Text>
-            <TokensList tokens={this.props.tokens} />
-            <Exchange exchange={this.props.exchange} />
+            <TokensList tokens={tokens} />
+            <Exchange exchange={exchange} />
           </View>
         </View>
       </TouchableOpacity>

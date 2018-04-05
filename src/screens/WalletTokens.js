@@ -1,6 +1,12 @@
 /* @flow */
 import * as React from 'react'
-import { FlatList, View, Image, Text, StyleSheet } from 'react-native'
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import I18n from 'react-native-i18n'
 import colors from '../utils/colors'
 
@@ -12,7 +18,7 @@ export default class WalletTokens extends React.Component {
   render () {
     return (
       <FlatList
-        data={tokens}
+        data={this.props.tokens}
         renderItem={this.renderItem}
         keyExtractor={this.keyExtractor}
         style={styles.list}
@@ -70,25 +76,3 @@ const styles = StyleSheet.create({
   },
 })
 
-const tokens = [
-  {
-    id: 'ETH',
-    symbol: 'ETH',
-    value: 10,
-    balance: {
-      currency: 'USD',
-      amount: 10000,
-    },
-    image: require('../images/coin-ethereum-small.png'),
-  },
-  {
-    id: 'TIME',
-    symbol: 'TIME',
-    value: 10,
-    image: require('../images/coin-time-small.png'),
-    balance: {
-      currency: 'USD',
-      amount: 10000,
-    },
-  },
-]

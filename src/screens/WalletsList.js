@@ -7,35 +7,40 @@ import {
 } from 'react-native'
 import I18n from 'react-native-i18n'
 
-import SectionHeader from 'components/SectionHeader'
-import WalletsListItem, {
-  WalletListItemProps,
-} from 'components/WalletsListItem'
-import { getSectionedBalances } from 'redux/session/selectors'
-import BalanceModel from 'models/tokens/BalanceModel'
+import { getAccountTransactions } from 'redux/mainWallet/actions'
+
+import SectionHeader from '../components/SectionHeader'
+import WalletsListItem from '../components/WalletsListItem'
+import { getSectionedBalances } from '../redux/session/selectors'
+// import BalanceModel from '../../mint/src/models/tokens/BalanceModel'
+import {
+  type TWallet,
+  type TWalletSectionList,
+  type TWalletSection,
+} from '../types'
 
 // TODO: add fallback for coins' icons
 //import { TOKEN_ICONS } from 'assets'
-
-type WalletListSection = {
-  data: BalanceModel[],
-  title: string,
-}
 
 type WalletsListState = {
   refreshing: boolean,
 }
 
-type WalletsListProps = {
-  walletSections: WalletListSection[],
+type WalletListProps = {
+  walletSections: TWalletSectionList,
+  // navigator: any, // FIXME: need to discover flow type for this
 }
 
-const mapStateToProps = (state): { walletSections: WalletListSection[] } => ({
+const mapStateToProps = (state): { walletSections: TWalletSectionList } => ({
   walletSections: getSectionedBalances()(state),
 })
 
-@connect(mapStateToProps)
-export default class WalletsList extends PureComponent<WalletsListProps, WalletsListState> {
+const mapDispatchToProps = (dispatch) => ({
+  getAccountTransactions: () => dispatch(getAccountTransactions()),
+})
+
+@connect(mapStateToProps, mapDispatchToProps)
+export default class WalletsList extends PureComponent {
 
   // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
@@ -62,13 +67,20 @@ export default class WalletsList extends PureComponent<WalletsListProps, Wallets
     refreshing: false,
   }
 
+  /**
+   * Alexey Ozerov: for the further development
+   */
+  // componentDidMount () {
+  //   this.props.getAccountTransactions()
+  // }
+
   handleRefresh = () => {
     this.setState({ refreshing: true })
 
     setTimeout(() => this.setState({ refreshing: false }), 1000)
   }
 
-  onNavigatorEvent = ({ type, id }) => {
+  onNavigatorEvent = ({ type, id }: { type: string, id: string }) => {
     if (type === 'NavBarButtonPress' && id === 'drawer') {
       this.props.navigator.toggleDrawer({ side: 'left' })
     }
@@ -80,26 +92,32 @@ export default class WalletsList extends PureComponent<WalletsListProps, Wallets
     }
   }
 
-  keyExtractor = (item) => item.title
+  keyExtractor = ( section: TWalletSection ) => section.title
 
-  renderItem = ({ item }) => {
-    return <WalletsListItem {...item} navigator={this.props.navigator} />
-  }
+  renderItem = ({ item }: { item: TWallet }) => <WalletsListItem {...item} navigator={this.props.navigator} />
 
-  renderSectionHeader = ({ section }) => <SectionHeader {...section} isDark />
+  renderSectionHeader = ({ section }: { section: TWalletSection}) => <SectionHeader title={section.title} isDark />
 
   render () {
+    // return (
+    //   <ActivityIndicator />
+    // // )
+    // console.log('Props:')
+    // console.log(this.props)
+
+    if (this.state.refreshing || !(this.props.walletSections && this.props.walletSections.length)) {
+      return <ActivityIndicator />
+    }
+
     return (
-      (this.state.refreshing || !this.props.walletSections.length) ?
-        <ActivityIndicator /> :
-        <SectionList
-          renderItem={this.renderItem}
-          renderSectionHeader={this.renderSectionHeader}
-          sections={this.props.walletSections}
-          keyExtractor={this.keyExtractor}
-          onRefresh={this.handleRefresh}
-          refreshing={this.state.refreshing}
-        />
+      <SectionList
+        renderItem={this.renderItem}
+        renderSectionHeader={this.renderSectionHeader}
+        sections={this.props.walletSections}
+        keyExtractor={this.keyExtractor}
+        onRefresh={this.handleRefresh}
+        refreshing={this.state.refreshing}
+      />
     )
   }
 }
