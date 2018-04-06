@@ -162,8 +162,7 @@ export const mainTransfer = (token: TokenModel, amount: Amount, recipient: strin
     const tokenDAO = tokenService.getDAO(token.id())
     await tokenDAO.transfer(wallet.addresses().item(token.blockchain()).address(), recipient, amount, token, feeMultiplier)
   } catch (e) {
-    console.log(e)
-    // dispatch(notifyError(e, 'mainTransfer'))
+    dispatch(notifyError(e, 'mainTransfer'))
   }
 }
 
