@@ -55,6 +55,6 @@ buck-out/
 google-play-api-secret.json
 .vscode
 
-# Haul
+# Flow-typed
 #
-haul-debug.log
+flow-typed
