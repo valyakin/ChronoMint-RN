@@ -27,6 +27,7 @@ export const showConfirmTxModal = () => (dispatch, getState) => new Promise((res
   // console.log(st)
   const updatedTx = st.get(DUCK_WATCHER).confirmTx
   resolve({ isConfirmed: isConfirmed, updatedTx: updatedTx })
+  // TODO: to implemet RN confirmation screen and enable the code below
 //   dispatch(modalsOpen({
 //     component: ConfirmTxDialog,
 //     props: {

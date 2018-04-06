@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import {
   Image,
   ScrollView,
-  Slider,
   StyleSheet,
   Text,
   TextInput,
@@ -12,9 +11,10 @@ import {
   View,
 } from 'react-native'
 import BigNumber from 'bignumber.js'
-import Separator from '../components/Separator'
-import SectionHeader from '../components/SectionHeader'
-import colors from '../utils/colors'
+import Separator from 'components/Separator'
+import SectionHeader from 'components/SectionHeader'
+import colors from 'utils/colors'
+import FeeSlider from 'components/FeeSlider'
 import {
   type TToken,
   type TWallet,
@@ -22,7 +22,7 @@ import {
   type TAmountModel,
   type TMainWalletModel,
   type TTokensCollection,
-} from '../types'
+} from 'types'
 import { mainTransfer } from '../../mint/src/redux/mainWallet/actions'
 import Amount from '../../mint/src/models/Amount'
 import { getMainWallet, getWTokens } from '../redux/session/selectors'
@@ -42,6 +42,7 @@ type SendProps = {
 
 type SendStat = {
   selectedToken: TToken;
+  fee: number,
 }
 
 const mapStateToProps = (state): TMainWalletModel => ({
@@ -94,6 +95,7 @@ export default class Send extends React.Component<SendProps, SendStat> {
 
   state = {
     selectedToken: (this.props.wallet.tokens && this.props.wallet.tokens[0]) || { id: 'ETH', amount: 0 },
+    fee: 1,
   }
 
   handleNavigatorEvent = ({ type, id }) => {
@@ -165,6 +167,12 @@ export default class Send extends React.Component<SendProps, SendStat> {
     })
   }
 
+  onFeeSliderChange = (value: number) => {
+    this.setState({
+      fee: value,
+    })
+  }
+
   render () {
     const { wallet } = this.props
     return (
@@ -205,7 +213,14 @@ export default class Send extends React.Component<SendProps, SendStat> {
           <Input placeholder={`Amount, ${this.state.selectedToken.id}`} />
           <Text style={styles.sendBalance}>USD 0.00</Text>
           <SectionHeader title='Fee' />
-          <FeeSlider />
+          <FeeSlider
+            tokenID={this.state.selectedToken.id}
+            averageFee={1 /* TODO: to receive real average fee via token()*/}
+            maximumValue={0.1}
+            minimumValue={1.9}
+            step={0.1}
+            handleValueChange={this.onFeeSliderChange}
+          />
           <Text style={styles.advancedFee}>
             Advanced Fee
           </Text>
@@ -246,27 +261,27 @@ const Input = (props) => (
   />
 )
 
-const FeeSlider = () => (
-  <View style={styles.feeSliderContainer}>
-    <View style={styles.feeSliderLabel}>
-      <Text style={styles.feeSliderLabelText}>Slow transaction</Text>
-      <Text style={styles.feeSliderLabelText}>Fast transaction</Text>
-    </View>
-    <Slider
-      minimumTrackTintColor='#786AB7'
-      value={0.5}
-    />
-    <Text style={styles.feeSliderDetails}>
-      <Text style={styles.feeSliderDetailsBold}>
-        Transaction fee:
-      </Text>
-      &nbsp;
-      ETH 0.001 (≈USD 10.00)
-      {'\n'}
-      1.0x of average fee
-    </Text>
-  </View>
-)
+// const FeeSlider = () => (
+//   <View style={styles.feeSliderContainer}>
+//     <View style={styles.feeSliderLabel}>
+//       <Text style={styles.feeSliderLabelText}>Slow transaction</Text>
+//       <Text style={styles.feeSliderLabelText}>Fast transaction</Text>
+//     </View>
+//     <Slider
+//       minimumTrackTintColor='#786AB7'
+//       value={0.5}
+//     />
+//     <Text style={styles.feeSliderDetails}>
+//       <Text style={styles.feeSliderDetailsBold}>
+//         Transaction fee:
+//       </Text>
+//       &nbsp;
+//       ETH 0.001 (≈USD 10.00)
+//       {'\n'}
+//       1.0x of average fee
+//     </Text>
+//   </View>
+// )
 
 const styles = StyleSheet.create({
   scrollView: {

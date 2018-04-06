@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-import colors from '../utils/colors'
-import Separator from '../components/Separator'
+import colors from 'utils/colors'
+import Separator from 'components/Separator'
+
 import WalletTransactions from './WalletTransactions'
 import WalletOwners from './WalletOwners'
 import WalletTokens from './WalletTokens'
