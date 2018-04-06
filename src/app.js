@@ -14,6 +14,7 @@ Navigation.startSingleScreenApp({
     title: I18n.t('Wallet.title'),
   },
   appStyle: {
+    disabledBackGesture: true,
     navBarBackgroundColor: '#614DBA',
     navBarTextColor: '#BDB2FF',
     navBarButtonColor: '#FFFFFF',
@@ -26,5 +27,6 @@ Navigation.startSingleScreenApp({
       screen: 'Drawer',
     },
     animationType: 'parallax',
+    disableOpenGesture: true,
   },
 })
