@@ -1,12 +1,11 @@
 {
-  "extends": ["plugin:chronobank-react/recommended"],
+  "extends": [
+    "plugin:chronobank-react/recommended"
+  ],
   "plugins": [
     "flowtype",
     "react-native"
   ],
-  "ecmaFeatures": {
-    "jsx": true
-  },
   "env": {
     "react-native/react-native": true
   },
@@ -14,7 +13,10 @@
     "import/resolver": {
       "babel-module": {}
     },
-    "import/external-module-folders": ["./src/components", "./components"]
+    "import/external-module-folders": [
+      "./src/components",
+      "./components"
+    ]
   },
   "rules": {
     "react/prop-types": 0,

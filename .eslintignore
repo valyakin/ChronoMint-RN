@@ -9,4 +9,5 @@ docs/**
 *.less
 *.scss
 *.svg
+patches/**
 git
