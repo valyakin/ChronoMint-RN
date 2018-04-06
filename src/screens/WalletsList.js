@@ -9,9 +9,9 @@ import I18n from 'react-native-i18n'
 
 import { getAccountTransactions } from 'redux/mainWallet/actions'
 
-import SectionHeader from '../components/SectionHeader'
-import WalletsListItem from '../components/WalletsListItem'
-import { getSectionedBalances } from '../redux/session/selectors'
+import SectionHeader from 'components/SectionHeader'
+import WalletsListItem from 'components/WalletsListItem'
+import { getSectionedBalances } from 'redux/session/selectors'
 // import BalanceModel from '../../mint/src/models/tokens/BalanceModel'
 import {
   type TWallet,
