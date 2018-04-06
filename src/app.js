@@ -20,11 +20,13 @@ Navigation.startSingleScreenApp({
     statusBarTextColorScheme: 'light',
     screenBackgroundColor: '#242045',
     hideBackButtonTitle: true,
+    disabledBackGesture: true,
   },
   drawer: {
     left: {
       screen: 'Drawer',
     },
     animationType: 'parallax',
+    disableOpenGesture: true,
   },
 })
