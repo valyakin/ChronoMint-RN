@@ -1,19 +1,26 @@
 /* @flow */
 import TokenModel from '../../mint/src/models/tokens/TokenModel'
 import TokensCollection from '../../mint/src/models/tokens/TokensCollection'
+
 /**
- * Token deatils
- * 
- * id - usually equal to 'sumbol', but it can be anything
- * amount - amount of specified token
+ * Pure object representation of a TTokenModel
+ * @type {object}
+ * @prop {number} amount - Amount of specified token.
+ * @prop {string} id -Usually equal to 'sumbol', but it can be anything.
  */
 export type TToken = {
+  /**
+   * @prop {number} amount - Amount of specified token.
+   */
   amount: number,
   id: string,
 }
 
 /**
- * List of all available tokens (like ETH, TIME, XEM etc.)
+ * Alias to TToken[] - list of all available tokens
+ * @type {object}
+ * @prop {number} amount - Amount of specified token.
+ * @prop {string} id -Usually equal to 'sumbol', but it can be anything.
  */
 export type TTokenList = TToken[]
 

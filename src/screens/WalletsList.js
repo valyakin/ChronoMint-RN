@@ -8,16 +8,15 @@ import {
 import I18n from 'react-native-i18n'
 
 import { getAccountTransactions } from 'redux/mainWallet/actions'
-
+import { getSectionedBalances } from 'redux/session/selectors'
 import SectionHeader from 'components/SectionHeader'
 import WalletsListItem from 'components/WalletsListItem'
-import { getSectionedBalances } from 'redux/session/selectors'
-// import BalanceModel from '../../mint/src/models/tokens/BalanceModel'
+
 import {
   type TWallet,
   type TWalletSectionList,
   type TWalletSection,
-} from '../types'
+} from 'types'
 
 // TODO: add fallback for coins' icons
 //import { TOKEN_ICONS } from 'assets'
@@ -28,7 +27,7 @@ type WalletsListState = {
 
 type WalletListProps = {
   walletSections: TWalletSectionList,
-  // navigator: any, // FIXME: need to discover flow type for this
+  navigator: any, // FIXME: need to discover flow type for this
 }
 
 const mapStateToProps = (state): { walletSections: TWalletSectionList } => ({
@@ -40,7 +39,7 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class WalletsList extends PureComponent {
+export default class WalletsList extends PureComponent<WalletListProps, WalletsListState> {
 
   // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
@@ -58,7 +57,7 @@ export default class WalletsList extends PureComponent {
     ],
   }
 
-  constructor (props) {
+  constructor (props: WalletListProps) {
     super(props)
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent)
   }
@@ -109,4 +108,3 @@ export default class WalletsList extends PureComponent {
     )
   }
 }
-

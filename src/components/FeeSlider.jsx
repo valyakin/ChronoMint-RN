@@ -3,18 +3,19 @@
 import * as React from 'react'
 import {
   Slider,
-  StyleSheet,
   Text,
   View,
 } from 'react-native'
-import colors from '../utils/colors'
+
 import {
   type TTokenModel,
-} from '../types'
+} from 'types'
+
+import styles from './styles/FeeSliderStyles'
 
 type FeeSliderProps = {|
   tokenID: string | TTokenModel,
-  averageFee?: number,
+  value: number,
   maximumValue?: number,
   minimumValue?: number,
   step?: number,
@@ -22,74 +23,56 @@ type FeeSliderProps = {|
 |}
 
 /**
- * Component for 'Send' screen: to adjust fee/gas before sending a transaction
+ * Title on top of slider: Slow <-> Fast.
+ */
+const FeeSliderTitle = () => (
+  <View style={styles.feeSliderLabel}>
+    <Text style={styles.feeSliderLabelText}>
+      Slow transaction
+    </Text>
+    <Text style={styles.feeSliderLabelText}>
+      Fast transaction
+    </Text>
+  </View>
+)
+
+/**
+ * Component for the 'Send' screen: to adjust fee/gas before sending a transaction
  * 
  * @param {string} tokenID - Selected token ID
  * @param {number} [averageFee=0.1] - Minimum fee value
  * @param {number} [maximumValue=1.9] - Maximum fee value
  * @param {number} [step=0.1] - Slider's step
- * @param {number} [averageFee=1] - Recommended fee/gas value
+ * @param {number} [value=1] - Recommended fee/gas value
  * @param {(value: number): void} handleValueChange - Update fee value on each slider's change
  */
 const FeeSlider = ({
   tokenID,
-  averageFee = 1,
+  value = 1,
   maximumValue = 0.1,
   minimumValue = 1.9,
   step = 0.1,
-  handleValueChange,
+  handleValueChange = () => {}, // [AO] Do nothing by default
 }: FeeSliderProps) => (
   <View style={styles.feeSliderContainer}>
-    <View style={styles.feeSliderLabel}>
-      <Text style={styles.feeSliderLabelText}>
-        Slow transaction
-      </Text>
-      <Text style={styles.feeSliderLabelText}>
-        Fast transaction
-      </Text>
-    </View>
+    <FeeSliderTitle />
     <Slider
       maximumValue={maximumValue}
       minimumTrackTintColor='#786AB7'
       minimumValue={minimumValue}
       step={step}
-      value={averageFee}
+      value={value}
       onValueChange={handleValueChange}
     />
-    <Text style={styles.feeSliderDetails}>
-      <Text style={styles.feeSliderDetailsBold}>
+    <View style={styles.feeSliderDetailsContainer}>
+      <Text style={[styles.feeSliderDetails, styles.feeSliderDetailsBold]}>
         {`Transaction fee: ${tokenID} 0.001 (≈USD 10.00)`}
       </Text>
-      <Text>
-        {`${averageFee}.0x of average fee`}
+      <Text style={styles.feeSliderDetails}>
+        {`${value.toFixed(1)}x of average fee`}
       </Text>
-    </Text>
+    </View>
   </View>
 )
 
 export default FeeSlider
-
-const styles = StyleSheet.create({
-  feeSliderContainer: {
-    marginVertical: 30,
-    marginHorizontal: 20,
-  },
-  feeSliderLabel: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    bottom: -8,
-  },
-  feeSliderLabelText: {
-    fontSize: 16,
-    color: colors.foreground,
-  },
-  feeSliderDetails: {
-    fontSize: 14,
-    color: colors.foreground,
-    fontWeight: '200',
-    marginTop: 8,
-  },
-  feeSliderDetailsBold: {
-    fontWeight: '700',
-  },
-})
