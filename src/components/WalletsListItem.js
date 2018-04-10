@@ -15,6 +15,7 @@ import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
 
 import WalletImage from './WalletImage'
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 type TMainWalletModel = typeof MainWalletModel
 type TMultisigWalletModel = typeof MultisigWalletModel
@@ -33,29 +34,27 @@ const Transactions = ({ transactions }) => !transactions ? null : (
   )
 )
 
-const TokensList = ({ tokens }) => {
-  if (!tokens || !tokens.length) {
+const TokensList = ({tokens}) => {
+  if (!tokens || !Object.keys(tokens).length) {
     return null
   }
 
-  const tokensNames = Object.keys(tokens)
-  const tLength = tokensNames.length
-  const firstTokenId = tokensNames[0]
-  let tokensText = [firstTokenId, tokens[firstTokenId].toFixed(2)].join(' ')
+  let tokensStrings = Object.keys(tokens).sort().reduce( (accumulator, tokenSymbol) => {
+    accumulator.push([tokenSymbol, tokens[tokenSymbol].toFixed(2)].join(': '))
+    return accumulator
+  }, [])
 
-  if (tLength === 2) {
-    const secondTokenText = [tokensNames[1].id, tokensNames[1].amount.toFixed(2)].join(' ')
-    tokensText = [tokensText, secondTokenText].join(', ')
+  if (tokensStrings && tokensStrings.length > 2) {
+    tokensStrings = [
+      tokensStrings[0],
+      ['+', tokensStrings.length - 1, 'more'].join(' '),
+    ]
   }
-
-  if (tLength > 2) {
-    const moreTokenText = ['+', tLength - 1, 'more'].join(' ')
-    tokensText = [tokensText, moreTokenText].join(', ')
-  }
+  tokensStrings = tokensStrings && tokensStrings.join(', ')
 
   return (
     <Text style={styles.tokens}>
-      {tokensText}
+      {tokensStrings}
     </Text>
   )
 }
@@ -77,9 +76,6 @@ type WalletsListItemProps = {
   sectionName: string,
 }
 
-type WalletsListItemState = {
-  balance: number,
-}
 const mapStateToProps = (state) => {
   const {
     prices,
@@ -95,17 +91,14 @@ const mapStateToProps = (state) => {
 }
 
 @connect(mapStateToProps, null)
-export default class WalletsListItem extends React.Component<WalletsListItemProps, WalletsListItemState> {
-
-  state = {
-    balance: 0,
-  }
+export default class WalletsListItem extends React.Component<WalletsListItemProps> {
 
   handlePress = (): void => {
 
     const {
       navigator,
       wallet,
+      address,
     } = this.props
   
     // this.props.selectWallet(
@@ -116,6 +109,7 @@ export default class WalletsListItem extends React.Component<WalletsListItemProp
       screen: 'Wallet',
       passProps: {
         wallet: wallet,
+        address: address,
       },
     })
   }
@@ -124,33 +118,40 @@ export default class WalletsListItem extends React.Component<WalletsListItemProp
     let res = {}
     let usd = 0
     const prices = this.props.prices
-    console.log(
-      '%s wallet (%s) balance calculation: %s',
-      this.props.wallet.isMultisig() ? 'Multisig' : 'Main',
-      this.props.sectionName,
-      this.props.address
-    )
-    this.props.wallet.balances().items().map( (balance) => {
-      const tokensArray = this.props.tokens.items()
-      tokensArray.map( (tokenOfCurrentWallet) => {
-        if (this.props.sectionName === tokenOfCurrentWallet.blockchain()) {
-          const bAmount = balance.amount()
-          const tSymbol = tokenOfCurrentWallet.symbol()
-          const tAmount = this.props.tokens.item(tSymbol).removeDecimals(bAmount).toNumber()
-          res[tSymbol] = tAmount
 
-          const tokenPrice = prices[ tSymbol ] && prices[ tSymbol ][ this.props.selectedCurrency ] || null
-          if (tokenPrice) {
-            console.log('%s costs %s, amount: %s, usd: %s', tSymbol, tokenPrice, tAmount, tAmount * tokenPrice)
+    const filterBalancesByBlockchainName = (balanceItem) => {
+      const bSymbol = balanceItem.symbol()
+      const bToken = this.props.tokens.item(bSymbol)
+      return bToken.blockchain() === this.props.sectionName
+    }
+
+    const filteredWalletBalancesItems = this.props.wallet.balances().items().filter(filterBalancesByBlockchainName)
+
+    const convertAmountToNumber = (symbol, amount) =>
+      this.props.tokens
+        .item(symbol)
+        .removeDecimals(amount)
+        .toNumber()
+
+    // TODO: this is only for main wallets
+    if (!this.props.wallet.isMultisig() && this.props.prices) {
+      filteredWalletBalancesItems
+        .map( (balance) => {
+          const bAmount = balance.amount()
+          const bSymbol = balance.symbol()
+          const tAmount = convertAmountToNumber(bSymbol, bAmount)
+    
+          res[bSymbol] = tAmount
+          const tokenPrice = prices[ bSymbol ] && prices[ bSymbol ][ this.props.selectedCurrency ] || null
+          if (tokenPrice && tAmount > 0) {
             usd += (tAmount * tokenPrice)
           }
-        }
-      })
-    })
-    // console.log(res, usd)
+        })
+    }
+
     return {
       tokens: res,
-      balanceUSD: usd,
+      balanceUSD: usd.toFixed(2),
     }
   }
 
@@ -193,7 +194,7 @@ export default class WalletsListItem extends React.Component<WalletsListItemProp
                       {address}
                     </Text>
                     <Text style={styles.balance}>
-                      {this.props.selectedCurrency} {balanceUSD.toFixed(2)}
+                      {this.props.selectedCurrency} {balanceUSD}
                     </Text>
                     <TokensList tokens={tokens} />
                     {false &&

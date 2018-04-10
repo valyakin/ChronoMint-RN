@@ -42,7 +42,7 @@ const ActionButton = ({ title, image, onPress }: ActionButtonProps) => (
   </TouchableOpacity>
 )
 
-export default class Wallet extends React.Component<{ wallet: TWallet, navigator: any }, { tab: TTabs }> {
+export default class Wallet extends React.Component<{ wallet: TWallet, address: string, navigator: any }, { tab: TTabs }> {
   state = {
     tab: 'transactions',
   }
