@@ -1,4 +1,9 @@
-/* @flow */
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import React from 'react'
 import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
 import { View, TextInput, StyleSheet, Text } from 'react-native'

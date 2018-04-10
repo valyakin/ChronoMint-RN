@@ -1,3 +1,9 @@
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import settingsERC20Tokens from './erc20/tokens/reducer'
 import settingsUserCBE from './user/cbe/reducer'
 

@@ -1,3 +1,9 @@
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 export const KEY_ADD = 'sensitive/KEY_ADD'
 import { AES, enc } from 'crypto-js'
 import { getEncryptedKeys } from './selectors'

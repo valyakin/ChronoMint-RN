@@ -1,3 +1,9 @@
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import moment from 'moment'
 // import { setLocale } from 'platform/i18n'
 import ls from 'utils/LocalStorage'

@@ -1,4 +1,9 @@
-/* @flow */
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import * as React from 'react'
 import { View, TextInput, StyleSheet } from 'react-native'
 import colors from '../utils/colors'

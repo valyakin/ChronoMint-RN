@@ -1,4 +1,9 @@
-/* @flow */
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import { Navigation } from 'react-native-navigation'
 import AddWallet from './AddWallet'
 import ChangeLanguage from './ChangeLanguage'

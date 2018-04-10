@@ -1,3 +1,9 @@
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import { Navigation } from 'react-native-navigation'
 import { Provider } from 'react-redux'
 import I18n from 'react-native-i18n'

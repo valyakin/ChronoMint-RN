@@ -1,3 +1,9 @@
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import { createSelector } from 'reselect'
 import { isTokenChecked } from 'models/ProfileModel'
 import { MANDATORY_TOKENS } from 'dao/ERC20ManagerDAO'

@@ -1,3 +1,9 @@
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import Immutable from 'immutable'
 import CBEModel from 'models/CBEModel'
 import * as a from './actions'
