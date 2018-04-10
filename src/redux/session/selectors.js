@@ -1,5 +1,8 @@
 /* @flow */
-import { createSelector } from 'reselect'
+import {
+  createSelector,
+  createStructuredSelector,
+} from 'reselect'
 import { DUCK_MAIN_WALLET } from '../../../mint/src/redux/mainWallet/actions'
 import { DUCK_MARKET } from '../../../mint/src/redux/market/action'
 import { DUCK_MULTISIG_WALLET } from '../../../mint/src/redux/multisigWallet/actions'
@@ -62,8 +65,21 @@ export const getMultisigWallets = (state) => {
   return result
 }
 
+export const getMultisigActiveWallets = (state) => {
+  const msWallet: TMultisigWalletModel = state.get(DUCK_MULTISIG_WALLET)
+  return msWallet.activeWallets()
+}
+
+export const getMultisigTimeLockedWallets = (state) => {
+  const msWallet: TMultisigWalletModel = state.get(DUCK_MULTISIG_WALLET)
+  return msWallet.timeLockedWallets()
+}
+
 export const getMarketPrices = (state) => {
-  const { prices, selectedCurrency } = state.get(DUCK_MARKET)
+  const {
+    prices,
+    selectedCurrency,
+  } = state.get(DUCK_MARKET)
   return {
     prices,
     selectedCurrency,
@@ -80,6 +96,18 @@ export const getMainWallet = () => createSelector(
     return mainWallet
   }
 )
+
+// export const getGasSliderCollection = (state) => {
+//   const { gasPriceMultiplier } = state.get(DUCK_SESSION)
+//   return gasPriceMultiplier
+// }
+
+// export const getGasPriceMultiplier = (blockchain: string) => createSelector(
+//   [ getGasSliderCollection ],
+//   (gasSliderCollection) => {
+//     return gasSliderCollection.get(blockchain) || 1
+//   },
+// )
 
 export const getWTokens = () => createSelector(
   [ getTokens ],
@@ -141,7 +169,7 @@ export const getVisibleBalances = (comparator: TComparator = BALANCES_COMPARATOR
   },
 )
 
-export const getSectionedBalances = () => createSelector(
+export const getSectionedBalances = () => createStructuredSelector(
   [ getCurrentWallet, getMultisigWallets, getTokens, getBalances, getMarketPrices ],
   (
     mainWallet: TMainWalletModel,

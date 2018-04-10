@@ -18,9 +18,6 @@ import {
   type TWalletSection,
 } from 'types'
 
-// TODO: add fallback for coins' icons
-//import { TOKEN_ICONS } from 'assets'
-
 type WalletsListState = {
   refreshing: boolean,
 }

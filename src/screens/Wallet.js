@@ -17,7 +17,6 @@ import WalletTokens from './WalletTokens'
 import WalletTemplates from './WalletTemplates'
 
 import {
-  type TTokenList,
   type TWallet,
 } from '../types'
 
@@ -71,9 +70,9 @@ export default class Wallet extends React.Component<{ wallet: TWallet, navigator
     } = this.props
     this.props.navigator.push({
       screen: 'Send',
-      title: 'Send tokens',
+      title: 'Send Funds',
       passProps: {
-        wallet: wallet,
+        selcetedBlockchainName: wallet.title,
       },
     })
   }

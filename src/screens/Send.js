@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 
 import {
+  getGasPriceMultiplier,
   getMainWallet,
   getWTokens,
 } from 'redux/session/selectors'
@@ -33,16 +34,16 @@ import SectionHeader from 'components/SectionHeader'
 import Separator from 'components/Separator'
 
 type SendProps = {
-  wallet: TWallet;
-  navigator: any; // FIXME: use correct flow type for this
-  mainWallet: TMainWalletModel;
-  tokensDuck: TTokensCollection;
+  selcetedBlockchainName: string,
+  navigator: any, // FIXME: use correct flow type for this
+  tokens: TTokensCollection,
+  gasPriceMultiplier: any,
   mainTransfer: (
     token: TTokenModel,
     amount: TAmountModel,
     recipient: string,
     feeMultiplier: number,
-  ) => {}
+  ) => {},
 }
 
 type SendState = {
@@ -53,7 +54,7 @@ type SendState = {
 }
 
 const mapStateToProps = (state): TMainWalletModel => ({
-  mainWallet: getMainWallet()(state),
+  gasPriceMultiplier: getGasPriceMultiplier()(state),
   tokensDuck: getWTokens()(state),
 })
 
@@ -82,13 +83,14 @@ export default class Send extends React.Component<SendProps, SendState> {
   static navigatorButtons = {
     leftButtons: [
       {
+        title: 'Cancel',
         id: 'cancel',
       },
     ],
     rightButtons: [
       {
-        title: 'Send',
-        id: 'send',
+        title: 'Done',
+        id: 'done',
       },
    
     ],
@@ -113,25 +115,34 @@ export default class Send extends React.Component<SendProps, SendState> {
           this.props.navigator.pop()
           break
         }
-        case 'send': {
-          // console.log(this.props.mainWallet.tokens())
-          // console.log(this.props.mainWallet.tokens().items('ETH'))
-          // const tokensCollection = this.props.mainWallet
-          // console.log(tokensCollection)
-          const token: TTokenModel = this.props.tokensDuck.item(this.state.selectedToken.id)
-          console.log(token.toJS())
-          const toSendBigNumber: BigNumber = new BigNumber('0.00001')
-          console.log(toSendBigNumber)
-          const bnWithDecimals: TAmountModel = token.addDecimals(toSendBigNumber)
-          console.log(bnWithDecimals)
-          const amountToSend: TAmountModel = new Amount(bnWithDecimals, this.state.selectedToken.id)
-          console.log(amountToSend)
-          const recipient: string = '0x1563915e194d8cfba1943570603f7606a3115508'
-          const feeMultiplier = token.fee()
-          console.log(token, amountToSend, recipient, feeMultiplier)
-          this.props.mainTransfer(token, amountToSend, recipient, feeMultiplier)
-          break
+        case 'done': {
+          this.props.navigator.push({
+            screen: 'ConfirmSend',
+            title: 'Confirm Send',
+            passProps: {
+              amount: this.state.amount,
+              fee: this.state.fee,
+              recipient: this.state.recipient,
+              usd: 1.44,
+            },
+          })
         }
+        // case 'done': {
+        //   // TODO: To move it into separate function
+        //   const token: TTokenModel = this.props.tokensDuck.item(this.state.selectedToken.id)
+        //   // console.log(token.toJS())
+        //   const toSendBigNumber: BigNumber = new BigNumber(this.state.amount)
+        //   // console.log(toSendBigNumber)
+        //   const bnWithDecimals: TAmountModel = token.addDecimals(toSendBigNumber)
+        //   // console.log(bnWithDecimals)
+        //   const amountToSend: TAmountModel = new Amount(bnWithDecimals, this.state.selectedToken.id)
+        //   // console.log(amountToSend)
+        //   const recipient: string = this.state.recipient
+        //   const feeMultiplier = token.fee()
+        //   // console.log(token, amountToSend, recipient, feeMultiplier)
+        //   this.props.mainTransfer(token, amountToSend, recipient, feeMultiplier)
+        //   break
+        // }
       }
     }
   }
@@ -244,7 +255,6 @@ export default class Send extends React.Component<SendProps, SendState> {
           <SectionHeader title='Fee' />
           <FeeSlider
             tokenID={this.state.selectedToken.id}
-            // averageFee={1 /* TODO: to receive real average fee via token()*/}
             maximumValue={1.9}
             minimumValue={0.1}
             value={this.state.fee}
@@ -369,28 +379,6 @@ const styles = StyleSheet.create({
     color: '#7F7F7F',
     marginBottom: 30,
   },
-  // feeSliderContainer: {
-  //   marginVertical: 30,
-  //   marginHorizontal: 20,
-  // },
-  // feeSliderLabel: {
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between',
-  //   bottom: -8,
-  // },
-  // feeSliderLabelText: {
-  //   fontSize: 16,
-  //   color: colors.foreground,
-  // },
-  // feeSliderDetails: {
-  //   fontSize: 14,
-  //   color: colors.foreground,
-  //   fontWeight: '200',
-  //   marginTop: 8,
-  // },
-  // feeSliderDetailsBold: {
-  //   fontWeight: '700',
-  // },
   advancedFee: {
     margin: 20,
     fontSize: 16,

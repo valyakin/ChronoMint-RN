@@ -10,6 +10,7 @@ import AddTimeLockedWallet from './AddTimeLockedWallet'
 import AddTokenToAdvancedWallet from './AddTokenToAdvancedWallet'
 import AddWallet from './AddWallet'
 import ChangeLanguage from './ChangeLanguage'
+import ConfirmSend from './ConfirmSend'
 import Download2FAApp from './Download2FAApp'
 import Drawer from './Drawer'
 import EnterMnemonic from './EnterMnemonic'
@@ -40,6 +41,7 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('AddTokenToAdvancedWallet', () => AddTokenToAdvancedWallet, store, Provider)
   Navigation.registerComponent('AddWallet', () => AddWallet, store, Provider)
   Navigation.registerComponent('ChangeLanguage', () => ChangeLanguage, store, Provider)
+  Navigation.registerComponent('ConfirmSend', () => ConfirmSend, store, Provider)
   Navigation.registerComponent('Download2FAApp', () => Download2FAApp, store, Provider)
   Navigation.registerComponent('Drawer', () => Drawer, store, Provider)
   Navigation.registerComponent('EnterMnemonic', () => EnterMnemonic, store, Provider)
