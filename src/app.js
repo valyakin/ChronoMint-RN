@@ -1,10 +1,10 @@
+import 'utils/i18n'
+import 'utils/shim'
 import { Navigation } from 'react-native-navigation'
 import { Provider } from 'react-redux'
+import { store } from 'redux/configureStore'
 import I18n from 'react-native-i18n'
-import './utils/shim'
-import './utils/i18n'
-import { store } from './redux/configureStore'
-import registerScreens from './screens/registerScreens'
+import registerScreens from 'screens/registerScreens'
 
 registerScreens(store, Provider)
 

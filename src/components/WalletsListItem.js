@@ -7,26 +7,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import colors from '../utils/colors'
+import { connect } from 'react-redux'
+import colors from 'utils/colors'
+import MainWalletModel from 'models/wallet/MainWalletModel'
+import MultisigWalletModel from 'models/wallet/MultisigWalletModel'
+import { DUCK_MARKET } from 'redux/market/action'
+import { DUCK_TOKENS } from 'redux/tokens/actions'
+
 import WalletImage from './WalletImage'
 
-/**
- * Alexey Ozerov:
- * I know that there is the following syntax available:
- * import type { TExchange, TTokenList } from '../types'
- * 
- * But in this case IDE's (VSCode) hints stop working. :-(
- * See how it should looks:
- * http://ozerov.pro/root/apitracker/uploads/18e05f3575ed0141a933bd77eaf3682f/Screen_Shot_2018-04-04_at_16.02.24.png
- */
-import {
-  type TExchange,
-  type TTokenList,
-  type TTransactionList,
-  type TWallet,
-} from '../types'
+type TMainWalletModel = typeof MainWalletModel
+type TMultisigWalletModel = typeof MultisigWalletModel
 
-const Transactions = ({ transactions }: { transactions?: TTransactionList }) => !transactions ? null : (
+const Transactions = ({ transactions }) => !transactions ? null : (
   !transactions[1] ? (
     <Image
       source={require('../images/indicator-receiving-25.png')}
@@ -40,17 +33,21 @@ const Transactions = ({ transactions }: { transactions?: TTransactionList }) => 
   )
 )
 
-const TokensList = ({ tokens }: {tokens?: TTokenList}) => {
+const TokensList = ({ tokens }) => {
   if (!tokens || !tokens.length) {
     return null
   }
 
-  const tLength = tokens.length
-  let tokensText = [tokens[0].id, tokens[0].amount.toFixed(2)].join(' ')
+  const tokensNames = Object.keys(tokens)
+  const tLength = tokensNames.length
+  const firstTokenId = tokensNames[0]
+  let tokensText = [firstTokenId, tokens[firstTokenId].toFixed(2)].join(' ')
+
   if (tLength === 2) {
-    const secondTokenText = [tokens[1].id, tokens[1].amount.toFixed(2)].join(' ')
+    const secondTokenText = [tokensNames[1].id, tokensNames[1].amount.toFixed(2)].join(' ')
     tokensText = [tokensText, secondTokenText].join(', ')
   }
+
   if (tLength > 2) {
     const moreTokenText = ['+', tLength - 1, 'more'].join(' ')
     tokensText = [tokensText, moreTokenText].join(', ')
@@ -63,13 +60,46 @@ const TokensList = ({ tokens }: {tokens?: TTokenList}) => {
   )
 }
 
-const Exchange = ({ exchange }: { exchange?: TExchange }) => !exchange ? null : (
+const Exchange = ({ exchange }) => !exchange ? null : (
   <Text style={styles.exchange}>
     {exchange.currency} {exchange.amount}
   </Text>
-) 
+)
 
-export default class WalletsListItem extends React.Component<{ wallet: TWallet, navigator: any }> {
+type WalletsListItemProps = {
+  wallet: TMainWalletModel | TMultisigWalletModel,
+  index: number,
+  address: string,
+  selectWallet(): void,
+  navigator: any,
+  selectedCurrency: string,
+  prices: any,
+  sectionName: string,
+}
+
+type WalletsListItemState = {
+  balance: number,
+}
+const mapStateToProps = (state) => {
+  const {
+    prices,
+    selectedCurrency,
+  } = state.get(DUCK_MARKET)
+  const tokens = state.get(DUCK_TOKENS)
+
+  return {
+    prices,
+    selectedCurrency,
+    tokens,
+  }
+}
+
+@connect(mapStateToProps, null)
+export default class WalletsListItem extends React.Component<WalletsListItemProps, WalletsListItemState> {
+
+  state = {
+    balance: 0,
+  }
 
   handlePress = (): void => {
 
@@ -77,7 +107,11 @@ export default class WalletsListItem extends React.Component<{ wallet: TWallet, 
       navigator,
       wallet,
     } = this.props
-
+  
+    // this.props.selectWallet(
+    //   wallet.isMultisig(),
+    //   wallet.address()
+    // )
     navigator.push({
       screen: 'Wallet',
       passProps: {
@@ -86,39 +120,93 @@ export default class WalletsListItem extends React.Component<{ wallet: TWallet, 
     })
   }
 
+  calculateWalletBalance = () => {
+    let res = {}
+    let usd = 0
+    const prices = this.props.prices
+    console.log(
+      '%s wallet (%s) balance calculation: %s',
+      this.props.wallet.isMultisig() ? 'Multisig' : 'Main',
+      this.props.sectionName,
+      this.props.address
+    )
+    this.props.wallet.balances().items().map( (balance) => {
+      const tokensArray = this.props.tokens.items()
+      tokensArray.map( (tokenOfCurrentWallet) => {
+        if (this.props.sectionName === tokenOfCurrentWallet.blockchain()) {
+          const bAmount = balance.amount()
+          const tSymbol = tokenOfCurrentWallet.symbol()
+          const tAmount = this.props.tokens.item(tSymbol).removeDecimals(bAmount).toNumber()
+          res[tSymbol] = tAmount
+
+          const tokenPrice = prices[ tSymbol ] && prices[ tSymbol ][ this.props.selectedCurrency ] || null
+          if (tokenPrice) {
+            console.log('%s costs %s, amount: %s, usd: %s', tSymbol, tokenPrice, tAmount, tAmount * tokenPrice)
+            usd += (tAmount * tokenPrice)
+          }
+        }
+      })
+    })
+    // console.log(res, usd)
+    return {
+      tokens: res,
+      balanceUSD: usd,
+    }
+  }
+
   render () {
     const {
       wallet,
+      address,
     } = this.props
+
+    const { tokens, balanceUSD } = this.calculateWalletBalance()
+
+    const walletTitle = `My ${this.props.sectionName} Wallet`
 
     return (
       <TouchableOpacity
         style={styles.container}
         onPress={this.handlePress}
       >
-        <View style={styles.transactions}>
-          <Transactions transactions={wallet.transactions} />
-        </View>
-        <View style={styles.content}>
-          <WalletImage
-            image={wallet.image}
-            walletMode={wallet.mode}
-            style={styles.image}
-          />
-          <View style={styles.contentColumn}>
-            <Text style={styles.title}>
-              {wallet.title}
-            </Text>
-            <Text style={styles.address}>
-              {wallet.address}
-            </Text>
-            <Text style={styles.balance}>
-              {wallet.balance.currency} {wallet.balance.amount.toFixed(2)}
-            </Text>
-            <TokensList tokens={wallet.tokens} />
-            <Exchange exchange={wallet.exchange} />
-          </View>
-        </View>
+        {
+          wallet.isMultisig()
+            ? <View><Text>TODO: draw multisig later</Text></View>
+            : (
+              <View>
+                <View style={styles.transactions}>
+                  <Transactions transactions={wallet.transactions} />
+                </View>
+                <View style={styles.content}>
+                  <WalletImage
+                    image={wallet.image}
+                    walletMode={wallet.mode}
+                    style={styles.image}
+                  />
+                  <View style={styles.contentColumn}>
+                    <Text style={styles.title}>
+                      {
+                        walletTitle
+                      }
+                    </Text>
+                    <Text style={styles.address}>
+                      {address}
+                    </Text>
+                    <Text style={styles.balance}>
+                      {this.props.selectedCurrency} {balanceUSD.toFixed(2)}
+                    </Text>
+                    <TokensList tokens={tokens} />
+                    {false &&
+                      <View>
+                        <TokensList tokens={wallet.tokens} />
+                        <Exchange exchange={wallet.exchange} />
+                      </View>
+                    }
+                  </View>
+                </View>
+              </View>
+            )
+        }
       </TouchableOpacity>
     )
   }

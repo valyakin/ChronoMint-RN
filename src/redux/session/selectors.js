@@ -1,38 +1,160 @@
 /* @flow */
 import {
   createSelector,
-  createStructuredSelector,
 } from 'reselect'
-import { DUCK_MAIN_WALLET } from '../../../mint/src/redux/mainWallet/actions'
-import { DUCK_MARKET } from '../../../mint/src/redux/market/action'
-import { DUCK_MULTISIG_WALLET } from '../../../mint/src/redux/multisigWallet/actions'
-import { getCurrentWallet } from '../../../mint/src/redux/wallet/actions'
-import { getTokens } from '../../../mint/src/redux/tokens/selectors'
-import { MANDATORY_TOKENS } from '../../../mint/src/dao/ERC20ManagerDAO'
-import { isTokenChecked } from '../../../mint/src/models/ProfileModel'
-
-// import MainWalletModel from '../../../mint/src/models/wallet/MainWalletModel'
-// import MultisigWalletModel from '../../../mint/src/models/wallet/MultisigWalletModel'
+import { DUCK_MAIN_WALLET } from 'redux/mainWallet/actions'
+import { DUCK_MARKET } from 'redux/market/action'
+import { DUCK_MULTISIG_WALLET } from 'redux/multisigWallet/actions'
+import { getCurrentWallet } from 'redux/wallet/actions'
+import { getTokens } from 'redux/tokens/selectors'
+import { isTokenChecked } from 'models/ProfileModel'
+import { MANDATORY_TOKENS } from 'dao/ERC20ManagerDAO'
 
 import {
   DUCK_SESSION,
   rebuildProfileTokens,
-} from './actions'
+} from 'redux/session/actions'
 
-import {
-  type TAddressModel,
-  type TAmountModel,
-  type TBalanceModel,
-  type TBalancesCollection,
-  type TMainWalletModel,
-  type TMultisigWalletModel,
-  type TMultisigWalletsModelsSet,
-  type TTokenModel,
-  type TTokensCollection,
-  type TWallet,
-  type TWalletSection,
-  type TWalletSectionList,
-} from '../../types'
+/**
+ * STORE: Get store DUCK_MAIN_WALLET = mainWallet
+ * @param {*} state 
+ */
+export const getMainWalletStore = (state) => state.get(DUCK_MAIN_WALLET)
+
+/**
+ * STORE: Get store DUCK_MULTISIG_WALLET = multisigWallets
+ * @param {*} state 
+ */
+export const getMultisigWalletsStore = (state) => state.get(DUCK_MULTISIG_WALLET)
+
+/**
+ * STORE: Get all active multisig wallets (activeWallets)
+ * @param {*} state 
+ */
+export const getActiveMultisigWalletsStore = (state) => getMultisigWalletsStore(state).activeWallets()
+
+/**
+ * STORE: Get all timeLocked multisig wallets (timeLockedWallets)
+ * @param {*} state 
+ */
+export const getTimeLockedMultisigWalletsStore = (state) => getMultisigWalletsStore(state).timeLockedWallets()
+
+/**
+ * STORE: Get balances collection of the main wallet
+ * @param {*} state 
+ */
+export const getMainWalletBalancesStore = (state) => getMainWalletStore(state).balances()
+
+/**
+ * STORE: Get balances collection of the multisig wallet
+ * @param {*} state 
+ */
+export const getMultisigWalletBalancesStore = (state) => getMultisigWalletsStore(state).balances()
+
+/**
+ * STORE: Get tokens collection of the main wallet
+ * @param {*} state 
+ */
+export const getMainWalletTokensStore = (state) => getMainWalletStore(state).tokens()
+
+/**
+ * STORE: Get tokens collection of the multisig wallet
+ * @param {*} state 
+ */
+export const getMultisigWalletTokensStore = (state) => getMultisigWalletsStore(state).tokens()
+
+/**
+ * SELECTOR: get main wallet
+ */
+export const getMainWalletSelector = () => createSelector(
+  [ getMainWalletStore ],
+  (mainWallet) => mainWallet
+)
+
+export const sectionsSelector = () => createSelector(
+  [
+    getMainWalletStore,
+    getMultisigWalletsStore,
+  ],
+  (
+    mainWallet,
+    multisigWallets,
+  ) => {
+    // final result will be svaed here
+    const sectionsObject = {}
+
+    // Go through mainWallet's addresses
+    mainWallet.addresses().items().map( (address) => {
+      const addrJS = address.toJS()
+      const addrID = addrJS.id
+      if (addrJS.address != null) {
+        if (!sectionsObject.hasOwnProperty(addrID)) {
+          sectionsObject[addrID] = {
+            data: [{
+              address: addrJS.address,
+              wallet: mainWallet,
+            }],
+          }
+        } else {
+          sectionsObject[addrID].data.push({
+            address: addrJS.address,
+            wallet: mainWallet,
+          })
+        }
+      }
+    })
+
+    // Add active multisig wallets
+    multisigWallets.activeWallets().map( (aWallet) => {
+      const currentWalletAddress: string = aWallet.address()
+      const addrID: string = 'Ethereum' // Hardcoded for now (only for multisig)
+      if (!sectionsObject.hasOwnProperty(addrID)) {
+        sectionsObject[addrID] = {
+          data: [{
+            address: currentWalletAddress,
+            wallet: aWallet,
+          }],
+        }
+      } else {
+        sectionsObject[addrID].data.push({
+          address: currentWalletAddress,
+          wallet: aWallet,
+        })
+      }
+    })
+
+    // Add timeLocked multisig wallets
+    multisigWallets.timeLockedWallets().map( (tlWallet) => {
+      const addrID = 'Ethereum' // Hardcoded for now (only for multisig)
+      const currentWalletAddress: string = tlWallet.address()
+      if (!sectionsObject.hasOwnProperty(addrID)) {
+        sectionsObject[addrID] = {
+          data: [{
+            address: currentWalletAddress,
+            wallet: tlWallet,
+          }],
+        }
+      } else {
+        sectionsObject[addrID].data.push({
+          address: currentWalletAddress,
+          wallet: tlWallet,
+        })
+      }
+    })
+
+    // Sort main sections and make an array
+    const sortSectionsObject = (o) => Object.keys(o).sort().reduce((r, k) => (r[k] = o[k], r), {})
+    const sortedSections = sortSectionsObject(sectionsObject)
+    const resultSections = Object.keys(sortedSections).map( (sectionName) => {
+      return {
+        title: sectionName,
+        data: sortedSections[sectionName].data,
+      }
+    })
+
+    return resultSections
+  }
+)
 
 export const getProfile = (state) => {
   const { profile } = state.get(DUCK_SESSION)
@@ -40,23 +162,23 @@ export const getProfile = (state) => {
 }
 
 export const getBalances = (state) => {
-  const wallet: TMainWalletModel = state.get(DUCK_MAIN_WALLET)
+  const wallet = state.get(DUCK_MAIN_WALLET)
   return wallet.balances()
 }
 
 export const getTransactions = (state) => {
-  const wallet: TMainWalletModel = state.get(DUCK_MAIN_WALLET)
+  const wallet = state.get(DUCK_MAIN_WALLET)
   return wallet.transactions()
 }
 
-export const getAddresses = (state): TMultisigWalletsModelsSet => {
-  const wallet: TMainWalletModel = state.get(DUCK_MAIN_WALLET)
+export const getAddresses = (state) => {
+  const wallet = state.get(DUCK_MAIN_WALLET)
   return wallet.addresses()
 }
 
 export const getMultisigWallets = (state) => {
-  const msWallet: TMultisigWalletModel = state.get(DUCK_MULTISIG_WALLET)
-  const result: TMultisigWalletsModelsSet = {
+  const msWallet = state.get(DUCK_MULTISIG_WALLET)
+  const result = {
     msWallet: msWallet,
     msActiveWallets: msWallet.activeWallets(),
     msTimelockedWallets: msWallet.timeLockedWallets(),
@@ -66,12 +188,12 @@ export const getMultisigWallets = (state) => {
 }
 
 export const getMultisigActiveWallets = (state) => {
-  const msWallet: TMultisigWalletModel = state.get(DUCK_MULTISIG_WALLET)
+  const msWallet = state.get(DUCK_MULTISIG_WALLET)
   return msWallet.activeWallets()
 }
 
 export const getMultisigTimeLockedWallets = (state) => {
-  const msWallet: TMultisigWalletModel = state.get(DUCK_MULTISIG_WALLET)
+  const msWallet = state.get(DUCK_MULTISIG_WALLET)
   return msWallet.timeLockedWallets()
 }
 
@@ -81,54 +203,33 @@ export const getMarketPrices = (state) => {
     selectedCurrency,
   } = state.get(DUCK_MARKET)
   return {
-    prices,
-    selectedCurrency,
+    prices: prices || {},
+    selectedCurrency: selectedCurrency || 'USD',
   }
-}
-
-export const getMainWalletStore = (state) => {
-  return state.get(DUCK_MAIN_WALLET)
 }
 
 export const getMainWallet = () => createSelector(
   [ getMainWalletStore ],
-  (mainWallet: TMainWalletModel) => {
+  (mainWallet) => {
     return mainWallet
   }
 )
 
-// export const getGasSliderCollection = (state) => {
-//   const { gasPriceMultiplier } = state.get(DUCK_SESSION)
-//   return gasPriceMultiplier
-// }
-
-// export const getGasPriceMultiplier = (blockchain: string) => createSelector(
-//   [ getGasSliderCollection ],
-//   (gasSliderCollection) => {
-//     return gasSliderCollection.get(blockchain) || 1
-//   },
-// )
-
 export const getWTokens = () => createSelector(
   [ getTokens ],
-  (tokens: TTokensCollection) => {
+  (tokens) => {
     return tokens
   }
 )
 
-type TComparator = (item1: TItemToCompare, item2: TItemToCompare) => number
-type TItemToCompare = {
-  balance: TBalanceModel,
-  token: TTokenModel,
-}
 // Permanent reference to a functor to improve selector performance
-export const BALANCES_COMPARATOR_SYMBOL: TComparator = (item1: TItemToCompare, item2: TItemToCompare) => {
+export const BALANCES_COMPARATOR_SYMBOL = (item1, item2) => {
   const s1 = item1.balance.symbol()
   const s2 = item2.balance.symbol()
   return s1 < s2 ? -1 : (s1 > s2 ? 1 : 0)
 }
 
-export const BALANCES_COMPARATOR_URGENCY: TComparator = (item1: TItemToCompare, item2: TItemToCompare) => {
+export const BALANCES_COMPARATOR_URGENCY = (item1, item2) => {
   const m1 = MANDATORY_TOKENS.includes(item1.token.symbol())
   const m2 = MANDATORY_TOKENS.includes(item2.token.symbol())
   const urgency = m2 - m1
@@ -140,7 +241,7 @@ export const BALANCES_COMPARATOR_URGENCY: TComparator = (item1: TItemToCompare, 
   return s1 < s2 ? -1 : (s1 > s2 ? 1 : 0)
 }
 
-export const getVisibleBalances = (comparator: TComparator = BALANCES_COMPARATOR_URGENCY) => createSelector(
+export const getVisibleBalances = (comparator = BALANCES_COMPARATOR_URGENCY) => createSelector(
   [ getCurrentWallet, getProfile, getTokens ],
   (wallet, profile, tokens) => {
     const profileTokens = rebuildProfileTokens(profile, tokens)
@@ -169,16 +270,11 @@ export const getVisibleBalances = (comparator: TComparator = BALANCES_COMPARATOR
   },
 )
 
-export const getSectionedBalances = () => createStructuredSelector(
-  [ getCurrentWallet, getMultisigWallets, getTokens, getBalances, getMarketPrices ],
+export const getSectionedBalances = () => createSelector(
+  [ getCurrentWallet, getTokens, getBalances, getMarketPrices ],
   (
-    mainWallet: TMainWalletModel,
-    {
-      msWallet,
-      msActiveWallets,
-      msTimelockedWallets,
-    }: TMultisigWalletsModelsSet,
-    tokens: TTokensCollection,
+    mainWallet,
+    tokens,
     balances,
     {
       prices,
@@ -194,7 +290,7 @@ export const getSectionedBalances = () => createStructuredSelector(
      * @param {string} address - Wallet's address
      * @param {string} title - Wallet's title
      */
-    const getNewEmptyWallet = (address: string, title: string, balanceCurrency: string): TWallet => {
+    const getNewEmptyWallet = (address: string, title: string, balanceCurrency: string) => {
 
       return  {
         address: address,
@@ -215,8 +311,8 @@ export const getSectionedBalances = () => createStructuredSelector(
      * Create all available main wallets in TSectionList format
      * @param {TMainWalletModel} mwAddresses - all addresses of a main wallet
      */
-    const createMainWalletsSections = (mWallet: TMainWalletModel) => {
-      mWallet.addresses().items().map( (addr: TAddressModel) => {
+    const createMainWalletsSections = (mWallet) => {
+      mWallet.addresses().items().map( (addr) => {
         // Get current address (it will be an address of a main wallet)
         const walletAddress: string = addr.address()
         // if wallet has no address, it means that it was not initialized (for example like BTG in Rinkeby/Infura testnet)
@@ -224,7 +320,7 @@ export const getSectionedBalances = () => createStructuredSelector(
           // Get blockchain title
           const blockChainId: string = addr.id()
           // Create new main wallet
-          const newMainWallet: TWallet = getNewEmptyWallet(
+          const newMainWallet = getNewEmptyWallet(
             walletAddress,
             ['My', blockChainId, 'Wallet'].join(' '),
             selectedCurrency,
@@ -243,19 +339,19 @@ export const getSectionedBalances = () => createStructuredSelector(
      * @param {TBalancesCollection} balances all available balances from global store
      * @param {TTokensCollection} tokens all available tokens from global store
      */
-    const fillWalletsTokens =  (balances: TBalancesCollection, tokens: TTokensCollection) => {
+    const fillWalletsTokens =  (balances, tokens) => {
       // Lets' go through all balances
-      balances.items().map( (balance: TBalanceModel) => {
+      balances.items().map( (balance) => {
         // Symbol of the current balance
         const bSymbol: string = balance.symbol()
         // Token of the current balance
-        const token: TTokenModel = tokens.item(bSymbol)
+        const token = tokens.item(bSymbol)
         // Blochchin name for the current token
         const currentBlockChainName: string = token.blockchain()
         // Ignoring missing wallets
         if ( result[currentBlockChainName] !== undefined ) {
           // Amount of the current balance
-          const bAmount: TAmountModel = balance.amount()
+          const bAmount = balance.amount()
           // Token's symbol
           const tSymbol: string = token.symbol()
           result[currentBlockChainName].data[0].tokens.push({
@@ -273,7 +369,7 @@ export const getSectionedBalances = () => createStructuredSelector(
       // Get all blockchain names
       const activeBlockchains: string[] = Object.keys(result)
       activeBlockchains.map( (blockChainName: string) => {
-        const currentMainWallet: TWalletSection = result[blockChainName]
+        const currentMainWallet = result[blockChainName]
         const balanceReducer = (walletBalance, token) => {
           const tokenId: string = token.id
           const tokenPrice: number | null = prices[ tokenId ] && prices[ tokenId ][ selectedCurrency ] || null
@@ -294,7 +390,7 @@ export const getSectionedBalances = () => createStructuredSelector(
 
     // Return sections' list (array)
     const activeBlockchains: string[] = Object.keys(result).sort() 
-    const sectionList: TWalletSectionList = activeBlockchains.map( (blockchainName: string) => result[blockchainName] ) 
+    const sectionList = activeBlockchains.map( (blockchainName: string) => result[blockchainName] ) 
     return sectionList
   }
 )

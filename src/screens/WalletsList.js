@@ -4,35 +4,47 @@ import { connect } from 'react-redux'
 import {
   ActivityIndicator,
   SectionList,
+  Text,
 } from 'react-native'
 import I18n from 'react-native-i18n'
 
 import { getAccountTransactions } from 'redux/mainWallet/actions'
-import { getSectionedBalances } from 'redux/session/selectors'
+import {
+  getSectionedBalances,
+  sectionsSelector,
+} from 'redux/session/selectors'
 import SectionHeader from 'components/SectionHeader'
 import WalletsListItem from 'components/WalletsListItem'
+import { switchWallet } from 'redux/wallet/actions'
+import MainWalletModel from 'models/wallet/MainWalletModel'
+import MultisigWalletModel from 'models/wallet/MultisigWalletModel'
 
-import {
-  type TWallet,
-  type TWalletSectionList,
-  type TWalletSection,
-} from 'types'
+type TMainWalletModel = typeof MainWalletModel
+type TMultisigWalletModel = typeof MultisigWalletModel
 
 type WalletsListState = {
   refreshing: boolean,
 }
 
 type WalletListProps = {
-  walletSections: TWalletSectionList,
-  navigator: any, // FIXME: need to discover flow type for this
+  newWallets: {
+    main: TMainWalletModel,
+    multisig: {
+      active: TMultisigWalletModel[],
+      timeLocked: TMultisigWalletModel[],
+    }
+  },
+  navigator: any,
 }
 
-const mapStateToProps = (state): { walletSections: TWalletSectionList } => ({
+const mapStateToProps = (state) => ({
   walletSections: getSectionedBalances()(state),
+  sections: sectionsSelector()(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({
   getAccountTransactions: () => dispatch(getAccountTransactions()),
+  selectWallet: (wallet, address, token) => dispatch(switchWallet(wallet, address, token)),
 })
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -81,15 +93,26 @@ export default class WalletsList extends PureComponent<WalletListProps, WalletsL
     }
   }
 
-  keyExtractor = ( section: TWalletSection ) => section.title
+  keyExtractor = ( section, index ) => [section.title, index].join('')
 
-  renderItem = ({ item }: { item: TWallet }) => <WalletsListItem wallet={item} navigator={this.props.navigator} />
+  renderItem = ({ item, index, section }) => (
+    <WalletsListItem
+      wallet={item.wallet}
+      index={index}
+      address={item.address}
+      sectionName={section.title}
+      selectWallet={this.props.selectWallet}
+      navigator={this.props.navigator}
+    />
+  )
 
-  renderSectionHeader = ({ section }: { section: TWalletSection}) => <SectionHeader title={section.title} isDark />
+  renderSectionHeader = ({ section }) => (
+    <SectionHeader title={`${section.title} Wallets`} isDark />
+  )
 
   render () {
 
-    if (this.state.refreshing || !(this.props.walletSections && this.props.walletSections.length)) {
+    if (this.state.refreshing || !this.props.sections) {
       return <ActivityIndicator />
     }
 
@@ -97,7 +120,7 @@ export default class WalletsList extends PureComponent<WalletListProps, WalletsL
       <SectionList
         renderItem={this.renderItem}
         renderSectionHeader={this.renderSectionHeader}
-        sections={this.props.walletSections}
+        sections={this.props.sections}
         keyExtractor={this.keyExtractor}
         onRefresh={this.handleRefresh}
         refreshing={this.state.refreshing}
