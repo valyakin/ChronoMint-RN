@@ -1,3 +1,9 @@
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import * as network from '../../mint/packages/login/redux/network/'
 import * as assetsManager from '../../mint/src/redux/assetsManager'
 import * as drawer from '../../mint/src/redux/drawer'

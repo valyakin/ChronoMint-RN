@@ -1,4 +1,9 @@
-/* @flow */
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import React from 'react'
 import { View, TouchableOpacity, Switch, Text, StyleSheet } from 'react-native'
 import Icon from './Icon'
