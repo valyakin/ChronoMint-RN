@@ -37,14 +37,21 @@ const FeeSliderTitle = () => (
 )
 
 /**
+ * Update fee value on each slider's change
+ *
+ * @callback handleFeeUpdate
+ * @param {number} value
+ */
+
+/**
  * Component for the 'Send' screen: to adjust fee/gas before sending a transaction
  * 
- * @param {string} tokenID - Selected token ID
- * @param {number} [averageFee=0.1] - Minimum fee value
- * @param {number} [maximumValue=1.9] - Maximum fee value
- * @param {number} [step=0.1] - Slider's step
- * @param {number} [value=1] - Recommended fee/gas value
- * @param {(value: number): void} handleValueChange - Update fee value on each slider's change
+ * @param {string} tokenID Selected token ID
+ * @param {number} [averageFee=0.1] Minimum fee value
+ * @param {number} [maximumValue=1.9] Maximum fee value
+ * @param {number} [step=0.1] Slider's step
+ * @param {number} [value=1] Recommended fee/gas value
+ * @param {handleFeeUpdate} handleValueChange Update fee value on each slider's change
  */
 const FeeSlider = ({
   tokenID,
@@ -53,7 +60,7 @@ const FeeSlider = ({
   minimumValue = 1.9,
   step = 0.1,
   handleValueChange = () => {}, // [AO] Do nothing by default
-}: FeeSliderProps) => (
+}: FeeSliderProps): React.Element<FeeSliderProps> => (
   <View style={styles.feeSliderContainer}>
     <FeeSliderTitle />
     <Slider
