@@ -8,14 +8,15 @@ import {
   View,
 } from 'react-native'
 import { connect } from 'react-redux'
+
+import { DUCK_MARKET } from 'redux/market/action'
+import { DUCK_TOKENS } from 'redux/tokens/actions'
 import colors from 'utils/colors'
 import MainWalletModel from 'models/wallet/MainWalletModel'
 import MultisigWalletModel from 'models/wallet/MultisigWalletModel'
-import { DUCK_MARKET } from 'redux/market/action'
-import { DUCK_TOKENS } from 'redux/tokens/actions'
+import { calculateWalletBalance } from 'utils/calculations'
 
 import WalletImage from './WalletImage'
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 type TMainWalletModel = typeof MainWalletModel
 type TMultisigWalletModel = typeof MultisigWalletModel
@@ -34,7 +35,7 @@ const Transactions = ({ transactions }) => !transactions ? null : (
   )
 )
 
-const TokensList = ({tokens}) => {
+const TokensList = ({ tokens }) => {
   if (!tokens || !Object.keys(tokens).length) {
     return null
   }
@@ -54,7 +55,7 @@ const TokensList = ({tokens}) => {
 
   return (
     <Text style={styles.tokens}>
-      {tokensStrings}
+      {tokensStrings || ''}
     </Text>
   )
 }
@@ -93,66 +94,30 @@ const mapStateToProps = (state) => {
 @connect(mapStateToProps, null)
 export default class WalletsListItem extends React.Component<WalletsListItemProps> {
 
-  handlePress = (): void => {
+  handlePress = (tokens, balance): void => {
 
     const {
       navigator,
       wallet,
       address,
+      prices,
     } = this.props
   
-    // this.props.selectWallet(
-    //   wallet.isMultisig(),
-    //   wallet.address()
-    // )
+    this.props.selectWallet(
+      wallet,
+      address
+    )
+
     navigator.push({
       screen: 'Wallet',
       passProps: {
         wallet: wallet,
         address: address,
+        tokens: tokens,
+        balance: balance,
+        prices: prices,
       },
     })
-  }
-
-  calculateWalletBalance = () => {
-    let res = {}
-    let usd = 0
-    const prices = this.props.prices
-
-    const filterBalancesByBlockchainName = (balanceItem) => {
-      const bSymbol = balanceItem.symbol()
-      const bToken = this.props.tokens.item(bSymbol)
-      return bToken.blockchain() === this.props.sectionName
-    }
-
-    const filteredWalletBalancesItems = this.props.wallet.balances().items().filter(filterBalancesByBlockchainName)
-
-    const convertAmountToNumber = (symbol, amount) =>
-      this.props.tokens
-        .item(symbol)
-        .removeDecimals(amount)
-        .toNumber()
-
-    // TODO: this is only for main wallets
-    if (!this.props.wallet.isMultisig() && this.props.prices) {
-      filteredWalletBalancesItems
-        .map( (balance) => {
-          const bAmount = balance.amount()
-          const bSymbol = balance.symbol()
-          const tAmount = convertAmountToNumber(bSymbol, bAmount)
-    
-          res[bSymbol] = tAmount
-          const tokenPrice = prices[ bSymbol ] && prices[ bSymbol ][ this.props.selectedCurrency ] || null
-          if (tokenPrice && tAmount > 0) {
-            usd += (tAmount * tokenPrice)
-          }
-        })
-    }
-
-    return {
-      tokens: res,
-      balanceUSD: usd.toFixed(2),
-    }
   }
 
   render () {
@@ -161,53 +126,59 @@ export default class WalletsListItem extends React.Component<WalletsListItemProp
       address,
     } = this.props
 
-    const { tokens, balanceUSD } = this.calculateWalletBalance()
+    const { tokens, balance } = calculateWalletBalance(
+      this.props.wallet,
+      this.props.prices,
+      this.props.tokens,
+      this.props.selectedCurrency,
+      this.props.sectionName,
+    )
 
-    const walletTitle = `My ${this.props.sectionName} Wallet`
+    // TODO: to optimize (rewrite it)
+    let walletTitle = `My ${this.props.sectionName} Wallet`
+    if (wallet.isMultisig()) {
+      walletTitle = wallet.isTimeLocked() ? 'My TimeLocked Wallet' : 'My Shared wallet'
+    }
 
     return (
       <TouchableOpacity
         style={styles.container}
-        onPress={this.handlePress}
+        onPress={() => this.handlePress(tokens, balance)}
       >
-        {
-          wallet.isMultisig()
-            ? <View><Text>TODO: draw multisig later</Text></View>
-            : (
-              <View>
-                <View style={styles.transactions}>
-                  <Transactions transactions={wallet.transactions} />
+
+        <View>
+          <View style={styles.transactions}>
+            <Transactions transactions={wallet.transactions} />
+          </View>
+          <View style={styles.content}>
+            <WalletImage
+              image={wallet.image}
+              walletMode={wallet.mode}
+              style={styles.image}
+            />
+            <View style={styles.contentColumn}>
+              <Text style={styles.title}>
+                {
+                  walletTitle
+                }
+              </Text>
+              <Text style={styles.address}>
+                {address}
+              </Text>
+              <Text style={styles.balance}>
+                {this.props.selectedCurrency} {balance}
+              </Text>
+              <TokensList tokens={tokens} />
+              {false &&
+                <View>
+                  <TokensList tokens={wallet.tokens} />
+                  <Exchange exchange={wallet.exchange} />
                 </View>
-                <View style={styles.content}>
-                  <WalletImage
-                    image={wallet.image}
-                    walletMode={wallet.mode}
-                    style={styles.image}
-                  />
-                  <View style={styles.contentColumn}>
-                    <Text style={styles.title}>
-                      {
-                        walletTitle
-                      }
-                    </Text>
-                    <Text style={styles.address}>
-                      {address}
-                    </Text>
-                    <Text style={styles.balance}>
-                      {this.props.selectedCurrency} {balanceUSD}
-                    </Text>
-                    <TokensList tokens={tokens} />
-                    {false &&
-                      <View>
-                        <TokensList tokens={wallet.tokens} />
-                        <Exchange exchange={wallet.exchange} />
-                      </View>
-                    }
-                  </View>
-                </View>
-              </View>
-            )
-        }
+              }
+            </View>
+          </View>
+        </View>
+
       </TouchableOpacity>
     )
   }

@@ -13,21 +13,13 @@ import {
 
 import {
   getGasPriceMultiplier,
-  getMainWallet,
   getWTokens,
 } from 'redux/session/selectors'
-import { mainTransfer } from 'redux/mainWallet/actions'
+import { mainTransfer, ETH } from 'redux/mainWallet/actions'
+import { DUCK_TOKENS } from 'redux/tokens/actions'
 
-import {
-  type TToken,
-  type TWallet,
-  type TTokenModel,
-  type TAmountModel,
-  type TMainWalletModel,
-  type TTokensCollection,
-} from 'types'
-import Amount from 'models/Amount'
-import BigNumber from 'bignumber.js'
+// import Amount from 'models/Amount'
+// import BigNumber from 'bignumber.js'
 import colors from 'utils/colors'
 import FeeSlider from 'components/FeeSlider'
 import SectionHeader from 'components/SectionHeader'
@@ -36,27 +28,32 @@ import Separator from 'components/Separator'
 type SendProps = {
   selcetedBlockchainName: string,
   navigator: any, // FIXME: use correct flow type for this
-  tokens: TTokensCollection,
+  tokens: Object,
   gasPriceMultiplier: any,
+  prices: any,
   mainTransfer: (
-    token: TTokenModel,
-    amount: TAmountModel,
+    token: any,
+    amount: any,
     recipient: string,
     feeMultiplier: number,
   ) => {},
 }
 
 type SendState = {
-  selectedToken: TToken;
+  selectedToken: any,
   fee: number,
   recipient: string,
   amount: number | null,
 }
 
-const mapStateToProps = (state): TMainWalletModel => ({
-  gasPriceMultiplier: getGasPriceMultiplier()(state),
-  tokensDuck: getWTokens()(state),
-})
+const mapStateToProps = (state) => {
+  const token = state.get(DUCK_TOKENS).item(ETH)
+  return {
+    gasPriceMultiplier: getGasPriceMultiplier(token.blockchain())(state),
+    token,
+    tokensDuck: getWTokens()(state),
+  }
+}
 
 const mapDispatchToProps  = (dispatch) => {
   return {
@@ -68,10 +65,10 @@ const mapDispatchToProps  = (dispatch) => {
     //   feeMultiplier: number,
     // ) => dispatch(mainApprove(token, amount, spender, feeMultiplier)),
     mainTransfer: (
-      token: TTokenModel,
-      amount: TAmountModel,
-      recipient: string,
-      feeMultiplier: number,
+      token,
+      amount,
+      recipient,
+      feeMultiplier,
     ) => dispatch(mainTransfer(token, amount, recipient, feeMultiplier)),
   }
 }
@@ -106,6 +103,7 @@ export default class Send extends React.Component<SendProps, SendState> {
     fee: 1,
     recipient: '',
     amount: null,
+    amountInCurrency: 0,
   }
 
   handleNavigatorEvent = ({ type, id }) => {
@@ -179,8 +177,10 @@ export default class Send extends React.Component<SendProps, SendState> {
   }
 
   handleAmountInput = (value: number) => {
+    const tokenPrice = this.props.prices[ ETH ] && this.props.prices[ ETH ][ 'USD' ]
     this.setState({
       amount: value,
+      amountInCurrency: tokenPrice * value,
     })
   }
 
@@ -190,8 +190,8 @@ export default class Send extends React.Component<SendProps, SendState> {
       title: 'Select Token',
       passProps: {
         // navigator: this.props.navigator,
-        tokens: this.props.wallet.tokens,
-        onPressAction: (data: TToken) => {
+        tokens: this.props.tokens,
+        onPressAction: (data) => {
           this.setState({ selectedToken: data })
         },
       },
@@ -205,6 +205,7 @@ export default class Send extends React.Component<SendProps, SendState> {
   }
 
   render () {
+    console.log('FEE RATE:', this.props.token.feeRate().toNumber())
     const { wallet } = this.props
     return (
       <ScrollView
@@ -251,7 +252,11 @@ export default class Send extends React.Component<SendProps, SendState> {
             onChangeText={this.handleAmountInput}
             value={this.state.amount}
           />
-          <Text style={styles.sendBalance}>USD 0.00</Text>
+          <Text style={styles.sendBalance}>
+            {
+              `USD ${this.state.amountInCurrency.toFixed(2)}`
+            }
+          </Text>
           <SectionHeader title='Fee' />
           <FeeSlider
             tokenID={this.state.selectedToken.id}
@@ -259,6 +264,7 @@ export default class Send extends React.Component<SendProps, SendState> {
             minimumValue={0.1}
             value={this.state.fee}
             step={0.1}
+            feeRate={this.props.token.feeRate().toNumber()}
             handleValueChange={this.onFeeSliderChange}
           />
           <Text style={styles.advancedFee}>
@@ -276,7 +282,7 @@ export default class Send extends React.Component<SendProps, SendState> {
   }
 }
 
-const TokenSelector = ({ onPress, selectedToken }: { onPress?: () => void, selectedToken: TToken}) => {
+const TokenSelector = ({ onPress, selectedToken }) => {
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>

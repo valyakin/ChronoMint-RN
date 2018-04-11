@@ -5,7 +5,10 @@ import {
 import { DUCK_MAIN_WALLET } from 'redux/mainWallet/actions'
 import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_MULTISIG_WALLET } from 'redux/multisigWallet/actions'
-import { getCurrentWallet } from 'redux/wallet/actions'
+import {
+  getCurrentWallet,
+  DUCK_WALLET,
+} from 'redux/wallet/actions'
 import { getTokens } from 'redux/tokens/selectors'
 import { isTokenChecked } from 'models/ProfileModel'
 import { MANDATORY_TOKENS } from 'dao/ERC20ManagerDAO'
@@ -15,6 +18,8 @@ import {
   rebuildProfileTokens,
 } from 'redux/session/actions'
 
+import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
+ 
 /**
  * STORE: Get store DUCK_MAIN_WALLET = mainWallet
  * @param {*} state 
@@ -26,6 +31,12 @@ export const getMainWalletStore = (state) => state.get(DUCK_MAIN_WALLET)
  * @param {*} state 
  */
 export const getMultisigWalletsStore = (state) => state.get(DUCK_MULTISIG_WALLET)
+
+/**
+ * STORE: Get store DUCK_WALLET = wallet
+ * @param {*} state 
+ */
+export const getSelectedWalletStore = (state) => state.get(DUCK_WALLET)
 
 /**
  * STORE: Get all active multisig wallets (activeWallets)
@@ -107,16 +118,15 @@ export const sectionsSelector = () => createSelector(
     // Add active multisig wallets
     multisigWallets.activeWallets().map( (aWallet) => {
       const currentWalletAddress: string = aWallet.address()
-      const addrID: string = 'Ethereum' // Hardcoded for now (only for multisig)
-      if (!sectionsObject.hasOwnProperty(addrID)) {
-        sectionsObject[addrID] = {
+      if (!sectionsObject.hasOwnProperty(BLOCKCHAIN_ETHEREUM)) {
+        sectionsObject[BLOCKCHAIN_ETHEREUM] = {
           data: [{
             address: currentWalletAddress,
             wallet: aWallet,
           }],
         }
       } else {
-        sectionsObject[addrID].data.push({
+        sectionsObject[BLOCKCHAIN_ETHEREUM].data.push({
           address: currentWalletAddress,
           wallet: aWallet,
         })
@@ -125,17 +135,16 @@ export const sectionsSelector = () => createSelector(
 
     // Add timeLocked multisig wallets
     multisigWallets.timeLockedWallets().map( (tlWallet) => {
-      const addrID = 'Ethereum' // Hardcoded for now (only for multisig)
       const currentWalletAddress: string = tlWallet.address()
-      if (!sectionsObject.hasOwnProperty(addrID)) {
-        sectionsObject[addrID] = {
+      if (!sectionsObject.hasOwnProperty(BLOCKCHAIN_ETHEREUM)) {
+        sectionsObject[BLOCKCHAIN_ETHEREUM] = {
           data: [{
             address: currentWalletAddress,
             wallet: tlWallet,
           }],
         }
       } else {
-        sectionsObject[addrID].data.push({
+        sectionsObject[BLOCKCHAIN_ETHEREUM].data.push({
           address: currentWalletAddress,
           wallet: tlWallet,
         })
@@ -270,133 +279,19 @@ export const getVisibleBalances = (comparator = BALANCES_COMPARATOR_URGENCY) => 
   },
 )
 
-export const getSectionedBalances = () => createSelector(
-  [ getCurrentWallet, getTokens, getBalances, getMarketPrices ],
-  (
-    mainWallet,
-    tokens,
-    balances,
-    {
-      prices,
-      selectedCurrency,
-    }
-  ) => {
-
-    // This is final result object. Sections array to be created based on this result.
-    const result: Object = Object.create(null)
-
-    /**
-     * Object to reresent a main wallet
-     * @param {string} address - Wallet's address
-     * @param {string} title - Wallet's title
-     */
-    const getNewEmptyWallet = (address: string, title: string, balanceCurrency: string) => {
-
-      return  {
-        address: address,
-        balance: {
-          amount: 0,
-          currency: balanceCurrency,
-        },
-        // exchange: emptyExcahnge,
-        // image: 0,
-        // mode: null,
-        title: title,
-        tokens: [],
-        // transactions: [],
-      }
-    }
-
-    /**
-     * Create all available main wallets in TSectionList format
-     * @param {TMainWalletModel} mwAddresses - all addresses of a main wallet
-     */
-    const createMainWalletsSections = (mWallet) => {
-      mWallet.addresses().items().map( (addr) => {
-        // Get current address (it will be an address of a main wallet)
-        const walletAddress: string = addr.address()
-        // if wallet has no address, it means that it was not initialized (for example like BTG in Rinkeby/Infura testnet)
-        if (walletAddress) {
-          // Get blockchain title
-          const blockChainId: string = addr.id()
-          // Create new main wallet
-          const newMainWallet = getNewEmptyWallet(
-            walletAddress,
-            ['My', blockChainId, 'Wallet'].join(' '),
-            selectedCurrency,
-          )
-          // Push newly cretae wallet into data filed of appropriate section, selected by blockchain title
-          result[blockChainId] = {
-            title: [blockChainId, 'Wallets'].join(' '),
-            data: [newMainWallet],
-          }
-        }
-      })
-    }
-
-    /**
-     * Distribute tokens between main wallets (by blockchain names)
-     * @param {TBalancesCollection} balances all available balances from global store
-     * @param {TTokensCollection} tokens all available tokens from global store
-     */
-    const fillWalletsTokens =  (balances, tokens) => {
-      // Lets' go through all balances
-      balances.items().map( (balance) => {
-        // Symbol of the current balance
-        const bSymbol: string = balance.symbol()
-        // Token of the current balance
-        const token = tokens.item(bSymbol)
-        // Blochchin name for the current token
-        const currentBlockChainName: string = token.blockchain()
-        // Ignoring missing wallets
-        if ( result[currentBlockChainName] !== undefined ) {
-          // Amount of the current balance
-          const bAmount = balance.amount()
-          // Token's symbol
-          const tSymbol: string = token.symbol()
-          result[currentBlockChainName].data[0].tokens.push({
-            id: token.id(),
-            amount: tokens.item(tSymbol).removeDecimals(bAmount).toNumber(),
-          })
-        }
-      })
-    }
-
-    /**
-     * Loop through all available tokens in main wallets, get its' proces and calculate main wallet's balance.amount
-     */
-    const calculateWalletBalanceInUSD = (): void => {
-      // Get all blockchain names
-      const activeBlockchains: string[] = Object.keys(result)
-      activeBlockchains.map( (blockChainName: string) => {
-        const currentMainWallet = result[blockChainName]
-        const balanceReducer = (walletBalance, token) => {
-          const tokenId: string = token.id
-          const tokenPrice: number | null = prices[ tokenId ] && prices[ tokenId ][ selectedCurrency ] || null
-          return tokenPrice ?
-            (tokenPrice * token.amount) + walletBalance :
-            walletBalance
-        }
-        let balanceResult: number = (currentMainWallet.data[0].tokens && currentMainWallet.data[0].tokens.length) ?
-          currentMainWallet.data[0].tokens.reduce(balanceReducer, 0) :
-          0
-        currentMainWallet.data[0].balance.amount = Math.round( balanceResult * 1e2 ) / 1e2 // This is like toFixed(2) but returns number
-      })
-    }
-
-    createMainWalletsSections(mainWallet)
-    fillWalletsTokens(balances, tokens)
-    calculateWalletBalanceInUSD()
-
-    // Return sections' list (array)
-    const activeBlockchains: string[] = Object.keys(result).sort() 
-    const sectionList = activeBlockchains.map( (blockchainName: string) => result[blockchainName] ) 
-    return sectionList
-  }
-)
-
 export const getProfileTokens = () => createSelector([ getProfile, getTokens ],
   (profile, tokens) => {
     return rebuildProfileTokens(profile, tokens)
+  },
+)
+
+export const getGasSliderCollection = (state) => {
+  const { gasPriceMultiplier } = state.get(DUCK_SESSION)
+  return gasPriceMultiplier
+}
+
+export const getGasPriceMultiplier = (blockchain) => createSelector([ getGasSliderCollection ],
+  (gasSliderCollection) => {
+    return gasSliderCollection && gasSliderCollection.get(blockchain) || 1
   },
 )

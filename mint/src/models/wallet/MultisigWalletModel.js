@@ -59,6 +59,10 @@ export default class MultisigWalletModel extends abstractFetchingModel({
     return this._getSet('tokens', value)
   }
 
+  selected () {
+    return this.get('selected')
+  }
+
   isMultisig () {
     return this.get('isMultisig')
   }

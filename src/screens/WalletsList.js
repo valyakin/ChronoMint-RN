@@ -4,13 +4,12 @@ import { connect } from 'react-redux'
 import {
   ActivityIndicator,
   SectionList,
-  Text,
+  View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
 
 import { getAccountTransactions } from 'redux/mainWallet/actions'
 import {
-  getSectionedBalances,
   sectionsSelector,
 } from 'redux/session/selectors'
 import SectionHeader from 'components/SectionHeader'
@@ -18,6 +17,8 @@ import WalletsListItem from 'components/WalletsListItem'
 import { switchWallet } from 'redux/wallet/actions'
 import MainWalletModel from 'models/wallet/MainWalletModel'
 import MultisigWalletModel from 'models/wallet/MultisigWalletModel'
+
+import styles from './styles/WalletsListStyles'
 
 type TMainWalletModel = typeof MainWalletModel
 type TMultisigWalletModel = typeof MultisigWalletModel
@@ -38,13 +39,12 @@ type WalletListProps = {
 }
 
 const mapStateToProps = (state) => ({
-  walletSections: getSectionedBalances()(state),
   sections: sectionsSelector()(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({
   getAccountTransactions: () => dispatch(getAccountTransactions()),
-  selectWallet: (wallet, address, token) => dispatch(switchWallet(wallet, address, token)),
+  selectWallet: (wallet, address) => dispatch(switchWallet(wallet, address)),
 })
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -96,14 +96,16 @@ export default class WalletsList extends PureComponent<WalletListProps, WalletsL
   keyExtractor = ( section, index ) => [section.title, index].join('')
 
   renderItem = ({ item, index, section }) => (
-    <WalletsListItem
-      wallet={item.wallet}
-      index={index}
-      address={item.address}
-      sectionName={section.title}
-      selectWallet={this.props.selectWallet}
-      navigator={this.props.navigator}
-    />
+    <View style={styles.walletItemHorizontalPaddings}>
+      <WalletsListItem
+        wallet={item.wallet}
+        index={index}
+        address={item.address}
+        sectionName={section.title}
+        selectWallet={this.props.selectWallet}
+        navigator={this.props.navigator}
+      />
+    </View>
   )
 
   renderSectionHeader = ({ section }) => (
@@ -124,6 +126,7 @@ export default class WalletsList extends PureComponent<WalletListProps, WalletsL
         keyExtractor={this.keyExtractor}
         onRefresh={this.handleRefresh}
         refreshing={this.state.refreshing}
+        stickySectionHeadersEnabled={false}
       />
     )
   }
