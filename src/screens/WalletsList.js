@@ -8,47 +8,25 @@ import {
 } from 'react-native'
 import I18n from 'react-native-i18n'
 
-import { getAccountTransactions } from 'redux/mainWallet/actions'
 import {
   sectionsSelector,
 } from 'redux/session/selectors'
 import SectionHeader from 'components/SectionHeader'
 import WalletsListItem from 'components/WalletsListItem'
 import { switchWallet } from 'redux/wallet/actions'
-import MainWalletModel from 'models/wallet/MainWalletModel'
-import MultisigWalletModel from 'models/wallet/MultisigWalletModel'
 
 import styles from './styles/WalletsListStyles'
-
-type TMainWalletModel = typeof MainWalletModel
-type TMultisigWalletModel = typeof MultisigWalletModel
-
-type WalletsListState = {
-  refreshing: boolean,
-}
-
-type WalletListProps = {
-  newWallets: {
-    main: TMainWalletModel,
-    multisig: {
-      active: TMultisigWalletModel[],
-      timeLocked: TMultisigWalletModel[],
-    }
-  },
-  navigator: any,
-}
 
 const mapStateToProps = (state) => ({
   sections: sectionsSelector()(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  getAccountTransactions: () => dispatch(getAccountTransactions()),
   selectWallet: (wallet, address) => dispatch(switchWallet(wallet, address)),
 })
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class WalletsList extends PureComponent<WalletListProps, WalletsListState> {
+export default class WalletsList extends PureComponent {
 
   // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
@@ -66,7 +44,7 @@ export default class WalletsList extends PureComponent<WalletListProps, WalletsL
     ],
   }
 
-  constructor (props: WalletListProps) {
+  constructor (props) {
     super(props)
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent)
   }

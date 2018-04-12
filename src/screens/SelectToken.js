@@ -1,5 +1,5 @@
 /* @flow */
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   ListView,
   StyleSheet,
@@ -8,47 +8,39 @@ import {
   View,
 } from 'react-native'
 
-import colors from '../utils/colors'
-import {
-  type TToken,
-  type TTokenList,
-  // type TWallet,
-} from '../types'
+import colors from 'utils/colors'
 
-interface SelectTokenProps {
-  tokens: TTokenList;
-  navigator: any; // FIXME
-  onPressAction: (token: TToken) => void;
-}
+export default class SelectToken extends PureComponent {
 
-type SelectTokenState = {
-  tokens: TTokenList,
-}
-
-export default class SelectToken extends Component<SelectTokenProps, SelectTokenState> {
-
-  constructor (props: SelectTokenProps) {
+  constructor (props) {
     super(props)
-
-    const ds = new ListView.DataSource({ rowHasChanged: (r1: TToken, r2: TToken) => r1.id !== r2.id })
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     const { tokens } = props
+    const tokensArray = Object.keys(tokens).map( (k) => { return { symbol: k, amount: tokens[k] } } )
     this.state = {
-      tokens: ds.cloneWithRows(tokens),
+      tokens: ds.cloneWithRows(tokensArray),
     }
   }
 
-  handlePress = (token: TToken) => {
+  handlePress = (token) => {
     this.props.navigator.pop()
     this.props.onPressAction(token)
   }
 
-  renderRow = (rowData: TToken) => {
+  renderRow = (rowData) => {
+    const notEnoughAmount = rowData.amount ? null : styles.zeroAmount
     return (
       <TouchableOpacity onPress={() => this.handlePress(rowData)}>
         <View style={styles.tokenSelector}>
-          <Text style={styles.tokenSelectorLabel}>
+          <Text style={[styles.tokenSelectorLabel, styles.symbolColumn]}>
             {
-              rowData.id
+              rowData.symbol
+            }
+          </Text>
+
+          <Text style={[styles.tokenSelectorLabel, styles.amountColumn, notEnoughAmount]}>
+            {
+              rowData.amount.toFixed(2)
             }
           </Text>
         </View>
@@ -79,13 +71,23 @@ const styles = StyleSheet.create({
     padding: 20,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#424066',
-    // borderBottomWidth: 0.5,
-    // borderColor: '#4488A7',
-    // borderTopWidth: 0.5,
   },
   tokenSelectorLabel: {
     color: colors.background,
     fontSize: 17,
     fontWeight: '700',
+  },
+  symbolColumn: {
+    flex: 1,
+    flexDirection: 'row',
+    textAlign: 'left',
+  },
+  amountColumn: {
+    flex: 1,
+    flexDirection: 'row',
+    textAlign: 'right',
+  },
+  zeroAmount: {
+    color: '#C25351',
   },
 })

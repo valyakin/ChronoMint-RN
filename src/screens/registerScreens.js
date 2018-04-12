@@ -30,6 +30,7 @@ import WalletOwners from './WalletOwners'
 import WalletsList from './WalletsList'
 import WalletTemplates from './WalletTemplates'
 import WalletTokens from './WalletTokens'
+import WalletsApp from './WalletsApp'
 
 export default function registerScreens (store, Provider) {
   Navigation.registerComponent('Add2FAWallet', () => Add2FAWallet, store, Provider)
@@ -61,4 +62,5 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('WalletsList', () => WalletsList, store, Provider)
   Navigation.registerComponent('WalletTemplates', () => WalletTemplates, store, Provider)
   Navigation.registerComponent('WalletTokens', () => WalletTokens, store, Provider)
+  Navigation.registerComponent('WalletsApp', () => WalletsApp, store, Provider)
 }

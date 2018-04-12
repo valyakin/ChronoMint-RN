@@ -60,21 +60,24 @@ export default class Wallet extends React.PureComponent {
     const {
       address,
       balance,
+      blockchainTitle,
+      prices,
       tokens,
       wallet,
-      prices,
     } = props
 
     props.navigator.push({
       screen: 'Send',
       title: 'Send Funds',
       passProps: {
-        selcetedBlockchainName: wallet.title,
         address: address,
-        wallet: wallet,
         balance: balance,
-        tokens: tokens,
+        blockchainTitle: blockchainTitle,
         prices: prices,
+        selectedBlockchainName: blockchainTitle,
+        tokens: tokens,
+        wallet: wallet,
+        walletAddress: address,
 
       },
     })

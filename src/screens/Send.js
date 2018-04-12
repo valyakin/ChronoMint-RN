@@ -17,53 +17,34 @@ import {
 } from 'redux/session/selectors'
 import { mainTransfer, ETH } from 'redux/mainWallet/actions'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
+import tokenService from 'services/TokenService'
 
-// import Amount from 'models/Amount'
-// import BigNumber from 'bignumber.js'
 import colors from 'utils/colors'
 import FeeSlider from 'components/FeeSlider'
 import SectionHeader from 'components/SectionHeader'
 import Separator from 'components/Separator'
 
-type SendProps = {
-  selcetedBlockchainName: string,
-  navigator: any, // FIXME: use correct flow type for this
-  tokens: Object,
-  gasPriceMultiplier: any,
-  prices: any,
-  mainTransfer: (
-    token: any,
-    amount: any,
-    recipient: string,
-    feeMultiplier: number,
-  ) => {},
-}
+import {
+  makeGetWalletTokensAndBalanceByAddress,
+} from 'redux/wallet/selectors'
 
-type SendState = {
-  selectedToken: any,
-  fee: number,
-  recipient: string,
-  amount: number | null,
-}
-
-const mapStateToProps = (state) => {
-  const token = state.get(DUCK_TOKENS).item(ETH)
-  return {
-    gasPriceMultiplier: getGasPriceMultiplier(token.blockchain())(state),
-    token,
-    tokensDuck: getWTokens()(state),
+const makeMapStateToProps = (origState, origProps) => {
+  const token = origState.get(DUCK_TOKENS).item(ETH)
+  const getWalletTokensAndBalanceByAddress = makeGetWalletTokensAndBalanceByAddress(origProps.blockchainTitle)
+  const mapStateToProps = (state, ownProps) => {
+    const walletTokensAndBalance = getWalletTokensAndBalanceByAddress(state, ownProps)
+    return {
+      walletTokensAndBalance,
+      gasPriceMultiplier: getGasPriceMultiplier(token.blockchain())(state),
+      token,
+      tokensDuck: getWTokens()(state),
+    }
   }
+  return mapStateToProps
 }
 
 const mapDispatchToProps  = (dispatch) => {
   return {
-    // TODO: for further developemnt
-    // mainApprove: (
-    //   token: TTokenModel,
-    //   amount: TAmountModel,
-    //   spender: string,
-    //   feeMultiplier: number,
-    // ) => dispatch(mainApprove(token, amount, spender, feeMultiplier)),
     mainTransfer: (
       token,
       amount,
@@ -73,8 +54,8 @@ const mapDispatchToProps  = (dispatch) => {
   }
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export default class Send extends React.Component<SendProps, SendState> {
+@connect(makeMapStateToProps, mapDispatchToProps)
+export default class Send extends React.PureComponent {
 
   // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
@@ -93,17 +74,28 @@ export default class Send extends React.Component<SendProps, SendState> {
     ],
   }
 
-  constructor (props: SendProps) {
+  constructor (props) {
     super(props)
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)
   }
 
   state = {
-    selectedToken: (this.props.wallet.tokens && this.props.wallet.tokens[0]) || { id: 'ETH', amount: 0 },
+    // FIXME: to delete and to make it unseen! 
+    selectedToken: (
+      this.props.walletTokensAndBalance &&
+      this.props.walletTokensAndBalance.tokens &&
+      this.props.walletTokensAndBalance.tokens[0] &&
+      {
+        amount: Object.values(this.props.walletTokensAndBalance.tokens[0]).amount,
+        symbol: Object.keys(this.props.walletTokensAndBalance.tokens[0]),
+      }
+    ),
     fee: 1,
     recipient: '',
     amount: null,
     amountInCurrency: 0,
+    isRecipientInputValid: false,
+    isAmountInputValid: false,
   }
 
   handleNavigatorEvent = ({ type, id }) => {
@@ -177,10 +169,11 @@ export default class Send extends React.Component<SendProps, SendState> {
   }
 
   handleAmountInput = (value: number) => {
-    const tokenPrice = this.props.prices[ ETH ] && this.props.prices[ ETH ][ 'USD' ]
+    const tokenPrice = this.props.prices[ ETH ] && this.props.prices[ this.state.selectedToken.symbol ][ 'USD' ]
     this.setState({
       amount: value,
       amountInCurrency: tokenPrice * value,
+      isAmountInputValid: (value > 0)
     })
   }
 
@@ -189,10 +182,14 @@ export default class Send extends React.Component<SendProps, SendState> {
       screen: 'SelectToken',
       title: 'Select Token',
       passProps: {
-        // navigator: this.props.navigator,
         tokens: this.props.tokens,
         onPressAction: (data) => {
-          this.setState({ selectedToken: data })
+          this.setState({
+            selectedToken: {
+              symbol: data.symbol,
+              amount: data.amount,
+            }
+          })
         },
       },
     })
@@ -205,18 +202,38 @@ export default class Send extends React.Component<SendProps, SendState> {
   }
 
   render () {
-    console.log('FEE RATE:', this.props.token.feeRate().toNumber())
-    const { wallet } = this.props
+    const {
+      address,
+      balance,
+      prices,
+      selectedBlockchainName,
+      tokens,
+      wallet,
+    } = this.props
+
+    const currentTokenBalance = this.props.walletTokensAndBalance.tokens
+      .filter( (tObj) => {
+        return Object.keys(tObj)[0] === this.state.selectedToken.symbol
+      })
+      .reduce ( (acc, value) => {
+        acc = value[this.state.selectedToken.symbol].balance
+        return acc
+      }, 0)
+
     return (
       <ScrollView
         style={styles.scrollView}
       >
         <View style={styles.formHeader}>
           <Text style={styles.walletTitle}>
-            {wallet.title}
+            {
+              `My ${selectedBlockchainName} Wallet`
+            }
           </Text>
           <Text style={styles.walletAddress}>
-            {wallet.address}
+            {
+              address
+            }
           </Text>
           <Separator style={styles.separatorDark} />
           <TokenSelector
@@ -227,13 +244,13 @@ export default class Send extends React.Component<SendProps, SendState> {
           <Text style={styles.walletValue}>
             {
               [
-                this.state.selectedToken.id,
+                this.state.selectedToken.symbol,
                 this.state.selectedToken.amount,
               ].join(' ')
             }
           </Text>
           <Text style={styles.walletBalance}>
-            {wallet.balance.currency} {wallet.balance.amount}
+            USD {currentTokenBalance.toFixed(2)}
           </Text>
         </View>
         <View style={styles.formBody}>
@@ -247,10 +264,10 @@ export default class Send extends React.Component<SendProps, SendState> {
             value={this.state.recipient}
           />
           <Input
-            placeholder={`Amount, ${this.state.selectedToken.id}`}
+            placeholder={`Amount, ${this.state.selectedToken.symbol}`}
             keyboardType='numeric'
             onChangeText={this.handleAmountInput}
-            value={this.state.amount}
+            value={this.state.amount != null ? this.state.amount.toString() : ''}
           />
           <Text style={styles.sendBalance}>
             {
@@ -259,7 +276,7 @@ export default class Send extends React.Component<SendProps, SendState> {
           </Text>
           <SectionHeader title='Fee' />
           <FeeSlider
-            tokenID={this.state.selectedToken.id}
+            tokenID={this.state.selectedToken.symbol}
             maximumValue={1.9}
             minimumValue={0.1}
             value={this.state.fee}
@@ -288,9 +305,11 @@ const TokenSelector = ({ onPress, selectedToken }) => {
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.tokenSelector}>
         {
-          selectedToken && selectedToken.id &&
+          selectedToken && selectedToken.symbol &&
             <Text style={styles.tokenSelectorLabel}>
-              {selectedToken.id} {selectedToken.amount}
+              {
+                selectedToken.symbol
+              }
             </Text>
         }
         <Image source={require('../images/chevron-right.png')} />
@@ -299,13 +318,15 @@ const TokenSelector = ({ onPress, selectedToken }) => {
   )
 }
 
-const Input = (props) => (
-  <TextInput
-    style={styles.textInput}
-    placeholderTextColor='#7F7F7F'
-    {...props}
-  />
-)
+const Input = (props) => {
+  return (
+    <TextInput
+      style={styles.textInput}
+      placeholderTextColor='#7F7F7F'
+      {...props}
+    />
+  )
+}
 
 const styles = StyleSheet.create({
   scrollView: {

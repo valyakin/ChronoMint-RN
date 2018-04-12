@@ -58,6 +58,7 @@ const FeeSliderTitle = () => (
 const FeeSlider = ({
   tokenID,
   value = 1,
+  calculatedFeeValue = null,
   maximumValue = 0.1,
   minimumValue = 1.9,
   step = 0.1,
@@ -76,7 +77,7 @@ const FeeSlider = ({
     />
     <View style={styles.feeSliderDetailsContainer}>
       <Text style={[styles.feeSliderDetails, styles.feeSliderDetailsBold]}>
-        {`Transaction fee: ${tokenID} ${Number((value * feeRate).toFixed(1))} (≈USD 10.00)`}
+        {`Transaction fee: ${calculatedFeeValue ? tokenID  : ''}` /*${tokenID} ${Number((value * feeRate).toFixed(1))} (≈USD 10.00)`*/}
       </Text>
       <Text style={styles.feeSliderDetails}>
         {`${value.toFixed(1)}x of average fee`}

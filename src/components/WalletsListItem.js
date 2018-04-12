@@ -101,6 +101,7 @@ export default class WalletsListItem extends React.Component<WalletsListItemProp
       wallet,
       address,
       prices,
+      sectionName,
     } = this.props
   
     this.props.selectWallet(
@@ -116,6 +117,7 @@ export default class WalletsListItem extends React.Component<WalletsListItemProp
         tokens: tokens,
         balance: balance,
         prices: prices,
+        blockchainTitle: sectionName,
       },
     })
   }
