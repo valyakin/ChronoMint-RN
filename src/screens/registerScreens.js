@@ -5,7 +5,8 @@
  * @flow
  */
 import { Navigation } from 'react-native-navigation'
-
+import screenLayout from '../utils/screenLayout'
+import LoginScreenLayout from '../components/LoginScreenLayout'
 import Add2FAWallet from './Add2FAWallet'
 import AddAdvancedWallet from './AddAdvancedWallet'
 import AddEthereumWallet from './AddEthereumWallet'
@@ -16,6 +17,7 @@ import AddTokenToAdvancedWallet from './AddTokenToAdvancedWallet'
 import AddWallet from './AddWallet'
 import ChangeLanguage from './ChangeLanguage'
 import ConfirmSend from './ConfirmSend'
+import CreateWallet from './CreateWallet'
 import Download2FAApp from './Download2FAApp'
 import Drawer from './Drawer'
 import EnterMnemonic from './EnterMnemonic'
@@ -32,10 +34,10 @@ import SelectToken from './SelectToken'
 import Send from './Send'
 import Wallet from './Wallet'
 import WalletOwners from './WalletOwners'
+import WalletsApp from './WalletsApp'
 import WalletsList from './WalletsList'
 import WalletTemplates from './WalletTemplates'
 import WalletTokens from './WalletTokens'
-import WalletsApp from './WalletsApp'
 
 export default function registerScreens (store, Provider) {
   Navigation.registerComponent('Add2FAWallet', () => Add2FAWallet, store, Provider)
@@ -48,6 +50,7 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('AddWallet', () => AddWallet, store, Provider)
   Navigation.registerComponent('ChangeLanguage', () => ChangeLanguage, store, Provider)
   Navigation.registerComponent('ConfirmSend', () => ConfirmSend, store, Provider)
+  Navigation.registerComponent('CreateWallet', () => screenLayout(LoginScreenLayout)(CreateWallet), store, Provider)
   Navigation.registerComponent('Download2FAApp', () => Download2FAApp, store, Provider)
   Navigation.registerComponent('Drawer', () => Drawer, store, Provider)
   Navigation.registerComponent('EnterMnemonic', () => EnterMnemonic, store, Provider)
@@ -64,8 +67,8 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('Send', () => Send, store, Provider)
   Navigation.registerComponent('Wallet', () => Wallet, store, Provider)
   Navigation.registerComponent('WalletOwners', () => WalletOwners, store, Provider)
+  Navigation.registerComponent('WalletsApp', () => WalletsApp, store, Provider)
   Navigation.registerComponent('WalletsList', () => WalletsList, store, Provider)
   Navigation.registerComponent('WalletTemplates', () => WalletTemplates, store, Provider)
   Navigation.registerComponent('WalletTokens', () => WalletTokens, store, Provider)
-  Navigation.registerComponent('WalletsApp', () => WalletsApp, store, Provider)
 }

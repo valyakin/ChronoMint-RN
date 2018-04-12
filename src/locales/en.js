@@ -113,4 +113,14 @@ export default {
     receiving: 'Receiving from',
     sending: 'Sending to',
   },
+  CreateWallet: {
+    password: 'Password',
+    confirmPassword: 'Confirm password',
+    createWallet: 'Create a wallet',
+    or: 'or',
+    useExistingWallet: 'Use an existing wallet',
+    copyright: 'Copyright ©2018 LaborX Australia Pty Ltd. All Rights Reserved.',
+    mismatchPasswords: 'Passwords do not match',
+    invalidPassword: 'Password is not valid',
+  },
 }
