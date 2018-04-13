@@ -13,6 +13,8 @@ import Button from '../components/Button'
 import LoginScreenLayout from './LoginScreenLayout'
 import screenLayout from '../utils/screenLayout'
 
+const PRIVATE_KEY: string = __DEV__ ? '1111111111111111111111111111111111111111111111111111111111111111' : ''
+
 class EnterPrivateKey extends React.Component<{}, {}> {
   static screenOptions = {
     title: I18n.t('EnterPrivateKey.title'),
@@ -20,7 +22,7 @@ class EnterPrivateKey extends React.Component<{}, {}> {
   }
 
   state = {
-    privateKey: '',
+    privateKey: PRIVATE_KEY,
     isPending: false,
   }
   
@@ -42,6 +44,7 @@ class EnterPrivateKey extends React.Component<{}, {}> {
           multiline
           isDark
           onChangeText={this.handleInput}
+          value={PRIVATE_KEY}
         />
         <Checkbox
           label={I18n.t('EnterPrivateKey.saveOnDevice')}

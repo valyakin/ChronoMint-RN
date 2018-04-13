@@ -5,19 +5,26 @@
  * @flow
  */
 import * as React from 'react'
-import { FlatList, View, Image, Text, StyleSheet } from 'react-native'
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import I18n from 'react-native-i18n'
-import colors from '../utils/colors'
+import colors from 'utils/colors'
 
-export default class WalletTokens extends React.Component {
-  keyExtractor = ({ id }) => id
+export default class WalletTokens extends React.PureComponent {
 
-  renderItem = ({ item }) => <Token {...item} />
+  keyExtractor = (id: string) => id
+
+  renderItem = (item) => <Token token={item} balance={this.props.wallet.balance} />
 
   render () {
     return (
       <FlatList
-        data={tokens}
+        data={this.props.wallet.tokens}
         renderItem={this.renderItem}
         keyExtractor={this.keyExtractor}
         style={styles.list}
@@ -26,16 +33,17 @@ export default class WalletTokens extends React.Component {
   }
 }
 
-class Token extends React.Component {
+class Token extends React.PureComponent {
   render () {
-    const { image, symbol, value, balance } = this.props
+    const { id, amount, image } = this.props.token
+    const { balance } = this.props
     return (
       <View style={styles.token}>
         { image && <Image source={image} style={styles.image} /> }
         <Text style={styles.value}>
-          {symbol}
+          {id}
           &nbsp;
-          {I18n.toNumber(value, { precision: 2 })}
+          {I18n.toNumber(amount, { precision: 2 })}
         </Text>
         <Text style={styles.balance}>
           {balance.currency}
@@ -75,25 +83,3 @@ const styles = StyleSheet.create({
   },
 })
 
-const tokens = [
-  {
-    id: 'ETH',
-    symbol: 'ETH',
-    value: 10,
-    balance: {
-      currency: 'USD',
-      amount: 10000,
-    },
-    image: require('../images/coin-ethereum-small.png'),
-  },
-  {
-    id: 'TIME',
-    symbol: 'TIME',
-    value: 10,
-    image: require('../images/coin-time-small.png'),
-    balance: {
-      currency: 'USD',
-      amount: 10000,
-    },
-  },
-]

@@ -4,13 +4,34 @@
  *
  * @flow
  */
-import * as React from 'react'
-import { SectionList } from 'react-native'
-import I18n from 'react-native-i18n'
-import SectionHeader from '../components/SectionHeader'
-import WalletsListItem from '../components/WalletsListItem'
 
-export default class WalletsList extends React.Component {
+import React, { PureComponent }  from 'react'
+import { connect } from 'react-redux'
+import {
+  ActivityIndicator,
+  SectionList,
+  View,
+} from 'react-native'
+import I18n from 'react-native-i18n'
+import {
+  sectionsSelector,
+} from 'redux/session/selectors'
+import SectionHeader from 'components/SectionHeader'
+import WalletsListItem from 'components/WalletsListItem'
+import { switchWallet } from 'redux/wallet/actions'
+import styles from './styles/WalletsListStyles'
+
+const mapStateToProps = (state) => ({
+  sections: sectionsSelector()(state),
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  selectWallet: (wallet, address) => dispatch(switchWallet(wallet, address)),
+})
+
+@connect(mapStateToProps, mapDispatchToProps)
+export default class WalletsList extends PureComponent {
+
   // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
     leftButtons: [
@@ -26,10 +47,9 @@ export default class WalletsList extends React.Component {
       },
     ],
   }
-  
+
   constructor (props) {
     super(props)
-
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent)
   }
 
@@ -39,11 +59,11 @@ export default class WalletsList extends React.Component {
 
   handleRefresh = () => {
     this.setState({ refreshing: true })
-    
+
     setTimeout(() => this.setState({ refreshing: false }), 1000)
   }
-  
-  onNavigatorEvent = ({ type, id }) => {
+
+  onNavigatorEvent = ({ type, id }: { type: string, id: string }) => {
     if (type === 'NavBarButtonPress' && id === 'drawer') {
       this.props.navigator.toggleDrawer({ side: 'left' })
     }
@@ -55,76 +75,41 @@ export default class WalletsList extends React.Component {
     }
   }
 
-  keyExtractor = (item) => item.title
+  keyExtractor = ( section, index ) => [section.title, index].join('')
 
-  renderItem = ({ item }) => <WalletsListItem {...item} navigator={this.props.navigator} />
+  renderItem = ({ item, index, section }) => (
+    <View style={styles.walletItemHorizontalPaddings}>
+      <WalletsListItem
+        wallet={item.wallet}
+        index={index}
+        address={item.address}
+        sectionName={section.title}
+        selectWallet={this.props.selectWallet}
+        navigator={this.props.navigator}
+      />
+    </View>
+  )
 
-  renderSectionHeader = ({ section }) => <SectionHeader {...section} isDark />
+  renderSectionHeader = ({ section }) => (
+    <SectionHeader title={`${section.title} Wallets`} isDark />
+  )
 
   render () {
+
+    if (this.state.refreshing || !this.props.sections) {
+      return <ActivityIndicator />
+    }
+
     return (
       <SectionList
         renderItem={this.renderItem}
         renderSectionHeader={this.renderSectionHeader}
-        sections={walletSections}
+        sections={this.props.sections}
         keyExtractor={this.keyExtractor}
         onRefresh={this.handleRefresh}
         refreshing={this.state.refreshing}
+        stickySectionHeadersEnabled={false}
       />
     )
   }
 }
-
-const walletSections = [
-  { title: 'Bitcoin wallets', data: [
-    {
-      title: 'Bitcoin Wallet',
-      address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-      balance: { currency: 'BTC', amount: 15.2045 },
-      exchange: { currency: 'USD', amount: 121600 },
-      image: require('../images/coin-bitcoin-big.png'),
-      token: 'btc',
-      transactions: [
-        { status: 'receiving' },
-      ],
-    },
-  ] },
-  { title: 'Ethereum wallets', data: [
-    {
-      title: 'My Wallet',
-      address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-      balance: { currency: 'USD', amount: 1000 },
-      tokens: [
-        { id: 'ETH', amount: 10 },
-        { id: 'TIME', amount: 10 },
-      ],
-      mode: '2fa',
-    },
-    {
-      title: 'My Shared Wallet',
-      address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-      balance: { currency: 'USD', amount: 32020.41 },
-      tokens: [
-        { id: 'ETH', amount: 21 },
-        { id: 'TIME', amount: 521.20 },
-      ],
-      transactions: [
-        { status: 'receiving' },
-        { status: 'receiving' },
-      ],
-      mode: 'shared',
-    },
-    {
-      title: 'My Locked Wallet',
-      address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-      balance: { currency: 'USD', amount: 32020.41 },
-      tokens: [
-        { id: 'ETH', amount: 21 },
-        { id: 'TIME', amount: 10 },
-        { id: 'TIME', amount: 10 },
-        { id: 'TIME', amount: 10 },
-      ],
-      mode: 'timeLocked',
-    },
-  ] },
-]

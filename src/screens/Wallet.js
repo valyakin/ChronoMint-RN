@@ -13,12 +13,15 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-import colors from '../utils/colors'
-import Separator from '../components/Separator'
-import WalletTransactions from './WalletTransactions'
+// import {
+//   getSelectedWalletStore,
+// } from 'redux/session/selectors'
+import colors from 'utils/colors'
+import Separator from 'components/Separator'
 import WalletOwners from './WalletOwners'
-import WalletTokens from './WalletTokens'
 import WalletTemplates from './WalletTemplates'
+import WalletTokens from './WalletTokens'
+import WalletTransactions from './WalletTransactions'
 
 type ActionButtonProps = {
   title: string,
@@ -31,66 +34,134 @@ const ActionButton = ({ title, image, onPress }: ActionButtonProps) => (
     style={styles.actionButton}
     onPress={onPress}
   >
-    <Image source={image} style={styles.actionIcon} />
+    <Image
+      source={image}
+      style={styles.actionIcon}
+    />
     <Text style={styles.actionTitle}>
       {title}
     </Text>
   </TouchableOpacity>
 )
 
-export default class Wallet extends React.Component {
+/**
+ * Tabs IDs for Wallet screen. Used to switch between tabs.
+ */
+type TTabs = 'transactions' | 'tokens' | 'owners' | 'templates'
+
+export default class Wallet extends React.PureComponent {
+
   state = {
     tab: 'transactions',
   }
 
-  handleTransactions = () => {
-    this.setState({ tab: 'transactions' })
+  handleTabClick = (tabName: TTabs) => {
+    this.setState({ tab: tabName })
   }
 
-  handleTokens = () => {
-    this.setState({ tab: 'tokens' })
+  handleSend = (props): void => {
+    const {
+      address,
+      balance,
+      blockchainTitle,
+      prices,
+      tokens,
+      wallet,
+    } = props
+
+    props.navigator.push({
+      screen: 'Send',
+      title: 'Send Funds',
+      passProps: {
+        address: address,
+        balance: balance,
+        blockchainTitle: blockchainTitle,
+        prices: prices,
+        selectedBlockchainName: blockchainTitle,
+        tokens: tokens,
+        wallet: wallet,
+        walletAddress: address,
+
+      },
+    })
   }
 
-  handleOwners = () => {
-    this.setState({ tab: 'owners' })
-  }
-
-  handleTemplates = () => {
-    this.setState({ tab: 'templates' })
-  }
-
-  handleSend = () => {
-    this.props.navigator.push({ screen: 'Send' })
-  }
+  handleNothing = () => {}
 
   render () {
     const { tab } = this.state
-    const { mode } = this.props
-    
+
+    const {
+      address,
+      wallet,
+      balance,
+      tokens,
+    } = this.props
+    console.log('Wallet this.props', this.props)
+    /**
+     * [Alexey Ozerov] Need to clarify: does 'mode' used only for multisig?
+     * Also need a better place for the mode "calculations"
+     */
+    let mode = '2fa'
+    if (wallet.isMultisig()) {
+      if (wallet.isTimeLocked()) {
+        mode = 'timeLocked'
+      } else {
+        mode = 'shared'
+      }
+    }
+
     return (
       <View style={styles.screenView}>
         <View style={styles.tabsContainer}>  
-          <Text style={styles.tabItem} onPress={this.handleTransactions}>
+          <Text
+            style={styles.tabItem}
+            onPress={() => this.handleTabClick('transactions')}
+          >
             Transactions
           </Text>
           <Separator style={styles.separator} />
-          { this.props.token !== 'btc' && ([
-            <Text style={styles.tabItem} onPress={this.handleTokens} key='0'>
-              Tokens
-            </Text>,
-            <Separator style={styles.separator} key='1' />,
-          ])}
+          {/* Alexey Ozerov: Do not understand a logic here. We have array of tokens, which one should be compared with btc?
+            this.props.wallet.token !== 'btc' && ([
+              <Text
+                style={styles.tabItem}
+                onPress={() => this.handleTabClick('tokens)}
+                key='0'
+              >
+                Tokens
+              </Text>,
+              <Separator style={styles.separator} key='1' />,
+            ])
+          */}
           { mode === 'shared' && ([
-            <Text style={styles.tabItem} onPress={this.handleOwners} key='0'>
+            <Text
+              style={styles.tabItem}
+              onPress={() => this.handleTabClick('owners')}
+              key='0'
+            >
               Owners
             </Text>,
-            <Separator style={styles.separator} key='1' />,
+            <Separator
+              style={styles.separator}
+              key='1'
+            />,
           ])}
-          <Text style={styles.tabItem} onPress={this.handleTemplates}>
+          <Text
+            style={styles.tabItem}
+            onPress={() => this.handleTabClick('templates')}
+          >
             Templates
           </Text>
         </View>
-        { tab === 'transactions' && <WalletTransactions {...this.props} />}
+        {
+          tab === 'transactions' &&
+            <WalletTransactions
+              address={address}
+              balance={balance}
+              tokens={tokens}
+              wallet={wallet}
+            />
+        }
         { tab === 'tokens' && <WalletTokens {...this.props} />}
         { tab === 'owners' && <WalletOwners {...this.props} />}
         { tab === 'templates' && <WalletTemplates {...this.props} />}
@@ -98,11 +169,12 @@ export default class Wallet extends React.Component {
           <ActionButton
             title={I18n.t('Wallet.send')}
             image={require('../images/send-ios.png')}
-            onPress={this.handleSend}
+            onPress={() => this.handleSend(this.props)}
           />
           <ActionButton
             title={I18n.t('Wallet.receive')}
             image={require('../images/receive-ios.png')}
+            onPress={this.handleNothing}
           />
         </View>
       </View>

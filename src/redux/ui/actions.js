@@ -12,6 +12,8 @@ import ipfs from 'utils/IPFS'
 import { modalsOpen } from '@chronobank/mint/src/redux/modals/actions'
 // import ConfirmTxDialog from 'components/dialogs/ConfirmTxDialog/ConfirmTxDialog'
 // import UserActiveDialog from 'components/dialogs/UserActiveDialog/UserActiveDialog'
+import { DUCK_WATCHER, WATCHER_TX_SET } from 'redux/watcher/actions'
+
 
 export const removeWatchersUserMonitor = () => () => {
   // userMonitorService
@@ -25,17 +27,23 @@ export const watchInitUserMonitor = () => (dispatch) => {
   //   .start()
 }
 
-export const showConfirmTxModal = () => (dispatch) => new Promise((resolve) => {
-  dispatch(modalsOpen({
-    component: ConfirmTxDialog,
-    props: {
-      callback: (isConfirmed) => resolve(isConfirmed),
-    },
-  }))
-}).catch((e) => {
-  // eslint-disable-next-line
-    console.error('Confirm modal error:', e)
-  return false
+export const showConfirmTxModal = () => (dispatch, getState) => new Promise((resolve) => {
+  const isConfirmed: boolean = true
+  const st = getState()
+  // console.log(st)
+  const updatedTx = st.get(DUCK_WATCHER).confirmTx
+  resolve({ isConfirmed: isConfirmed, updatedTx: updatedTx })
+  // TODO: to implemet RN confirmation screen and enable the code below
+//   dispatch(modalsOpen({
+//     component: ConfirmTxDialog,
+//     props: {
+//       callback: (isConfirmed) => resolve(isConfirmed),
+//     },
+//   }))
+// }).catch((e) => {
+//   // eslint-disable-next-line
+//     console.error('Confirm modal error:', e)
+//   return false
 })
 
 export const changeMomentLocale = (locale, dispatch) => {

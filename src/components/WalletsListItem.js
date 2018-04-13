@@ -5,31 +5,25 @@
  * @flow
  */
 import * as React from 'react'
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import colors from '../utils/colors'
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import { connect } from 'react-redux'
+import { DUCK_MARKET } from 'redux/market/action'
+import { DUCK_TOKENS } from 'redux/tokens/actions'
+import colors from 'utils/colors'
+import MainWalletModel from 'models/wallet/MainWalletModel'
+import MultisigWalletModel from 'models/wallet/MultisigWalletModel'
+import { calculateWalletBalance } from 'utils/calculations'
+
 import WalletImage from './WalletImage'
 
-type Token = { id: string, amount: number }
-
-type Transaction = { status?: 'receiving' | null }
-
-type ExchangeType = { currency: string, amount: number }
-
-type WalletMode = '2fa' | 'shared' | 'timeLocked'
-
-type WalletListItemProps = {
-  title: string,
-  address: string,
-  balance: {
-    currency: string,
-    amount: number
-  },
-  transactions?: Transaction[],
-  tokens?: Token[],
-  exchange?: ExchangeType,
-  image?: number,
-  mode?: WalletMode,
-}
+type TMainWalletModel = typeof MainWalletModel
+type TMultisigWalletModel = typeof MultisigWalletModel
 
 const Transactions = ({ transactions }) => !transactions ? null : (
   !transactions[1] ? (
@@ -45,63 +39,152 @@ const Transactions = ({ transactions }) => !transactions ? null : (
   )
 )
 
-const TokensList = ({ tokens }) => !(tokens || [])[0] ? null : (
-  <Text style={styles.tokens}>
-    {tokens[0].id} {tokens[0].amount.toFixed(2)}
-    {tokens[1] && ', '}
-    {tokens[2] ?
-      `+ ${tokens.length - 1} more` :
-      `${tokens[1].id} ${tokens[1].amount.toFixed(2)}`
-    }
-  </Text>
-)
+const TokensList = ({ tokens }) => {
+  if (!tokens || !Object.keys(tokens).length) {
+    return null
+  }
 
-const Exchange = ({ exchange }: ExchangeType) => !exchange ? null : (
+  let tokensStrings = Object.keys(tokens).sort().reduce( (accumulator, tokenSymbol) => {
+    accumulator.push([tokenSymbol, tokens[tokenSymbol].toFixed(2)].join(': '))
+    return accumulator
+  }, [])
+
+  if (tokensStrings && tokensStrings.length > 2) {
+    tokensStrings = [
+      tokensStrings[0],
+      ['+', tokensStrings.length - 1, 'more'].join(' '),
+    ]
+  }
+  tokensStrings = tokensStrings && tokensStrings.join(', ')
+
+  return (
+    <Text style={styles.tokens}>
+      {tokensStrings || ''}
+    </Text>
+  )
+}
+
+const Exchange = ({ exchange }) => !exchange ? null : (
   <Text style={styles.exchange}>
     {exchange.currency} {exchange.amount}
   </Text>
-) 
+)
 
-export default class WalletsListItem extends React.Component<WalletListItemProps, {}> {
-  handlePress = () => {
-    const { navigator, mode, address, token } = this.props
+type WalletsListItemProps = {
+  wallet: TMainWalletModel | TMultisigWalletModel,
+  index: number,
+  address: string,
+  selectWallet(): void,
+  navigator: any,
+  selectedCurrency: string,
+  prices: any,
+  sectionName: string,
+}
+
+const mapStateToProps = (state) => {
+  const {
+    prices,
+    selectedCurrency,
+  } = state.get(DUCK_MARKET)
+  const tokens = state.get(DUCK_TOKENS)
+
+  return {
+    prices,
+    selectedCurrency,
+    tokens,
+  }
+}
+
+@connect(mapStateToProps, null)
+export default class WalletsListItem extends React.Component<WalletsListItemProps> {
+
+  handlePress = (tokens, balance): void => {
+
+    const {
+      navigator,
+      wallet,
+      address,
+      prices,
+      sectionName,
+    } = this.props
+  
+    this.props.selectWallet(
+      wallet,
+      address
+    )
+
     navigator.push({
       screen: 'Wallet',
       passProps: {
-        mode,
-        address,
-        token,
+        wallet: wallet,
+        address: address,
+        tokens: tokens,
+        balance: balance,
+        prices: prices,
+        blockchainTitle: sectionName,
       },
     })
   }
 
   render () {
-    const { title, address, balance } = this.props
+    const {
+      wallet,
+      address,
+    } = this.props
+
+    const { tokens, balance } = calculateWalletBalance(
+      this.props.wallet,
+      this.props.prices,
+      this.props.tokens,
+      this.props.selectedCurrency,
+      this.props.sectionName,
+    )
+
+    // TODO: to optimize (rewrite it)
+    let walletTitle = `My ${this.props.sectionName} Wallet`
+    if (wallet.isMultisig()) {
+      walletTitle = wallet.isTimeLocked() ? 'My TimeLocked Wallet' : 'My Shared wallet'
+    }
+
     return (
-      <TouchableOpacity style={styles.container} onPress={this.handlePress}>
-        <View style={styles.transactions}>
-          <Transactions transactions={this.props.transactions} />
-        </View>
-        <View style={styles.content}>
-          <WalletImage
-            image={this.props.image}
-            walletMode={this.props.mode}
-            style={styles.image}
-          />
-          <View style={styles.contentColumn}>
-            <Text style={styles.title}>
-              {title}
-            </Text>
-            <Text style={styles.address}>
-              {address}
-            </Text>
-            <Text style={styles.balance}>
-              {balance.currency} {balance.amount.toFixed(2)}
-            </Text>
-            <TokensList tokens={this.props.tokens} />
-            <Exchange exchange={this.props.exchange} />
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => this.handlePress(tokens, balance)}
+      >
+
+        <View>
+          <View style={styles.transactions}>
+            <Transactions transactions={wallet.transactions} />
+          </View>
+          <View style={styles.content}>
+            <WalletImage
+              image={wallet.image}
+              walletMode={wallet.mode}
+              style={styles.image}
+            />
+            <View style={styles.contentColumn}>
+              <Text style={styles.title}>
+                {
+                  walletTitle
+                }
+              </Text>
+              <Text style={styles.address}>
+                {address}
+              </Text>
+              <Text style={styles.balance}>
+                {this.props.selectedCurrency} {balance}
+              </Text>
+              <TokensList tokens={tokens} />
+              {false &&
+                <View>
+                  <TokensList tokens={wallet.tokens} />
+                  <Exchange exchange={wallet.exchange} />
+                </View>
+              }
+            </View>
           </View>
         </View>
+
       </TouchableOpacity>
     )
   }

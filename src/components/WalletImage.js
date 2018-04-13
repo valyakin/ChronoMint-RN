@@ -5,28 +5,47 @@
  * @flow
  */
 import * as React from 'react'
-import { View, Image, StyleSheet } from 'react-native'
-import { indicators } from '../utils/globals'
-import colors from '../utils/colors'
+import {
+  View,
+  Image,
+  StyleSheet,
+} from 'react-native'
+import { indicators } from 'utils/globals'
+import colors from 'utils/colors'
+
+type WalletImageProps = {
+  image?: number,
+  walletMode?: '2fa' | 'shared' | 'timeLocked',
+  shapeStyle?: any,
+  imageStyle?: any,
+}
 
 const WalletImage = ({ image, walletMode, shapeStyle, imageStyle, style }: WalletImageProps) => (
   <View style={style}>
-    { walletMode && <Image source={indicators[walletMode]} style={styles.walletBadge} /> }
-    { (typeof image !== 'undefined') ?
-      <Image source={image} /> :
-      <View style={[
-        styles.walletImageShape,
-        shapeStyle,
-      ]}
-      >
+    {
+      walletMode &&
         <Image
-          source={require('../images/wallet.png')}
-          style={[
-            styles.walletImage,
-            imageStyle,
-          ]}
+          source={indicators[walletMode]}
+          style={styles.walletBadge}
         />
-      </View>
+    }
+    {
+      (typeof image !== 'undefined') ?
+        <Image source={image} /> :
+        <View
+          style={[
+            styles.walletImageShape,
+            shapeStyle,
+          ]}
+        >
+          <Image
+            source={require('../images/wallet.png')}
+            style={[
+              styles.walletImage,
+              imageStyle,
+            ]}
+          />
+        </View>
     }
   </View>
 )
@@ -52,10 +71,3 @@ const styles = StyleSheet.create({
     height: 24,
   },
 })
-
-type WalletImageProps = {
-  image?: number,
-  walletMode?: '2fa' | 'shared' | 'timeLocked',
-  shapeStyle?: any,
-  imageStyle?: any,
-}
