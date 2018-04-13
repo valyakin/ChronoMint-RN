@@ -1,22 +1,22 @@
 {
-  "extends": ["plugin:chronobank-react/recommended"],
+  "extends": [
+    "plugin:chronobank-react/recommended"
+  ],
   "plugins": [
     "flowtype",
     "react-native"
   ],
-  "ecmaFeatures": {
-    "jsx": true
-  },
   "env": {
     "react-native/react-native": true
   },
   "settings": {
     "import/resolver": {
-      "babel-module": {
-        "root": ["./src", "./mint/src"],
-        "paths": ["./src", "./mint/src"]
-      }
-    }
+      "babel-module": {}
+    },
+    "import/external-module-folders": [
+      "./src/components",
+      "./components"
+    ]
   },
   "rules": {
     "react/prop-types": 0,

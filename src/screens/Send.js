@@ -4,41 +4,259 @@
  *
  * @flow
  */
-import * as React from 'react'
-import {
-  View,
-  ScrollView,
-  Text,
-  Image,
-  TextInput,
-  Slider,
-  StyleSheet,
-} from 'react-native'
-import Separator from '../components/Separator'
-import SectionHeader from '../components/SectionHeader'
-import colors from '../utils/colors'
 
-export default class Send extends React.Component {
+import React from 'react'
+import { connect } from 'react-redux'
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+
+import {
+  getGasPriceMultiplier,
+  getWTokens,
+} from 'redux/session/selectors'
+import { mainTransfer, ETH } from 'redux/mainWallet/actions'
+import { DUCK_TOKENS } from 'redux/tokens/actions'
+import tokenService from 'services/TokenService'
+
+import colors from 'utils/colors'
+import FeeSlider from 'components/FeeSlider'
+import SectionHeader from 'components/SectionHeader'
+import Separator from 'components/Separator'
+
+import {
+  makeGetWalletTokensAndBalanceByAddress,
+} from 'redux/wallet/selectors'
+
+const makeMapStateToProps = (origState, origProps) => {
+  const token = origState.get(DUCK_TOKENS).item(ETH)
+  const getWalletTokensAndBalanceByAddress = makeGetWalletTokensAndBalanceByAddress(origProps.blockchainTitle)
+  const mapStateToProps = (state, ownProps) => {
+    const walletTokensAndBalance = getWalletTokensAndBalanceByAddress(state, ownProps)
+    return {
+      walletTokensAndBalance,
+      gasPriceMultiplier: getGasPriceMultiplier(token.blockchain())(state),
+      token,
+      tokensDuck: getWTokens()(state),
+    }
+  }
+  return mapStateToProps
+}
+
+const mapDispatchToProps  = (dispatch) => {
+  return {
+    mainTransfer: (
+      token,
+      amount,
+      recipient,
+      feeMultiplier,
+    ) => dispatch(mainTransfer(token, amount, recipient, feeMultiplier)),
+  }
+}
+
+@connect(makeMapStateToProps, mapDispatchToProps)
+export default class Send extends React.PureComponent {
+
+  // noinspection JSUnusedGlobalSymbols
+  static navigatorButtons = {
+    leftButtons: [
+      {
+        title: 'Cancel',
+        id: 'cancel',
+      },
+    ],
+    rightButtons: [
+      {
+        title: 'Done',
+        id: 'done',
+      },
+   
+    ],
+  }
+
+  constructor (props) {
+    super(props)
+    this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)
+  }
+
+  state = {
+    // FIXME: to delete and to make it unseen! 
+    selectedToken: (
+      this.props.walletTokensAndBalance &&
+      this.props.walletTokensAndBalance.tokens &&
+      this.props.walletTokensAndBalance.tokens[0] &&
+      {
+        amount: Object.values(this.props.walletTokensAndBalance.tokens[0]).amount,
+        symbol: Object.keys(this.props.walletTokensAndBalance.tokens[0]),
+      }
+    ),
+    fee: 1,
+    recipient: '',
+    amount: null,
+    amountInCurrency: 0,
+    isRecipientInputValid: false,
+    isAmountInputValid: false,
+  }
+
+  handleNavigatorEvent = ({ type, id }) => {
+    if (type === 'NavBarButtonPress') {
+      switch (id) {
+        case 'cancel': {
+          this.props.navigator.pop()
+          break
+        }
+        case 'done': {
+          this.props.navigator.push({
+            screen: 'ConfirmSend',
+            title: 'Confirm Send',
+            passProps: {
+              amount: this.state.amount,
+              fee: this.state.fee,
+              recipient: this.state.recipient,
+              usd: 1.44,
+            },
+          })
+        }
+        // case 'done': {
+        //   // TODO: To move it into separate function
+        //   const token: TTokenModel = this.props.tokensDuck.item(this.state.selectedToken.id)
+        //   // console.log(token.toJS())
+        //   const toSendBigNumber: BigNumber = new BigNumber(this.state.amount)
+        //   // console.log(toSendBigNumber)
+        //   const bnWithDecimals: TAmountModel = token.addDecimals(toSendBigNumber)
+        //   // console.log(bnWithDecimals)
+        //   const amountToSend: TAmountModel = new Amount(bnWithDecimals, this.state.selectedToken.id)
+        //   // console.log(amountToSend)
+        //   const recipient: string = this.state.recipient
+        //   const feeMultiplier = token.fee()
+        //   // console.log(token, amountToSend, recipient, feeMultiplier)
+        //   this.props.mainTransfer(token, amountToSend, recipient, feeMultiplier)
+        //   break
+        // }
+      }
+    }
+  }
+
+  // FIXME: to move 'this.props.mainTransfer' call from handleNavigatorEvent to external method
+  //
+  // handleSubmit = (values) => {
+  //   const { wallet, tokens } = this.props
+  //   const { action, symbol, amount, recipient, feeMultiplier } = values.toJS()
+  //   const token = tokens.item(symbol)
+
+  //   const value = new Amount(token.addDecimals(amount), symbol)
+
+  //   // TODO: No multisig wallets here.
+  //   // See to the handleSubmit methiod at mint/src/components/dashboard/SendTokens/SendTokens.jsx
+  //   switch (action) {
+  //     case ACTION_APPROVE:
+  //       this.props.mainApprove(token, value, recipient, feeMultiplier)
+  //       break
+  //     case ACTION_TRANSFER:
+  //         this.props.mainTransfer(token, value, recipient, feeMultiplier)
+  //         break
+  //   }
+  // }
+
+  handleSubmitSuccess = () => {
+    this.props.navigator.pop()
+  }
+
+  handleRecipientInput = (value: string) => {
+    this.setState({
+      recipient: value,
+    })
+  }
+
+  handleAmountInput = (value: number) => {
+    const tokenPrice = this.props.prices[ ETH ] && this.props.prices[ this.state.selectedToken.symbol ][ 'USD' ]
+    this.setState({
+      amount: value,
+      amountInCurrency: tokenPrice * value,
+      isAmountInputValid: (value > 0)
+    })
+  }
+
+  handlePressOnTokenSelector = (): void => {
+    this.props.navigator.push({
+      screen: 'SelectToken',
+      title: 'Select Token',
+      passProps: {
+        tokens: this.props.tokens,
+        onPressAction: (data) => {
+          this.setState({
+            selectedToken: {
+              symbol: data.symbol,
+              amount: data.amount,
+            }
+          })
+        },
+      },
+    })
+  }
+
+  onFeeSliderChange = (value: number) => {
+    this.setState({
+      fee: value,
+    })
+  }
+
   render () {
+    const {
+      address,
+      balance,
+      prices,
+      selectedBlockchainName,
+      tokens,
+      wallet,
+    } = this.props
+
+    const currentTokenBalance = this.props.walletTokensAndBalance.tokens
+      .filter( (tObj) => {
+        return Object.keys(tObj)[0] === this.state.selectedToken.symbol
+      })
+      .reduce ( (acc, value) => {
+        acc = value[this.state.selectedToken.symbol].balance
+        return acc
+      }, 0)
+
     return (
       <ScrollView
         style={styles.scrollView}
       >
         <View style={styles.formHeader}>
           <Text style={styles.walletTitle}>
-            MyWallet
+            {
+              `My ${selectedBlockchainName} Wallet`
+            }
           </Text>
           <Text style={styles.walletAddress}>
-            n4XmX91N5FfccY678vaG1ELNtXh6skVES7
+            {
+              address
+            }
           </Text>
           <Separator style={styles.separatorDark} />
-          <TokenSelector />
+          <TokenSelector
+            selectedToken={this.state.selectedToken}
+            onPress={this.handlePressOnTokenSelector}
+          />
           <Separator style={styles.separatorDark} />
           <Text style={styles.walletValue}>
-            TIME 4.00
+            {
+              [
+                this.state.selectedToken.symbol,
+                this.state.selectedToken.amount,
+              ].join(' ')
+            }
           </Text>
           <Text style={styles.walletBalance}>
-            USD 160.9
+            USD {currentTokenBalance.toFixed(2)}
           </Text>
         </View>
         <View style={styles.formBody}>
@@ -46,11 +264,32 @@ export default class Send extends React.Component {
             source={require('../images/coin-time-small.png')}
             style={styles.tokenImage}
           />
-          <Input placeholder='Recipient Address' />
-          <Input placeholder='Amount, TIME' />
-          <Text style={styles.sendBalance}>USD 0.00</Text>
+          <Input
+            placeholder='Recipient Address'
+            onChangeText={this.handleRecipientInput}
+            value={this.state.recipient}
+          />
+          <Input
+            placeholder={`Amount, ${this.state.selectedToken.symbol}`}
+            keyboardType='numeric'
+            onChangeText={this.handleAmountInput}
+            value={this.state.amount != null ? this.state.amount.toString() : ''}
+          />
+          <Text style={styles.sendBalance}>
+            {
+              `USD ${this.state.amountInCurrency.toFixed(2)}`
+            }
+          </Text>
           <SectionHeader title='Fee' />
-          <FeeSlider />
+          <FeeSlider
+            tokenID={this.state.selectedToken.symbol}
+            maximumValue={1.9}
+            minimumValue={0.1}
+            value={this.state.fee}
+            step={0.1}
+            feeRate={this.props.token.feeRate().toNumber()}
+            handleValueChange={this.onFeeSliderChange}
+          />
           <Text style={styles.advancedFee}>
             Advanced Fee
           </Text>
@@ -66,44 +305,34 @@ export default class Send extends React.Component {
   }
 }
 
-const TokenSelector = () => (
-  <View style={styles.tokenSelector}>
-    <Text style={styles.tokenSelectorLabel}>
-      TIME
-    </Text>
-    <Image source={require('../images/chevron-down.png')} />
-  </View>
-)
+const TokenSelector = ({ onPress, selectedToken }) => {
 
-const Input = (props) => (
-  <TextInput
-    style={styles.textInput}
-    placeholderTextColor='#7F7F7F'
-    {...props}
-  />
-)
+  return (
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+      <View style={styles.tokenSelector}>
+        {
+          selectedToken && selectedToken.symbol &&
+            <Text style={styles.tokenSelectorLabel}>
+              {
+                selectedToken.symbol
+              }
+            </Text>
+        }
+        <Image source={require('../images/chevron-right.png')} />
+      </View>
+    </TouchableOpacity>
+  )
+}
 
-const FeeSlider = () => (
-  <View style={styles.feeSliderContainer}>
-    <View style={styles.feeSliderLabel}>
-      <Text style={styles.feeSliderLabelText}>Slow transaction</Text>
-      <Text style={styles.feeSliderLabelText}>Fast transaction</Text>
-    </View>
-    <Slider
-      minimumTrackTintColor='#786AB7'
-      value={0.5}
+const Input = (props) => {
+  return (
+    <TextInput
+      style={styles.textInput}
+      placeholderTextColor='#7F7F7F'
+      {...props}
     />
-    <Text style={styles.feeSliderDetails}>
-      <Text style={styles.feeSliderDetailsBold}>
-        Transaction fee:
-      </Text>
-      &nbsp;
-      ETH 0.001 (≈USD 10.00)
-      {'\n'}
-      1.0x of average fee
-    </Text>
-  </View>
-)
+  )
+}
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -182,28 +411,6 @@ const styles = StyleSheet.create({
     fontWeight: '200',
     color: '#7F7F7F',
     marginBottom: 30,
-  },
-  feeSliderContainer: {
-    marginVertical: 30,
-    marginHorizontal: 20,
-  },
-  feeSliderLabel: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    bottom: -8,
-  },
-  feeSliderLabelText: {
-    fontSize: 16,
-    color: colors.foreground,
-  },
-  feeSliderDetails: {
-    fontSize: 14,
-    color: colors.foreground,
-    fontWeight: '200',
-    marginTop: 8,
-  },
-  feeSliderDetailsBold: {
-    fontWeight: '700',
   },
   advancedFee: {
     margin: 20,

@@ -5,36 +5,65 @@
  * @flow
  */
 import * as React from 'react'
-import { View, ScrollView, StyleSheet, Image, Text } from 'react-native'
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import I18n from 'react-native-i18n'
-import WalletImage from '../components/WalletImage'
-import WalletAlert from '../components/WalletAlert'
-import TransactionsList from '../components/TransactionsList'
-import Separator from '../components/Separator'
-import colors from '../utils/colors'
+
+import colors from 'utils/colors'
+import DetailsSection from 'components/DetailsSection'
+import Separator from 'components/Separator'
+import TransactionsList from 'components/TransactionsList'
+import WalletAlert from 'components/WalletAlert'
 
 export default class WalletTransactions extends React.Component {
-  static defaultProps = {
-    address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-    mode: 'shared',
-    balance: { id: 'usd', amount: 32020.41 },
-  }
 
   render () {
-    const { address, mode, balance } = this.props
+    const {
+      address,
+      wallet,
+      balance,
+      tokens,
+    } = this.props
+
+    console.log('WalletTransactions this.props', this.props)
+    /**
+     * [Alexey Ozerov] Need to clarify: does 'mode' used only for multisig?
+     * Also need a better place for the mode "calculations"
+     */
+    let mode = '2fa'
+    if (wallet.isMultisig()) {
+      if (wallet.isTimeLocked()) {
+        mode = 'timeLocked'
+      } else {
+        mode = 'shared'
+      }
+    }
+
     return (
       <ScrollView style={styles.mainSection}>
         <DetailsSection
-          walletMode={mode}
+          mode={mode}
           balance={balance}
           address={address}
+          tokensLength={tokens && Object.keys(tokens).length || 0}
         />
         <WalletAlert
           title='23 February 2018'
           style={styles.walletAlert}
           actions={[
-            { id: 'revoke', title: I18n.t('Wallet.revoke') },
-            { id: 'sign', title: I18n.t('Wallet.sign'), isMain: true },
+            {
+              id: 'revoke',
+              title: I18n.t('Wallet.revoke'),
+            }, {
+              id: 'sign',
+              title: I18n.t('Wallet.sign'),
+              isMain: true,
+            },
           ]}
           contentContainerStyle={styles.walletAlertContent}
         >
@@ -60,47 +89,11 @@ export default class WalletTransactions extends React.Component {
   }
 }
 
-const DetailsSection = ({ walletMode, address, balance }) => (
-  <View style={styles.walletDetailsSection}>
-    <WalletImage
-      walletMode={walletMode}
-      shapeStyle={styles.walletImageShape}
-      imageStyle={styles.walletImageIcon}
-    />
-    <Text style={styles.address}>{address}</Text>
-    <Text style={styles.balance}>
-      {I18n.t(balance.id)}&nbsp;
-      {I18n.toNumber(balance.amount, { precision: 2 })}
-    </Text>
-    <Text style={styles.walletDetails}>
-      36 Tokens, 3 Owners
-    </Text>
-  </View>
-)
-
 const styles = StyleSheet.create({
   mainSection: {
     flexGrow: 1,
     paddingTop: 16,
     paddingHorizontal: 8,
-  },
-  walletImageShape: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-  },
-  walletImageIcon: {
-    width: 38,
-    height: 38,
-  },
-  walletDetailsSection: {
-    backgroundColor: '#302D59',
-    borderRadius: 3,
-    alignItems: 'center',
-    padding: 24,
-  },
-  walletDetails: {
-    color: '#A3A3CC',
   },
   walletAlert: {
     marginTop: 8,
@@ -119,17 +112,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     fontWeight: '200',
     flexShrink: 1,
-  },
-  address: {
-    color: colors.background,
-    fontSize: 11,
-    fontWeight: '600',
-    marginVertical: 16,
-  },
-  balance: {
-    color: colors.background,
-    fontSize: 22,
-    fontWeight: '700',
   },
   transactionsListContainer: {
     backgroundColor: colors.background,
