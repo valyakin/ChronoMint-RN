@@ -22,6 +22,7 @@ import CreateWallet from './CreateWallet'
 import Download2FAApp from './Download2FAApp'
 import Drawer from './Drawer'
 import EnterPin from './EnterPin'
+import EnterPrivateKey from './EnterPrivateKey'
 import GenerateMnemonic from './GenerateMnemonic'
 import ImportAccount from './ImportAccount'
 import SelectAccount from './SelectAccount'
@@ -51,6 +52,7 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('Download2FAApp', () => Download2FAApp, store, Provider)
   Navigation.registerComponent('Drawer', () => Drawer, store, Provider)
   Navigation.registerComponent('EnterPin', () => screenLayout(LoginScreenLayout)(EnterPin), store, Provider)
+  Navigation.registerComponent('EnterPrivateKey', () => screenLayout(LoginScreenLayout)(EnterPrivateKey), store, Provider)
   Navigation.registerComponent('GenerateMnemonic', () => screenLayout(LoginScreenLayout)(GenerateMnemonic), store, Provider)
   Navigation.registerComponent('ImportAccount', () => screenLayout(LoginScreenLayout)(ImportAccount), store, Provider)
   Navigation.registerComponent('SelectAccount', () => screenLayout(LoginScreenLayout)(SelectAccount), store, Provider)
