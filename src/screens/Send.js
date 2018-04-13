@@ -8,6 +8,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -20,17 +21,21 @@ import {
   getGasPriceMultiplier,
   getWTokens,
 } from 'redux/session/selectors'
-import { mainTransfer, ETH } from 'redux/mainWallet/actions'
+import {
+  makeGetWalletTokensAndBalanceByAddress,
+  selectMarketPricesSelectedCurrencyStore,
+} from 'redux/wallet/selectors'
+import {
+  mainTransfer,
+  ETH,
+} from 'redux/mainWallet/actions'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
-import tokenService from 'services/TokenService'
+import Amount from 'models/Amount'
 import colors from 'utils/colors'
 import FeeSlider from 'components/FeeSlider'
 import SectionHeader from 'components/SectionHeader'
 import Separator from 'components/Separator'
-
-import {
-  makeGetWalletTokensAndBalanceByAddress,
-} from 'redux/wallet/selectors'
+import tokenService from 'services/TokenService'
 
 const makeMapStateToProps = (origState, origProps) => {
   const token = origState.get(DUCK_TOKENS).item(ETH)
@@ -38,10 +43,11 @@ const makeMapStateToProps = (origState, origProps) => {
   const mapStateToProps = (state, ownProps) => {
     const walletTokensAndBalance = getWalletTokensAndBalanceByAddress(state, ownProps)
     return {
-      walletTokensAndBalance,
       gasPriceMultiplier: getGasPriceMultiplier(token.blockchain())(state),
+      selectedCurrency: selectMarketPricesSelectedCurrencyStore(state),
       token,
       tokensDuck: getWTokens()(state),
+      walletTokensAndBalance,
     }
   }
   return mapStateToProps
@@ -58,8 +64,7 @@ const mapDispatchToProps  = (dispatch) => {
   }
 }
 
-@connect(makeMapStateToProps, mapDispatchToProps)
-export default class Send extends React.PureComponent {
+class Send extends React.PureComponent {
 
   // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
@@ -78,28 +83,35 @@ export default class Send extends React.PureComponent {
     ],
   }
 
+  static getDerivedStateFromProps (nextProps, prevState) {
+    if (!prevState.selectedToken && nextProps.walletTokensAndBalance && nextProps.walletTokensAndBalance.tokens) {
+      const firstTokenInRow = nextProps.walletTokensAndBalance.tokens[0]
+      return {
+        selectedToken: {
+          amount: Object.values(firstTokenInRow).amount,
+          symbol: Object.keys(firstTokenInRow),
+        },
+      }
+    }
+    // Return null to indicate no change to state.
+    return null
+  }
+
   constructor (props) {
     super(props)
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)
   }
 
   state = {
-    // FIXME: to delete and to make it unseen! 
-    selectedToken: (
-      this.props.walletTokensAndBalance &&
-      this.props.walletTokensAndBalance.tokens &&
-      this.props.walletTokensAndBalance.tokens[0] &&
-      {
-        amount: Object.values(this.props.walletTokensAndBalance.tokens[0]).amount,
-        symbol: Object.keys(this.props.walletTokensAndBalance.tokens[0]),
-      }
-    ),
-    fee: 1,
-    recipient: '',
     amount: null,
     amountInCurrency: 0,
-    isRecipientInputValid: false,
+    feeMultiplier: 1,
+    gasFee: null,
     isAmountInputValid: false,
+    isRecipientInputValid: false,
+    recipient: '',
+    selectedDAO: null,
+    selectedToken: null,
   }
 
   handleNavigatorEvent = ({ type, id }) => {
@@ -110,16 +122,19 @@ export default class Send extends React.PureComponent {
           break
         }
         case 'done': {
-          this.props.navigator.push({
-            screen: 'ConfirmSend',
-            title: 'Confirm Send',
-            passProps: {
-              amount: this.state.amount,
-              fee: this.state.fee,
-              recipient: this.state.recipient,
-              usd: 1.44,
-            },
-          })
+          Alert.alert('Work in progress', 'Sorry, sending transaction still in development', [{ text: 'Cancel', onPress: () => {}, style: 'cancel' }])
+          // [AO] Please keep the comments below
+ 
+          // this.props.navigator.push({
+          //   screen: 'ConfirmSend',
+          //   title: 'Confirm Send',
+          //   passProps: {
+          //     amount: this.state.amount,
+          //     feeMultiplier: this.state.feeMultiplier,
+          //     recipient: this.state.recipient,
+          //     usd: 1.44,
+          //   },
+          // })
         }
         // case 'done': {
         //   // TODO: To move it into separate function
@@ -169,15 +184,24 @@ export default class Send extends React.PureComponent {
   handleRecipientInput = (value: string) => {
     this.setState({
       recipient: value,
+      isRecipientInputValid: (value && (value.length >= 40 || value.length <= 44) && value.startsWith('0x') ), // TODO: need to implement real validaton, this is only for ETH
+    }, () => {
+      if (this.state.isAmountInputValid) {
+        this.requestGasEstimations(this.state.recipient, this.state.amount)
+      }
     })
   }
 
   handleAmountInput = (value: number) => {
-    const tokenPrice = this.props.prices[ ETH ] && this.props.prices[ this.state.selectedToken.symbol ][ 'USD' ]
+    const tokenPrice = this.props.prices && this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
     this.setState({
       amount: value,
       amountInCurrency: tokenPrice * value,
-      isAmountInputValid: (value > 0)
+      isAmountInputValid: (value && value !== '' && value > 0), // TODO: need to implement real validaton
+    }, () => {
+      if (this.state.isRecipientInputValid) {
+        this.requestGasEstimations(this.state.recipient, this.state.amount)
+      }
     })
   }
 
@@ -192,19 +216,51 @@ export default class Send extends React.PureComponent {
             selectedToken: {
               symbol: data.symbol,
               amount: data.amount,
-            }
+            },
+            selectedDAO: tokenService.getDAO( this.props.tokensDuck.getBySymbol(data.symbol)) || null,
           })
         },
       },
     })
   }
 
-  onFeeSliderChange = (value: number) => {
-    this.setState({
-      fee: value,
-    })
+  requestGasEstimations = (to, value) => {
+    if (this.state.selectedToken) {
+      // eslint-disable-next-line no-underscore-dangle
+      this.state.selectedDAO._estimateGas(to, value)
+        .then( ({ gasFee }) => {
+          const newGasFee = (new Amount(this.state.selectedDAO.removeDecimals(gasFee.mul(this.state.feeMultiplier)))).toNumber()
+          const tokenPrice = this.props.prices && this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
+          const newGasFeePrice = newGasFee * tokenPrice
+          this.setState({
+            gasFee,
+            gasFeeAmount: newGasFee,
+            gasFeeAmountInCurrency: newGasFeePrice,
+          })
+        })
+        .catch( (error) => console.log('Error during fetching gasPrice. No info how to handle it.') )
+    }
   }
 
+  onFeeSliderChange = (value: number) => {
+    if (this.state.gasFee !== null) {
+      const newGasFee = (new Amount(this.state.selectedDAO.removeDecimals(this.state.gasFee.mul(this.state.feeMultiplier)))).toNumber()
+      const tokenPrice = this.props.prices && this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
+      const newGasFeePrice = newGasFee * tokenPrice
+      this.setState({
+        feeMultiplier: value,
+        gasFeeAmount: newGasFee,
+        gasFeeAmountInCurrency: newGasFeePrice,
+      })
+    } else {
+      this.setState({
+        feeMultiplier: value,
+      })
+    }
+  }
+
+  // Temporary 
+  // eslint-disable-next-line complexity
   render () {
     const {
       address,
@@ -215,19 +271,16 @@ export default class Send extends React.PureComponent {
       wallet,
     } = this.props
 
-    const currentTokenBalance = this.props.walletTokensAndBalance.tokens
-      .filter( (tObj) => {
-        return Object.keys(tObj)[0] === this.state.selectedToken.symbol
-      })
-      .reduce ( (acc, value) => {
-        acc = value[this.state.selectedToken.symbol].balance
-        return acc
-      }, 0)
-
+    const CT = this.props.walletTokensAndBalance && 
+      this.state.selectedToken &&
+      this.props.walletTokensAndBalance.tokens
+        .find( (tObj) => {
+          return Object.keys(tObj)[0] === this.state.selectedToken.symbol
+        })
+    const currentTokenBalance = CT ? CT[this.state.selectedToken.symbol].balance : null
+ 
     return (
-      <ScrollView
-        style={styles.scrollView}
-      >
+      <ScrollView style={styles.scrollView}>
         <View style={styles.formHeader}>
           <Text style={styles.walletTitle}>
             {
@@ -241,20 +294,20 @@ export default class Send extends React.PureComponent {
           </Text>
           <Separator style={styles.separatorDark} />
           <TokenSelector
-            selectedToken={this.state.selectedToken}
+            selectedToken={this.state.selectedToken && this.state.selectedToken}
             onPress={this.handlePressOnTokenSelector}
           />
           <Separator style={styles.separatorDark} />
           <Text style={styles.walletValue}>
             {
-              [
+              this.state.selectedToken && [
                 this.state.selectedToken.symbol,
                 this.state.selectedToken.amount,
               ].join(' ')
             }
           </Text>
           <Text style={styles.walletBalance}>
-            USD {currentTokenBalance.toFixed(2)}
+            {this.props.selectedCurrency} {currentTokenBalance && currentTokenBalance.toFixed(2)}
           </Text>
         </View>
         <View style={styles.formBody}>
@@ -268,24 +321,26 @@ export default class Send extends React.PureComponent {
             value={this.state.recipient}
           />
           <Input
-            placeholder={`Amount, ${this.state.selectedToken.symbol}`}
+            placeholder={`Amount, ${this.state.selectedToken && this.state.selectedToken.symbol}`}
             keyboardType='numeric'
             onChangeText={this.handleAmountInput}
             value={this.state.amount != null ? this.state.amount.toString() : ''}
           />
           <Text style={styles.sendBalance}>
             {
-              `USD ${this.state.amountInCurrency.toFixed(2)}`
+              `${this.props.selectedCurrency} ${this.state.amountInCurrency.toFixed(2)}`
             }
           </Text>
           <SectionHeader title='Fee' />
           <FeeSlider
-            tokenID={this.state.selectedToken.symbol}
+            tokenSymbol={this.state.selectedToken && this.state.selectedToken.symbol}
+            selectedCurrency={this.props.selectedCurrency}
+            calculatedFeeValue={this.state.gasFeeAmount}
+            calculatedFeeValueInSelectedCurrency={this.state.gasFeeAmountInCurrency}
             maximumValue={1.9}
             minimumValue={0.1}
-            value={this.state.fee}
+            value={this.state.feeMultiplier}
             step={0.1}
-            feeRate={this.props.token.feeRate().toNumber()}
             handleValueChange={this.onFeeSliderChange}
           />
           <Text style={styles.advancedFee}>
@@ -321,6 +376,8 @@ const TokenSelector = ({ onPress, selectedToken }) => {
     </TouchableOpacity>
   )
 }
+
+export default connect(makeMapStateToProps, mapDispatchToProps)(Send)
 
 const Input = (props) => {
   return (
