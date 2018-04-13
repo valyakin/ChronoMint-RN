@@ -173,4 +173,10 @@ export default {
     recoverUsingMnemonic: 'Recover using mnemonic',
     or: 'common.or',
   },
+  ImportAccount: {
+    title: 'Import Address',
+    mnemonic: 'Mnemonic',
+    privateKey: 'Private key',
+    walletFile: 'Wallet File',
+  },
 } 

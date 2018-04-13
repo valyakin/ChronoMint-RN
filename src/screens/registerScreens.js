@@ -23,6 +23,7 @@ import Download2FAApp from './Download2FAApp'
 import Drawer from './Drawer'
 import EnterPin from './EnterPin'
 import GenerateMnemonic from './GenerateMnemonic'
+import ImportAccount from './ImportAccount'
 import SelectAccount from './SelectAccount'
 import SelectToken from './SelectToken'
 import Send from './Send'
@@ -51,6 +52,7 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('Drawer', () => Drawer, store, Provider)
   Navigation.registerComponent('EnterPin', () => screenLayout(LoginScreenLayout)(EnterPin), store, Provider)
   Navigation.registerComponent('GenerateMnemonic', () => screenLayout(LoginScreenLayout)(GenerateMnemonic), store, Provider)
+  Navigation.registerComponent('ImportAccount', () => screenLayout(LoginScreenLayout)(ImportAccount), store, Provider)
   Navigation.registerComponent('SelectAccount', () => screenLayout(LoginScreenLayout)(SelectAccount), store, Provider)
   Navigation.registerComponent('SelectToken', () => SelectToken, store, Provider)
   Navigation.registerComponent('Send', () => Send, store, Provider)
