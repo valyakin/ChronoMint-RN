@@ -7,11 +7,12 @@
 import React from 'react'
 import { StyleSheet, View, TextInput, Platform } from 'react-native'
 import I18n from 'react-native-i18n'
+import withLogin from '../components/withLogin'
 import { PIN_LENGTH } from '../utils/globals'
 
 const bullets = Array(PIN_LENGTH).fill(1)
 
-export default class EnterPin extends React.Component {
+class EnterPin extends React.Component {
 
   state = {
     pin: '',
@@ -24,9 +25,13 @@ export default class EnterPin extends React.Component {
 
     if (!this.props.pin) return this.gotoConfirmPin(pin)
 
-    if (this.props.pin === pin) return this.gotoLogin()
+    if (this.props.pin === pin) return this.handleLogin()
 
     alert(I18n.t('EnterPin.pinsNotMatch'))
+  }
+
+  handleLogin = () => {
+    this.props.onMnemonicLogin(this.props.mnemonic)
   }
 
   gotoConfirmPin = (pin) => {
@@ -35,14 +40,8 @@ export default class EnterPin extends React.Component {
       title: I18n.t('EnterPin.confirmTitle'),
       passProps: {
         pin,
+        onLogin: this.props.onLogin,
       },
-    })
-  }
-
-  gotoLogin = () => {
-    this.props.navigator.resetTo({
-      screen: 'WalletsList',
-      title: I18n.t('WalletsList.title'),
     })
   }
 
@@ -71,6 +70,8 @@ export default class EnterPin extends React.Component {
     )
   }
 }
+
+export default withLogin(EnterPin)
 
 const styles = StyleSheet.create({
   container: {

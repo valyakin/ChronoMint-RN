@@ -11,11 +11,14 @@ import PrimaryButton from '../components/PrimaryButton'
 
 export default class GenerateMnemonic extends React.Component {
   handleConfirm = () => {
+    const { mnemonic, onLogin } = this.props
+    
     this.props.navigator.push({
       screen: 'ConfirmMnemonic',
       title: I18n.t('ConfirmMnemonic.title'),
       passProps: {
-        mnemonic: this.props.mnemonic,
+        mnemonic,
+        onLogin,
       },
     })
   }
