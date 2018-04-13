@@ -5,13 +5,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-
 import {
   makeGetWalletTokensAndBalanceByAddress,
 } from 'redux/wallet/selectors'
-
 import styles from './styles/WalletPanelStyles'
-
 import WalletImage from './WalletImage'
 
 const makeMapStateToProps = (origState, origProps) => {

@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-
 import colors from 'utils/colors'
 
 export default class SelectToken extends PureComponent {

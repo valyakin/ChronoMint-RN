@@ -6,12 +6,9 @@ import {
   SectionList, // https://facebook.github.io/react-native/docs/sectionlist.html
   View,
 } from 'react-native'
-
 import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
-
 import SectionHeader from 'components/SectionHeader'
 import WalletPanel from 'components/WalletPanel'
-
 import {
   makeGetSectionedWallets, 
 } from 'redux/wallet/selectors'

@@ -13,14 +13,12 @@ import {
   View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-
 import {
   sectionsSelector,
 } from 'redux/session/selectors'
 import SectionHeader from 'components/SectionHeader'
 import WalletsListItem from 'components/WalletsListItem'
 import { switchWallet } from 'redux/wallet/actions'
-
 import styles from './styles/WalletsListStyles'
 
 const mapStateToProps = (state) => ({

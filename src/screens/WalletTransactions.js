@@ -13,7 +13,6 @@ import {
   View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-
 import colors from 'utils/colors'
 import DetailsSection from 'components/DetailsSection'
 import Separator from 'components/Separator'

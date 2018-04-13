@@ -16,7 +16,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-
 import {
   getGasPriceMultiplier,
   getWTokens,
@@ -24,7 +23,6 @@ import {
 import { mainTransfer, ETH } from 'redux/mainWallet/actions'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
 import tokenService from 'services/TokenService'
-
 import colors from 'utils/colors'
 import FeeSlider from 'components/FeeSlider'
 import SectionHeader from 'components/SectionHeader'

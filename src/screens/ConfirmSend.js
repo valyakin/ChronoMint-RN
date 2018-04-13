@@ -17,13 +17,11 @@ import {
   View,
 } from 'react-native'
 import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
-
 import {
   getMainWallet,
   getWTokens,
 } from 'redux/session/selectors'
 import { mainTransfer } from 'redux/mainWallet/actions'
-
 import Amount from 'models/Amount'
 import BigNumber from 'bignumber.js'
 import colors from 'utils/colors'

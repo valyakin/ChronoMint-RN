@@ -9,7 +9,6 @@ import * as React from 'react'
 import {
   Text,
 } from 'react-native'
-
 import styles from './styles/WalletTokensListStyles'
 
 const WalletTokensList = (tokens) => {

@@ -13,7 +13,6 @@ import {
   View,
 } from 'react-native'
 import { connect } from 'react-redux'
-
 import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
 import colors from 'utils/colors'

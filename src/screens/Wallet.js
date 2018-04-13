@@ -13,13 +13,11 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-
 // import {
 //   getSelectedWalletStore,
 // } from 'redux/session/selectors'
 import colors from 'utils/colors'
 import Separator from 'components/Separator'
-
 import WalletOwners from './WalletOwners'
 import WalletTemplates from './WalletTemplates'
 import WalletTokens from './WalletTokens'

@@ -11,9 +11,7 @@ import {
   View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-
 import WalletImage from './WalletImage'
-
 import styles from './styles/DetailsSectionStyles'
 
 const DetailsSection = (
