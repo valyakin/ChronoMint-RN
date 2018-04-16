@@ -72,12 +72,10 @@ const FeeSlider = ({
   handleValueChange = () => {}, // [AO] Do nothing by default
 }: FeeSliderProps) => {
 
-  console.log('FEE SLIDER props:', this.props)
-
   const tokenInfo = tokenSymbol &&
      calculatedFeeValue &&
      [tokenSymbol, calculatedFeeValue].join(' ') || 'EEE'
-  console.log('NEW tokenInfo', tokenInfo)
+
   const currencyInfo = tokenSymbol &&
     selectedCurrency &&
     calculatedFeeValueInSelectedCurrency &&
