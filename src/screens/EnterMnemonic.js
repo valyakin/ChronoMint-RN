@@ -5,100 +5,99 @@
  * @flow
  */
 import React from 'react'
-import { View, ActivityIndicator, StyleSheet } from 'react-native'
-import I18n from 'react-native-i18n'
-import Checkbox from '../components/Checkbox'
+import { StyleSheet, FlatList, View } from 'react-native'
 import Input from '../components/Input'
-import Button from '../components/Button'
-import LoginScreenLayout from './LoginScreenLayout'
-import screenLayout from '../utils/screenLayout'
-import colors from '../utils/colors'
+import PrimaryButton from '../components/PrimaryButton'
+import { MNEMONIC_LENGTH } from '../utils/globals'
+import withLogin from '../components/withLogin'
+import mnemonicProvider from '../../mint/packages/login/network/mnemonicProvider'
 
-type Props = {
-  navigator: {
-    push: (Object) => void
-  }
-}
+const emptyMnemonic = Array(MNEMONIC_LENGTH).fill(1)
 
-type State = {
-  mnemonic: string
-}
-
-class EnterMnemonic extends React.Component<Props, State> {
-  static screenOptions = {
-    title: I18n.t('EnterMnemonic.title'),
-    subtitle: I18n.t('EnterMnemonic.subtitle'),
-  }
+class EnterMnemonic extends React.Component<EnterMnemonicProps, EnterMnemonicState> {
 
   state = {
-    mnemonic: '',
-    isPending: false,
+    mnemonicWords: [],
   }
 
-  handleLogin = () => {
-    this.setState({ isPending: true })
-    this.props.onLogin(this.state.mnemonic)
-  }
+  handleEnterWord = (index: number) => (word: string) => {
+    const { mnemonicWords } = this.state
+    
+    mnemonicWords[index] = word.trim()
 
-  handleMnemonicChange = (mnemonic) => {
-    this.setState({ mnemonic })
-  }
-
-  handleGenerateMnemonic = () => {
-    this.props.navigator.push({
-      screen: 'Login.GenerateMnemonic',
-      backButtonTitle: 'Mnemonic',
-    })
+    if (/\s+$/.test(word)) {
+      (index + 1 === MNEMONIC_LENGTH) ?
+        this.handleLogin() :
+        this.inputs[index + 1].focus()
+    }
+    
+    this.setState({ mnemonicWords })
   }
   
+  handleLogin = () => {
+    const mnemonic = this.state.mnemonicWords.join(' ')
+
+    if (!mnemonicProvider.validateMnemonic(mnemonic)) {
+      return alert('Incorrect mnemonic. Check it and try again')
+    }
+
+    this.props.onMnemonicLogin(mnemonic)
+  }
+
+  inputs: Array<any> = []
+
+  keyExtractor = (item: null, index: number) => index.toString()
+
+  refInput = (index: number) => (input: any) => this.inputs[index] = input
+
+  renderItem = ({ index }: { index: number }) => (
+    <Input
+      style={styles.input}
+      ref={this.refInput(index)}
+      placeholder={`word ${index + 1}`}
+      onChangeText={this.handleEnterWord(index)}
+      autoCapitalize='none'
+      autoCorrect={false}
+    />
+  )
+
   render () {
     return (
-      <View>
-        <Input
-          isDark
-          label={I18n.t('EnterMnemonic.mnemonic')}
-          style={styles.input}
-          multiline
-          onChangeText={this.handleMnemonicChange}
+      <View style={styles.screenView}>
+        <FlatList
+          data={emptyMnemonic}
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderItem}
+          numColumns={4}
         />
-        <Checkbox
-          isDark
-          label={I18n.t('EnterMnemonic.saveOnDevice')}
+        <PrimaryButton
+          label='Log in'
+          onPress={this.handleLogin}
         />
-        <View 
-          style={styles.actions}
-        >
-          { this.state.isPending ? 
-            <ActivityIndicator /> :
-            <Button
-              isDark
-              label={I18n.t('EnterMnemonic.login')}
-              onPress={this.handleLogin}
-            />
-          }
-          <Button
-            isDark
-            icon={require('../images/mnemonic.png')}
-            style={styles.generateButton}
-            label={I18n.t('EnterMnemonic.generateMnemonic')}
-            onPress={this.handleGenerateMnemonic}
-          />
-        </View>
       </View>
     )
   }
 }
 
+export default withLogin(EnterMnemonic)
+
 const styles = StyleSheet.create({
-  actions: {
-    margin: 16,
+  screenView: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingTop: 60,
   },
   input: {
-    height: 80,
-  },
-  generateButton: {
-    backgroundColor: colors.transparent,
+    flex: 1,
+    marginHorizontal: 5,
+    marginTop: 20,
   },
 })
 
-export default screenLayout(LoginScreenLayout)(EnterMnemonic)
+type EnterMnemonicProps = {
+  onMnemonicLogin (mnemonic: string): void
+}
+
+type EnterMnemonicState = {
+  mnemonicWords: Array<string>,
+}

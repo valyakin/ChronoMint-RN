@@ -5,75 +5,53 @@
  * @flow
  */
 import React from 'react'
-import { View, ActivityIndicator, StyleSheet } from 'react-native'
-import I18n from 'react-native-i18n'
-import Checkbox from '../components/Checkbox'
+import { StyleSheet, View } from 'react-native'
 import Input from '../components/Input'
-import Button from '../components/Button'
-import LoginScreenLayout from './LoginScreenLayout'
-import screenLayout from '../utils/screenLayout'
+import PrimaryButton from '../components/PrimaryButton'
+import withLogin from '../components/withLogin'
 
-const PRIVATE_KEY: string = __DEV__ ? '1111111111111111111111111111111111111111111111111111111111111111' : ''
-
-class EnterPrivateKey extends React.Component<{}, {}> {
-  static screenOptions = {
-    title: I18n.t('EnterPrivateKey.title'),
-    subtitle: I18n.t('EnterPrivateKey.subtitle'),
-  }
+class EnterPrivateKey extends React.Component<EnterPrivateKeyProps, EnterPrivateKeyState> {
 
   state = {
-    privateKey: PRIVATE_KEY,
-    isPending: false,
-  }
-  
-  handlePress = () => {
-    this.setState({ isPending: true })
-    this.props.onLogin(this.state.privateKey)
+    privateKey: '',
   }
 
-  handleInput = (privateKey) => {
+  handlePrivateKey = (privateKey: string) => {
     this.setState({ privateKey })
+  }
+
+  handleAddAccount = () => {
+    this.props.onPrivateKeyLogin(this.state.privateKey)
   }
 
   render () {
     return (
-      <View>
+      <View style={styles.screenView}>
         <Input
-          label={I18n.t('EnterPrivateKey.private')}
-          style={styles.input}
-          multiline
-          isDark
-          onChangeText={this.handleInput}
-          value={PRIVATE_KEY}
+          label='Private key'
+          onChangeText={this.handlePrivateKey}
         />
-        <Checkbox
-          label={I18n.t('EnterPrivateKey.saveOnDevice')}
-          isDark
+        <PrimaryButton
+          label='Add account'
+          onPress={this.handleAddAccount}
         />
-        <View 
-          style={styles.actions}
-        >
-          { this.state.isPending ? 
-            <ActivityIndicator /> :
-            <Button
-              label={I18n.t('EnterPrivateKey.login')}
-              isDark
-              onPress={this.handlePress}
-            />
-          }
-        </View>
       </View>
     )
   }
 }
 
+export default withLogin(EnterPrivateKey)
+
 const styles = StyleSheet.create({
-  input: {
-    height: 80,
-  },
-  actions: {
-    margin: 16,
+  screenView: {
+    margin: 20,
   },
 })
 
-export default screenLayout(LoginScreenLayout)(EnterPrivateKey)
+type EnterPrivateKeyProps = {
+  onPrivateKeyLogin: (privateKey: string) => void
+}
+
+type EnterPrivateKeyState = {
+  privateKey: string,
+}

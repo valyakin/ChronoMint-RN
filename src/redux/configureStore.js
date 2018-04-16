@@ -8,6 +8,8 @@ import Immutable from 'immutable'
 // import { browserHistory, createMemoryHistory } from 'react-router'
 import { combineReducers } from 'redux-immutable'
 import { createStore, applyMiddleware, compose } from 'redux'
+import { persistStore, autoRehydrate } from 'redux-persist-immutable'
+import createSensitiveStorage from 'redux-persist-sensitive-storage'
 // import { reducer as formReducer } from 'redux-form/immutable'
 // import { loadTranslations, setLocale, i18nReducer, I18n } from 'platform/i18n'
 // import moment from 'moment'
@@ -67,7 +69,6 @@ const configureStore = () => {
   }
 
   const composeEnhancers = __DEV__ ? composeWithDevTools({ realtime: true }) : compose
-  // const composeEnhancers = composeWithDevTools({ realtime: true })
 
   const rLogger = rCreateLogger({
     collapse: true,
@@ -77,12 +78,11 @@ const configureStore = () => {
   const createStoreWithMiddleware = composeEnhancers(
     applyMiddleware(
       thunk,
-      // routerMiddleware(historyEngine),
-      saveAccountMiddleWare,
-      // rLogger
-    )
+      saveAccountMiddleWare
+    ), 
+    autoRehydrate(),
   )(createStore)
-
+  
   return createStoreWithMiddleware(
     rootReducer,
     initialState,
@@ -90,6 +90,16 @@ const configureStore = () => {
 }
 
 export const store = configureStore()
+
+persistStore(store,
+  {
+    storage: createSensitiveStorage({
+      keychainService: "ChronoMint",
+      sharedPreferencesName: "ChronoMint",
+    }),
+    whitelist: [],
+  }
+)
 // store.dispatch(globalWatcher())
 
 // export const DUCK_I18N = 'i18n'

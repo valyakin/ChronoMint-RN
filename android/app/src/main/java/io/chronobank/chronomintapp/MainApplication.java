@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.reactnativenavigation.NavigationApplication;
 import com.facebook.react.ReactApplication;
+import br.com.classapp.RNSensitiveInfo.RNSensitiveInfoPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.rnfs.RNFSPackage;
 import com.peel.react.rnos.RNOSModule;

@@ -22,3 +22,7 @@ export const indicators = {
   shared: require('../images/indicator-shared-wallet.png'),
   timeLocked: require('../images/indicator-time-locked.png'),
 }
+
+export const PIN_LENGTH = 4
+
+export const MNEMONIC_LENGTH = 12

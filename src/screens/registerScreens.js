@@ -5,7 +5,9 @@
  * @flow
  */
 import { Navigation } from 'react-native-navigation'
-
+import screenLayout from '../utils/screenLayout'
+import LoginScreenLayout from '../components/LoginScreenLayout'
+import AccountPassword from './AccountPassword'
 import Add2FAWallet from './Add2FAWallet'
 import AddAdvancedWallet from './AddAdvancedWallet'
 import AddEthereumWallet from './AddEthereumWallet'
@@ -14,30 +16,29 @@ import AddStandardWallet from './AddStandardWallet'
 import AddTimeLockedWallet from './AddTimeLockedWallet'
 import AddTokenToAdvancedWallet from './AddTokenToAdvancedWallet'
 import AddWallet from './AddWallet'
-import ChangeLanguage from './ChangeLanguage'
+import ConfirmMnemonic from './ConfirmMnemonic'
 import ConfirmSend from './ConfirmSend'
+import CreateWallet from './CreateWallet'
 import Download2FAApp from './Download2FAApp'
 import Drawer from './Drawer'
 import EnterMnemonic from './EnterMnemonic'
-import EnterPinCode from './EnterPinCode'
+import EnterPin from './EnterPin'
 import EnterPrivateKey from './EnterPrivateKey'
-import EnterWalletPassword from './EnterWalletPassword'
 import GenerateMnemonic from './GenerateMnemonic'
-import GenerateWalletFile from './GenerateWalletFile'
-import LoginSettings from './LoginSettings'
-import PickWalletFile from './PickWalletFile'
-import SelectLoginOption from './SelectLoginOption'
-import SelectNetwork from './SelectNetwork'
+import ImportAccount from './ImportAccount'
+import SelectAccount from './SelectAccount'
 import SelectToken from './SelectToken'
 import Send from './Send'
 import Wallet from './Wallet'
+import WalletBackup from './WalletBackup'
 import WalletOwners from './WalletOwners'
+import WalletsApp from './WalletsApp'
 import WalletsList from './WalletsList'
 import WalletTemplates from './WalletTemplates'
 import WalletTokens from './WalletTokens'
-import WalletsApp from './WalletsApp'
 
 export default function registerScreens (store, Provider) {
+  Navigation.registerComponent('AccountPassword', () => screenLayout(LoginScreenLayout)(AccountPassword), store, Provider)
   Navigation.registerComponent('Add2FAWallet', () => Add2FAWallet, store, Provider)
   Navigation.registerComponent('AddAdvancedWallet', () => AddAdvancedWallet, store, Provider)
   Navigation.registerComponent('AddEthereumWallet', () => AddEthereumWallet, store, Provider)
@@ -46,26 +47,24 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('AddTimeLockedWallet', () => AddTimeLockedWallet, store, Provider)
   Navigation.registerComponent('AddTokenToAdvancedWallet', () => AddTokenToAdvancedWallet, store, Provider)
   Navigation.registerComponent('AddWallet', () => AddWallet, store, Provider)
-  Navigation.registerComponent('ChangeLanguage', () => ChangeLanguage, store, Provider)
+  Navigation.registerComponent('ConfirmMnemonic', () => screenLayout(LoginScreenLayout)(ConfirmMnemonic), store, Provider)
   Navigation.registerComponent('ConfirmSend', () => ConfirmSend, store, Provider)
+  Navigation.registerComponent('CreateWallet', () => screenLayout(LoginScreenLayout)(CreateWallet), store, Provider)
   Navigation.registerComponent('Download2FAApp', () => Download2FAApp, store, Provider)
   Navigation.registerComponent('Drawer', () => Drawer, store, Provider)
-  Navigation.registerComponent('EnterMnemonic', () => EnterMnemonic, store, Provider)
-  Navigation.registerComponent('EnterPinCode', () => EnterPinCode, store, Provider)
-  Navigation.registerComponent('EnterPrivateKey', () => EnterPrivateKey, store, Provider)
-  Navigation.registerComponent('EnterWalletPassword', () => EnterWalletPassword, store, Provider)
-  Navigation.registerComponent('GenerateMnemonic', () => GenerateMnemonic, store, Provider)
-  Navigation.registerComponent('GenerateWalletFile', () => GenerateWalletFile, store, Provider)
-  Navigation.registerComponent('LoginSettings', () => LoginSettings, store, Provider)
-  Navigation.registerComponent('PickWalletFile', () => PickWalletFile, store, Provider)
-  Navigation.registerComponent('SelectLoginOption', () => SelectLoginOption, store, Provider)
-  Navigation.registerComponent('SelectNetwork', () => SelectNetwork, store, Provider)
+  Navigation.registerComponent('EnterMnemonic', () => screenLayout(LoginScreenLayout)(EnterMnemonic), store, Provider)
+  Navigation.registerComponent('EnterPin', () => screenLayout(LoginScreenLayout)(EnterPin), store, Provider)
+  Navigation.registerComponent('EnterPrivateKey', () => screenLayout(LoginScreenLayout)(EnterPrivateKey), store, Provider)
+  Navigation.registerComponent('GenerateMnemonic', () => screenLayout(LoginScreenLayout)(GenerateMnemonic), store, Provider)
+  Navigation.registerComponent('ImportAccount', () => screenLayout(LoginScreenLayout)(ImportAccount), store, Provider)
+  Navigation.registerComponent('SelectAccount', () => screenLayout(LoginScreenLayout)(SelectAccount), store, Provider)
   Navigation.registerComponent('SelectToken', () => SelectToken, store, Provider)
   Navigation.registerComponent('Send', () => Send, store, Provider)
   Navigation.registerComponent('Wallet', () => Wallet, store, Provider)
+  Navigation.registerComponent('WalletBackup', () => screenLayout(LoginScreenLayout)(WalletBackup), store, Provider)
   Navigation.registerComponent('WalletOwners', () => WalletOwners, store, Provider)
+  Navigation.registerComponent('WalletsApp', () => WalletsApp, store, Provider)
   Navigation.registerComponent('WalletsList', () => WalletsList, store, Provider)
   Navigation.registerComponent('WalletTemplates', () => WalletTemplates, store, Provider)
   Navigation.registerComponent('WalletTokens', () => WalletTokens, store, Provider)
-  Navigation.registerComponent('WalletsApp', () => WalletsApp, store, Provider)
 }
