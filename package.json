@@ -11,7 +11,8 @@
     "contracts:compile": "cd node_modules/chronobank-smart-contracts && node --max_old_space_size=8000 ../truffle/build/cli.bundled.js compile --all",
     "android": "react-native run-android",
     "prepare": "patch-package",
-    "postinstall": "flow-typed install"
+    "postinstall": "flow-typed install",
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "assert": "^1.1.1",
@@ -101,12 +102,17 @@
     "eslint-plugin-react-native": "^3.2.1",
     "flow-bin": "^0.69.0",
     "flow-typed": "^2.4.0",
+    "husky": "^0.14.3",
     "jest": "22.2.0",
+    "lint-staged": "^7.0.4",
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
     "react-test-renderer": "16.2.0",
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6"
+  },
+  "lint-staged": {
+    "./src/**/*.(js|jsx)": ["eslint --fix", "git add"]
   },
   "resolutions": {
     "inherits": "olegdizus/inherits",
