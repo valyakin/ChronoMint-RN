@@ -96,7 +96,6 @@ export default class WalletsApp extends PureComponent {
      * Using getSectionedWalletsList selector from wallet/selectors
      */
     render () {
-      console.log(this.props.walletsSections)
       return (
         <SectionList
           stickySectionHeadersEnabled={false}

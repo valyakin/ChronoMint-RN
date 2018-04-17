@@ -4,7 +4,13 @@
  *
  * @flow
  */
+
 export default {
+  activeBlue: '#5F4CBA',
+  mainGrey: '#333333', // duplicated foreground, according to style-guide
+  greySub: '#808080',
+  greySubLight: '#BFBFBF',
+
   background: '#FBFBFE',
   backgroundLight: '#FFFFFF',
   backgroundDark: '#CCCCDF',
@@ -13,7 +19,7 @@ export default {
   foregroundLight: '#66669F',
   foregroundLighter: '#7F7F7F',
   foregroundLightest: '#CCCCDF',
-  
+
   grayLight: '#f7f9ff',
   gray: '#e9efff',
   grayDark: '#ccccdf',

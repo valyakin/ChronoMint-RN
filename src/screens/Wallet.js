@@ -4,8 +4,10 @@
  *
  * @flow
  */
-import * as React from 'react'
+
+import React, { PureComponent }  from 'react'
 import {
+  Alert,
   View,
   Text,
   Image,
@@ -13,23 +15,46 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-// import {
-//   getSelectedWalletStore,
-// } from 'redux/session/selectors'
+import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
 import colors from 'utils/colors'
+import MainWalletModel from 'models/wallet/MainWalletModel'
 import Separator from 'components/Separator'
 import WalletOwners from './WalletOwners'
 import WalletTemplates from './WalletTemplates'
 import WalletTokens from './WalletTokens'
 import WalletTransactions from './WalletTransactions'
 
-type ActionButtonProps = {
+type TMainWalletModel = typeof MainWalletModel
+
+type TPrices = {
+  [token: string]: {
+    [currency: string]: number
+  }
+}
+
+type TActionButtonProps = {
   title: string,
   image: number,
   onPress: () => void,
 }
 
-const ActionButton = ({ title, image, onPress }: ActionButtonProps) => (
+type TTabs = 'transactions' | 'tokens' | 'owners' | 'templates'
+
+type TWalletProps = {
+  wallet: TMainWalletModel,
+  navigator: any, // TODO: to implement a flow type for navigator
+  address: string,
+  tokens: any,
+  balance: any,
+  prices: TPrices, // TODO: we do not need to get prices here and send it via props. It should be done on 'Send' screen
+  blockchainTitle: string,
+}
+
+type TWalletState ={
+  tab: TTabs,
+}
+
+const ActionButton = ({ title, image, onPress }: TActionButtonProps) => (
   <TouchableOpacity
     style={styles.actionButton}
     onPress={onPress}
@@ -44,46 +69,57 @@ const ActionButton = ({ title, image, onPress }: ActionButtonProps) => (
   </TouchableOpacity>
 )
 
-/**
- * Tabs IDs for Wallet screen. Used to switch between tabs.
- */
-type TTabs = 'transactions' | 'tokens' | 'owners' | 'templates'
-
-export default class Wallet extends React.PureComponent {
+export default class Wallet extends PureComponent<TWalletProps, TWalletState> {
 
   state = {
     tab: 'transactions',
   }
 
-  handleTabClick = (tabName: TTabs) => {
-    this.setState({ tab: tabName })
+  handleTransactionsTabClick = () => {
+    this.setState({ tab: 'transactions' })
   }
 
-  handleSend = (props): void => {
-    const {
-      address,
-      balance,
-      blockchainTitle,
-      prices,
-      tokens,
-      wallet,
-    } = props
+  handleOwnersTabClick = () => {
+    this.setState({ tab: 'owners' })
+  }
 
-    props.navigator.push({
-      screen: 'Send',
-      title: 'Send Funds',
-      passProps: {
-        address: address,
-        balance: balance,
-        blockchainTitle: blockchainTitle,
-        prices: prices,
-        selectedBlockchainName: blockchainTitle,
-        tokens: tokens,
-        wallet: wallet,
-        walletAddress: address,
+  handleTemplatesTabClick = () => {
+    this.setState({ tab: 'templates' })
+  }
 
-      },
-    })
+  handleTokensTabClick = () => {
+    this.setState({ tab: 'tokens' })
+  }
+
+  handleSend = (props: TWalletProps): void => {
+    // [AO] This is temporary limitation. At the moment we can't send not-ETH funds
+    if (props.blockchainTitle !== BLOCKCHAIN_ETHEREUM) {
+      Alert.alert('Work in progress', 'Sorry, sending non-ETH funds still in development. Please choose Ethereum wallet.', [{ text: 'Ok', onPress: () => {}, style: 'cancel' }])
+    } else {
+      const {
+        address,
+        balance,
+        blockchainTitle,
+        prices,
+        tokens,
+        wallet,
+      } = props
+
+      props.navigator.push({
+        screen: 'Send',
+        title: 'Send Funds',
+        passProps: {
+          address: address,
+          balance: balance,
+          blockchainTitle: blockchainTitle,
+          prices: prices,
+          selectedBlockchainName: blockchainTitle,
+          tokens: tokens,
+          wallet: wallet,
+          walletAddress: address,
+        },
+      })
+    }
   }
 
   handleNothing = () => {}
@@ -97,7 +133,7 @@ export default class Wallet extends React.PureComponent {
       balance,
       tokens,
     } = this.props
-    console.log('Wallet this.props', this.props)
+
     /**
      * [Alexey Ozerov] Need to clarify: does 'mode' used only for multisig?
      * Also need a better place for the mode "calculations"
@@ -116,7 +152,7 @@ export default class Wallet extends React.PureComponent {
         <View style={styles.tabsContainer}>  
           <Text
             style={styles.tabItem}
-            onPress={() => this.handleTabClick('transactions')}
+            onPress={this.handleTransactionsTabClick}
           >
             Transactions
           </Text>
@@ -125,7 +161,7 @@ export default class Wallet extends React.PureComponent {
             this.props.wallet.token !== 'btc' && ([
               <Text
                 style={styles.tabItem}
-                onPress={() => this.handleTabClick('tokens)}
+                onPress={handleTokensTabClick}
                 key='0'
               >
                 Tokens
@@ -136,7 +172,7 @@ export default class Wallet extends React.PureComponent {
           { mode === 'shared' && ([
             <Text
               style={styles.tabItem}
-              onPress={() => this.handleTabClick('owners')}
+              onPress={this.handleOwnersTabClick}
               key='0'
             >
               Owners
@@ -148,7 +184,7 @@ export default class Wallet extends React.PureComponent {
           ])}
           <Text
             style={styles.tabItem}
-            onPress={() => this.handleTabClick('templates')}
+            onPress={this.handleTemplatesTabClick}
           >
             Templates
           </Text>

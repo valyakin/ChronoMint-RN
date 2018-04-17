@@ -4,7 +4,8 @@
  *
  * @flow
  */
-import * as React from 'react'
+
+import React, { PureComponent }  from 'react'
 import {
   Image,
   StyleSheet,
@@ -24,6 +25,27 @@ import WalletImage from './WalletImage'
 
 type TMainWalletModel = typeof MainWalletModel
 type TMultisigWalletModel = typeof MultisigWalletModel
+type TPrices = {
+  [token: string]: {
+    [currency: string]: number
+  }
+}
+type TCalculatedToken = TPrices
+type TCalculatedTokenCollection = TCalculatedToken[]
+type WalletsListItemProps = {
+  wallet: TMainWalletModel | TMultisigWalletModel,
+  index: number,
+  address: string,
+  navigator: any, // TODO: to implement a flow type for navigator
+  selectedCurrency: string,
+  prices: TPrices,
+  sectionName: string,
+  tokens: TCalculatedTokenCollection,
+  selectWallet(
+    wallet: TMainWalletModel,
+    address: string
+  ): void,
+}
 
 const Transactions = ({ transactions }) => !transactions ? null : (
   !transactions[1] ? (
@@ -70,17 +92,6 @@ const Exchange = ({ exchange }) => !exchange ? null : (
   </Text>
 )
 
-type WalletsListItemProps = {
-  wallet: TMainWalletModel | TMultisigWalletModel,
-  index: number,
-  address: string,
-  selectWallet(): void,
-  navigator: any,
-  selectedCurrency: string,
-  prices: any,
-  sectionName: string,
-}
-
 const mapStateToProps = (state) => {
   const {
     prices,
@@ -95,10 +106,9 @@ const mapStateToProps = (state) => {
   }
 }
 
-@connect(mapStateToProps, null)
-export default class WalletsListItem extends React.Component<WalletsListItemProps> {
+class WalletsListItem extends PureComponent<WalletsListItemProps> {
 
-  handlePress = (tokens, balance): void => {
+  handlePress = (tokens: TCalculatedTokenCollection, balance): void => {
 
     const {
       navigator,
@@ -120,7 +130,7 @@ export default class WalletsListItem extends React.Component<WalletsListItemProp
         address: address,
         tokens: tokens,
         balance: balance,
-        prices: prices,
+        prices: prices, // TODO: we do not need to get prices here and send it via props. It should be done on Wallet screen
         blockchainTitle: sectionName,
       },
     })
@@ -189,6 +199,8 @@ export default class WalletsListItem extends React.Component<WalletsListItemProp
     )
   }
 }
+
+export default connect(mapStateToProps, null)(WalletsListItem)
 
 const styles = StyleSheet.create({
   container: {

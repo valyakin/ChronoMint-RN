@@ -7,8 +7,9 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
+import type { Map } from 'immutable'
+import BigNumber from 'bignumber.js'
 import {
-  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -26,22 +27,76 @@ import {
   selectMarketPricesSelectedCurrencyStore,
 } from 'redux/wallet/selectors'
 import {
-  mainTransfer,
   ETH,
 } from 'redux/mainWallet/actions'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
-import Amount from 'models/Amount'
+import * as EthereumDAO from 'dao/EthereumDAO'
+import AmountModel from 'models/Amount' // { default as AmountModel }
 import colors from 'utils/colors'
 import FeeSlider from 'components/FeeSlider'
 import SectionHeader from 'components/SectionHeader'
 import Separator from 'components/Separator'
+import TokenModel from 'models/tokens/TokenModel'
+import TokensCollection from 'models/tokens/TokensCollection'
 import tokenService from 'services/TokenService'
 
-const makeMapStateToProps = (origState, origProps) => {
-  const token = origState.get(DUCK_TOKENS).item(ETH)
+type TBigNumber = typeof BigNumber
+type TTokenModel = typeof TokenModel
+type TTokensCollectionModel = typeof TokensCollection
+type TAmBa = {
+  amount: number,
+  balance: number,
+}
+type TPrices = {
+  [token: string]: {
+    [currency: string]: number
+  }
+}
+type TCalculatedToken = TPrices
+type TCalculatedTokenCollection = TCalculatedToken[]
+type TCalculatedTokenData = {
+  [token: string]: TAmBa,
+}
+type TWalletTokensAndBalanceByAddress = {
+  balance: number,
+  tokens: TCalculatedTokenData[]
+}
+type TSelectedToken = {
+  symbol: string,
+  amount: number,
+}
+interface ISendProps {
+  address: string,
+  blockchainTitle: string,
+  gasPriceMultiplier: number,
+  navigator: any, // TODO: to implement a flow type for navigator
+  prices: ?TPrices,
+  selectedBlockchainName: string,
+  selectedCurrency: string,
+  token: TTokenModel,
+  tokens: TCalculatedTokenCollection,
+  tokensDuck: TTokensCollectionModel,
+  walletTokensAndBalance: TWalletTokensAndBalanceByAddress,
+}
+type TSendState = {
+  amount: ?number,
+  amountInCurrency: number,
+  feeMultiplier: number,
+  gasFee: ?TBigNumber,
+  gasFeeAmount: ?number,
+  gasFeeAmountInCurrency: ?number,
+  isAmountInputValid: boolean,
+  isRecipientInputValid: boolean,
+  recipient: string,
+  selectedDAO: ?EthereumDAO, // TODO: to describe type of a Dao.
+  selectedToken: ?TSelectedToken,
+}
+
+const makeMapStateToProps = (origState: Map, origProps: ISendProps) => {
+  const token: TTokenModel = origState.get(DUCK_TOKENS).item(ETH) // TODO: replace hardcode
   const getWalletTokensAndBalanceByAddress = makeGetWalletTokensAndBalanceByAddress(origProps.blockchainTitle)
   const mapStateToProps = (state, ownProps) => {
-    const walletTokensAndBalance = getWalletTokensAndBalanceByAddress(state, ownProps)
+    const walletTokensAndBalance: TWalletTokensAndBalanceByAddress = getWalletTokensAndBalanceByAddress(state, ownProps)
     return {
       gasPriceMultiplier: getGasPriceMultiplier(token.blockchain())(state),
       selectedCurrency: selectMarketPricesSelectedCurrencyStore(state),
@@ -53,18 +108,7 @@ const makeMapStateToProps = (origState, origProps) => {
   return mapStateToProps
 }
 
-const mapDispatchToProps  = (dispatch) => {
-  return {
-    mainTransfer: (
-      token,
-      amount,
-      recipient,
-      feeMultiplier,
-    ) => dispatch(mainTransfer(token, amount, recipient, feeMultiplier)),
-  }
-}
-
-class Send extends React.PureComponent {
+class Send extends React.PureComponent<ISendProps, TSendState> {
 
   // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
@@ -83,12 +127,20 @@ class Send extends React.PureComponent {
     ],
   }
 
-  static getDerivedStateFromProps (nextProps, prevState) {
-    if (!prevState.selectedToken && nextProps.walletTokensAndBalance && nextProps.walletTokensAndBalance.tokens) {
-      const firstTokenInRow = nextProps.walletTokensAndBalance.tokens[0]
+  static getDerivedStateFromProps (nextProps: ISendProps, prevState: TSendState) {
+    if (!prevState.selectedToken &&
+      nextProps.walletTokensAndBalance &&
+      nextProps.walletTokensAndBalance.tokens) {
+
+      // [AO] See https://github.com/facebook/flow/issues/2221
+      const flowTypableValuesExtractor = <T>(obj: { [string]: T }): Array<T> =>
+        Object.keys(obj).map((k) => obj[k])
+
+      const firstTokenInRow: TCalculatedTokenData = nextProps.walletTokensAndBalance.tokens[0]
+      const dataAmountBalance: TAmBa = flowTypableValuesExtractor(firstTokenInRow)[0]
       return {
         selectedToken: {
-          amount: Object.values(firstTokenInRow).amount,
+          amount: dataAmountBalance.amount,
           symbol: Object.keys(firstTokenInRow),
         },
       }
@@ -112,79 +164,65 @@ class Send extends React.PureComponent {
     recipient: '',
     selectedDAO: null,
     selectedToken: null,
+    gasFeeAmount: null,
+    gasFeeAmountInCurrency: null,
   }
 
   handleNavigatorEvent = ({ type, id }) => {
     if (type === 'NavBarButtonPress') {
+      const selectedTokenSymbol: string | null = this.state.selectedToken &&
+        this.state.selectedToken.symbol ||
+        null
+
+      const CT = this.props.walletTokensAndBalance && 
+        selectedTokenSymbol &&
+        this.props.walletTokensAndBalance.tokens
+          .find( (tObj) => {
+            return Object.keys(tObj)[0] === selectedTokenSymbol
+          })
+
+      const { balance, amount } = (CT && selectedTokenSymbol) ? CT[this.state.selectedToken.symbol] : {balance: null, amount: null}
       switch (id) {
         case 'cancel': {
           this.props.navigator.pop()
           break
         }
         case 'done': {
-          Alert.alert('Work in progress', 'Sorry, sending transaction still in development', [{ text: 'Cancel', onPress: () => {}, style: 'cancel' }])
-          // [AO] Please keep the comments below
- 
-          // this.props.navigator.push({
-          //   screen: 'ConfirmSend',
-          //   title: 'Confirm Send',
-          //   passProps: {
-          //     amount: this.state.amount,
-          //     feeMultiplier: this.state.feeMultiplier,
-          //     recipient: this.state.recipient,
-          //     usd: 1.44,
-          //   },
-          // })
+          this.props.navigator.push({
+            screen: 'ConfirmSend',
+            title: 'Confirm Send',
+            passProps: {
+              recipientAddress: this.state.recipient,
+              selectedCurrency: this.props.selectedCurrency,
+              currentToken: this.state.selectedToken.symbol,
+              amountToSend: {
+                token: this.state.amount,
+                currency: this.state.amountInCurrency,
+              },
+              fee: {
+                token: this.state.gasFeeAmount,
+                currency: this.state.gasFeeAmountInCurrency,
+              },
+              balance: {
+                token: amount,
+                currency: balance,
+              },
+            },
+          })
         }
-        // case 'done': {
-        //   // TODO: To move it into separate function
-        //   const token: TTokenModel = this.props.tokensDuck.item(this.state.selectedToken.id)
-        //   // console.log(token.toJS())
-        //   const toSendBigNumber: BigNumber = new BigNumber(this.state.amount)
-        //   // console.log(toSendBigNumber)
-        //   const bnWithDecimals: TAmountModel = token.addDecimals(toSendBigNumber)
-        //   // console.log(bnWithDecimals)
-        //   const amountToSend: TAmountModel = new Amount(bnWithDecimals, this.state.selectedToken.id)
-        //   // console.log(amountToSend)
-        //   const recipient: string = this.state.recipient
-        //   const feeMultiplier = token.fee()
-        //   // console.log(token, amountToSend, recipient, feeMultiplier)
-        //   this.props.mainTransfer(token, amountToSend, recipient, feeMultiplier)
-        //   break
-        // }
       }
     }
   }
-
-  // FIXME: to move 'this.props.mainTransfer' call from handleNavigatorEvent to external method
-  //
-  // handleSubmit = (values) => {
-  //   const { wallet, tokens } = this.props
-  //   const { action, symbol, amount, recipient, feeMultiplier } = values.toJS()
-  //   const token = tokens.item(symbol)
-
-  //   const value = new Amount(token.addDecimals(amount), symbol)
-
-  //   // TODO: No multisig wallets here.
-  //   // See to the handleSubmit methiod at mint/src/components/dashboard/SendTokens/SendTokens.jsx
-  //   switch (action) {
-  //     case ACTION_APPROVE:
-  //       this.props.mainApprove(token, value, recipient, feeMultiplier)
-  //       break
-  //     case ACTION_TRANSFER:
-  //         this.props.mainTransfer(token, value, recipient, feeMultiplier)
-  //         break
-  //   }
-  // }
 
   handleSubmitSuccess = () => {
     this.props.navigator.pop()
   }
 
   handleRecipientInput = (value: string) => {
+    const dummyValidationOfRecipientInput: boolean = (value !== null && value !== '' && (value.length >= 40 || value.length <= 44) && value.startsWith('0x') )
     this.setState({
       recipient: value,
-      isRecipientInputValid: (value && (value.length >= 40 || value.length <= 44) && value.startsWith('0x') ), // TODO: need to implement real validaton, this is only for ETH
+      isRecipientInputValid: dummyValidationOfRecipientInput,
     }, () => {
       if (this.state.isAmountInputValid) {
         this.requestGasEstimations(this.state.recipient, this.state.amount)
@@ -193,11 +231,16 @@ class Send extends React.PureComponent {
   }
 
   handleAmountInput = (value: number) => {
-    const tokenPrice = this.props.prices && this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
+    const tokenPrice = this.props.prices &&
+      this.state.selectedToken &&
+      this.props.prices[ this.state.selectedToken.symbol ] &&
+      this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
+ 
+    const dummyValidationOfAmountInput: boolean =  (value !== null && value !== undefined && value !== '' && value > 0)
     this.setState({
       amount: value,
       amountInCurrency: tokenPrice * value,
-      isAmountInputValid: (value && value !== '' && value > 0), // TODO: need to implement real validaton
+      isAmountInputValid: dummyValidationOfAmountInput,
     }, () => {
       if (this.state.isRecipientInputValid) {
         this.requestGasEstimations(this.state.recipient, this.state.amount)
@@ -226,27 +269,44 @@ class Send extends React.PureComponent {
 
   requestGasEstimations = (to, value) => {
     if (this.state.selectedToken) {
-      // eslint-disable-next-line no-underscore-dangle
-      this.state.selectedDAO._estimateGas(to, value)
-        .then( ({ gasFee }) => {
-          const newGasFee = (new Amount(this.state.selectedDAO.removeDecimals(gasFee.mul(this.state.feeMultiplier)))).toNumber()
-          const tokenPrice = this.props.prices && this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
-          const newGasFeePrice = newGasFee * tokenPrice
-          this.setState({
-            gasFee,
-            gasFeeAmount: newGasFee,
-            gasFeeAmountInCurrency: newGasFeePrice,
+      this.state.selectedDAO &&
+        // eslint-disable-next-line no-underscore-dangle
+        this.state.selectedDAO._estimateGas &&
+        // eslint-disable-next-line no-underscore-dangle
+        this.state.selectedDAO._estimateGas(to, value)
+          .then( ({ gasFee }: { gasFee: TBigNumber }) => {
+            const newGasFee = this.state.selectedDAO &&
+              (new AmountModel(this.state.selectedDAO.removeDecimals(gasFee.mul(this.state.feeMultiplier)))).toNumber()
+            const tokenPrice = this.props.prices &&
+              this.state.selectedToken &&
+              this.state.selectedToken.symbol &&
+              this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
+            const newGasFeePrice = newGasFee ? newGasFee * tokenPrice : null
+
+            this.setState({
+              gasFee,
+              gasFeeAmount: newGasFee,
+              gasFeeAmountInCurrency: newGasFeePrice,
+            })
           })
-        })
-        .catch( (error) => console.log('Error during fetching gasPrice. No info how to handle it.') )
+          .catch( (error) => {
+            if (error) {
+              // eslint-disable-next-line no-console
+              console.log('Error during fetching gasPrice. No info how to handle it.', error)
+            }
+          })
     }
   }
 
   onFeeSliderChange = (value: number) => {
     if (this.state.gasFee !== null) {
-      const newGasFee = (new Amount(this.state.selectedDAO.removeDecimals(this.state.gasFee.mul(this.state.feeMultiplier)))).toNumber()
-      const tokenPrice = this.props.prices && this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
-      const newGasFeePrice = newGasFee * tokenPrice
+      const newGasFee =this.state.gasFee &&
+        this.state.selectedDAO &&
+        (new AmountModel(this.state.selectedDAO.removeDecimals(this.state.gasFee.mul(this.state.feeMultiplier)))).toNumber()
+      const tokenPrice = this.props.prices &&
+        this.state.selectedToken &&
+        this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
+      const newGasFeePrice = newGasFee ? newGasFee * tokenPrice : null
       this.setState({
         feeMultiplier: value,
         gasFeeAmount: newGasFee,
@@ -264,21 +324,25 @@ class Send extends React.PureComponent {
   render () {
     const {
       address,
-      balance,
-      prices,
+      // balance,
+      // prices,
       selectedBlockchainName,
-      tokens,
-      wallet,
+      // tokens,
+      // wallet,
     } = this.props
 
+    const selectedTokenSymbol: string | null = this.state.selectedToken &&
+      this.state.selectedToken.symbol ||
+      null
+
     const CT = this.props.walletTokensAndBalance && 
-      this.state.selectedToken &&
+      selectedTokenSymbol &&
       this.props.walletTokensAndBalance.tokens
         .find( (tObj) => {
-          return Object.keys(tObj)[0] === this.state.selectedToken.symbol
+          return Object.keys(tObj)[0] === selectedTokenSymbol
         })
-    const currentTokenBalance = CT ? CT[this.state.selectedToken.symbol].balance : null
- 
+    const currentTokenBalance = (CT && selectedTokenSymbol) ? CT[selectedTokenSymbol].balance : null
+
     return (
       <ScrollView style={styles.scrollView}>
         <View style={styles.formHeader}>
@@ -321,7 +385,7 @@ class Send extends React.PureComponent {
             value={this.state.recipient}
           />
           <Input
-            placeholder={`Amount, ${this.state.selectedToken && this.state.selectedToken.symbol}`}
+            placeholder={`Amount, ${selectedTokenSymbol}`}
             keyboardType='numeric'
             onChangeText={this.handleAmountInput}
             value={this.state.amount != null ? this.state.amount.toString() : ''}
@@ -333,7 +397,7 @@ class Send extends React.PureComponent {
           </Text>
           <SectionHeader title='Fee' />
           <FeeSlider
-            tokenSymbol={this.state.selectedToken && this.state.selectedToken.symbol}
+            tokenSymbol={selectedTokenSymbol}
             selectedCurrency={this.props.selectedCurrency}
             calculatedFeeValue={this.state.gasFeeAmount}
             calculatedFeeValueInSelectedCurrency={this.state.gasFeeAmountInCurrency}
@@ -377,7 +441,7 @@ const TokenSelector = ({ onPress, selectedToken }) => {
   )
 }
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(Send)
+export default connect(makeMapStateToProps, null)(Send)
 
 const Input = (props) => {
   return (
