@@ -26,27 +26,11 @@ const getNestedReducers = (ducks) => {
   let reducers = {}
 
   Object.keys(ducks).forEach((r) => {
+    // eslint-disable-next-line import/namespace
     reducers = { ...reducers, ...(typeof (ducks[r]) === 'function' ? { [r]: ducks[r] } : getNestedReducers(ducks[r])) }
   })
-
   return reducers
 }
-
-// add noised action here
-// const IGNORED_ACTIONS = [
-//   'market/UPDATE_RATES',
-//   'market/UPDATE_LAST_MARKET',
-// ]
-
-// let logActions = process.env.NODE_ENV === 'development'
-//   ? function (action) {
-//     if (IGNORED_ACTIONS.includes(action.type)) {
-//       return
-//     }
-//     // eslint-disable-next-line
-//     console.log(`%c ${action.type} `, 'color: #999; background: #333')
-//   }
-//   : function () {}
 
 const configureStore = () => {
   const initialState = new Immutable.Map()
@@ -56,30 +40,47 @@ const configureStore = () => {
   })
 
   const rootReducer = (state, action) => {
-    // workaround until fix redux devtool
-    // logActions(action)
-
+    let newState = state
     if (action.type === SESSION_DESTROY) {
       // const i18nState = state.get('i18n')
-      state = new Immutable.Map()
-      // state = state.set('i18n', i18nState)
+      newState = new Immutable.Map()
+      // newState = newState.set('i18n', i18nState)
     }
 
-    return appReducer(state, action)
+    return appReducer(newState, action)
   }
 
   const composeEnhancers = __DEV__ ? composeWithDevTools({ realtime: true }) : compose
 
-  const rLogger = rCreateLogger({
-    collapse: true,
-  });
+  // MIDDLEWARE
+  const middleware = [thunk, saveAccountMiddleWare]
 
+  // LOGGER
+
+  // Two lines below to avoid strange behaviour, when process.env.NODE_ENV is undefined,
+  // but console.log(process.env) dispalys Object {NODE_ENV: 'development} 
+  const processEnv = process.env
+  const isDevelopmentEnv = processEnv.NODE_ENV
+
+  if (process.env['REDUX_LOGGER'] && isDevelopmentEnv === 'development') {
+    const IGNORED_ACTIONS = [
+      'mainWallet/TOKEN_BALANCE',
+      'market/UPDATE_LAST_MARKET',
+      'market/UPDATE_PRICES',
+      'market/UPDATE_RATES',
+      'tokens/fetched',
+    ]
+    const rLogger = rCreateLogger({
+      collapse: true,
+      predicate: (getState, action) => !IGNORED_ACTIONS.includes(action.type),
+    })
+    middleware.push(rLogger)
+  }
+
+  //STORE
   // noinspection JSUnresolvedVariable,JSUnresolvedFunction
   const createStoreWithMiddleware = composeEnhancers(
-    applyMiddleware(
-      thunk,
-      saveAccountMiddleWare
-    ), 
+    applyMiddleware(...middleware), 
     autoRehydrate(),
   )(createStore)
   
@@ -89,7 +90,8 @@ const configureStore = () => {
   )
 }
 
-export const store = configureStore()
+const store = configureStore()
+export default store
 
 persistStore(store,
   {

@@ -36,6 +36,12 @@
         "vm": "vm-browserify",
         "tls": "./"
       }
+    }],
+    ["transform-inline-environment-variables", {
+      "include": [
+        "NODE_ENV",
+        "REDUX_LOGGER"
+      ]
     }]
   ]
 }
