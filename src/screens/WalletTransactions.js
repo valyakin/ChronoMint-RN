@@ -29,7 +29,6 @@ export default class WalletTransactions extends React.Component {
       tokens,
     } = this.props
 
-    console.log('WalletTransactions this.props', this.props)
     /**
      * [Alexey Ozerov] Need to clarify: does 'mode' used only for multisig?
      * Also need a better place for the mode "calculations"

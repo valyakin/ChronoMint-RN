@@ -13,24 +13,56 @@ import {
   View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-import {
-  sectionsSelector,
-} from 'redux/session/selectors'
+import { sectionsSelector } from 'redux/session/selectors'
+import { switchWallet } from 'redux/wallet/actions'
+import MainWalletModel from 'models/wallet/MainWalletModel'
 import SectionHeader from 'components/SectionHeader'
 import WalletsListItem from 'components/WalletsListItem'
-import { switchWallet } from 'redux/wallet/actions'
 import styles from './styles/WalletsListStyles'
+
+type TMainWalletModel = typeof MainWalletModel
+
+type TWalletListState = {
+  refreshing: boolean,
+}
+
+type TWalletItem = {
+  address: string,
+  wallet: TMainWalletModel,
+}
+
+type TWalletListSection = {
+  title: string,
+  data: TWalletItem[],
+}
+
+type TRenderItemArgs = {
+  item: TWalletItem,
+  index: number,
+  section: TWalletListSection,
+}
+
+type TOnNavigatorEventArgs = {
+  id: string,
+  type: string,
+}
 
 const mapStateToProps = (state) => ({
   sections: sectionsSelector()(state),
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  selectWallet: (wallet, address) => dispatch(switchWallet(wallet, address)),
+  selectWallet: (wallet: TMainWalletModel, address: string) =>
+    dispatch(switchWallet(wallet, address)),
 })
 
-@connect(mapStateToProps, mapDispatchToProps)
-export default class WalletsList extends PureComponent {
+interface IWalletsListProps {
+  selectWallet(wallet: TMainWalletModel, address: string): void,
+  navigator: any, // TODO: to implement a flow type for navigator
+  sections: TWalletListSection[],
+}
+
+class WalletsList extends PureComponent<IWalletsListProps, TWalletListState> {
 
   // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
@@ -58,12 +90,14 @@ export default class WalletsList extends PureComponent {
   }
 
   handleRefresh = () => {
-    this.setState({ refreshing: true })
+    this.setState({
+      refreshing: true,
+    })
 
     setTimeout(() => this.setState({ refreshing: false }), 1000)
   }
 
-  onNavigatorEvent = ({ type, id }: { type: string, id: string }) => {
+  onNavigatorEvent = ({ type, id }: TOnNavigatorEventArgs) => {
     if (type === 'NavBarButtonPress' && id === 'drawer') {
       this.props.navigator.toggleDrawer({ side: 'left' })
     }
@@ -75,9 +109,9 @@ export default class WalletsList extends PureComponent {
     }
   }
 
-  keyExtractor = ( section, index ) => [section.title, index].join('')
+  keyExtractor = ( section: TWalletListSection, index: number ) => [section.title, index].join('')
 
-  renderItem = ({ item, index, section }) => (
+  renderItem = ({ item, index, section }: TRenderItemArgs) => (
     <View style={styles.walletItemHorizontalPaddings}>
       <WalletsListItem
         wallet={item.wallet}
@@ -90,7 +124,7 @@ export default class WalletsList extends PureComponent {
     </View>
   )
 
-  renderSectionHeader = ({ section }) => (
+  renderSectionHeader = ({ section }: { section: TWalletListSection }) => (
     <SectionHeader title={`${section.title} Wallets`} isDark />
   )
 
@@ -113,3 +147,5 @@ export default class WalletsList extends PureComponent {
     )
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(WalletsList)

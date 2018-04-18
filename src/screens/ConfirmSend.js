@@ -8,29 +8,48 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {
-  Image,
-  ScrollView,
-  StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native'
-import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
-import {
-  getMainWallet,
-  getWTokens,
-} from 'redux/session/selectors'
+import { getWTokens } from 'redux/session/selectors'
 import { mainTransfer } from 'redux/mainWallet/actions'
-import Amount from 'models/Amount'
+import AmountModel from 'models/Amount' // { default as AmountModel }
 import BigNumber from 'bignumber.js'
-import colors from 'utils/colors'
-import FeeSlider from 'components/FeeSlider'
-import SectionHeader from 'components/SectionHeader'
-import Separator from 'components/Separator'
+import LabeledItem from 'components/LabeledItem'
+import TokenModel from 'models/tokens/TokenModel'
+import styles from './styles/ConfirmSendStyles'
+
+type TTokenModel = typeof TokenModel
+type TAmountModel = typeof AmountModel
+
+type ConfirmSendProps = {
+  tokensDuck: any, // TODO: to make a flow type for this
+  navigator: any,
+  recipientAddress: string,
+  selectedCurrency: string,
+  currentToken: string,
+  feeMultiplier: number,
+  amountToSend: {
+    currency: number,
+    token: number,
+  },
+  fee: {
+    currency: number,
+    token: number,
+  },
+  balance: {
+    currency: number,
+    token: number,
+  },
+  mainTransfer(
+    token: TTokenModel,
+    amount: TAmountModel,
+    recipient: string,
+    feeMultiplier: number,
+  ): void,
+}
 
 const mapStateToProps = (state) => ({
-  mainWallet: getMainWallet()(state),
   tokensDuck: getWTokens()(state),
 })
 
@@ -39,14 +58,13 @@ const mapDispatchToProps  = (dispatch) => {
     mainTransfer: (
       token,
       amount,
-      recipient: string,
+      recipient,
       feeMultiplier: number,
     ) => dispatch(mainTransfer(token, amount, recipient, feeMultiplier)),
   }
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
-export default class ConfirmSend extends React.PureComponent {
+class ConfirmSend extends React.PureComponent<ConfirmSendProps> {
 
   // noinspection JSUnusedGlobalSymbols
   static navigatorButtons = {
@@ -70,131 +88,92 @@ export default class ConfirmSend extends React.PureComponent {
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)
   }
 
-  state = {
-    selectedToken: (this.props.wallet.tokens && this.props.wallet.tokens[0]) || { id: 'ETH', amount: 0 },
-    fee: 1,
-    recipient: '',
-    amount: null,
-  }
-
   handleNavigatorEvent = ({ type, id }) => {
     if (type === 'NavBarButtonPress') {
       switch (id) {
         case 'cancel': {
-          // Go back to previous screen (currently this is 'Send' screen only)
+          // Go back to previous screen (currently it is 'Send' screen only)
           this.props.navigator.pop()
           break
         }
-        case 'done': {
+        case 'confirm': {
           this.sendTransaction()
+          this.props.navigator.pop()
           break
         }
       }
     }
   }
 
-  handleSubmitSuccess = () => {
-    this.props.navigator.pop()
-  }
-
-  handleRecipientInput = (value: string) => {
-    this.setState({
-      recipient: value,
-    })
-  }
-
-  handleAmountInput = (value: number) => {
-    this.setState({
-      amount: value,
-    })
-  }
-
-  handlePressOnTokenSelector = (): void => {
-    this.props.navigator.push({
-      screen: 'SelectToken',
-      title: 'Select Token',
-      passProps: {
-        // navigator: this.props.navigator,
-        tokens: this.props.wallet.tokens,
-        onPressAction: (data) => {
-          this.setState({ selectedToken: data })
-        },
-      },
-    })
-  }
-
   sendTransaction = () => {
-    const token = this.props.tokensDuck.item(this.state.selectedToken.id)
-    // console.log(token.toJS())
-    const toSendBigNumber: BigNumber = new BigNumber(this.state.amount)
-    // console.log(toSendBigNumber)
+    const token = this.props.tokensDuck.item(this.props.currentToken)
+    const toSendBigNumber: BigNumber = new BigNumber(this.props.amountToSend.token)
     const bnWithDecimals = token.addDecimals(toSendBigNumber)
-    // console.log(bnWithDecimals)
-    const amountToSend = new Amount(bnWithDecimals, this.state.selectedToken.id)
-    // console.log(amountToSend)
-    const recipient: string = this.state.recipient
-    const feeMultiplier = token.fee()
-    // console.log(token, amountToSend, recipient, feeMultiplier)
+    const amountToSend = new AmountModel(bnWithDecimals, this.props.currentToken)
+    const recipient: string = this.props.recipientAddress
+    const feeMultiplier = this.props.feeMultiplier
     this.props.mainTransfer(token, amountToSend, recipient, feeMultiplier)
   }
 
-  onFeeSliderChange = (value: number) => {
-    this.setState({
-      fee: value,
-    })
-  }
-
   render () {
-    const { wallet } = this.props
+
+    const {
+      currentToken,
+      selectedCurrency,
+    } = this.props
+
     return (
-      <View>
-        <LabeledText
-          label='Send To'
-          text='gg'
-        />
-        <LabeledText
-          label='BTC 0.2'
-          text='gg'
-        />
-        <LabeledText
-          label='Fee'
-          text='gg'
-        />
-        <LabeledText
-          label='Balance'
-          text='gg'
-        />
+      <View style={styles.container}>
+        <LabeledItem
+          labelText='Send To'
+        >
+          <Text>
+            {
+              this.props.recipientAddress
+            }
+          </Text>
+        </LabeledItem>
+        <LabeledItem
+          labelText={`${currentToken} ${this.props.amountToSend.token}`}
+          labelType='currencyColored'
+        >
+          <Text style={styles.lightGreyText}>
+            {
+              `${selectedCurrency} ${this.props.amountToSend.currency.toFixed(2)}`
+            }
+          </Text>
+        </LabeledItem>
+        <LabeledItem
+          labelText='Fee'
+        >
+          <Text>
+            {
+              `${currentToken} ${this.props.fee.token}`
+            }
+            <Text style={styles.lightGreyText}>
+              {
+                ` (${selectedCurrency} ${this.props.fee.currency.toFixed(2)})`
+              }
+            </Text>
+          </Text>
+        </LabeledItem>
+        <LabeledItem
+          labelText='Balance'
+        >
+          <Text>
+            {
+              `${currentToken}  ${this.props.balance.token}`
+            }
+            <Text style={styles.lightGreyText}>
+              {
+                ` (${selectedCurrency} ${this.props.balance.currency.toFixed(2)})`
+              }
+            </Text>
+          </Text>
+        </LabeledItem>
       </View>
     )
   }
 }
 
-type LabeledTextProps = {
-  label: string,
-  labelStyle?: StyleObj,
-  text: string,
-}
-const LabeledText = ({
-  label,
-  labelStyle = styles.LabeledText_Label,
-  text,
-}: LabeledTextProps) => (
-  <View style={styles.LabeledTextContainer}>
-    <Text style={labelStyle}>
-      {
-        label
-      }
-    </Text>
-    <Text style={styles.LabeledText_Text}>
-      {
-        text
-      }
-    </Text>
-  </View>
-)
-
-const styles = StyleSheet.create({
-  LabeledTextContainer: {},
-  LabeledText_Label: {},
-  LabeledText_Text: {},
-})
+export default connect(mapStateToProps, mapDispatchToProps)(ConfirmSend)

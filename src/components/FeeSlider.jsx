@@ -91,7 +91,6 @@ const FeeSlider = ({
         step={step}
         value={value}
         onValueChange={(value) => {
-          console.log(value)
           handleValueChange(Number(value.toFixed(1)))
         }}
       />
