@@ -6,6 +6,7 @@
   "license": "AGPL-3.0",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start:logredux": "cross-env REDUX_LOGGER=1 node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "ios": "react-native run-ios --simulator 'iPhone SE'",
     "contracts:compile": "cd node_modules/chronobank-smart-contracts && node --max_old_space_size=8000 ../truffle/build/cli.bundled.js compile --all",
@@ -90,9 +91,11 @@
     "babel-plugin-functional-hmr": "^1.0.24",
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.0",
     "babel-plugin-transform-new-target": "^7.0.0-alpha.14",
     "babel-plugin-transform-object-set-prototype-of-to-assign": "^6.22.0",
     "babel-preset-react-native": "4.0.0",
+    "cross-env": "^5.1.4",
     "eslint": "^4.17.0",
     "eslint-import-resolver-babel-module": "^4.0.0",
     "eslint-import-resolver-meteor": "^0.4.0",
@@ -112,7 +115,10 @@
     "redux-logger": "^3.0.6"
   },
   "lint-staged": {
-    "./src/**/*.(js|jsx)": ["eslint --fix", "git add"]
+    "./src/**/*.(js|jsx)": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "resolutions": {
     "inherits": "olegdizus/inherits",
