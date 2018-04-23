@@ -15,19 +15,19 @@ import {
   clearErrors,
   DUCK_NETWORK,
   loading,
-} from '../../mint/packages/login/redux/network/actions'
-import networkService from '../../mint/packages/login/network/NetworkService'
-import mnemonicProvider from '../../mint/packages/login/network/mnemonicProvider'
-import privateKeyProvider from '../../mint/packages/login/network/privateKeyProvider'
-import web3Provider from '../../mint/packages/login/network/Web3Provider'
-import { ethereumProvider } from '../../mint/packages/login/network/EthereumProvider'
+} from 'login/redux/network/actions'
+import networkService from 'login/network/NetworkService'
+import mnemonicProvider from 'login/network/mnemonicProvider'
+import privateKeyProvider from 'login/network/privateKeyProvider'
+import web3Provider from 'login/network/Web3Provider'
+import { ethereumProvider } from 'login/network/EthereumProvider'
 import {
   bccProvider,
   btcProvider,
   btgProvider,
   ltcProvider,
-} from '../../mint/packages/login/network/BitcoinProvider'
-import { nemProvider } from '../../mint/packages/login/network/NemProvider'
+} from 'login/network/BitcoinProvider'
+import { nemProvider } from 'login/network/NemProvider'
 
 export default function withLogin (Screen: React.ComponentType<any>): React.ComponentType<any> {
   class LoginHOC extends React.Component<LoginHOCProps, LoginHOCState> {

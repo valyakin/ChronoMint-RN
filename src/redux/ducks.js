@@ -23,7 +23,7 @@ import * as ui from 'redux/ui'
 import * as voting from 'redux/voting'
 import * as wallet from 'redux/wallet'
 import * as watcher from 'redux/watcher'
-import * as network from '../../mint/packages/login/redux/network/'
+import * as network from 'login/redux/network/'
 import * as sensitive from './sensitive'
 
 export {

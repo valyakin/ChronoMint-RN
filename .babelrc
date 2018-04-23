@@ -7,9 +7,20 @@
     "transform-new-target",
     "transform-exponentiation-operator",
     ["module-resolver", {
-      "root": ["./src", "./mint/src"],
-      "paths": ["./src", "./mint/src"],
+      "root": [
+        "./",
+        "./src",
+        "./node_modules/@chronobank/src",
+        "./node_modules/@chronobank/packages"
+      ],
+      "paths": [
+        "./",
+        "./src",
+        "./node_modules/@chronobank/src",
+        "./node_modules/@chronobank/packages"
+      ],
       "alias": {
+        "@chronobank/login": "@chronobank/packages/login",
         "crypto": "react-native-crypto",
         "zlib": "browserify-zlib",
         "console": "console-browserify",

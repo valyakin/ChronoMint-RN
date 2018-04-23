@@ -4,9 +4,9 @@
  *
  * @flow
  */
-import networkService from '@chronobank/login/network/NetworkService'
-import { LOCAL_ID, LOCAL_PROVIDER_ID, NETWORK_MAIN_ID } from '@chronobank/login/network/settings'
-import { DUCK_NETWORK } from '@chronobank/login/redux/network/actions'
+import networkService from 'login/network/NetworkService'
+import { LOCAL_ID, LOCAL_PROVIDER_ID, NETWORK_MAIN_ID } from 'login/network/settings'
+import { DUCK_NETWORK } from 'login/redux/network/actions'
 import contractsManagerDAO from 'dao/ContractsManagerDAO'
 import ProfileModel from 'models/ProfileModel'
 import { watchStopMarket } from 'redux/market/action'

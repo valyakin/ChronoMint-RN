@@ -8,11 +8,11 @@ import React from 'react'
 import { StyleSheet, Switch, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import I18n from 'react-native-i18n'
-import mnemonicProvider from '../../mint/packages/login/network/mnemonicProvider'
-import { setUsePinProtection } from '../redux/sensitive/actions'
-import PrimaryButton from '../components/PrimaryButton'
-import Separator from '../components/Separator'
-import TextButton from '../components/TextButton'
+import mnemonicProvider from 'login/network/mnemonicProvider'
+import { setUsePinProtection } from 'redux/sensitive/actions'
+import PrimaryButton from 'components/PrimaryButton'
+import Separator from 'components/Separator'
+import TextButton from 'components/TextButton'
 
 class WalletBackup extends React.Component<WalletBackupProps, {}> {
 

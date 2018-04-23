@@ -9,7 +9,7 @@ import { AsyncStorage } from 'react-native'
 import {
   LOCAL_ID,
   LOCAL_PROVIDER_ID,
-} from '../../mint/packages/login/network/settings'
+} from 'login/network/settings'
 import logger from '../utils/logger'
 
 class Storage {
