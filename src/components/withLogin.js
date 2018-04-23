@@ -171,6 +171,9 @@ function mapDispatchToProps (dispatch: Dispatch<any>) {
 }
 
 export type LoginHOCProps = {
+  getProviderURL: () => void,
+  selectNetwork: (network: number) => void,
+  selectProvider: (providerId: number) => void,
   accounts: Array<any>,
   addError: (error: string) => void,
   checkNetwork: typeof networkService.checkNetwork,
