@@ -16,6 +16,7 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
+    "@chronobank": "https://github.com/ChronoBank/ChronoMint.git#a709457f9142a46b6cdbf6b37ca2e59e08c2ae10",
     "assert": "^1.1.1",
     "asyncstorage-down": "^4.0.1",
     "axios": "^0.17.1",
@@ -94,6 +95,8 @@
     "babel-plugin-transform-inline-environment-variables": "^0.4.0",
     "babel-plugin-transform-new-target": "^7.0.0-alpha.14",
     "babel-plugin-transform-object-set-prototype-of-to-assign": "^6.22.0",
+    "babel-plugin-transform-react-constant-elements": "^6.23.0",
+    "babel-preset-react": "^6.24.1",
     "babel-preset-react-native": "4.0.0",
     "cross-env": "^5.1.4",
     "eslint": "^4.17.0",

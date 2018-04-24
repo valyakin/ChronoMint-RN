@@ -6,11 +6,11 @@
  */
 import React from 'react'
 import { StyleSheet, FlatList, View } from 'react-native'
-import Input from '../components/Input'
-import PrimaryButton from '../components/PrimaryButton'
-import { MNEMONIC_LENGTH } from '../utils/globals'
-import withLogin from '../components/withLogin'
-import mnemonicProvider from '../../mint/packages/login/network/mnemonicProvider'
+import { MNEMONIC_LENGTH } from 'utils/globals'
+import Input from 'components/Input'
+import mnemonicProvider from 'login/network/mnemonicProvider'
+import PrimaryButton from 'components/PrimaryButton'
+import withLogin from 'components/withLogin'
 
 const emptyMnemonic = Array(MNEMONIC_LENGTH).fill(1)
 

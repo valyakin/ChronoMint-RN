@@ -19,6 +19,9 @@
 ; Ignore metro
 .*/node_modules/metro/.*
 
+; Ignore node_modules at all
+.*/node_modules/[a-zA-Z-]+/.*
+
 [include]
 
 [libs]
@@ -33,7 +36,8 @@ emoji=true
 
 module.system.node.resolve_dirname=node_modules
 module.system.node.resolve_dirname=./src
-module.system.node.resolve_dirname=./mint/src
+module.system.node.resolve_dirname=./node_modules/@chronobank/src
+module.system.node.resolve_dirname=./node_modules/@chronobank/packages
 
 munge_underscores=true
 

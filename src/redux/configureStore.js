@@ -16,11 +16,11 @@ import createSensitiveStorage from 'redux-persist-sensitive-storage'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { createLogger as rCreateLogger } from 'redux-logger'
-import saveAccountMiddleWare from './session/saveAccountMiddleWare'
+import saveAccountMiddleWare from 'redux/session/saveAccountMiddleWare'
 // import ls from 'utils/LocalStorage'
 // import { globalWatcher } from '@chronobank/mint/src/redux/watcher/actions'
-import { SESSION_DESTROY } from './session/actions'
-import * as ducks from './ducks'
+import { SESSION_DESTROY } from 'redux/session/actions'
+import * as ducks from 'redux/ducks'
 
 const getNestedReducers = (ducks) => {
   let reducers = {}
