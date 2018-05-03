@@ -178,7 +178,11 @@ class WalletsListItem extends PureComponent<WalletsListItemProps> {
                   walletTitle
                 }
               </Text>
-              <Text style={styles.address}>
+              <Text
+                style={styles.address}
+                ellipsizeMode='middle'
+                numberOfLines={1}
+              >
                 {address}
               </Text>
               <Text style={styles.balance}>
