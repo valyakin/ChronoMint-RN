@@ -71,7 +71,7 @@ const configureStore = () => {
       'tokens/fetched',
     ]
     const rLogger = rCreateLogger({
-      collapse: true,
+      collapsed: true,
       predicate: (getState, action) => !IGNORED_ACTIONS.includes(action.type),
     })
     middleware.push(rLogger)
