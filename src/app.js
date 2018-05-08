@@ -10,7 +10,7 @@ import { Navigation } from 'react-native-navigation'
 import { Provider } from 'react-redux'
 import './init'
 import store from './redux/configureStore'
-import registerScreens from './screens/registerScreens'
+import registerScreens from './registerScreens'
 
 registerScreens(store, Provider)
 

@@ -4,23 +4,27 @@
  *
  * @flow
  */
-import * as React from 'react'
+
+import React, { PureComponent } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import colors from '../utils/colors'
 import Separator from './Separator'
 
-const WalletAlertAction = ({ title, onPress, isMain }: WalletAlertActionProps) => (
-  <TouchableOpacity
-    style={styles.action}
-    onPress={onPress || (() => {})}
-  >
-    <Text style={[ styles.actionTitle, (isMain && styles.actionTitleMain) ]}>
-      {title}
-    </Text>
-  </TouchableOpacity>
-)
+type WalletAlertProps = {
+  actions: WalletAlertActionProps[],
+  children?: any,
+  contentContainerStyle: any,
+  style: any,
+  title: string,
+}
 
-export default class WalletAlert extends React.Component<WalletAlertProps> {
+type WalletAlertActionProps = {
+  isMain?: boolean,
+  title: string,
+  onPress?: () => void,
+}
+
+export default class WalletAlert extends PureComponent<WalletAlertProps> {
 
   renderActionButton = (item, index, actions) => ([
     <WalletAlertAction {...item} key={item.id} />,
@@ -48,48 +52,55 @@ export default class WalletAlert extends React.Component<WalletAlertProps> {
   }
 }
 
+class WalletAlertAction extends PureComponent<WalletAlertActionProps> {
+  render () {
+    const {
+      title,
+      onPress,
+      isMain,
+    } = this.props
+
+    return (
+      <TouchableOpacity
+        style={styles.action}
+        onPress={onPress || (() => {})}
+      >
+        <Text style={[ styles.actionTitle, (isMain && styles.actionTitleMain) ]}>
+          {title}
+        </Text>
+      </TouchableOpacity>
+    )
+  }
+}
+
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.background,
-    borderRadius: 3,
-  },
-  title: {
-    paddingVertical: 8,
-    paddingHorizontal: 24,
-  },
-  content: {
-    padding: 24,
-    paddingBottom: 16, 
-  },
   action: {
     flex: 1,
-    padding: 16,
     justifyContent: 'center',
-  },
-  actionTitle: {
-    textAlign: 'center',
-    color: colors.primaryLight,
-    fontWeight: '200',
-    fontSize: 16,
-  },
-  actionTitleMain: {
-    fontWeight: '700',
+    padding: 16,
   },
   actions: {
     flexDirection: 'row',
   },
+  actionTitle: {
+    color: colors.primaryLight,
+    fontSize: 16,
+    fontWeight: '200',
+    textAlign: 'center',
+  },
+  actionTitleMain: {
+    fontWeight: '700',
+  },
+  container: {
+    backgroundColor: colors.background,
+    borderRadius: 3,
+  },
+  content: {
+    padding: 24,
+    paddingBottom: 16,
+  },
+  title: {
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+  },
 })
-
-type WalletAlertProps = {
-  actions: WalletAlertActionProps[],
-  children?: React.Node,
-  contentContainerStyle: any,
-  style: any,
-  title: string,
-}
-
-type WalletAlertActionProps = {
-  isMain?: boolean,
-  title: string,
-  onPress?: () => void,
-}
