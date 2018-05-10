@@ -16,7 +16,7 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
-    "@chronobank": "https://github.com/ChronoBank/ChronoMint.git#a709457f9142a46b6cdbf6b37ca2e59e08c2ae10",
+    "@chronobank": "https://github.com/ChronoBank/ChronoMint.git#89c4e00ff3cdef0d06af2296493446d9ec8cbc85",
     "assert": "^1.1.1",
     "asyncstorage-down": "^4.0.1",
     "axios": "^0.17.1",
@@ -26,7 +26,7 @@
     "bitcoinjs-lib": "^3.3.2",
     "browserify-zlib": "~0.1.4",
     "capture-stack-trace": "^1.0.0",
-    "chronobank-smart-contracts": "1.1.45",
+    "chronobank-smart-contracts": "1.1.47",
     "coinselect": "^3.1.11",
     "console-browserify": "^1.1.0",
     "constants-browserify": "^1.0.0",
