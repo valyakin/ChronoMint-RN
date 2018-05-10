@@ -1,4 +1,15 @@
 patch-package
+--- a/node_modules/@chronobank/packages/login/network/NemMiddlewareNode.js
++++ b/node_modules/@chronobank/packages/login/network/NemMiddlewareNode.js
+@@ -110,7 +110,7 @@ export default class NemMiddlewareNode extends NemAbstractNode {
+       throw new Error('invalid result')
+     }
+     for (const tx of data) {
+-      txs.push(this.createTxModel(tx, address))
++      txs.push(createTxModel(tx, address))
+     }
+     return txs
+   }
 --- a/node_modules/@chronobank/src/redux/session/actions.js
 +++ b/node_modules/@chronobank/src/redux/session/actions.js
 @@ -8,7 +8,6 @@ import { LOCAL_ID, LOCAL_PROVIDER_ID, NETWORK_MAIN_ID } from '@chronobank/login/
