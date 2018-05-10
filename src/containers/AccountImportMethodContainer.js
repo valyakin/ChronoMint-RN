@@ -9,11 +9,11 @@ import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import AccountImportMethod, { type TAccountImportMethod } from '../screens/AccountImportMethod'
 
-type AccountImportMethodContainerProps = {
+type TAccountImportMethodContainerProps = {
   navigator: any,
 }
 
-class AccountImportMethodContainer extends PureComponent<AccountImportMethodContainerProps> {
+class AccountImportMethodContainer extends PureComponent<TAccountImportMethodContainerProps, {}> {
   handleCreateWallet = () => {
     this.props.navigator.push({
       screen: 'CreateWallet',

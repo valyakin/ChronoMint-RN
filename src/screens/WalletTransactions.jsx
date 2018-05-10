@@ -32,7 +32,7 @@ export type TTransaction = {
   value: number,
 }
 
-export type WalletTransactionsProps = {
+export type TWalletTransactionsProps = {
   address: string,
   balance: typeof BalanceModel,
   tokens: typeof TokensModel,
@@ -40,7 +40,7 @@ export type WalletTransactionsProps = {
   transactions?: Array<TTransaction>, 
 }
 
-export default class WalletTransactions extends PureComponent<WalletTransactionsProps> {
+export default class WalletTransactions extends PureComponent<TWalletTransactionsProps, {}> {
   render () {
     const {
       address,

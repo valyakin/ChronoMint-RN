@@ -32,17 +32,17 @@ export type TWallet = {
   balance: TBalance,
 }
 
-type WalletTokensProps = {
+type TWalletTokensProps = {
   wallet: TWallet,
   onSelectToken: (token: TToken) => () => void,
 }
 
-type TokenProps = TToken & {
+type TTokenProps = TToken & {
   balance: TBalance,
   onSelectToken: () => void,
 }
 
-export default class WalletTokens extends PureComponent<WalletTokensProps> {
+export default class WalletTokens extends PureComponent<TWalletTokensProps, {}> {
   keyExtractor = (id: string) => id
 
   renderItem = ({ item }: { item: TToken }) =>
@@ -64,7 +64,7 @@ export default class WalletTokens extends PureComponent<WalletTokensProps> {
   }
 }
 
-class Token extends PureComponent<TokenProps> {
+class Token extends PureComponent<TTokenProps, {}> {
   render () {
     const {
       amount,

@@ -10,19 +10,19 @@ import I18n from 'react-native-i18n'
 import ConfirmMnemonic from '../screens/ConfirmMnemonic'
 import { MNEMONIC_LENGTH } from '../utils/globals'
 
-export type ConfirmMnemonicContainerProps = {
+export type TConfirmMnemonicContainerProps = {
   mnemonic: string,
   navigator: any,
   usePinProtection?: boolean,
 }
 
-export type ConfirmMnemonicContainerState = {
+export type TConfirmMnemonicContainerState = {
   mnemonic: Array<string>,
   words: Array<string>,
 }
 
-class ConfirmMnemonicContainer extends PureComponent<ConfirmMnemonicContainerProps, ConfirmMnemonicContainerState> {
-  constructor (props: ConfirmMnemonicContainerProps) {
+class ConfirmMnemonicContainer extends PureComponent<TConfirmMnemonicContainerProps, TConfirmMnemonicContainerState> {
+  constructor (props: TConfirmMnemonicContainerProps) {
     super(props)
 
     this.state = this.createInitialState()

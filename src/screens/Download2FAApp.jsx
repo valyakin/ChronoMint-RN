@@ -9,7 +9,7 @@ import React, { PureComponent } from 'react'
 import { Text, ScrollView, StyleSheet, Image } from 'react-native'
 import colors from '../utils/colors'
 
-export default class Download2FAApp extends PureComponent<{}> {
+export default class Download2FAApp extends PureComponent<{}, {}> {
   render () {
     return (
       <ScrollView contentContainerStyle={styles.scrollView} bounces={false}>

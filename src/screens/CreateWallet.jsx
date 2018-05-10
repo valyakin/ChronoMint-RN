@@ -18,7 +18,7 @@ import Input from '../components/Input'
 import PrimaryButton from '../components/PrimaryButton'
 import TextButton from '../components/TextButton'
 
-export type CreateWalletProps = {
+export type TCreateWalletProps = {
   onChangePassword: (password: string) => void,
   onChangePasswordConfirmation: (passwordConfirmation: string) => void,
   onCreateWallet: () => void,
@@ -27,7 +27,7 @@ export type CreateWalletProps = {
   onUseWallet: () => void,
 }
 
-export default class CreateWallet extends React.Component<CreateWalletProps> {
+export default class CreateWallet extends React.Component<TCreateWalletProps, {}> {
   render () {
     const {
       onChangePassword,

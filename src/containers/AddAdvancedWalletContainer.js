@@ -15,11 +15,11 @@ export type TToken = {
   title: string,
 }
 
-export type AddAdvancedWalletContainerProps = {
+export type TAddAdvancedWalletContainerProps = {
   navigator: any,
 }
 
-class AddAdvancedWalletContainer extends PureComponent<AddAdvancedWalletContainerProps, {}> {
+class AddAdvancedWalletContainer extends PureComponent<TAddAdvancedWalletContainerProps, {}> {
     static navigatorButtons = {
       leftButtons: [
         {
@@ -35,7 +35,7 @@ class AddAdvancedWalletContainer extends PureComponent<AddAdvancedWalletContaine
       ],
     }
   
-    constructor (props: AddAdvancedWalletContainerProps) {
+    constructor (props: TAddAdvancedWalletContainerProps) {
       super(props)
   
       this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)

@@ -21,14 +21,14 @@ import SectionHeader from '../components/SectionHeader'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
 
-export type AddAdvancedWalletProps = {
+export type TAddAdvancedWalletProps = {
   onAddNewToken: () => void,
   tokens: Array<TToken>,
 }
 
-type TokenProps = TToken
+type TTokenProps = TToken
 
-export default class AddAdvancedWallet extends PureComponent<AddAdvancedWalletProps> {
+export default class AddAdvancedWallet extends PureComponent<TAddAdvancedWalletProps, {}> {
   keyExtractor = ({ id }: TToken) => id
 
   renderItem = ({ item }: { item: TToken }) => <Token {...item} />
@@ -65,7 +65,7 @@ export default class AddAdvancedWallet extends PureComponent<AddAdvancedWalletPr
   }
 }
 
-class Token extends PureComponent<TokenProps> {
+class Token extends PureComponent<TTokenProps, {}> {
   render () {
     const { image, isChecked, title } = this.props
 

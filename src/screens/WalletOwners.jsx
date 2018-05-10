@@ -16,16 +16,16 @@ export type TOwner = {
   name: string,
 }
 
-type WalletOwnersProps = {
+type TWalletOwnersProps = {
   owners: Array<TOwner>,
   onSelectOwner: (owner: TOwner) => () => void,
 }
 
-type OwnerProps = TOwner & {
+type TOwnerProps = TOwner & {
   onSelectOwner: () => void,
 }
 
-export default class WalletOwners extends PureComponent<WalletOwnersProps> {
+export default class WalletOwners extends PureComponent<TWalletOwnersProps, {}> {
   keyExtractor = ({ id }: TOwner) => id
 
   renderItem = ({ item }: { item: TOwner }) =>
@@ -50,7 +50,7 @@ export default class WalletOwners extends PureComponent<WalletOwnersProps> {
   }
 }
 
-class Owner extends PureComponent<OwnerProps> {
+class Owner extends PureComponent<TOwnerProps, {}> {
   render () {
     const { image, name, address } = this.props
     return (

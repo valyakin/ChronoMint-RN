@@ -20,13 +20,13 @@ import SectionHeader from '../components/SectionHeader'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
 
-export type AddMultiSigWalletProps = {
+export type TAddMultiSigWalletProps = {
   walletOwners: Array<TWalletOwner>,
 }
 
-type WalletOwnerProps = TWalletOwner
+type TWalletOwnerProps = TWalletOwner
 
-export default class AddMultiSigWallet extends PureComponent<AddMultiSigWalletProps> {
+export default class AddMultiSigWallet extends PureComponent<TAddMultiSigWalletProps, {}> {
   keyExtractor = ({ id }: TWalletOwner) => id
 
   renderItem = ({ item }: { item: TWalletOwner }) => <WalletOwner {...item} /> 
@@ -92,7 +92,7 @@ export default class AddMultiSigWallet extends PureComponent<AddMultiSigWalletPr
   }
 }
 
-class WalletOwner extends PureComponent<WalletOwnerProps> {
+class WalletOwner extends PureComponent<TWalletOwnerProps, {}> {
   render () {
     const { image, name, address } = this.props
 

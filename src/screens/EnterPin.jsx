@@ -8,13 +8,13 @@
 import React, { PureComponent } from 'react'
 import { StyleSheet, View, TextInput, Platform } from 'react-native'
 
-export type EnterPinProps = {
+export type TEnterPinProps = {
   onChangePin: (pin: string) => void,
   pinDigitsTotalCount: number,
   pinDigitsFilledCount: number,
 }
 
-export default class EnterPin extends PureComponent<EnterPinProps> {
+export default class EnterPin extends PureComponent<TEnterPinProps, {}> {
   renderPinDigit = (item: any, index: number) => {
     const isPinDigitActive = this.props.pinDigitsFilledCount > index
 

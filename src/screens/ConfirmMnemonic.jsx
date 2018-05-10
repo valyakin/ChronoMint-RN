@@ -16,19 +16,19 @@ import {
 import I18n from 'react-native-i18n'
 import PrimaryButton from '../components/PrimaryButton'
 
-export type ConfirmMnemonicProps = {
+export type TConfirmMnemonicProps = {
   onDone: () => void,
   onWord: (word: string) => () => void,
   mnemonic: string,
   words: Array<string>,
 }
 
-type WordProps = {
+type TWordProps = {
   word: string,
   onPress: () => void,
 }
 
-export default class ConfirmMnemonic extends PureComponent<ConfirmMnemonicProps> {
+export default class ConfirmMnemonic extends PureComponent<TConfirmMnemonicProps, {}> {
   
   keyExtractor = (word: string) => word
   
@@ -65,7 +65,7 @@ export default class ConfirmMnemonic extends PureComponent<ConfirmMnemonicProps>
   }
 }
 
-class Word extends PureComponent<WordProps> {
+class Word extends PureComponent<TWordProps, {}> {
   render () {
     const { word, onPress } = this.props
     if (word === 'emptyWord') {

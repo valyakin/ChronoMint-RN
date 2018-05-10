@@ -18,14 +18,14 @@ import { type TWalletType } from '../containers/AddEthereumWalletContainer'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
 
-export type AddEthereumWalletProps = {
+export type TAddEthereumWalletProps = {
   onPress: (walletType: TWalletType) => () => void,
   walletTypes: Array<TWalletType>,
 }
 
-type WalletTypeProps = TWalletType & { onPress: () => void }
+type TWalletTypeProps = TWalletType & { onPress: () => void }
 
-export default class AddEthereumWallet extends PureComponent<AddEthereumWalletProps> {
+export default class AddEthereumWallet extends PureComponent<TAddEthereumWalletProps, {}> {
   keyExtractor = ({ id }: TWalletType) => id
 
   renderItem = ({ item }: { item: TWalletType }) => (
@@ -47,7 +47,7 @@ export default class AddEthereumWallet extends PureComponent<AddEthereumWalletPr
   }
 }
 
-class WalletType extends PureComponent<WalletTypeProps> {
+class WalletType extends PureComponent<TWalletTypeProps, {}> {
   render () {
     const { image, title, description, onPress } = this.props
 

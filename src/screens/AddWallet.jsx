@@ -17,14 +17,14 @@ import { type TWalletType } from '../containers/AddWalletContainer'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
 
-export type AddWalletProps = {
+export type TAddWalletProps = {
   walletTypes: Array<TWalletType>,
   onWalletTypePress: (walletType: TWalletType) => () => void,
 }
 
-type WalletTypeProps = TWalletType & { onPress: () => void }
+type TWalletTypeProps = TWalletType & { onPress: () => void }
 
-export default class AddWallet extends PureComponent<AddWalletProps> {
+export default class AddWallet extends PureComponent<TAddWalletProps, {}> {
   keyExtractor = ({ id }: TWalletType) => id
 
   renderItem = ({ item }: { item: TWalletType }) => (
@@ -46,7 +46,7 @@ export default class AddWallet extends PureComponent<AddWalletProps> {
   }
 }
 
-class WalletType extends PureComponent<WalletTypeProps> {
+class WalletType extends PureComponent<TWalletTypeProps, {}> {
   render () {
     const { title, image, onPress } = this.props
 

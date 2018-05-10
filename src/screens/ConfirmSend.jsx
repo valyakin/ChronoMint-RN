@@ -14,7 +14,7 @@ import {
 import LabeledItem from '../components/LabeledItem'
 import colors from '../utils/colors'
 
-type ConfirmSendProps = {
+type TConfirmSendProps = {
   amountToSend: {
     currency: number,
     token: number,
@@ -32,7 +32,7 @@ type ConfirmSendProps = {
   selectedCurrency: string,
 }
 
-export default class ConfirmSend extends React.PureComponent<ConfirmSendProps, {}> {
+export default class ConfirmSend extends React.PureComponent<TConfirmSendProps, {}> {
   render () {
     const {
       amountToSend,

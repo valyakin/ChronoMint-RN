@@ -10,7 +10,7 @@ import { View, TextInput, StyleSheet, Text } from 'react-native'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
 
-export default class AddTokenToAdvancedWallet extends PureComponent<{}> {
+export default class AddTokenToAdvancedWallet extends PureComponent<{}, {}> {
   render () {
     return (
       <View style={styles.screenView}>

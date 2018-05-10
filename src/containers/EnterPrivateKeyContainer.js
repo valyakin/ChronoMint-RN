@@ -9,15 +9,15 @@ import React, { PureComponent } from 'react'
 import EnterPrivateKey from '../screens/EnterPrivateKey'
 import withLogin from '../components/withLogin'
 
-export type EnterPrivateKeyContainerProps = {
+export type TEnterPrivateKeyContainerProps = {
   onPrivateKeyLogin: (privateKey: string) => void,
 }
 
-type EnterPrivateKeyContainerState = {
+type TEnterPrivateKeyContainerState = {
   privateKey: string,
 }
 
-class EnterPrivateKeyContainer extends PureComponent<EnterPrivateKeyContainerProps, EnterPrivateKeyContainerState> {
+class EnterPrivateKeyContainer extends PureComponent<TEnterPrivateKeyContainerProps, TEnterPrivateKeyContainerState> {
   state = {
     privateKey: '',
   }

@@ -8,11 +8,11 @@
 import React, { PureComponent } from 'react'
 import AddTokenToAdvancedWallet from '../screens/AddTokenToAdvancedWallet'
 
-export type AddTokenToAdvancedWalletContainerProps = {
+export type TAddTokenToAdvancedWalletContainerProps = {
   navigator: any,
 }
 
-class AddTokenToAdvancedWalletContainer extends PureComponent<AddTokenToAdvancedWalletContainerProps, {}> {
+class AddTokenToAdvancedWalletContainer extends PureComponent<TAddTokenToAdvancedWalletContainerProps, {}> {
   static navigatorButtons = {
     leftButtons: [
       {
@@ -28,7 +28,7 @@ class AddTokenToAdvancedWalletContainer extends PureComponent<AddTokenToAdvanced
     ],
   }
 
-  constructor (props: AddTokenToAdvancedWalletContainerProps) {
+  constructor (props: TAddTokenToAdvancedWalletContainerProps) {
     super(props)
 
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)

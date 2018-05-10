@@ -9,12 +9,12 @@ import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import GenerateMnemonic from '../screens/GenerateMnemonic'
 
-type GenerateMnemonicContainerProps = {
+type TGenerateMnemonicContainerProps = {
   mnemonic: string,
   navigator: any,
 }
 
-class GenerateMnemonicContainer extends PureComponent<GenerateMnemonicContainerProps> {
+class GenerateMnemonicContainer extends PureComponent<TGenerateMnemonicContainerProps, {}> {
   handleConfirm = () => {
     const { mnemonic } = this.props
     

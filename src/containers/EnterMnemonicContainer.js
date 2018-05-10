@@ -11,17 +11,17 @@ import { MNEMONIC_LENGTH } from '../utils/globals'
 import EnterMnemonic from '../screens/EnterMnemonic'
 import withLogin from '../components/withLogin'
 
-export type EnterMnemonicContainerProps = {
+export type TEnterMnemonicContainerProps = {
   onMnemonicLogin: (mnemonic: string) => void,
 }
 
-type EnterMnemonicContainerState = {
+type TEnterMnemonicContainerState = {
   mnemonicWords: Array<string>
 }
 
 const inputsList = Array(MNEMONIC_LENGTH).fill(1)
 
-class EnterMnemonicContainer extends PureComponent<EnterMnemonicContainerProps, EnterMnemonicContainerState> {
+class EnterMnemonicContainer extends PureComponent<TEnterMnemonicContainerProps, TEnterMnemonicContainerState> {
   state = {
     mnemonicWords: [],
   }

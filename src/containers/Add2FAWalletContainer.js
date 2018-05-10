@@ -8,11 +8,11 @@
 import React, { PureComponent } from 'react'
 import Add2FAWallet from '../screens/Add2FAWallet'
 
-export type Add2FAWalletContainerProps = {
+export type TAdd2FAWalletContainerProps = {
   navigator: any,
 }
 
-class Add2FAWalletContainer extends PureComponent<Add2FAWalletContainerProps, {}> {
+class Add2FAWalletContainer extends PureComponent<TAdd2FAWalletContainerProps, {}> {
   static navigatorButtons = {
     leftButtons: [
       {
@@ -28,7 +28,7 @@ class Add2FAWalletContainer extends PureComponent<Add2FAWalletContainerProps, {}
     ],
   }
 
-  constructor (props: Add2FAWalletContainerProps) {
+  constructor (props: TAdd2FAWalletContainerProps) {
     super(props)
 
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)

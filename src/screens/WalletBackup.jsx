@@ -12,14 +12,14 @@ import PrimaryButton from 'components/PrimaryButton'
 import Separator from 'components/Separator'
 import TextButton from 'components/TextButton'
 
-type WalletBackupProps = {
+type TWalletBackupProps = {
   onDone: () => void,
   onLater: () => void,
   onSwitchUsePinProtection: (value: boolean) => void,
   usePinProtection?: boolean,
 }
 
-class WalletBackup extends React.Component<WalletBackupProps> {
+class WalletBackup extends React.Component<TWalletBackupProps, {}> {
   render () {
     const { 
       onDone,

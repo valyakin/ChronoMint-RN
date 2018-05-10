@@ -8,7 +8,7 @@
 import React, { PureComponent } from 'react'
 import AddMultiSigWallet from '../screens/AddMultiSigWallet'
 
-export type AddMultiSigWalletContainerProps = {
+export type TAddMultiSigWalletContainerProps = {
   navigator: any,
 }
 
@@ -19,7 +19,7 @@ export type TWalletOwner = {
   image: string,
 }
 
-class AddMultiSigWalletContainer extends PureComponent<AddMultiSigWalletContainerProps, {}> {
+class AddMultiSigWalletContainer extends PureComponent<TAddMultiSigWalletContainerProps, {}> {
   static navigatorButtons = {
     leftButtons: [
       {
@@ -35,7 +35,7 @@ class AddMultiSigWalletContainer extends PureComponent<AddMultiSigWalletContaine
     ],
   }
 
-  constructor (props: AddMultiSigWalletContainerProps) {
+  constructor (props: TAddMultiSigWalletContainerProps) {
     super(props)
 
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)

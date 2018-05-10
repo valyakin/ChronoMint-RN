@@ -65,7 +65,7 @@ const ActionButton = ({ title, image, onPress }: TActionButtonProps) => (
   </TouchableOpacity>
 )
 
-export default class Wallet extends PureComponent<TWalletProps> {
+export default class Wallet extends PureComponent<TWalletProps, {}> {
   render () {
     const {
       tab,

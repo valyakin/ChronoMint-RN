@@ -8,11 +8,11 @@
 import React, { PureComponent } from 'react'
 import WalletTokens, { type TToken, type TWallet } from '../screens/WalletTokens'
 
-type WalletTokensContainerProps = {
+type TWalletTokensContainerProps = {
   wallet: TWallet,
 }
 
-class WalletTokensContainer extends PureComponent<WalletTokensContainerProps> {
+class WalletTokensContainer extends PureComponent<TWalletTokensContainerProps, {}> {
   /* eslint-disable-next-line no-unused-vars */
   handleSelectToken = (token: TToken) => () => {
     throw 'Not implemented yet'

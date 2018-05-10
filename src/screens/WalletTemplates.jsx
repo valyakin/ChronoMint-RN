@@ -18,16 +18,16 @@ export type TTemplate = {
   value: number,
 }
 
-type WalletTemplatesProps = {
+type TWalletTemplatesProps = {
   onSelectTemplate: (template: TTemplate) => () => void,
   templates: Array<TTemplate>,
 }
 
-type TemplateProps = TTemplate & {
+type TTemplateProps = TTemplate & {
   onSelectTemplate: () => void,
 }
 
-export default class WalletTemplates extends PureComponent<WalletTemplatesProps> {
+export default class WalletTemplates extends PureComponent<TWalletTemplatesProps, {}> {
   keyExtractor = ({ id }: TTemplate) => id
 
   renderItem = ({ item }: { item: TTemplate}) =>
@@ -52,7 +52,7 @@ export default class WalletTemplates extends PureComponent<WalletTemplatesProps>
   }
 }
 
-class Template extends PureComponent<TemplateProps> {
+class Template extends PureComponent<TTemplateProps, {}> {
   render () {
     const {
       address,

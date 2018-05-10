@@ -10,7 +10,7 @@ import I18n from 'react-native-i18n'
 import withLogin from '../components/withLogin'
 import WalletBackup from '../screens/WalletBackup'
 
-type WalletBackupContainerProps = {
+type TWalletBackupContainerProps = {
   navigator: any,
   onSetUsePinProtection: (value: boolean) => void,
   usePinProtection: boolean,
@@ -18,7 +18,7 @@ type WalletBackupContainerProps = {
   mnemonic: string,
 }
 
-class WalletBackupContainer extends PureComponent<WalletBackupContainerProps> {
+class WalletBackupContainer extends PureComponent<TWalletBackupContainerProps, {}> {
   handleDone = () => {
     this.props.navigator.push({
       screen: 'GenerateMnemonic',

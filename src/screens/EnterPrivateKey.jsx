@@ -10,12 +10,12 @@ import { StyleSheet, View } from 'react-native'
 import Input from '../components/Input'
 import PrimaryButton from '../components/PrimaryButton'
 
-export type EnterPrivateKeyProps = {
+export type TEnterPrivateKeyProps = {
   onChangePrivateKey: (privateKey: string) => void,
   onDone: () => void,
 }
 
-export default class EnterPrivateKey extends PureComponent<EnterPrivateKeyProps> {
+export default class EnterPrivateKey extends PureComponent<TEnterPrivateKeyProps, {}> {
   render () {
     const {
       onChangePrivateKey,

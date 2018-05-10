@@ -18,7 +18,7 @@ import {
 import I18n from 'react-native-i18n'
 import colors from '../utils/colors'
 
-export type DrawerProps = {
+export type TDrawerProps = {
   currentNetwork: string,
   mainAddress: string,
   menuItems: Array<TMenuItem>,
@@ -35,13 +35,13 @@ export type TMenuItem = {
   title: string,
 }
 
-type CurrentNetworkProps = {
+type TCurrentNetworkProps = {
   network: string,
 }
 
-type DrawerMenuItemProps = TMenuItem
+type TDrawerMenuItemProps = TMenuItem
 
-export default class Drawer extends PureComponent<DrawerProps> {
+export default class Drawer extends PureComponent<TDrawerProps, {}> {
   keyExtractor = ({ id }: TMenuItem) => id
 
   renderItem = ({ item }: { item: TMenuItem }) => <DrawerMenuItem {...item} />
@@ -125,7 +125,7 @@ export default class Drawer extends PureComponent<DrawerProps> {
   }
 }
 
-class CurrentNetwork extends PureComponent<CurrentNetworkProps> {
+class CurrentNetwork extends PureComponent<TCurrentNetworkProps, {}> {
   render () {
     const { network } = this.props
 
@@ -141,7 +141,7 @@ class CurrentNetwork extends PureComponent<CurrentNetworkProps> {
   }
 }
 
-class DrawerMenuItem extends PureComponent<DrawerMenuItemProps> {
+class DrawerMenuItem extends PureComponent<TDrawerMenuItemProps, {}> {
   render () {
     const { image, title } = this.props
 

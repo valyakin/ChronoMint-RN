@@ -8,11 +8,11 @@
 import React, { PureComponent } from 'react'
 import AddTimeLockedWallet from '../screens/AddTimeLockedWallet'
 
-export type AddTimeLockedWalletContainerProps = {
+export type TAddTimeLockedWalletContainerProps = {
   navigator: any
 }
 
-class AddTimeLockedWalletContainer extends PureComponent<AddTimeLockedWalletContainerProps, {}> {
+class AddTimeLockedWalletContainer extends PureComponent<TAddTimeLockedWalletContainerProps, {}> {
   static navigatorButtons = {
     leftButtons: [
       {
@@ -28,7 +28,7 @@ class AddTimeLockedWalletContainer extends PureComponent<AddTimeLockedWalletCont
     ],
   }
 
-  constructor (props: AddTimeLockedWalletContainerProps) {
+  constructor (props: TAddTimeLockedWalletContainerProps) {
     super(props)
 
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)

@@ -9,7 +9,7 @@ import React, { PureComponent } from 'react'
 import { View, TextInput, StyleSheet } from 'react-native'
 import colors from '../utils/colors'
 
-export default class AddStandardWallet extends PureComponent<{}> {  
+export default class AddStandardWallet extends PureComponent<{}, {}> {  
   render () {
     return (
       <View style={styles.screenView}>

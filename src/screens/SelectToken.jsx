@@ -15,7 +15,7 @@ import {
 } from 'react-native'
 import colors from 'utils/colors'
 
-export default class SelectToken extends PureComponent {
+export default class SelectToken extends PureComponent<{}, {}> {
 
   constructor (props) {
     super(props)

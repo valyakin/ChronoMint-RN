@@ -11,7 +11,7 @@ import EnterPin from '../screens/EnterPin'
 import withLogin from '../components/withLogin'
 import { PIN_LENGTH } from '../utils/globals'
 
-export type EnterPinContainerProps = {
+export type TEnterPinContainerProps = {
   navigator: any,
   pin: string,
   onMnemonicLogin: (mnemonic: string) => void,
@@ -19,11 +19,11 @@ export type EnterPinContainerProps = {
   onLogin: () => void,
 }
 
-type EnterPinContainerState = {
+type TEnterPinContainerState = {
   pin: string,
 }
 
-class EnterPinContainer extends PureComponent<EnterPinContainerProps, EnterPinContainerState> {
+class EnterPinContainer extends PureComponent<TEnterPinContainerProps, TEnterPinContainerState> {
   state = {
     pin: '',
   }

@@ -16,11 +16,11 @@ export type TWalletType = {
   title: string,
 }
 
-export type AddEthereumWalletContainerProps = {
+export type TAddEthereumWalletContainerProps = {
   navigator: any,
 }
 
-class AddEthereumWalletContainer extends PureComponent<AddEthereumWalletContainerProps, {}> {
+class AddEthereumWalletContainer extends PureComponent<TAddEthereumWalletContainerProps, {}> {
   handlePress = ({ screen }: { screen: string }) => () => {
     this.props.navigator.push({
       screen: screen,

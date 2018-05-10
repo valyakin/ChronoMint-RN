@@ -9,7 +9,7 @@ import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import Drawer from '../screens/Drawer'
 
-class DrawerContainer extends PureComponent<{}> {
+class DrawerContainer extends PureComponent<{}, {}> {
   handleCopyAddress = () => {
     throw 'Not implemented yet'
   }

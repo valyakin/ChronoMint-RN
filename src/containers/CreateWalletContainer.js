@@ -11,17 +11,17 @@ import withLogin from '../components/withLogin'
 import isValid from '../utils/validators'
 import CreateWallet from '../screens/CreateWallet'
 
-type CreateWalletContainerProps = {
+type TCreateWalletContainerProps = {
   navigator: any,
   generateMnemonic: () => void
 }
 
-type CreateWalletContainerState = {
+type TCreateWalletContainerState = {
   password: string,
   passwordConfirmation: string,
 }
 
-class CreateWalletContainer extends PureComponent<CreateWalletContainerProps, CreateWalletContainerState> {
+class CreateWalletContainer extends PureComponent<TCreateWalletContainerProps, TCreateWalletContainerState> {
   static navigatorStyle = {
     navBarHidden: true,
   }

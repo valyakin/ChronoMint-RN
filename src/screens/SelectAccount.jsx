@@ -24,18 +24,18 @@ export type TAccount = {
   image: any,
 }
 
-type SelectAccountProps = {
+type TSelectAccountProps = {
   accounts: Array<TAccount>,
   onCreateWallet: () => void,
   onImportAccount: () => void,
   onSelectAccount: (account: TAccount) => () => void,
 }
 
-type AccountProps = TAccount & {
+type TAccountProps = TAccount & {
   onPress: () => void,
 }
 
-export default class SelectAccount extends PureComponent<SelectAccountProps> {
+export default class SelectAccount extends PureComponent<TSelectAccountProps, {}> {
   keyExtractor = ({ address }: TAccount) => address
 
   renderItem = ({ item }: { item: TAccount }) => (
@@ -79,7 +79,7 @@ export default class SelectAccount extends PureComponent<SelectAccountProps> {
   }
 }
 
-class Account extends PureComponent<AccountProps> {
+class Account extends PureComponent<TAccountProps, {}> {
   render () {
     const {
       address,

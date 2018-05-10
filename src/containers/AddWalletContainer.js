@@ -16,11 +16,11 @@ export type TWalletType = {
   screen: string,
 }
 
-export type AddWalletContainerProps = {
+export type TAddWalletContainerProps = {
   navigator: any,
 }
 
-class AddWalletContainer extends PureComponent<AddWalletContainerProps, {}> {
+class AddWalletContainer extends PureComponent<TAddWalletContainerProps, {}> {
   handleWalletTypePress = ({ screen }: TWalletType) => () => {
     this.props.navigator.push({
       screen,

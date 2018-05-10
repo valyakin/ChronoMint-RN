@@ -18,7 +18,7 @@ import ConfirmSend from '../screens/ConfirmSend'
 type TTokenModel = typeof TokenModel
 type TAmountModel = typeof AmountModel
 
-export type ConfirmSendContainerProps = {
+export type TConfirmSendContainerProps = {
   tokensDuck: any, // TODO: to make a flow type for this
   navigator: any,
   recipientAddress: string,
@@ -45,7 +45,7 @@ export type ConfirmSendContainerProps = {
   ) => void,
 }
 
-class ConfirmSendContainer extends PureComponent<ConfirmSendContainerProps, {}> {
+class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}> {
   static navigatorButtons = {
     leftButtons: [
       {
@@ -62,7 +62,7 @@ class ConfirmSendContainer extends PureComponent<ConfirmSendContainerProps, {}> 
     ],
   }
 
-  constructor (props: ConfirmSendContainerProps) {
+  constructor (props: TConfirmSendContainerProps) {
     super(props)
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)
   }

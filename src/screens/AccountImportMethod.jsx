@@ -16,7 +16,7 @@ import {
 import I18n from 'react-native-i18n'
 import TextButton from '../components/TextButton'
 
-type AccountImportMethodProps = {
+type TAccountImportMethodProps = {
   accountImportMethods: Array<TAccountImportMethod>,
   onCreateWallet: () => void,
   onSelectAccountImportMethod: (accountImportMethod: TAccountImportMethod) => () => void,
@@ -30,11 +30,11 @@ export type TAccountImportMethod = {
   title: string,
 }
 
-type MethodProps = TAccountImportMethod & {
+type TMethodProps = TAccountImportMethod & {
   onPress: () => void,
 }
 
-export default class SelectAccountImportMethod extends PureComponent<AccountImportMethodProps> {
+export default class SelectAccountImportMethod extends PureComponent<TAccountImportMethodProps, {}> {
   renderMethod = (accountImportMethod: TAccountImportMethod) => (
     <Method
       key={accountImportMethod.id}
@@ -67,7 +67,7 @@ export default class SelectAccountImportMethod extends PureComponent<AccountImpo
   }
 }
 
-class Method extends PureComponent<MethodProps> {
+class Method extends PureComponent<TMethodProps> {
   render () {
     const {
       image,

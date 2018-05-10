@@ -24,24 +24,25 @@ type TWalletItem = {
 }
 
 export type TWalletListSection = {
-  title: string,
   data: TWalletItem[],
+  title: string,
 }
 
 type TRenderItemArgs = {
-  item: TWalletItem,
   index: number,
+  item: TWalletItem,
   section: TWalletListSection,
 }
 
 type IWalletsListProps = {
-  selectWallet(wallet: TMainWalletModel, address: string): void,
-  sections: TWalletListSection[],
   isRefreshing?: boolean,
+  navigator: any,
   onRefresh: () => void,
+  sections: TWalletListSection[],
+  selectWallet(wallet: TMainWalletModel, address: string): void,
 }
 
-export default class WalletsList extends PureComponent<IWalletsListProps> {
+export default class WalletsList extends PureComponent<IWalletsListProps, {}> {
   keyExtractor = ( section: TWalletListSection, index: number ) => [section.title, index].join('')
 
   renderItem = ({ item, index, section }: TRenderItemArgs) => (

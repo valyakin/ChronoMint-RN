@@ -11,7 +11,7 @@ import SectionHeader from '../components/SectionHeader'
 import Separator from '../components/Separator'
 import colors from '../utils/colors'
 
-export default class AddTimeLockedWallet extends PureComponent<{}> {
+export default class AddTimeLockedWallet extends PureComponent<{}, {}> {
   render () {
     return (
       <View style={styles.screenView}>

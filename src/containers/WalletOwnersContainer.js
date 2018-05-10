@@ -8,7 +8,7 @@
 import React, { PureComponent } from 'react'
 import WalletOwners, { type TOwner } from '../screens/WalletOwners'
 
-class WalletOwnersContainer extends PureComponent<{}> {
+class WalletOwnersContainer extends PureComponent<{}, {}> {
   /* eslint-disable-next-line no-unused-vars */
   handleSelectOwner = (owner: TOwner) => () => {
     throw 'Not implemented yet'

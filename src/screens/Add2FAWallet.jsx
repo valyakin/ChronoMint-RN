@@ -10,7 +10,7 @@ import { Text, ScrollView, StyleSheet, TextInput } from 'react-native'
 import SectionHeader from '../components/SectionHeader'
 import colors from '../utils/colors'
 
-export default class Add2FAWallet extends PureComponent<{}> {
+export default class Add2FAWallet extends PureComponent<{}, {}> {
   render () {
     return (
       <ScrollView contentContainerStyle={styles.scrollView} bounces={false}>
@@ -35,7 +35,7 @@ export default class Add2FAWallet extends PureComponent<{}> {
   }
 }
 
-class Input extends PureComponent<{}> {
+class Input extends PureComponent<{}, {}> {
   render () {
     return (
       <TextInput

@@ -8,7 +8,7 @@
 import React, { PureComponent } from 'react'
 import Download2FAApp from '../screens/Download2FAApp'
 
-class Download2FAAppContainer extends PureComponent<{}> {
+class Download2FAAppContainer extends PureComponent<{}, {}> {
   static navigatorButtons = {
     leftButtons: [
       {

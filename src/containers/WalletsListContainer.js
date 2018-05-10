@@ -16,17 +16,17 @@ import WalletsList, {
   type TWalletListSection,
 } from '../screens/WalletsList'
 
-type WalletsListContainerProps = {
+type TWalletsListContainerProps = {
   selectWallet(wallet: TMainWalletModel, address: string): void,
   navigator: any,
   sections: TWalletListSection[],
 }
 
-type WalletsListContainerState = {
+type TWalletsListContainerState = {
   isRefreshing: boolean,
 }
 
-class WalletsListContainer extends PureComponent<WalletsListContainerProps, WalletsListContainerState> {
+class WalletsListContainer extends PureComponent<TWalletsListContainerProps, TWalletsListContainerState> {
   static navigatorButtons = {
     leftButtons: [
       {
@@ -74,6 +74,7 @@ class WalletsListContainer extends PureComponent<WalletsListContainerProps, Wall
   render () {
     return (<WalletsList
       isRefreshing={this.state.isRefreshing}
+      navigator={this.props.navigator}
       onRefresh={this.handleRefresh}
       sections={this.props.sections}
       selectWallet={this.props.selectWallet}

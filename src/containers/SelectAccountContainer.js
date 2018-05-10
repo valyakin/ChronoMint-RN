@@ -9,11 +9,11 @@ import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import SelectAccount, { type TAccount } from '../screens/SelectAccount'
 
-type SelectAccountContainerProps = {
+type TSelectAccountContainerProps = {
   navigator: any,
 }
 
-class SelectAccountContainer extends PureComponent<SelectAccountContainerProps> {
+class SelectAccountContainer extends PureComponent<TSelectAccountContainerProps, {}> {
   handleCreateWallet = () => {
     this.props.navigator.resetTo({ screen: 'CreateWallet' })
   }

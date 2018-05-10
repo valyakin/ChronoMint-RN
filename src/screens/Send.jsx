@@ -79,7 +79,7 @@ type TTokenSelectorProps = {
   selectedToken: ?TSelectedToken,
 }
 
-export default class Send extends PureComponent<TSendProps> {
+export default class Send extends PureComponent<TSendProps, {}> {
   // Temporary 
   // eslint-disable-next-line complexity
   render () {
@@ -194,7 +194,7 @@ export default class Send extends PureComponent<TSendProps> {
   }
 }
 
-class TokenSelector extends PureComponent<TTokenSelectorProps> {
+class TokenSelector extends PureComponent<TTokenSelectorProps, {}> {
   render () {
     const {
       onPress,
@@ -219,7 +219,7 @@ class TokenSelector extends PureComponent<TTokenSelectorProps> {
   }
 }
 
-class Input extends PureComponent<{}> {
+class Input extends PureComponent<{}, {}> {
   render () {
     return (<TextInput
       style={styles.textInput}

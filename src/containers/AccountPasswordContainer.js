@@ -15,15 +15,15 @@ export type TAccount = {
   address: string,
 }
 
-export type AccountPasswordContainerProps = {
+export type TAccountPasswordContainerProps = {
   navigator: any
 }
 
-type AccountPasswordContainerState = {
+type TAccountPasswordContainerState = {
   password: string,
 }
 
-class AccountPasswordContainer extends PureComponent<AccountPasswordContainerProps, AccountPasswordContainerState> {
+class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerProps, TAccountPasswordContainerState> {
   static navigatorStyle = {
     navBarHidden: true,
   }

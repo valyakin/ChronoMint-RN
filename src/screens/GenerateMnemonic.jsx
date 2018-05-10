@@ -10,16 +10,16 @@ import { StyleSheet, View, Text } from 'react-native'
 import I18n from 'react-native-i18n'
 import PrimaryButton from '../components/PrimaryButton'
 
-export type GenerateMnemonicProps = {
+export type TGenerateMnemonicProps = {
   mnemonic: string,
   onConfirm: () => void,
 }
 
-type WarningItemProps = {
+type TWarningItemProps = {
   warningIndex: number,
 }
 
-export default class GenerateMnemonic extends PureComponent<GenerateMnemonicProps> {
+export default class GenerateMnemonic extends PureComponent<TGenerateMnemonicProps, {}> {
   renderWarningItem = (item: any, index: number) => (
     <WarningItem
       key={`warning${index}`}
@@ -59,7 +59,7 @@ export default class GenerateMnemonic extends PureComponent<GenerateMnemonicProp
   }
 }
 
-class WarningItem extends PureComponent <WarningItemProps> {
+class WarningItem extends PureComponent <TWarningItemProps, {}> {
   render () {
     const { warningIndex } = this.props
 

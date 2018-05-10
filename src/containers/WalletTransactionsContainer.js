@@ -6,11 +6,11 @@
  */
 
 import React, { PureComponent } from 'react'
-import WalletTransactions, { type WalletTransactionsProps } from '../screens/WalletTransactions'
+import WalletTransactions, { type TWalletTransactionsProps } from '../screens/WalletTransactions'
 
-type WalletTransactionsContainerProps = WalletTransactionsProps
+type TWalletTransactionsContainerProps = TWalletTransactionsProps
 
-class WalletTransactionsContainer extends PureComponent<WalletTransactionsContainerProps> {
+class WalletTransactionsContainer extends PureComponent<TWalletTransactionsContainerProps, {}> {
   render () {
     return (<WalletTransactions
       {...this.props}

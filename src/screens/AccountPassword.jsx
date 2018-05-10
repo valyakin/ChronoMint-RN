@@ -20,7 +20,7 @@ import PrimaryButton from '../components/PrimaryButton'
 import Separator from '../components/Separator'
 import TextButton from '../components/TextButton'
 
-export type AccountPasswordProps = {
+export type TAccountPasswordProps = {
   accounts: Array<TAccount>,
   onChangePassword: (password: string) => void,
   onLogin: () => void,
@@ -29,9 +29,9 @@ export type AccountPasswordProps = {
   onUseWallet: () => void,
 }
 
-type AccountItemProps = TAccount
+type TAccountItemProps = TAccount
 
-export default class AccountPassword extends PureComponent<AccountPasswordProps> {
+export default class AccountPassword extends PureComponent<TAccountPasswordProps, {}> {
   render () {
     const {
       accounts,
@@ -100,7 +100,7 @@ export default class AccountPassword extends PureComponent<AccountPasswordProps>
   }
 }
 
-class AccountItem extends PureComponent<AccountItemProps> {
+class AccountItem extends PureComponent<TAccountItemProps, {}> {
   render () {
     const { accountImage, address } = this.props
 
