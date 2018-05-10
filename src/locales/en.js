@@ -146,11 +146,11 @@ export default {
     warningItem1Content: 'Double check services you\'re giving your mnemonic to and don\'t share your phrase with anyone.',
     confirm: 'Confirm phrase',
     warnings: {
-      1: {
+      '0': {
         title: 'Don\'t share your mnemonic phrase with someone you don\'t trust.',
         content: 'Double check services you\'re giving your mnemonic to and don\'t share your phrase with anyone.',
       },
-      2: {
+      '1': {
         title: 'Don\'t loose your key.',
         content: 'We do not store this information and Your account will be lost together with all your funds and history.',
       },
