@@ -71,13 +71,14 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
     if (type === 'NavBarButtonPress') {
       switch (id) {
         case 'cancel': {
-          // Go back to previous screen (currently it is 'Send' screen only)
+          // Go back to previous screen
           this.props.navigator.pop()
           break
         }
+        // Close confirm screen, reset Send screen, go to Wallet screren (TODO: select transactions tab)
         case 'confirm': {
           this.sendTransaction()
-          this.props.navigator.pop()
+          this.props.navigator.resetTo('Wallet')
           break
         }
       }
@@ -96,14 +97,16 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
   }
 
   render () {
-    return (<ConfirmSend
-      amountToSend={this.props.amountToSend}
-      balance={this.props.balance}
-      currentToken={this.props.currentToken}
-      fee={this.props.fee}
-      recipientAddress={this.props.recipientAddress}
-      selectedCurrency={this.props.selectedCurrency}
-    />)
+    return (
+      <ConfirmSend
+        amountToSend={this.props.amountToSend}
+        balance={this.props.balance}
+        currentToken={this.props.currentToken}
+        fee={this.props.fee}
+        recipientAddress={this.props.recipientAddress}
+        selectedCurrency={this.props.selectedCurrency}
+      />
+    )
   }
 }
 

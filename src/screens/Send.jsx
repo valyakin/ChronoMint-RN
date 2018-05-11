@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import I18n from 'react-native-i18n'
 import TokenModel from 'models/tokens/TokenModel'
 import TokensCollection from 'models/tokens/TokensCollection'
 import colors from '../utils/colors'
@@ -63,7 +64,7 @@ type TSendProps = {
   feeMultiplier: number,
   gasFeeAmount: ?number,
   gasFeeAmountInCurrency: ?number,
-  onChangeAmount: (amount: number) => void,
+  onChangeAmount: (amount: string) => void,
   onChangeRecipient: (recipient: string) => void,
   onFeeSliderChange: (value: number) => void,
   onSelectToken: () => void,
@@ -156,7 +157,7 @@ export default class Send extends PureComponent<TSendProps, {}> {
             placeholder={strings.amountInput}
             keyboardType='numeric'
             onChangeText={onChangeAmount}
-            value={amount != null ? amount.toString() : ''}
+            value={amount != null ? amount.toLocaleString(I18n.currentLocale()) : ''}
           />
           <Text style={styles.sendBalance}>
             {

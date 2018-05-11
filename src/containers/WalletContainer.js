@@ -6,31 +6,35 @@
  */
 
 import React, { PureComponent }  from 'react'
-import { Alert } from 'react-native'
+import { connect } from 'react-redux'
+import {
+  Alert,
+} from 'react-native'
 import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
+import {
+  makeGetMainWalletTransactionsByBlockchainName,
+  selectMainWalletTransactionsStore,
+} from 'redux/wallet/selectors'
+
 import Wallet, {
-  type TMainWalletModel,
+  type TWalletProps,
   type TTab,
-} from '../screens/Wallet'
+} from 'screens/Wallet'
 
-type TPrices = {
-  [token: string]: {
-    [currency: string]: number
-  }
-}
-
-type TWalletProps = {
-  address: string,
-  balance: any,
-  blockchainTitle: string,
-  navigator: any, // TODO: to implement a flow type for navigator
-  prices: TPrices, // TODO: we do not need to get prices here and send it via props. It should be done on 'Send' screen
-  tokens: any,
-  wallet: TMainWalletModel,
-}
-
-type TWalletState ={
+export type TWalletState ={
   tab: TTab,
+}
+
+const makeMapStateToProps = (origState, origProps) => {
+  const getSelectedWalletTransactions = makeGetMainWalletTransactionsByBlockchainName(origProps.blockchainTitle, origProps.address)
+  const mapStateToProps = (state, ownProps) => {
+    const walletTransactions = getSelectedWalletTransactions(state, ownProps)
+    return {
+      walletTransactions: walletTransactions,
+      mainWalletTransactionLoadingStatus: selectMainWalletTransactionsStore(state),
+    }
+  }
+  return mapStateToProps
 }
 
 class WalletContainer extends PureComponent<TWalletProps, TWalletState> {
@@ -39,14 +43,26 @@ class WalletContainer extends PureComponent<TWalletProps, TWalletState> {
     tab: 'transactions',
   }
 
-  handlePressTab = (tab: TTab) => () => {
-    this.setState({ tab })
+  handleTransactionsTabClick = () => {
+    this.setState({ tab: 'transactions' })
+  }
+
+  handleOwnersTabClick = () => {
+    this.setState({ tab: 'owners' })
+  }
+
+  handleTemplatesTabClick = () => {
+    this.setState({ tab: 'templates' })
+  }
+
+  handleTokensTabClick = () => {
+    this.setState({ tab: 'tokens' })
   }
 
   handleSend = (): void => {
     // [AO] This is temporary limitation. At the moment we can't send not-ETH funds
     if (this.props.blockchainTitle !== BLOCKCHAIN_ETHEREUM) {
-      Alert.alert('Work in progress', 'Sorry, sending non-ETH funds still in development. Please choose Ethereum wallet.', [{ text: 'Ok', onPress: () => {}, style: 'cancel' }])
+      Alert.alert('Work in progress', 'Sorry, sending non-Ethereum funds still in development. Please choose Ethereum wallet to continue.', [{ text: 'Ok', onPress: () => {}, style: 'cancel' }])
     } else {
       const {
         address,
@@ -77,18 +93,27 @@ class WalletContainer extends PureComponent<TWalletProps, TWalletState> {
   handleNothing = () => {}
 
   render () {
-    return (<Wallet
-      address={this.props.address}
-      balance={this.props.balance}
-      blockchainTitle={this.props.blockchainTitle}
-      onPressTab={this.handlePressTab}
-      onSend={this.handleSend}
-      prices={this.props.prices}
-      tab={this.state.tab}
-      tokens={this.props.tokens}
-      wallet={this.props.wallet}
-    />)
+    return (
+      <Wallet
+        navigator={this.props.navigator}
+        address={this.props.address}
+        balance={this.props.balance}
+        blockchainTitle={this.props.blockchainTitle}
+        onPressTabTransactions={this.handleTransactionsTabClick}
+        onPressTabOwners={this.handleOwnersTabClick}
+        onPressTabTemplates={this.handleTemplatesTabClick}
+        onPressTabTokens={this.handleTokensTabClick}
+        onSend={this.handleSend}
+        prices={this.props.prices}
+        tab={this.state.tab}
+        tokens={this.props.tokens}
+        wallet={this.props.wallet}
+        walletTransactions={this.props.walletTransactions}
+        mainWalletTransactionLoadingStatus={this.props.mainWalletTransactionLoadingStatus}
+      />
+    )
   }
+
 }
 
-export default WalletContainer
+export default connect(makeMapStateToProps, null)(WalletContainer)

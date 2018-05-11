@@ -4,41 +4,75 @@
  *
  * @flow
  */
-import * as React from 'react'
-import { View, Image, Text, StyleSheet, FlatList } from 'react-native'
+
+import React, { PureComponent } from 'react'
+import {
+  FlatList,
+  Text,
+  View,
+} from 'react-native'
 import I18n from 'react-native-i18n'
-import colors from '../utils/colors'
+import TransactionIcon, { type TTransactionType } from 'components/TransactionIcon'
+import styles from './styles/TransactionsListStyles'
 
-export default class TransactionsList extends React.Component<TransactionsListProps> {
-  keyExtractor = ({ id }) => id
+type TWalletTransaction = {
+  address: string,
+  amount: number,
+  confirmations: number,
+  symbol: string,
+  type: TTransactionType,
+}
 
-  renderItem = ({ item }) => <TransactionItem {...item} /> 
+type TTransactionsListProps = {
+  walletTransactions: TWalletTransaction[]
+}
+type TTransactionsListState = {}
+type TTransactionItemState = {}
+
+export default class TransactionsList extends PureComponent<TTransactionsListProps, TTransactionsListState> {
+
+  keyExtractor = ({ id }: { id: string } ) => id
+
+  renderItem = ({ item }: { item: TWalletTransaction } ) => <TransactionItem {...item} />
 
   render () {
-    const { transactions } = this.props
+    const { walletTransactions } = this.props
 
-    if (!transactions || transactions.length < 1) {
+    if (!walletTransactions || walletTransactions.length < 1) {
       return null
     }
     
     return (
       <FlatList
-        data={transactions}
+        data={walletTransactions}
         renderItem={this.renderItem}
-        keyExtractor={this.keyExtractor}
       />
     )
   }
 }
 
-class TransactionItem extends React.Component<TransactionProps> {
+class TransactionItem extends PureComponent<TWalletTransaction, TTransactionItemState> {
   render () {
-    const { address, type, confirmations, value, symbol } = this.props
+    const {
+      address,
+      confirmations,
+      symbol,
+      type,
+      amount,
+    } = this.props
+
+    const transactionStyle = type === 'sending'
+      ? styles.sending
+      : styles.receiving
+
+    const tType = I18n.t(`TransactionsList.${type}`)
+    const currency = I18n.toCurrency(amount, { precision: 2, unit: ` ${symbol} ` })
 
     return (
       <View style={styles.item}>
-        <Image
-          source={transactionImages[type][confirmations]}
+        <TransactionIcon
+          type={type}
+          confirmations={confirmations}
         />
         <View>
           <Text />
@@ -48,60 +82,21 @@ class TransactionItem extends React.Component<TransactionProps> {
           ellipsizeMode='middle'
           numberOfLines={2}
         >
-          {I18n.t(`TransactionsList.${type}`)}
+          {
+            tType
+          }
           {'\n'}
-          {address}
+          {
+            address
+          }
         </Text>
-        <Text style={transactionValueStyles[type]}>
-          {I18n.toCurrency(value, { precision: 2, unit: ` ${symbol} ` })}
+        <Text style={transactionStyle}>
+          {
+            currency
+          }
         </Text>
       </View>
     )
   }
 }
 
-const styles = StyleSheet.create({
-  item: {
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    flexDirection: 'row',
-  },
-  itemText: {
-    flexShrink: 1,
-    marginHorizontal: 8,
-    fontSize: 13,
-  },
-})
-
-/* eslint-disable react-native/no-unused-styles */
-const transactionValueStyles = StyleSheet.create({
-  receiving: {
-    color: colors.green,
-  },
-  sending: {
-    color: colors.foreground,
-  },
-})
-/* eslint-enable react-native/no-unused-styles */
-
-const transactionImages = {
-  receiving: {
-    1: require('../images/receiving-25-circle-small.png'),
-  },
-  sending: {
-    1: require('../images/sending-25-circle-small.png'),
-  },
-}
-
-type TransactionsListProps = {
-  transactions?: Array<TransactionProps> 
-}
-
-type TransactionProps = {
-  id: string,
-  type: 'receiving' | 'sending',
-  address: string,
-  confirmations: number,
-  symbol: string,
-  value: number,
-}

@@ -11,7 +11,7 @@ import {
 import styles from './styles/WalletPanelStyles'
 import WalletImage from './WalletImage'
 
-const makeMapStateToProps = (origState, origProps) => {
+const makeMapStateToProps = () => {
   const getWalletTokensAndBalanceByAddress = makeGetWalletTokensAndBalanceByAddress()
   const mapStateToProps = (state, ownProps) => {
     const walletTokensAndBalanceData = getWalletTokensAndBalanceByAddress(state, ownProps)
@@ -28,8 +28,7 @@ type WalletPanelProps = {
   walletTokensAndBalance: Object, // From mapStateToProps
 }
 
-@connect(makeMapStateToProps/*, mapDispatchToProps*/)
-export default class WalletPanel extends PureComponent<WalletPanelProps> {
+class WalletPanel extends PureComponent<WalletPanelProps> {
   render () {
     const {
       blockchainTitle,
@@ -75,3 +74,5 @@ export default class WalletPanel extends PureComponent<WalletPanelProps> {
     )
   }
 }
+
+export default connect(makeMapStateToProps, null)(WalletPanel)

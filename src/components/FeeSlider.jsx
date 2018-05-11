@@ -17,8 +17,8 @@ type FeeSliderProps = {|
   tokenSymbol?: string,
   selectedCurrency?: string,
   value: number,
-  calculatedFeeValue?: number,
-  calculatedFeeValueInSelectedCurrency?: number,
+  calculatedFeeValue?: ?number,
+  calculatedFeeValueInSelectedCurrency?: ?number,
   maximumValue?: number,
   minimumValue?: number,
   step?: number,
@@ -71,6 +71,9 @@ const FeeSlider = ({
   step = 0.1,
   handleValueChange = () => {}, // [AO] Do nothing by default
 }: FeeSliderProps) => {
+
+  console.log('tokenSymbol', tokenSymbol)
+  console.log('calculatedFeeValue', calculatedFeeValue)
 
   const tokenInfo = tokenSymbol &&
      calculatedFeeValue &&

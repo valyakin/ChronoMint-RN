@@ -14,13 +14,20 @@ import I18n from 'react-native-i18n'
 import WalletImage from './WalletImage'
 import styles from './styles/DetailsSectionStyles'
 
+export type TDetailSection = {
+  mode: '2fa' | 'shared' | 'timeLocked',
+  address: string,
+  balance: number,
+  tokensLength: number,
+}
+
 const DetailsSection = (
   {
     mode,
     address,
     balance,
     tokensLength,
-  }
+  }: TDetailSection
 ) => (
   <View style={styles.walletDetailsSection}>
     <WalletImage

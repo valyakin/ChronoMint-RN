@@ -8,29 +8,32 @@
 import React, { PureComponent }  from 'react'
 import {
   Image,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-import colors from 'utils/colors'
+import { type Navigator as TNavigator } from 'react-native-navigation'
 import MainWalletModel from 'models/wallet/MainWalletModel'
 import Separator from 'components/Separator'
+import styles from './styles/WalletStyles'
 import WalletOwners from '../containers/WalletOwnersContainer'
 import WalletTemplates from '../containers/WalletTemplatesContainer'
 import WalletTokens from '../containers/WalletTokensContainer'
-import WalletTransactions from '../containers/WalletTransactionsContainer'
+import WalletTransactionsContainer from '../containers/WalletTransactionsContainer'
+import {
+  type TWalletTransaction,
+} from './WalletTransactions'
 
 export type TMainWalletModel = typeof MainWalletModel
 
-type TPrices = {
+export type TPrices = {
   [token: string]: {
     [currency: string]: number
   }
 }
 
-type TActionButtonProps = {
+export type TActionButtonProps = {
   title: string,
   image: any,
   onPress?: () => void,
@@ -38,16 +41,22 @@ type TActionButtonProps = {
 
 export type TTab = 'transactions' | 'tokens' | 'owners' | 'templates'
 
-type TWalletProps = {
+export type TWalletProps = {
   address: string,
   balance: any,
   blockchainTitle: string,
-  onPressTab: (tab: TTab) => () => void,
-  onSend: () => void,
+  onPressTabTransactions(): void,
+  onPressTabOwners(): void,
+  onPressTabTemplates(): void,
+  onPressTabTokens(): void,
+  onSend: (props: TWalletProps) => void,
   prices: TPrices, // TODO: we do not need to get prices here and send it via props. It should be done on 'Send' screen
   tab: TTab,
   tokens: any,
   wallet: TMainWalletModel,
+  walletTransactions: TWalletTransaction[],
+  mainWalletTransactionLoadingStatus: any,
+  navigator: TNavigator,
 }
 
 const ActionButton = ({ title, image, onPress }: TActionButtonProps) => (
@@ -69,7 +78,12 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
   render () {
     const {
       tab,
-      onPressTab,
+      onPressTabTransactions,
+      onPressTabOwners,
+      onPressTabTemplates,
+      onPressTabTokens,
+      mainWalletTransactionLoadingStatus,
+      walletTransactions,
       onSend,
     } = this.props
 
@@ -98,7 +112,7 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
         <View style={styles.tabsContainer}>  
           <Text
             style={styles.tabItem}
-            onPress={onPressTab('transactions')}
+            onPress={onPressTabTransactions}
           >
             Transactions
           </Text>
@@ -107,7 +121,7 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
             this.props.wallet.token !== 'btc' && ([
               <Text
                 style={styles.tabItem}
-                onPress={handleTokensTabClick}
+                onPress={onPressTabTokens}
                 key='0'
               >
                 Tokens
@@ -118,7 +132,7 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
           { mode === 'shared' && ([
             <Text
               style={styles.tabItem}
-              onPress={onPressTab('owners')}
+              onPress={onPressTabOwners}
               key='0'
             >
               Owners
@@ -130,18 +144,20 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
           ])}
           <Text
             style={styles.tabItem}
-            onPress={onPressTab('templates')}
+            onPress={onPressTabTemplates}
           >
             Templates
           </Text>
         </View>
         {
           tab === 'transactions' &&
-            <WalletTransactions
+            <WalletTransactionsContainer
               address={address}
               balance={balance}
               tokens={tokens}
               wallet={wallet}
+              mainWalletTransactionLoadingStatus={mainWalletTransactionLoadingStatus}
+              walletTransactions={walletTransactions}
             />
         }
         { tab === 'tokens' && <WalletTokens {...this.props} />}
@@ -162,44 +178,3 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  actionButton: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    padding: 4,
-  },
-  actionIcon: {
-    tintColor: colors.background,
-  },
-  actions: {
-    backgroundColor: colors.primary,
-    flexDirection: 'row',
-  },
-  actionTitle: {
-    color: colors.background,
-    fontSize: 10,
-    fontWeight: '500',
-    marginTop: 4,
-  },
-  screenView: {
-    flex: 1,
-  },
-  separator: {
-    backgroundColor: colors.primary,
-  },
-  tabItem: {
-    backgroundColor: '#4e3d99',
-    color: colors.background,
-    fontSize: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
-  tabsContainer: {
-    backgroundColor: colors.primary,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingVertical: 10,
-  },
-})

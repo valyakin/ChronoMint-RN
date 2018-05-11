@@ -5,13 +5,11 @@
 
 /* @flow */
 
-import {
-  createSelector,
-} from 'reselect'
+import { createSelector } from 'reselect'
 import { DUCK_MAIN_WALLET } from 'redux/mainWallet/actions'
 import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
-
+import { type TxModel as TTxModel } from 'models/TxModel'
 import { getCurrentWallet } from './actions'
 
 /**
@@ -23,12 +21,12 @@ export const getMainWallet = (state) => {
   return state.get('mainWallet')
 }
 
-export const getMainWalletBalance = (symbol) => createSelector(
+export const getMainWalletBalance = (symbol: string) => createSelector(
   [ getMainWallet ],
   (mainWallet) => mainWallet.balances().item(symbol)
 )
 
-export const getCurrentWalletBalance = (symbol) => createSelector(
+export const getCurrentWalletBalance = (symbol: string) => createSelector(
   [ getCurrentWallet ],
   (currentWallet) => currentWallet.balances().item(symbol)
 )
@@ -36,15 +34,33 @@ export const getCurrentWalletBalance = (symbol) => createSelector(
 export const selectMainWalletBalancesListStore = (state) =>
   state.get(DUCK_MAIN_WALLET).balances().list() // BalancesCollection, array of BalanceModel
 
-export const selectMainWalletTokensStore = (state) =>
+export const selectTokensStore = (state) =>
   state.get(DUCK_TOKENS) // TokensCollection, array of TokenModel
 
 export const selectMainWalletAddressesListStore = (state) =>
   state.get(DUCK_MAIN_WALLET).addresses().list() // This is an instance of MainWalletModel
 
-export const selectMarketPricesListStore = (state) => state.get(DUCK_MARKET).prices
-export const selectMarketPricesSelectedCurrencyStore = (state) => state.get(DUCK_MARKET).selectedCurrency
+export const selectMainWalletTransactionsListStore = (state) => {
+  return state.get(DUCK_MAIN_WALLET).transactions().list() // This is an instance of MainWalletModel
+}
 
+export const selectMarketPricesListStore = (state) =>
+  state.get(DUCK_MARKET).prices
+  
+export const selectMarketPricesSelectedCurrencyStore = (state) =>
+  state.get(DUCK_MARKET).selectedCurrency
+
+export const selectMainWalletTransactionsStore = (state) => {
+  const status = state.get(DUCK_MAIN_WALLET).transactions().toJS()
+  return {
+    isFailed: status.isFailed,
+    isFetched: status.isFetched,
+    isFetching: status.isFetching,
+    isInited: status.isInited,
+    isPending: status.isPending,
+    isSelected: status.isSelected,
+  }
+}
 /**
  * WALLET SECTIONS
  * 
@@ -134,18 +150,20 @@ export const makeGetSectionedWallets = () => createSelector(
  * @return { { balance: number, tokens: [ {ETH: number } ] } }
  *         Returns list of sections for the ReactNative SectionList.
  */
-export const makeGetWalletTokensAndBalanceByAddress = (blockchainTitle) => {
+export const makeGetWalletTokensAndBalanceByAddress = (blockchainTitle: string, address?: string) => {
   return createSelector(
     [
       getMainWalletSections,
+      selectMainWalletTransactionsListStore,
       selectMainWalletAddressesListStore,
       selectMainWalletBalancesListStore,
-      selectMainWalletTokensStore,
+      selectTokensStore,
       selectMarketPricesListStore,
       selectMarketPricesSelectedCurrencyStore,
     ],
     (
       addressesAndBlockchains,
+      mainWalletTransactionsList,
       mainWalletAddressesList,
       mainWalletBalances,
       mainWalletTokens,
@@ -218,3 +236,83 @@ export const makeGetWalletTokensAndBalanceByAddress = (blockchainTitle) => {
   )
 }
 
+export const getWalletTransactions = createSelector(
+  [
+    selectMainWalletTransactionsListStore,
+  ],
+  (mainWalletTransactionsList) => {
+    return mainWalletTransactionsList
+  }
+)
+
+export const makeGetMainWalletTransactionsByBlockchainName = (
+  requiredBlocakchinName: string,
+  currentWalletAddress: string,
+) => {
+  return createSelector(
+    [
+      getMainWallet,
+      selectTokensStore,
+      selectMainWalletTransactionsListStore,
+      selectTokensStore,
+    ],
+    (
+      mainWallet,
+      mainWalletTokens,
+      mainWalletTransactions, // Immutable Map 
+      mainWalletTokensCollection, // TokensCollection
+    ) => {
+      /**
+       * Internal utility
+       * @private
+       */
+      const convertAmountToNumber = (symbol, amount) =>
+        mainWalletTokens
+          .item(symbol)
+          .removeDecimals(amount)
+          .toNumber()
+
+      const getTokenSymbolListByBlockchainName = (blockchainName: string) =>
+        mainWalletTokensCollection
+          .list()
+          .filter( (token) => {
+            const res = token.blockchain() === blockchainName
+            return res
+          })
+          .map( (token) => token.symbol() )
+          .toArray()
+
+      const requiredTokenList = getTokenSymbolListByBlockchainName(requiredBlocakchinName)
+      const result = mainWallet
+        .transactions()
+        .list()
+        .filter( (txModel: TTxModel) => {
+          const isNeedIt = requiredTokenList.includes(txModel.symbol()) // if sumbol of a transaction in range of current blockchain
+            && [txModel.to(), txModel.from()].includes(currentWalletAddress) // if to or from address of a transaction contians curent wallet's address
+          return isNeedIt
+        })
+        .map( (txModel: TTxModel) => {
+          const isSendTransaction = txModel.to().toLowerCase() === currentWalletAddress.toLowerCase()
+          const toAddress = txModel.to()
+          const fromAddress = txModel.from()
+          const transactionType = isSendTransaction
+            ? 'sending'
+            : 'receiving'
+          const transactionAddress = isSendTransaction
+            ? toAddress
+            : fromAddress
+          return {
+            type: transactionType,
+            address: transactionAddress,
+            amount: convertAmountToNumber(txModel.symbol(), txModel.value()),
+            symbol: txModel.symbol(),
+            confirmations: 1,
+            txDate: txModel.get('time'),
+          }
+        })
+        .toArray()
+
+      console.log('NEW RESULT:', result)
+      return result
+    })
+}

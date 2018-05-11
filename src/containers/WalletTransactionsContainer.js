@@ -12,9 +12,11 @@ type TWalletTransactionsContainerProps = TWalletTransactionsProps
 
 class WalletTransactionsContainer extends PureComponent<TWalletTransactionsContainerProps, {}> {
   render () {
-    return (<WalletTransactions
-      {...this.props}
-    />)
+    return (
+      <WalletTransactions
+        {...this.props}
+      />
+    )
   }
 }
 
