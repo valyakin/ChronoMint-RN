@@ -10,9 +10,14 @@ export const DUCK_WALLET = 'wallet'
 
 export const WALLET_SWITCH_WALLET = 'WALLET/switch_wallet'
 
-export const switchWallet = (wallet, address) => (dispatch) => {
+export const switchWallet = (wallet, address: string, blockchainTitle: string) => (dispatch) => {
   const isMultisig = wallet.isMultisig()
-  dispatch({ type: WALLET_SWITCH_WALLET, isMultisig, address })
+  dispatch({
+    type: WALLET_SWITCH_WALLET,
+    isMultisig,
+    address,
+    blockchainTitle,
+  })
   if (isMultisig) {
     dispatch(selectMultisigWallet(wallet.id()))
   }

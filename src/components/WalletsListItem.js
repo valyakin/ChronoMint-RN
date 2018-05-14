@@ -8,19 +8,17 @@
 import React, { PureComponent }  from 'react'
 import {
   Image,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native'
+import { calculateWalletBalance } from 'utils/calculations'
 import { connect } from 'react-redux'
 import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
-import colors from 'utils/colors'
 import MainWalletModel from 'models/wallet/MainWalletModel'
 import MultisigWalletModel from 'models/wallet/MultisigWalletModel'
-import { calculateWalletBalance } from 'utils/calculations'
-
+import styles from './styles/WalletListItemStyles'
 import WalletImage from './WalletImage'
 
 type TMainWalletModel = typeof MainWalletModel
@@ -43,7 +41,8 @@ type WalletsListItemProps = {
   tokens: TCalculatedTokenCollection,
   selectWallet(
     wallet: TMainWalletModel,
-    address: string
+    address: string,
+    blockchainTitle: string
   ): void,
 }
 
@@ -114,13 +113,13 @@ class WalletsListItem extends PureComponent<WalletsListItemProps> {
       navigator,
       wallet,
       address,
-      prices,
       sectionName,
     } = this.props
   
     this.props.selectWallet(
       wallet,
-      address
+      address,
+      sectionName,
     )
 
     navigator.push({
@@ -128,10 +127,7 @@ class WalletsListItem extends PureComponent<WalletsListItemProps> {
       passProps: {
         wallet: wallet,
         address: address,
-        tokens: tokens,
         balance: balance,
-        prices: prices, // TODO: we do not need to get prices here and send it via props. It should be done on Wallet screen
-        blockchainTitle: sectionName,
       },
     })
   }
@@ -205,67 +201,3 @@ class WalletsListItem extends PureComponent<WalletsListItemProps> {
 }
 
 export default connect(mapStateToProps, null)(WalletsListItem)
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.background,
-    borderRadius: 4,
-    padding: 8,
-    marginHorizontal: 16,
-    marginVertical: 4,
-    paddingBottom: 40,
-  },
-  transactions: {
-    flexDirection: 'row',
-    margin: 4,
-    minHeight: 20,
-    justifyContent: 'flex-end',
-  },
-  transactionsNumberContainer: {
-    height: 20,
-    minWidth: 20,
-    backgroundColor: colors.red,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  image: {
-    marginRight: 16,
-    marginLeft: 8,
-  },
-  transactionsNumber: {
-    color: colors.background,
-    fontWeight: '900',
-  },
-  content: {
-    flexDirection: 'row',
-  },
-  contentColumn: {
-    flex: 1,
-  },
-  title: {
-    marginTop: 8,
-    fontWeight: '700',
-  },
-  address: {
-    marginTop: 4,
-    fontWeight: '200',
-    fontSize: 12,
-  },
-  balance: {
-    fontSize: 22,
-    fontWeight: '700',
-    marginTop: 24,
-  },
-  tokens: {
-    color: colors.foregroundLighter,
-    fontWeight: '200',
-    marginTop: 4,
-  },
-  exchange: {
-    color: colors.foregroundLighter,
-    fontWeight: '200',
-    marginTop: 4,
-  },
-})

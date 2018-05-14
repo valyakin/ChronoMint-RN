@@ -25,6 +25,7 @@ import { DUCK_TOKENS } from 'redux/tokens/actions'
 import * as EthereumDAO from 'dao/EthereumDAO'
 import AmountModel from 'models/Amount' // { default as AmountModel }
 import tokenService from 'services/TokenService'
+import Web3Converter from 'utils/Web3Converter'
 import Send, {
   type TAmBa,
   type TCalculatedTokenCollection,
@@ -201,9 +202,9 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
     }
   }
 
-  handleSubmitSuccess = () => {
-    this.props.navigator.pop()
-  }
+  // handleSubmitSuccess = () => {
+  //   this.props.navigator.pop()
+  // }
 
   handleChangeRecipient = (value: string) => {
     const dummyValidationOfRecipientInput: boolean = (value !== null && value !== '' && (value.length >= 40 || value.length <= 44) && value.startsWith('0x') )
@@ -289,20 +290,25 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
     console.log('\n\n\n\n\nREQUIESTING GAS ESTIMATION\n\n\n\n\n')
     console.log(to, value)
     console.log('\n\n\n\n\nREQUIESTING GAS ESTIMATION\n\n\n\n\n')
+    // n: BigNumber, unit: string = 'wei'): BigNumber
+    const weiValue = Web3Converter.toWei(new BigNumber(value))
     if (this.state.selectedToken) {
       this.state.selectedDAO &&
         // eslint-disable-next-line no-underscore-dangle
         this.state.selectedDAO._estimateGas &&
         // eslint-disable-next-line no-underscore-dangle
-        this.state.selectedDAO._estimateGas(to, value)
+        this.state.selectedDAO._estimateGas(to, weiValue)
           .then( ({ gasFee }: { gasFee: TBigNumber }) => {
+            console.log('Received gasFee': gasFee)
             const newGasFee = this.state.selectedDAO &&
               (new AmountModel(this.state.selectedDAO.removeDecimals(gasFee.mul(this.state.feeMultiplier)))).toNumber()
+            console.log('New gas Fee:', newGasFee)
             const tokenPrice = this.props.prices &&
               this.state.selectedToken &&
               this.state.selectedToken.symbol &&
               this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
             const newGasFeePrice = newGasFee ? newGasFee * tokenPrice : null
+            console.log('New gas price:', newGasFeePrice)
 
             this.setState({
               gasFee,

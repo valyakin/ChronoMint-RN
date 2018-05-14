@@ -17,7 +17,11 @@ import WalletsList, {
 } from '../screens/WalletsList'
 
 type TWalletsListContainerProps = {
-  selectWallet(wallet: TMainWalletModel, address: string): void,
+  selectWallet(
+    wallet: TMainWalletModel,
+    address: string,
+    blockchainTitle: string
+  ): void,
   navigator: any,
   sections: TWalletListSection[],
 }
@@ -72,13 +76,15 @@ class WalletsListContainer extends PureComponent<TWalletsListContainerProps, TWa
   }
 
   render () {
-    return (<WalletsList
-      isRefreshing={this.state.isRefreshing}
-      navigator={this.props.navigator}
-      onRefresh={this.handleRefresh}
-      sections={this.props.sections}
-      selectWallet={this.props.selectWallet}
-    />)
+    return (
+      <WalletsList
+        isRefreshing={this.state.isRefreshing}
+        navigator={this.props.navigator}
+        onRefresh={this.handleRefresh}
+        sections={this.props.sections}
+        selectWallet={this.props.selectWallet}
+      />
+    )
   }
 }
 
@@ -87,8 +93,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  selectWallet: (wallet: TMainWalletModel, address: string) =>
-    dispatch(switchWallet(wallet, address)),
+  selectWallet: (wallet: TMainWalletModel, address: string, blockchainTitle: string) =>
+    dispatch(switchWallet(wallet, address, blockchainTitle)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletsListContainer)

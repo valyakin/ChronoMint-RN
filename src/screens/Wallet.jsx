@@ -16,14 +16,12 @@ import I18n from 'react-native-i18n'
 import { type Navigator as TNavigator } from 'react-native-navigation'
 import MainWalletModel from 'models/wallet/MainWalletModel'
 import Separator from 'components/Separator'
+import WalletOwners from 'containers/WalletOwnersContainer'
+import WalletTemplates from 'containers/WalletTemplatesContainer'
+import WalletTokens from 'containers/WalletTokensContainer'
+import WalletTransactionsContainer from 'containers/WalletTransactionsContainer'
+import { type TWalletTransaction } from './WalletTransactions'
 import styles from './styles/WalletStyles'
-import WalletOwners from '../containers/WalletOwnersContainer'
-import WalletTemplates from '../containers/WalletTemplatesContainer'
-import WalletTokens from '../containers/WalletTokensContainer'
-import WalletTransactionsContainer from '../containers/WalletTransactionsContainer'
-import {
-  type TWalletTransaction,
-} from './WalletTransactions'
 
 export type TMainWalletModel = typeof MainWalletModel
 
@@ -45,18 +43,18 @@ export type TWalletProps = {
   address: string,
   balance: any,
   blockchainTitle: string,
-  onPressTabTransactions(): void,
-  onPressTabOwners(): void,
-  onPressTabTemplates(): void,
-  onPressTabTokens(): void,
-  onSend: (props: TWalletProps) => void,
+  mainWalletTransactionLoadingStatus: any,
+  navigator: TNavigator,
   prices: TPrices, // TODO: we do not need to get prices here and send it via props. It should be done on 'Send' screen
   tab: TTab,
   tokens: any,
   wallet: TMainWalletModel,
   walletTransactions: TWalletTransaction[],
-  mainWalletTransactionLoadingStatus: any,
-  navigator: TNavigator,
+  onPressTabOwners(): void,
+  onPressTabTemplates(): void,
+  onPressTabTokens(): void,
+  onPressTabTransactions(): void,
+  onSend(): void,
 }
 
 const ActionButton = ({ title, image, onPress }: TActionButtonProps) => (
@@ -76,6 +74,7 @@ const ActionButton = ({ title, image, onPress }: TActionButtonProps) => (
 
 export default class Wallet extends PureComponent<TWalletProps, {}> {
   render () {
+    console.log('Wallet: this.props', this.props)
     const {
       tab,
       onPressTabTransactions,
@@ -99,7 +98,7 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
      * Also need a better place for the mode "calculations"
      */
     let mode = '2fa'
-    if (wallet.isMultisig()) {
+    if (wallet.isMultisig && wallet.isMultisig()) {
       if (wallet.isTimeLocked()) {
         mode = 'timeLocked'
       } else {

@@ -15,7 +15,9 @@ import {
   makeGetMainWalletTransactionsByBlockchainName,
   selectMainWalletTransactionsStore,
 } from 'redux/wallet/selectors'
-
+import { DUCK_MARKET } from 'redux/market/action'
+import { DUCK_TOKENS } from 'redux/tokens/actions'
+import { DUCK_WALLET } from 'redux/wallet/actions'
 import Wallet, {
   type TWalletProps,
   type TTab,
@@ -28,10 +30,25 @@ export type TWalletState ={
 const makeMapStateToProps = (origState, origProps) => {
   const getSelectedWalletTransactions = makeGetMainWalletTransactionsByBlockchainName(origProps.blockchainTitle, origProps.address)
   const mapStateToProps = (state, ownProps) => {
+    const {
+      prices,
+      selectedCurrency,
+    } = state.get(DUCK_MARKET)
+    const {
+      address,
+      blockchainTitle,
+    } = state.get(DUCK_WALLET)
+    const tokens = state.get(DUCK_TOKENS)
+    console.log('\n\n\n\nWALLET STATE:', state.get(DUCK_WALLET))
     const walletTransactions = getSelectedWalletTransactions(state, ownProps)
     return {
-      walletTransactions: walletTransactions,
+      address,
+      blockchainTitle,
       mainWalletTransactionLoadingStatus: selectMainWalletTransactionsStore(state),
+      prices,
+      selectedCurrency,
+      tokens,
+      walletTransactions: walletTransactions,
     }
   }
   return mapStateToProps
@@ -59,7 +76,7 @@ class WalletContainer extends PureComponent<TWalletProps, TWalletState> {
     this.setState({ tab: 'tokens' })
   }
 
-  handleSend = (): void => {
+  handleSend = () => {
     // [AO] This is temporary limitation. At the moment we can't send not-ETH funds
     if (this.props.blockchainTitle !== BLOCKCHAIN_ETHEREUM) {
       Alert.alert('Work in progress', 'Sorry, sending non-Ethereum funds still in development. Please choose Ethereum wallet to continue.', [{ text: 'Ok', onPress: () => {}, style: 'cancel' }])

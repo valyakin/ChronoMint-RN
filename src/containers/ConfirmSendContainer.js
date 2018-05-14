@@ -78,7 +78,7 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
         // Close confirm screen, reset Send screen, go to Wallet screren (TODO: select transactions tab)
         case 'confirm': {
           this.sendTransaction()
-          this.props.navigator.resetTo('Wallet')
+          this.props.navigator.resetTo({ screen: 'Wallet' })
           break
         }
       }
@@ -93,6 +93,9 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
     const recipient: string = this.props.recipientAddress
     const feeMultiplier = this.props.feeMultiplier
 
+    console.log('MAIN TRANSFER')
+    console.log('token, amountToSend, recipient, feeMultiplier')
+    console.log(token, amountToSend, recipient, feeMultiplier)
     this.props.mainTransfer(token, amountToSend, recipient, feeMultiplier)
   }
 
