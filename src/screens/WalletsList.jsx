@@ -34,16 +34,21 @@ type TRenderItemArgs = {
   section: TWalletListSection,
 }
 
-type IWalletsListProps = {
+type TWalletsListProps = {
   isRefreshing?: boolean,
   navigator: any,
   onRefresh: () => void,
   sections: TWalletListSection[],
-  selectWallet(wallet: TMainWalletModel, address: string): void,
+  selectWallet(
+    wallet: TMainWalletModel,
+    address: string,
+    blockchainTitle: string,
+  ): void,
 }
 
-export default class WalletsList extends PureComponent<IWalletsListProps, {}> {
-  keyExtractor = ( section: TWalletListSection, index: number ) => [section.title, index].join('')
+export default class WalletsList extends PureComponent<TWalletsListProps, {}> {
+  keyExtractor = ( section: TWalletListSection, index: number ) =>
+    [section.title, index].join('')
 
   renderItem = ({ item, index, section }: TRenderItemArgs) => (
     <View style={styles.walletItemHorizontalPaddings}>
@@ -58,11 +63,12 @@ export default class WalletsList extends PureComponent<IWalletsListProps, {}> {
     </View>
   )
 
-  renderSectionHeader = ({ section }: { section: TWalletListSection }) =>
-    (<SectionHeader
+  renderSectionHeader = ({ section }: { section: TWalletListSection }) => (
+    <SectionHeader
       title={`${section.title} Wallets`}
       isDark
-    />)
+    />
+  )
 
   render () {
     const {

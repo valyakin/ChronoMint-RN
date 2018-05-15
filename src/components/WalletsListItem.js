@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import { calculateWalletBalance } from 'utils/calculations'
 import { connect } from 'react-redux'
 import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
@@ -138,19 +137,21 @@ class WalletsListItem extends PureComponent<WalletsListItemProps> {
       address,
     } = this.props
 
-    const { tokens, balance } = calculateWalletBalance(
-      this.props.wallet,
-      this.props.prices,
-      this.props.tokens,
-      this.props.selectedCurrency,
-      this.props.sectionName,
-    )
+    // const { tokens, balance } = calculateWalletBalance(
+    //   this.props.wallet,
+    //   this.props.prices,
+    //   this.props.tokens,
+    //   this.props.selectedCurrency,
+    //   this.props.sectionName,
+    // )
 
     // TODO: to optimize (rewrite it)
     let walletTitle = `My ${this.props.sectionName} Wallet`
     if (wallet.isMultisig()) {
       walletTitle = wallet.isTimeLocked() ? 'My TimeLocked Wallet' : 'My Shared wallet'
     }
+
+    const textCurrencyBalance = [this.props.selectedCurrency, balance].join(' ')
 
     return (
       <TouchableOpacity
@@ -182,7 +183,9 @@ class WalletsListItem extends PureComponent<WalletsListItemProps> {
                 {address}
               </Text>
               <Text style={styles.balance}>
-                {this.props.selectedCurrency} {balance}
+                {
+                  textCurrencyBalance
+                }
               </Text>
               <TokensList tokens={tokens} />
               {false &&

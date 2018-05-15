@@ -14,6 +14,7 @@ import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
 import {
   makeGetMainWalletTransactionsByBlockchainName,
   selectMainWalletTransactionsStore,
+  getSelectedWalletBalanceInSelectedCurrency,
 } from 'redux/wallet/selectors'
 import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
@@ -39,11 +40,12 @@ const makeMapStateToProps = (origState, origProps) => {
       blockchainTitle,
     } = state.get(DUCK_WALLET)
     const tokens = state.get(DUCK_TOKENS)
-    console.log('\n\n\n\nWALLET STATE:', state.get(DUCK_WALLET))
+    // console.log('\n\n\n\nWALLET STATE:', state.get(DUCK_WALLET))
     const walletTransactions = getSelectedWalletTransactions(state, ownProps)
     return {
       address,
       blockchainTitle,
+      balanceCalc: getSelectedWalletBalanceInSelectedCurrency(state),
       mainWalletTransactionLoadingStatus: selectMainWalletTransactionsStore(state),
       prices,
       selectedCurrency,
@@ -110,8 +112,10 @@ class WalletContainer extends PureComponent<TWalletProps, TWalletState> {
   handleNothing = () => {}
 
   render () {
+    console.log('Rendering wallet. Balance from selector: ', this.props.balanceCalc)
     return (
       <Wallet
+        balanceCalc={this.props.balanceCalc}
         navigator={this.props.navigator}
         address={this.props.address}
         balance={this.props.balance}

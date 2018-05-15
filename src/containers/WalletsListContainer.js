@@ -20,7 +20,7 @@ type TWalletsListContainerProps = {
   selectWallet(
     wallet: TMainWalletModel,
     address: string,
-    blockchainTitle: string
+    blockchainTitle: string,
   ): void,
   navigator: any,
   sections: TWalletListSection[],

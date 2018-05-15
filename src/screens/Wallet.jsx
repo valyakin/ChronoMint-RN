@@ -50,6 +50,7 @@ export type TWalletProps = {
   tokens: any,
   wallet: TMainWalletModel,
   walletTransactions: TWalletTransaction[],
+  balanceCalc: number,
   onPressTabOwners(): void,
   onPressTabTemplates(): void,
   onPressTabTokens(): void,
@@ -74,23 +75,21 @@ const ActionButton = ({ title, image, onPress }: TActionButtonProps) => (
 
 export default class Wallet extends PureComponent<TWalletProps, {}> {
   render () {
-    console.log('Wallet: this.props', this.props)
+    // console.log('Wallet: this.props', this.props)
     const {
-      tab,
-      onPressTabTransactions,
+      address,
+      balance,
+      balanceCalc,
+      mainWalletTransactionLoadingStatus,
       onPressTabOwners,
       onPressTabTemplates,
       onPressTabTokens,
-      mainWalletTransactionLoadingStatus,
-      walletTransactions,
+      onPressTabTransactions,
       onSend,
-    } = this.props
-
-    const {
-      address,
-      wallet,
-      balance,
+      tab,
       tokens,
+      wallet,
+      walletTransactions,
     } = this.props
 
     /**
@@ -152,7 +151,7 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
           tab === 'transactions' &&
             <WalletTransactionsContainer
               address={address}
-              balance={balance}
+              balance={balanceCalc}
               tokens={tokens}
               wallet={wallet}
               mainWalletTransactionLoadingStatus={mainWalletTransactionLoadingStatus}
