@@ -6,42 +6,29 @@
  */
 
 import React, { PureComponent } from 'react'
-import { type Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import I18n from 'react-native-i18n'
 import { sectionsSelector } from 'redux/session/selectors'
-import { switchWallet } from 'redux/wallet/actions'
 import WalletsList, {
-  type TMainWalletModel,
-  type TWalletListSection,
-} from '../screens/WalletsList'
-
-type TWalletsListContainerProps = {
-  selectWallet(
-    wallet: TMainWalletModel,
-    address: string,
-    blockchainTitle: string,
-  ): void,
-  navigator: any,
-  sections: TWalletListSection[],
-}
+  type TWalletsListProps,
+} from 'screens/WalletsList'
 
 type TWalletsListContainerState = {
   isRefreshing: boolean,
 }
 
-class WalletsListContainer extends PureComponent<TWalletsListContainerProps, TWalletsListContainerState> {
+class WalletsListContainer extends PureComponent<TWalletsListProps, TWalletsListContainerState> {
   static navigatorButtons = {
     leftButtons: [
       {
         id: 'drawer',
-        icon: require('../images/burger.png'),
+        icon: require('images/burger.png'),
       },
     ],
     rightButtons : [
       {
         id: 'addWallet',
-        icon: require('../images/plus.png'),
+        icon: require('images/plus.png'),
       },
     ],
   }
@@ -82,7 +69,6 @@ class WalletsListContainer extends PureComponent<TWalletsListContainerProps, TWa
         navigator={this.props.navigator}
         onRefresh={this.handleRefresh}
         sections={this.props.sections}
-        selectWallet={this.props.selectWallet}
       />
     )
   }
@@ -92,9 +78,4 @@ const mapStateToProps = (state) => ({
   sections: sectionsSelector()(state),
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  selectWallet: (wallet: TMainWalletModel, address: string, blockchainTitle: string) =>
-    dispatch(switchWallet(wallet, address, blockchainTitle)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(WalletsListContainer)
+export default connect(mapStateToProps, null)(WalletsListContainer)

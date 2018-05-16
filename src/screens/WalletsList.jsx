@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import MainWalletModel from 'models/wallet/MainWalletModel'
 import SectionHeader from 'components/SectionHeader'
-import WalletsListItem from 'components/WalletsListItem'
+import WalletsListItemContainer from 'containers/WalletsListItemContainer'
 import styles from './styles/WalletsListStyles'
 
 export type TMainWalletModel = typeof MainWalletModel
@@ -34,16 +34,11 @@ type TRenderItemArgs = {
   section: TWalletListSection,
 }
 
-type TWalletsListProps = {
+export type TWalletsListProps = {
   isRefreshing?: boolean,
   navigator: any,
   onRefresh: () => void,
   sections: TWalletListSection[],
-  selectWallet(
-    wallet: TMainWalletModel,
-    address: string,
-    blockchainTitle: string,
-  ): void,
 }
 
 export default class WalletsList extends PureComponent<TWalletsListProps, {}> {
@@ -52,12 +47,11 @@ export default class WalletsList extends PureComponent<TWalletsListProps, {}> {
 
   renderItem = ({ item, index, section }: TRenderItemArgs) => (
     <View style={styles.walletItemHorizontalPaddings}>
-      <WalletsListItem
+      <WalletsListItemContainer
         address={item.address}
         index={index}
         navigator={this.props.navigator}
-        sectionName={section.title}
-        selectWallet={this.props.selectWallet}
+        blockchain={section.title}
         wallet={item.wallet}
       />
     </View>
