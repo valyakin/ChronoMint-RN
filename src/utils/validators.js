@@ -10,8 +10,13 @@ const password = (password: string) => (
   password.length <= 255
 )
 
+const pin = (pin: string) => (
+  pin.length === 4
+)
+
 const isValid = {
   password,
+  pin,
 }
 
 export default isValid
