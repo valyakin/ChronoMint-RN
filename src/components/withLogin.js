@@ -4,11 +4,13 @@
  *
  * @flow
  */
-import * as React from 'react'
+
+import React, { PureComponent, type ComponentType } from 'react'
+import { Alert } from 'react-native'
 import type { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import Web3 from 'web3'
-import { DUCK_SENSITIVE, setUsePinProtection } from 'redux/sensitive/actions'
+import { createDecipher, createHash } from 'crypto'
 import { login } from 'redux/session/actions'
 import {
   addError,
@@ -28,11 +30,54 @@ import {
   ltcProvider,
 } from 'login/network/BitcoinProvider'
 import { nemProvider } from 'login/network/NemProvider'
+import startAppRoot from '../app'
+import {
+  addAccount,
+  DUCK_SENSITIVE,
+  setPin,
+  setUsePinProtection,
+} from '../redux/sensitive/actions'
+import isValid from '../utils/validators'
+import salt from '../utils/salt'
 
-export default function withLogin (Screen: React.ComponentType<any>): React.ComponentType<any> {
-  class LoginHOC extends React.Component<LoginHOCProps, LoginHOCState> {
+export type LoginHOCProps = {
+  accounts: Array<any>,
+  addAccount: (account: { address: string, privateKey: string }, password: string) => void,
+  addError: (error: string) => void,
+  checkNetwork: typeof networkService.checkNetwork,
+  children (login: any): any,
+  clearErrors (): void,
+  createNetworkSession: typeof networkService.createNetworkSession,
+  errors: string[],
+  getProviderSettings: () => void,
+  getProviderURL: () => void,
+  loadAccounts: () => void,
+  loading: () => void,
+  login (account: any): void,
+  navigator: any,
+  onUsePinProtection (value: boolean): void,
+  selectAccount: (account: any) => void,
+  selectedAccount: string,
+  selectedNetworkId: number,
+  selectedProviderId: number,
+  selectNetwork: (network: number) => void,
+  selectProvider: (providerId: number) => void,
+  storedAccounts: any,
+  usePinProtection: boolean, 
+}
+
+type LoginHOCState = {
+  password: string,
+}
+
+export default function withLogin (Screen: ComponentType<any>): ComponentType<any> {
+  class LoginHOC extends PureComponent<LoginHOCProps, LoginHOCState> {
+
+    state = {
+      password: '',
+    }
     
-    setupAndLogin = async ({ ethereum, btc, bcc, btg, ltc, nem }) => {
+    loginSetup = async ({ ethereum, btc, bcc, btg, ltc, nem }) => {
       // setup
       const web3 = new Web3()
       const eProvider = ethereum.getProvider()
@@ -40,7 +85,7 @@ export default function withLogin (Screen: React.ComponentType<any>): React.Comp
       web3Provider.setWeb3(web3)
       web3Provider.setProvider(eProvider)
       web3Provider.reinit(web3, eProvider)
-  
+      
       // login
       try {
         await this.props.loadAccounts()
@@ -51,14 +96,14 @@ export default function withLogin (Screen: React.ComponentType<any>): React.Comp
         btgProvider.setEngine(btg)
         ltcProvider.setEngine(ltc)
         nemProvider.setEngine(nem)
-        await this.login()
+
       } catch (e) {
-        // eslint-disable-next-line
+
         this.props.addError(e.message)
       }
     }
 
-    login = async () => {
+    onLogin = async () => {
       this.props.clearErrors()
       
       const isPassed = await this.props.checkNetwork()
@@ -71,57 +116,130 @@ export default function withLogin (Screen: React.ComponentType<any>): React.Comp
         )
         
         await this.props.login(this.props.selectedAccount)
-        
+
         this.gotoWallet()
       }
     }
 
     gotoWallet = () => {
-      this.props.navigator.push({
-        screen: 'WalletsList',
-        title: 'My wallets',
-      })
+      startAppRoot('wallet')
     }
 
     generateMnemonic = mnemonicProvider.generateMnemonic
 
-    onLogin = () => {
-      alert('LOGIN')
-    }
+    onMnemonicLogin = async (mnemonic: string = mnemonicProvider.generateMnemonic()) => {
 
-    onMnemonicLogin = (mnemonic: string) => {
       this.props.loading()
       this.props.clearErrors()
+
       const providerSettings = this.props.getProviderSettings()
       const provider = mnemonicProvider.getMnemonicProvider(mnemonic, providerSettings)
-      this.setupAndLogin(provider)
+
+      await this.loginSetup(provider)
+
+      await this.addAccount(provider.ethereum.getPrivateKey())
+
+      return mnemonic
     }
 
-    onPrivateKeyLogin = (privateKey) => {
+    onPrivateKeyLogin = async (privateKey) => {
+      const { storedAccounts } = this.props
+      const { password } = this.state
+
       this.props.loading()
       this.props.clearErrors()
+
       try {
-        const provider = privateKeyProvider.getPrivateKeyProvider(privateKey, networkService.getProviderSettings())
-        this.setupAndLogin(provider)
+        const providerSettings = networkService.getProviderSettings()
+        const provider = privateKeyProvider.getPrivateKeyProvider(privateKey, providerSettings)
+
+        await this.loginSetup(provider)
+
+        const address = provider.ethereum.getAddress()
+        const hasAccount = storedAccounts.has(address)
+        const hasPassword = !!password
+
+        if (!hasAccount && hasPassword) {
+          await this.addAccount(privateKey)
+        }
       } catch (e) {
         this.props.addError(e.message)
       }
     }
+
+    onWalletLogin = async ({ encryptedPrivateKey, passwordHash }, password: string) => {
+      try {
+        this.props.clearErrors()
+
+        if (!isValid.password(password)) {
+          throw('Invalid password')
+        }
+
+        const hash = createHash('sha256')
+        hash.update(salt(password))
+
+        if (hash.digest('hex') !== passwordHash) {
+          throw('Incorrect password')
+        }
+
+        const decipher = createDecipher('aes-256-cbc', password)
+        let privateKey = decipher.update(encryptedPrivateKey, 'hex', 'utf8')
+        privateKey += decipher.final('utf8')
+        
+        await this.onPrivateKeyLogin(privateKey)
+        
+        this.onLogin()
+      } catch (error) {
+        this.props.addError(error)
+      }
+    }
+
+    onSetPassword = (password: string, passwordConfirmation: string) => 
+      new Promise((resolve, reject) => {
+        this.props.clearErrors()
+
+        if (password !== passwordConfirmation) {
+          reject('Passwords mismatch')
+        }
+        if (!isValid.password(password)) {
+          reject('Invalid password')
+        }
+
+        this.setState({ password }, resolve)
+      })
+
+    addAccount = async (privateKey: string) => {
+      await this.props.addAccount({
+        address: this.props.selectedAccount,
+        privateKey,
+      }, this.state.password)
+    }
+    
+    renderError = (error) => {
+      Alert.alert(
+        'Error',
+        error,
+        [
+          { text: 'OK', onPress: this.props.clearErrors },
+        ],
+        { cancelable: false }
+      )
+    }
     
     render () {
-      const {
-        onLogin,
-        onMnemonicLogin,
-        onPrivateKeyLogin,
-        generateMnemonic,
-      } = this
+
+      if (this.props.errors) {
+        this.props.errors.forEach(this.renderError)
+      }
 
       const props = {
         ...this.props,
-        onLogin,
-        generateMnemonic,
-        onMnemonicLogin,
-        onPrivateKeyLogin,
+        generateMnemonic: this.generateMnemonic,
+        onLogin: this.onLogin,
+        onMnemonicLogin: this.onMnemonicLogin,
+        onPrivateKeyLogin: this.onPrivateKeyLogin,
+        onSetPassword: this.onSetPassword,
+        onWalletLogin: this.onWalletLogin,
       }
 
       return <Screen {...props} />
@@ -139,6 +257,7 @@ function mapStateToProps (state: any) {
   const sensitive = state.get(DUCK_SENSITIVE)
 
   return {
+    storedAccounts: sensitive.accounts,
     accounts: network.accounts,
     errors: network.errors,
     isLoading: network.isLoading,
@@ -167,30 +286,9 @@ function mapDispatchToProps (dispatch: Dispatch<any>) {
     selectAccount: (value) => networkService.selectAccount(value),
     selectNetwork: (network) => networkService.selectNetwork(network),
     selectProvider: (providerId) => networkService.selectProvider(providerId),
+    setUsePinProtection: (value) => dispatch(setUsePinProtection(value)),
+    onSetPin: (pin: string) => dispatch(setPin(pin)),
+    addAccount: (account, password) => dispatch(addAccount(account, password)),
   }
 }
 
-export type LoginHOCProps = {
-  getProviderURL: () => void,
-  selectNetwork: (network: number) => void,
-  selectProvider: (providerId: number) => void,
-  accounts: Array<any>,
-  addError: (error: string) => void,
-  checkNetwork: typeof networkService.checkNetwork,
-  children (login: any): any,
-  clearErrors (): void,
-  createNetworkSession: typeof networkService.createNetworkSession,
-  getProviderSettings: () => void,
-  loadAccounts: () => void,
-  loading: () => void,
-  login (account: any): void,
-  navigator: any,
-  onUsePinProtection (value: boolean): void,
-  selectAccount: (account: any) => void,
-  selectedAccount: number,
-  selectedNetworkId: number,
-  selectedProviderId: number,
-  usePinProtection: boolean, 
-}
-
-type LoginHOCState = {}
