@@ -960,7 +960,13 @@ declare module '@chronobank/src/models/wallet/AllowanceModel' {
 // }
 
 declare module 'models/wallet/MultisigWalletCollection' {
-  declare export default class MultisigWalletCollection extends AbstractFetchingCollection {}
+  declare export default class MultisigWalletCollection extends AbstractFetchingCollection {
+    balance (walletId: string, balance: BalanceModel): MultisigWalletCollection ;
+    allPendingsCount (): number;
+    pending (walletId: string, pending: any): MultisigWalletCollection;
+    activeWallets (): MultisigWalletCollection;
+    timeLockedWallets (): MultisigWalletCollection;
+  }
 }
 
 declare module 'models/wallet/MultisigWalletModel' {
