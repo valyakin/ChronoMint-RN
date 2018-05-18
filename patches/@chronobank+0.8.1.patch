@@ -65,7 +65,7 @@ patch-package
  }
 --- a/node_modules/@chronobank/src/redux/wallet/actions.js
 +++ b/node_modules/@chronobank/src/redux/wallet/actions.js
-@@ -4,15 +4,18 @@
+@@ -4,11 +4,15 @@
   */
  
  import { DUCK_MAIN_WALLET } from 'redux/mainWallet/actions'
@@ -78,30 +78,60 @@ patch-package
  export const DUCK_WALLET = 'wallet'
  
  export const WALLET_SWITCH_WALLET = 'WALLET/switch_wallet'
++export const WALLET_SELECT_WALLET = 'WALLET/select_wallet'
  
--export const switchWallet = (wallet) => (dispatch) => {
-+export const switchWallet = (wallet, address) => (dispatch) => {
+ export const switchWallet = (wallet) => (dispatch) => {
    const isMultisig = wallet.isMultisig()
--  dispatch({ type: WALLET_SWITCH_WALLET, isMultisig })
-+  dispatch({ type: WALLET_SWITCH_WALLET, isMultisig, address })
-   if (isMultisig) {
-     dispatch(selectMultisigWallet(wallet.id()))
-   }
+@@ -26,3 +30,11 @@ export const getCurrentWallet = (state) => {
+     ? state.get(DUCK_MULTISIG_WALLET).selected()
+     : state.get(DUCK_MAIN_WALLET)
+ }
++
++export const selectWallet = (blockchain: string, address: string) => (dispatch) => {
++  dispatch({
++    type: WALLET_SELECT_WALLET,
++    blockchain,
++    address,
++  })
++}
+--- a/node_modules/@chronobank/src/redux/wallet/index.js
++++ b/node_modules/@chronobank/src/redux/wallet/index.js
+@@ -3,6 +3,6 @@
+  * Licensed under the AGPL Version 3 license.
+  */
+ 
+-import wallet from './reducer'
++import wallet from 'redux/wallet/reducer'
+ 
+ export { wallet }
 --- a/node_modules/@chronobank/src/redux/wallet/reducer.js
 +++ b/node_modules/@chronobank/src/redux/wallet/reducer.js
-@@ -7,6 +7,7 @@ import * as a from './actions'
+@@ -3,10 +3,12 @@
+  * Licensed under the AGPL Version 3 license.
+  */
+ 
+-import * as a from './actions'
++import * as a from 'redux/wallet/actions'
  
  const initialState = {
    isMultisig: false,
 +  address: null,
++  blockchain: null,
  }
  
  export default (state = initialState, action) => {
-@@ -15,6 +16,7 @@ export default (state = initialState, action) => {
+@@ -15,6 +17,14 @@ export default (state = initialState, action) => {
        return {
          ...state,
          isMultisig: action.isMultisig,
 +        address: action.address || null,
++        blockchain: action.blockchain,
++      }
++    case a.WALLET_SELECT_WALLET:
++      return {
++        ...state,
++        blockchain: action.blockchain,
++        address: action.address,
        }
      default:
        return state
