@@ -99,7 +99,7 @@ persistStore(store,
       keychainService: "ChronoMint",
       sharedPreferencesName: "ChronoMint",
     }),
-    whitelist: [],
+    whitelist: ['sensitive'],
   }
 )
 // store.dispatch(globalWatcher())
