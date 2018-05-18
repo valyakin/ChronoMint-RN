@@ -27,6 +27,7 @@ import EnterPin from './containers/EnterPinContainer'
 import EnterPrivateKey from './containers/EnterPrivateKeyContainer'
 import GenerateMnemonic from './containers/GenerateMnemonicContainer'
 import SelectAccount from './containers/SelectAccountContainer'
+import SelectLanguage from './containers/SelectLanguageContainer'
 import SelectToken from './screens/SelectToken'
 import Send from './containers/SendContainer'
 import Wallet from './containers/WalletContainer'
@@ -58,6 +59,7 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('EnterPrivateKey', () => screenLayout(LoginScreenLayout)(EnterPrivateKey), store, Provider)
   Navigation.registerComponent('GenerateMnemonic', () => screenLayout(LoginScreenLayout)(GenerateMnemonic), store, Provider)
   Navigation.registerComponent('SelectAccount', () => screenLayout(LoginScreenLayout)(SelectAccount), store, Provider)
+  Navigation.registerComponent('SelectLanguage', () => SelectLanguage, store, Provider)
   Navigation.registerComponent('SelectToken', () => SelectToken, store, Provider)
   Navigation.registerComponent('Send', () => Send, store, Provider)
   Navigation.registerComponent('Wallet', () => Wallet, store, Provider)
