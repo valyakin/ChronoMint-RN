@@ -12,7 +12,7 @@
     "contracts:compile": "cd node_modules/chronobank-smart-contracts && node --max_old_space_size=8000 ../truffle/build/cli.bundled.js compile --all",
     "android": "react-native run-android",
     "prepare": "patch-package",
-    "postinstall": "flow-typed install",
+    "postinstall": "flow-typed install --skip",
     "precommit": "lint-staged"
   },
   "dependencies": {
@@ -106,7 +106,7 @@
     "eslint-plugin-flowtype": "^2.42.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-react-native": "^3.2.1",
-    "flow-bin": "^0.69.0",
+    "flow-bin": "0.72.0",
     "flow-typed": "^2.4.0",
     "husky": "^0.14.3",
     "jest": "22.2.0",
