@@ -30,6 +30,7 @@ public class MainApplication extends NavigationApplication {
 
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
+          new RNI18nPackage(),
           new RandomBytesPackage(),
           new ReactNativeDocumentPicker(),
           new ReactNativeFingerprintScannerPackage(),
