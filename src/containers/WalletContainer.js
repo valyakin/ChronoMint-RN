@@ -29,7 +29,7 @@ export type TWalletState ={
 }
 
 const makeMapStateToProps = (origState, origProps) => {
-  const getSelectedWalletTransactions = makeGetMainWalletTransactionsByBlockchainName(origProps.blockchainTitle, origProps.address)
+  const getSelectedWalletTransactions = makeGetMainWalletTransactionsByBlockchainName(origProps.blockchain, origProps.address)
   const mapStateToProps = (state, ownProps) => {
     const {
       prices,
@@ -37,14 +37,14 @@ const makeMapStateToProps = (origState, origProps) => {
     } = state.get(DUCK_MARKET)
     const {
       address,
-      blockchainTitle,
+      blockchain,
     } = state.get(DUCK_WALLET)
     const tokens = state.get(DUCK_TOKENS)
     // console.log('\n\n\n\nWALLET STATE:', state.get(DUCK_WALLET))
     const walletTransactions = getSelectedWalletTransactions(state, ownProps)
     return {
       address,
-      blockchainTitle,
+      blockchain,
       balanceCalc: getSelectedWalletBalanceInSelectedCurrency(state),
       mainWalletTransactionLoadingStatus: selectMainWalletTransactionsStore(state),
       prices,
@@ -80,13 +80,13 @@ class WalletContainer extends PureComponent<TWalletProps, TWalletState> {
 
   handleSend = () => {
     // [AO] This is temporary limitation. At the moment we can't send not-ETH funds
-    if (this.props.blockchainTitle !== BLOCKCHAIN_ETHEREUM) {
+    if (this.props.blockchain !== BLOCKCHAIN_ETHEREUM) {
       Alert.alert('Work in progress', 'Sorry, sending non-Ethereum funds still in development. Please choose Ethereum wallet to continue.', [{ text: 'Ok', onPress: () => {}, style: 'cancel' }])
     } else {
       const {
         address,
         balance,
-        blockchainTitle,
+        blockchain,
         prices,
         tokens,
         wallet,
@@ -98,9 +98,9 @@ class WalletContainer extends PureComponent<TWalletProps, TWalletState> {
         passProps: {
           address: address,
           balance: balance,
-          blockchainTitle: blockchainTitle,
+          blockchain: blockchain,
           prices: prices,
-          selectedBlockchainName: blockchainTitle,
+          selectedBlockchainName: blockchain,
           tokens: tokens,
           wallet: wallet,
           walletAddress: address,
@@ -119,7 +119,7 @@ class WalletContainer extends PureComponent<TWalletProps, TWalletState> {
         navigator={this.props.navigator}
         address={this.props.address}
         balance={this.props.balance}
-        blockchainTitle={this.props.blockchainTitle}
+        blockchain={this.props.blockchain}
         onPressTabTransactions={this.handleTransactionsTabClick}
         onPressTabOwners={this.handleOwnersTabClick}
         onPressTabTemplates={this.handleTemplatesTabClick}

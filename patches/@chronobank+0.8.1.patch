@@ -181,12 +181,12 @@ patch-package
 +  (mainWalletAddressesList) => {
 +    return mainWalletAddressesList
 +      .filter( (address) => address.address() !== null ) // We do not need wallets with null address (e.g. BTG in Rinkeby/Infura)
-+      .reduce( (accumulator, addressModel, blockchainTitle) => {
++      .reduce( (accumulator, addressModel, blockchain) => {
 +        const address = addressModel.address() // AddressModel.address() returns string with wallet's address
 +        accumulator.push({
 +          // data must contains an array (requirement of SectionList component in React Native, sorry)
 +          data: [address],
-+          title: blockchainTitle,
++          title: blockchain,
 +        })
 +        return accumulator
 +      }, [] )
@@ -226,7 +226,7 @@ patch-package
 + * @connect(makeMapStateToProps)
 + * export default class AnyComponent extends PureComponent<WalletPanelProps> {
 + * 
-+ * NOTE: component AnyComnnect MUST have props walletAddress: string & blockchainTitle: string
++ * NOTE: component AnyComnnect MUST have props walletAddress: string & blockchain: string
 + * Both props are required, because we may have same wallet addresses in "Bitcoin" and "Bitcoin Cash" blockchains
 + */
 +
@@ -237,7 +237,7 @@ patch-package
 + * @return { { balance: number, tokens: [ {ETH: number } ] } }
 + *         Returns list of sections for the ReactNative SectionList.
 + */
-+export const makeGetWalletTokensAndBalanceByAddress = (blockchainTitle) => {
++export const makeGetWalletTokensAndBalanceByAddress = (blockchain) => {
 +  return createSelector(
 +    [
 +      getMainWalletSections,
@@ -270,7 +270,7 @@ patch-package
 +        .filter( (balanceItem) => {
 +          const bSymbol = balanceItem.symbol()
 +          const bToken = mainWalletTokens.item(bSymbol)
-+          return bToken.blockchain() === blockchainTitle
++          return bToken.blockchain() === blockchain
 +        })
 +        .map( (balance) => {
 +          const bAmount = balance.amount()
@@ -312,7 +312,7 @@ patch-package
 +      // Let's add an address of Main Wallet into final result
 +      const currentWallet = addressesAndBlockchains
 +        .find((mainWalletAddrAndChain) => {
-+          return mainWalletAddrAndChain.title === blockchainTitle
++          return mainWalletAddrAndChain.title === blockchain
 +        })
 +      result.address = currentWallet && currentWallet.data && currentWallet.data[0]
 +

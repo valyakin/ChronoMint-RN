@@ -24,18 +24,18 @@ const makeMapStateToProps = () => {
 
 type WalletPanelProps = {
   walletAddress: string, // From outside
-  blockchainTitle: string, // From outside
+  blockchain: string, // From outside
   walletTokensAndBalance: Object, // From mapStateToProps
 }
 
 class WalletPanel extends PureComponent<WalletPanelProps> {
   render () {
     const {
-      blockchainTitle,
+      blockchain,
       walletAddress,
       walletTokensAndBalance,
     } = this.props
-    const walletTitle: string = ['My', blockchainTitle, 'Wallet'].join(' ')
+    const walletTitle: string = ['My', blockchain, 'Wallet'].join(' ')
 
     return (
       <TouchableOpacity style={styles.container}>

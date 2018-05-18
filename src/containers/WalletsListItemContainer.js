@@ -11,22 +11,28 @@ import { type Dispatch } from 'redux'
 import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
 import { selectWallet } from 'redux/wallet/actions'
-import WalletsListItem, { type TWalletsListItemProps } from 'components/WalletsListItem'
+import WalletsListItem, {
+  type TWalletsListItemProps,
+  // type TCalculatedTokenCollection,
+} from 'components/WalletsListItem'
 import { makeGetWalletTokensAndBalanceByAddress } from 'redux/wallet/selectors'
 // import { typeof MainWalletModel as TMainWalletModel } from 'models/wallet/MainWalletModel'
 
+type TWalletsListItemContainerProps = TWalletsListItemProps & {
+  selectWallet(blockchain: string, address: string): void,
+  navigator: any,
+}
+
 const makeMapStateToProps = (origState, origProps) => {
-  const walletTokensAndBalanceByAddress = makeGetWalletTokensAndBalanceByAddress(origProps.blockchainTitle, origProps.address)
+  const walletTokensAndBalanceByAddress = makeGetWalletTokensAndBalanceByAddress(origProps.blockchain, origProps.address)
   const mapStateToProps = (state, ownProps) => {
     const balanceAndTokens = walletTokensAndBalanceByAddress(state, ownProps)
     const {
-      prices,
       selectedCurrency,
     } = state.get(DUCK_MARKET)
     const tokenCollection = state.get(DUCK_TOKENS)
 
     return {
-      prices,
       selectedCurrency,
       tokenCollection,
       ...balanceAndTokens,
@@ -40,45 +46,36 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
     dispatch(selectWallet(blockchain, address)),
 })
 
-class WalletsListItemContainer extends PureComponent<TWalletsListItemProps> {
+class WalletsListItemContainer extends PureComponent<TWalletsListItemContainerProps> {
 
-  handleItemPress = (tokens: TCalculatedTokenCollection, balance): void => {
-
-    const {
-      navigator,
-      wallet,
-      address,
-      blockchain,
-    } = this.props
+  handleItemPress = (blockchain: string, address: string): void => {
   
     this.props.selectWallet(
-      wallet,
-      address,
       blockchain,
+      address,
     )
 
-    navigator.push({
+    // Now we have info about selected wallet in Redux store
+    // Wallet will use this info by itself
+    this.props.navigator.push({
       screen: 'Wallet',
-      passProps: {
-        wallet: wallet,
-        address: address,
-        balance: balance,
-      },
     })
   }
 
   render () {
     const {
       address,
-      navigator,
+      balance,
       blockchain,
+      selectedCurrency,
     } = this.props
 
     return (
       <WalletsListItem
         address={address}
+        selectedCurrency={selectedCurrency}
+        balance={balance}
         blockchain={blockchain}
-        navigator={navigator}
         onItemPress={this.handleItemPress}
       />
     )

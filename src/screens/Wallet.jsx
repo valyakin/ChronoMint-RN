@@ -42,7 +42,7 @@ export type TTab = 'transactions' | 'tokens' | 'owners' | 'templates'
 export type TWalletProps = {
   address: string,
   balance: any,
-  blockchainTitle: string,
+  blockchain: string,
   mainWalletTransactionLoadingStatus: any,
   navigator: TNavigator,
   prices: TPrices, // TODO: we do not need to get prices here and send it via props. It should be done on 'Send' screen

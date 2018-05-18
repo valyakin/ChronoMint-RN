@@ -10,13 +10,11 @@ import { type Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { getWTokens } from 'redux/session/selectors'
 import { mainTransfer } from 'redux/mainWallet/actions'
+// eslint-disable-next-line
 import AmountModel from 'models/Amount' // { default as AmountModel }
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 import TokenModel from 'models/tokens/TokenModel'
 import ConfirmSend from '../screens/ConfirmSend'
-
-type TTokenModel = typeof TokenModel
-type TAmountModel = typeof AmountModel
 
 export type TConfirmSendContainerProps = {
   tokensDuck: any, // TODO: to make a flow type for this
@@ -38,8 +36,8 @@ export type TConfirmSendContainerProps = {
     token: number,
   },
   mainTransfer: (
-    token: TTokenModel,
-    amount: TAmountModel,
+    token: TokenModel,
+    amount: AmountModel,
     recipient: string,
     feeMultiplier: number,
   ) => void,
@@ -86,9 +84,9 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
   }
 
   sendTransaction = () => {
-    const token = this.props.tokensDuck.item(this.props.currentToken)
+    const token: TokenModel = this.props.tokensDuck.item(this.props.currentToken)
     const toSendBigNumber: BigNumber = new BigNumber(this.props.amountToSend.token)
-    const bnWithDecimals = token.addDecimals(toSendBigNumber)
+    const bnWithDecimals: BigNumber = token.addDecimals(toSendBigNumber)
     const amountToSend = new AmountModel(bnWithDecimals, this.props.currentToken)
     const recipient: string = this.props.recipientAddress
     const feeMultiplier = this.props.feeMultiplier

@@ -8,16 +8,17 @@ import * as React from 'react'
 import {
   View,
   Image,
-  StyleSheet,
 } from 'react-native'
 import { indicators } from 'utils/globals'
-import colors from 'utils/colors'
+import { type StyleObj as TStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
+import styles from 'components/styles/WalletImageStyles'
 
 type WalletImageProps = {
   image?: number,
-  walletMode?: '2fa' | 'shared' | 'timeLocked',
-  shapeStyle?: any,
   imageStyle?: any,
+  shapeStyle?: any,
+  style?: TStyle,
+  walletMode?: '2fa' | 'shared' | 'timeLocked',
 }
 
 const WalletImage = ({ image, walletMode, shapeStyle, imageStyle, style }: WalletImageProps) => (
@@ -52,22 +53,3 @@ const WalletImage = ({ image, walletMode, shapeStyle, imageStyle, style }: Walle
 
 export default WalletImage
 
-const styles = StyleSheet.create({
-  walletBadge: {
-    position: 'absolute',
-    zIndex: 1,
-  },
-  walletImageShape: {
-    backgroundColor: colors.primary,
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  walletImage: {
-    tintColor: colors.background,
-    width: 24,
-    height: 24,
-  },
-})

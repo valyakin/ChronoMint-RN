@@ -21,13 +21,16 @@ type TPrices = {
   }
 }
 type TCalculatedToken = TPrices
-type TCalculatedTokenCollection = TCalculatedToken[]
+export type TCalculatedTokenCollection = TCalculatedToken[]
 export type TWalletsListItemProps = {
   address: string,
-  navigator: any,
-  selectedCurrency: string,
+  balance: number,
   blockchain: string,
-  onItemPress(): void,
+  selectedCurrency: string,
+  onItemPress(
+    blockchain: string,
+    address: string,
+  ): void,
 }
 
 const Transactions = ({ transactions }) => !transactions ? null : (
@@ -79,10 +82,19 @@ const Exchange = ({ exchange }) => !exchange ? null : (
 
 export default class WalletsListItem extends PureComponent<TWalletsListItemProps> {
 
+  constructor (props: TWalletsListItemProps) {
+    super(props)
+  }
+
+  handleOnPress = () => {
+    const { blockchain, address } = this.props
+    this.props.onItemPress(blockchain, address)
+  }
+
   render () {
     const {
       address,
-      onItemPress,
+      balance,
     } = this.props
 
     // TODO: to optimize (rewrite it)
@@ -96,9 +108,8 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
     return (
       <TouchableOpacity
         style={styles.container}
-        onPress={onItemPress}
+        onPress={this.handleOnPress}
       >
-
         <View>
           <View style={styles.transactions}>
             <Transactions transactions={wallet.transactions} />
@@ -120,7 +131,9 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
                 ellipsizeMode='middle'
                 numberOfLines={1}
               >
-                {address}
+                {
+                  address
+                }
               </Text>
               <Text style={styles.balance}>
                 {
@@ -130,14 +143,12 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
               <TokensList tokens={tokens} />
               {false &&
                 <View>
-                  <TokensList tokens={wallet.tokens} />
                   <Exchange exchange={wallet.exchange} />
                 </View>
               }
             </View>
           </View>
         </View>
-
       </TouchableOpacity>
     )
   }

@@ -37,11 +37,9 @@ import Send, {
   type TWalletTokensAndBalanceByAddress,
 } from '../screens/Send'
 
-type TBigNumber = typeof BigNumber
-
 type TSendContainerProps = {
   address: string,
-  blockchainTitle: string,
+  blockchain: string,
   gasPriceMultiplier: number,
   navigator: any, // TODO: to implement a flow type for navigator
   prices: ?TPrices,
@@ -57,7 +55,7 @@ type TSendState = {
   amount: ?number,
   amountInCurrency: number,
   feeMultiplier: number,
-  gasFee: ?TBigNumber,
+  gasFee: ?BigNumber,
   gasFeeAmount: ?number,
   gasFeeAmountInCurrency: ?number,
   isAmountInputValid: boolean,
@@ -69,7 +67,7 @@ type TSendState = {
 
 const makeMapStateToProps = (origState: Map, origProps: TSendContainerProps) => {
   const token: TTokenModel = origState.get(DUCK_TOKENS).item(ETH) // TODO: replace hardcode
-  const getWalletTokensAndBalanceByAddress = makeGetWalletTokensAndBalanceByAddress(origProps.blockchainTitle)
+  const getWalletTokensAndBalanceByAddress = makeGetWalletTokensAndBalanceByAddress(origProps.blockchain)
 
   const mapStateToProps = (state, ownProps) => {
     const walletTokensAndBalance: TWalletTokensAndBalanceByAddress = getWalletTokensAndBalanceByAddress(state, ownProps)
@@ -298,8 +296,8 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
         this.state.selectedDAO._estimateGas &&
         // eslint-disable-next-line no-underscore-dangle
         this.state.selectedDAO._estimateGas(to, weiValue)
-          .then( ({ gasFee }: { gasFee: TBigNumber }) => {
-            console.log('Received gasFee': gasFee)
+          .then( ({ gasFee }: { gasFee: BigNumber }) => {
+            console.log('Received gasFee:', gasFee)
             const newGasFee = this.state.selectedDAO &&
               (new AmountModel(this.state.selectedDAO.removeDecimals(gasFee.mul(this.state.feeMultiplier)))).toNumber()
             console.log('New gas Fee:', newGasFee)

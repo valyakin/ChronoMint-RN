@@ -77,7 +77,7 @@ export default class WalletsApp extends PureComponent {
     renderWalletPanel = ({ item, index, section }) => (
       <WalletPanel
         walletAddress={item}
-        blockchainTitle={section.title}
+        blockchain={section.title}
       />
     )
 

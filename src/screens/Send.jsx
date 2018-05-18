@@ -104,7 +104,7 @@ export default class Send extends PureComponent<TSendProps, {}> {
     } = this.props
 
     const strings = {
-      amountInput: `Amount, ${selectedTokenSymbol}`,
+      amountInput: `Amount, ${selectedTokenSymbol || ''}`,
       walletValue: selectedToken && [ selectedToken.symbol, selectedToken.amount ].join(' '),
       walletTitle: `My ${selectedBlockchainName} Wallet`,
       walletBalance: `${selectedCurrency} ${currentTokenBalance && currentTokenBalance.toFixed(2)}`,
