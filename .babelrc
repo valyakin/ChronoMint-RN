@@ -6,6 +6,9 @@
     "functional-hmr",
     "transform-new-target",
     "transform-exponentiation-operator",
+    ["babel-plugin-transform-builtin-extend", {
+      "globals": ["Error", "Array"]
+    }],
     ["module-resolver", {
       "root": [
         "./",
