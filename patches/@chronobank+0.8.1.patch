@@ -351,3 +351,50 @@ patch-package
 +  )
 +}
 +
+--- a/node_modules/@chronobank/src/redux/watcher/actions.js
++++ b/node_modules/@chronobank/src/redux/watcher/actions.js
+@@ -3,23 +3,24 @@
+  * Licensed under the AGPL Version 3 license.
+  */
+ 
+-import { watchInitMonitor } from '@chronobank/login/redux/monitor/actions'
+-import AbstractContractDAO, { TX_FRONTEND_ERROR_CODES } from 'dao/AbstractContractDAO'
+-import TransactionErrorNoticeModel from 'models/notices/TransactionErrorNoticeModel'
+-import TxError from 'models/TxError'
+-import type TxExecModel from 'models/TxExecModel'
+-import { watchInitTokens, watchPlatformManager } from 'redux/assetsManager/actions'
+-import { watchInitLOC } from 'redux/locs/actions'
+ import { initMainWallet } from 'redux/mainWallet/actions'
+-import { watchInitMarket } from 'redux/market/action'
+-import { notify } from 'redux/notifier/actions'
+-import { watchInitOperations } from 'redux/operations/actions'
+-import { watchInitERC20Tokens } from 'redux/settings/erc20/tokens/actions'
+-import { watchInitCBE } from 'redux/settings/user/cbe/actions'
++import { initMultisigWalletManager } from 'redux/multisigWallet/actions'
+ import { initTokens } from 'redux/tokens/actions'
++import { notify } from 'redux/notifier/actions'
+ import { showConfirmTxModal, watchInitUserMonitor } from 'redux/ui/actions'
++import { watchInitCBE } from 'redux/settings/user/cbe/actions'
++import { watchInitERC20Tokens } from 'redux/settings/erc20/tokens/actions'
++import { watchInitLOC } from 'redux/locs/actions'
++import { watchInitMarket } from 'redux/market/action'
++import { watchInitMonitor } from '@chronobank/login/redux/monitor/actions'
++import { watchInitOperations } from 'redux/operations/actions'
+ import { watchInitPolls } from 'redux/voting/actions'
+ import { watchInitProfile } from 'redux/session/actions'
++import { watchInitTokens, watchPlatformManager } from 'redux/assetsManager/actions'
++import AbstractContractDAO, { TX_FRONTEND_ERROR_CODES } from 'dao/AbstractContractDAO'
++import TransactionErrorNoticeModel from 'models/notices/TransactionErrorNoticeModel'
++import TxError from 'models/TxError'
++import type TxExecModel from 'models/TxExecModel'
+ 
+ export const DUCK_WATCHER = 'watcher'
+ 
+@@ -76,6 +77,7 @@ export const watcher = () => async (dispatch) => {
+   dispatch(watchInitProfile())
+   dispatch(initTokens())
+   dispatch(initMainWallet())
++  dispatch(initMultisigWalletManager())
+   dispatch(watchPlatformManager())
+   dispatch(watchInitTokens())
+   dispatch(watchInitMonitor())
