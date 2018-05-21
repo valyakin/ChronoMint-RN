@@ -10,6 +10,28 @@ patch-package
      }
      return txs
    }
+--- a/node_modules/@chronobank/scripts/build.js
++++ b/node_modules/@chronobank/scripts/build.js
+@@ -3,7 +3,7 @@
+  * Licensed under the AGPL Version 3 license.
+  */
+ 
+-process.env.NODE_ENV = process.env.NODE_ENV || 'production'
++process.env['NODE_ENV'] = process.env.NODE_ENV || 'production'
+ 
+ // eslint-disable-next-line
+ console.log('NODE_ENV:', process.env.NODE_ENV)
+--- a/node_modules/@chronobank/scripts/start.js
++++ b/node_modules/@chronobank/scripts/start.js
+@@ -3,7 +3,7 @@
+  * Licensed under the AGPL Version 3 license.
+  */
+ 
+-process.env.NODE_ENV = process.env.NODE_ENV || 'development'
++process.env['NODE_ENV'] = process.env.NODE_ENV || 'development'
+ 
+ // eslint-disable-next-line
+ console.log('NODE_ENV:', process.env.NODE_ENV)
 --- a/node_modules/@chronobank/src/redux/session/actions.js
 +++ b/node_modules/@chronobank/src/redux/session/actions.js
 @@ -8,7 +8,6 @@ import { LOCAL_ID, LOCAL_PROVIDER_ID, NETWORK_MAIN_ID } from '@chronobank/login/
