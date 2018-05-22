@@ -8,7 +8,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import I18n from 'react-native-i18n'
-import { sectionsSelector } from 'redux/session/selectors'
+import { sectionsSelector } from 'redux/wallet/selectors'
 import WalletsList, {
   type TWalletsListProps,
 } from 'screens/WalletsList'

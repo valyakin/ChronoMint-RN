@@ -6,6 +6,10 @@
  */
 export const DUCK_SENSITIVE = 'sensitive'
 
+export type TSensitiveActionTypes = {
+  SET_USE_PIN_PROTECTION: 'sensitive/SET_USE_PIN_PROTECTION',
+}
+
 export const types = {
   SET_USE_PIN_PROTECTION: 'sensitive/SET_USE_PIN_PROTECTION',
 }

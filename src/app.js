@@ -8,9 +8,9 @@ import 'utils/i18n'
 import 'utils/shim'
 import { Navigation } from 'react-native-navigation'
 import { Provider } from 'react-redux'
-import './init'
 import store from './redux/configureStore'
 import registerScreens from './registerScreens'
+import './init'
 
 registerScreens(store, Provider)
 

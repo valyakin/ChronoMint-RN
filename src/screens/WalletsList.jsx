@@ -11,14 +11,14 @@ import {
   SectionList,
   View,
 } from 'react-native'
-import { typeof MainWalletModel as TMainWalletModel } from 'models/wallet/MainWalletModel'
+import MainWalletModel from 'models/wallet/MainWalletModel'
 import SectionHeader from 'components/SectionHeader'
 import WalletsListItemContainer from 'containers/WalletsListItemContainer'
 import styles from './styles/WalletsListStyles'
 
 type TWalletItem = {
   address: string,
-  wallet: TMainWalletModel,
+  wallet: MainWalletModel,
 }
 
 export type TWalletListSection = {
@@ -43,14 +43,12 @@ export default class WalletsList extends PureComponent<TWalletsListProps> {
   keyExtractor = ( section: TWalletListSection, index: number ) =>
     [section.title, index].join('')
 
-  renderItem = ({ item, index, section }: TRenderItemArgs) => (
+  renderItem = ({ item, section }: TRenderItemArgs) => (
     <View style={styles.walletItemHorizontalPaddings}>
       <WalletsListItemContainer
         address={item.address}
-        index={index}
         navigator={this.props.navigator}
         blockchain={section.title}
-        wallet={item.wallet}
       />
     </View>
   )
@@ -70,7 +68,11 @@ export default class WalletsList extends PureComponent<TWalletsListProps> {
     } = this.props
 
     if (isRefreshing || !sections) {
-      return <ActivityIndicator />
+      return (
+        <View style={styles.activityIndicatorContainer}>
+          <ActivityIndicator size='large' />
+        </View>
+      )
     }
 
     return (

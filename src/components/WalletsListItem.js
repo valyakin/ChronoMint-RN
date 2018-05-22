@@ -20,12 +20,15 @@ type TPrices = {
     [currency: string]: number
   }
 }
-type TCalculatedToken = TPrices
+type TCalculatedToken = TPrices[]
 export type TCalculatedTokenCollection = TCalculatedToken[]
 export type TWalletsListItemProps = {
   address: string,
   balance: number,
   blockchain: string,
+  tokens: TCalculatedToken,
+  walletInfo: any,
+  walletMode?: '2fa' | 'shared' | 'timeLocked',
   selectedCurrency: string,
   onItemPress(
     blockchain: string,
@@ -47,15 +50,22 @@ const Transactions = ({ transactions }) => !transactions ? null : (
   )
 )
 
+// TODO [AO]: Refactoring required
 const TokensList = ({ tokens }) => {
-  if (!tokens || !Object.keys(tokens).length) {
+  if (!tokens || !tokens.length) {
     return null
   }
-
-  let tokensStrings = Object.keys(tokens)
+  const tokensIndex = Object.create(null)
+  tokens
+    .forEach( (tokenObj) => {
+      const tKey = Object.keys(tokenObj)[0]
+      tokensIndex[tKey] = tokenObj[tKey]
+    })
+  let tokensStrings = tokens
+    .map( (tokenObj) => Object.keys(tokenObj)[0])
     .sort()
     .reduce( (accumulator, tokenSymbol) => {
-      accumulator.push([tokenSymbol, tokens[tokenSymbol].toFixed(2)].join(': '))
+      accumulator.push([tokenSymbol, tokensIndex[tokenSymbol].amount.toFixed(2)].join(': '))
       return accumulator
     }, [])
 
@@ -87,7 +97,10 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
   }
 
   handleOnPress = () => {
-    const { blockchain, address } = this.props
+    const {
+      address,
+      blockchain,
+    } = this.props
     this.props.onItemPress(blockchain, address)
   }
 
@@ -95,15 +108,29 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
     const {
       address,
       balance,
+      blockchain,
+      // tokens,
+      walletMode,
     } = this.props
 
-    // TODO: to optimize (rewrite it)
-    let walletTitle = `My ${this.props.blockchain} Wallet`
-    // if (wallet.isMultisig()) {
-    //   walletTitle = wallet.isTimeLocked() ? 'My TimeLocked Wallet' : 'My Shared wallet'
-    // }
+    // FIXME: stub for BCC in Testnet/Infura
+    let tokens = this.props.tokens
+    if (blockchain === 'Bitcoin Cash' && !tokens.length) {
+      tokens.push({ 'BCC': { amount: 0, balance: 0 } })
+    }
 
-    const textCurrencyBalance = [this.props.selectedCurrency, balance].join(' ')
+    let walletTitle = `My ${blockchain} Wallet`
+    if (walletMode === 'shared') {
+      walletTitle = 'My Shared Wallet'
+    }
+    if (walletMode === 'timeLocked') {
+      walletTitle = 'My TimeLocked Wallet'
+    }
+
+    const textCurrencyBalance = [
+      this.props.selectedCurrency,
+      balance.toFixed(2),
+    ].join(' ')
 
     return (
       <TouchableOpacity
@@ -112,12 +139,12 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
       >
         <View>
           <View style={styles.transactions}>
-            <Transactions transactions={wallet.transactions} />
+            <Transactions transactions={[1]} />
           </View>
           <View style={styles.content}>
             <WalletImage
-              image={wallet.image}
-              walletMode={wallet.mode}
+              bcTitle={blockchain}
+              walletMode={walletMode}
               style={styles.image}
             />
             <View style={styles.contentColumn}>
@@ -141,11 +168,11 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
                 }
               </Text>
               <TokensList tokens={tokens} />
-              {false &&
+              {/* TEMPORARY DISABLED
                 <View>
                   <Exchange exchange={wallet.exchange} />
                 </View>
-              }
+              */}
             </View>
           </View>
         </View>

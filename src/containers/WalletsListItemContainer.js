@@ -9,14 +9,14 @@ import React, { PureComponent }  from 'react'
 import { connect } from 'react-redux'
 import { type Dispatch } from 'redux'
 import { DUCK_MARKET } from 'redux/market/action'
-import { DUCK_TOKENS } from 'redux/tokens/actions'
 import { selectWallet } from 'redux/wallet/actions'
 import WalletsListItem, {
   type TWalletsListItemProps,
-  // type TCalculatedTokenCollection,
 } from 'components/WalletsListItem'
-import { makeGetWalletTokensAndBalanceByAddress } from 'redux/wallet/selectors'
-// import { typeof MainWalletModel as TMainWalletModel } from 'models/wallet/MainWalletModel'
+import {
+  makeGetWalletTokensAndBalanceByAddress,
+  makeGetWalletInfoByBockchainAndAddress,
+} from 'redux/wallet/selectors'
 
 type TWalletsListItemContainerProps = TWalletsListItemProps & {
   selectWallet(blockchain: string, address: string): void,
@@ -25,16 +25,17 @@ type TWalletsListItemContainerProps = TWalletsListItemProps & {
 
 const makeMapStateToProps = (origState, origProps) => {
   const walletTokensAndBalanceByAddress = makeGetWalletTokensAndBalanceByAddress(origProps.blockchain, origProps.address)
+  const walletInfoByBcAndAddress = makeGetWalletInfoByBockchainAndAddress(origProps.blockchain, origProps.address)
   const mapStateToProps = (state, ownProps) => {
     const balanceAndTokens = walletTokensAndBalanceByAddress(state, ownProps)
+    const walletInfo = walletInfoByBcAndAddress(state, ownProps)
     const {
       selectedCurrency,
     } = state.get(DUCK_MARKET)
-    const tokenCollection = state.get(DUCK_TOKENS)
 
     return {
+      blockchain: origProps.blockchain,
       selectedCurrency,
-      tokenCollection,
       ...balanceAndTokens,
     }
   }
@@ -63,20 +64,27 @@ class WalletsListItemContainer extends PureComponent<TWalletsListItemContainerPr
   }
 
   render () {
+    // console.log('WALLET INFO:')
+    // console.log(this.props.walletInfo)
     const {
       address,
       balance,
       blockchain,
       selectedCurrency,
+      tokens,
+      walletMode,
     } = this.props
 
     return (
       <WalletsListItem
         address={address}
+        walletInfo={this.props.walletInfo}
         selectedCurrency={selectedCurrency}
         balance={balance}
+        tokens={tokens}
         blockchain={blockchain}
         onItemPress={this.handleItemPress}
+        walletMode={walletMode}
       />
     )
   }

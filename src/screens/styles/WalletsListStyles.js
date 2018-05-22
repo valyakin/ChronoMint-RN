@@ -10,6 +10,11 @@ import {
 } from 'react-native'
 
 const styles = StyleSheet.create({
+  activityIndicatorContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
   walletItemHorizontalPaddings: {
     paddingHorizontal: 0,
   },

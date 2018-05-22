@@ -5,13 +5,17 @@
  * @flow
  */
 /* eslint-disable import/prefer-default-export */
-import { types } from './actions'
+import { types, type TSensitiveActionTypes } from 'redux/sensitive/actions'
 
-const initialState = {
+export type TSensitiveInitialState = {
+  usePinProtection: boolean,
+}
+
+const initialState: TSensitiveInitialState = {
   usePinProtection: true,
 }
 
-export const sensitive = (state = initialState, { type, payload }) => {
+export const sensitive = (state: TSensitiveInitialState = initialState, { type, payload }: { type: TSensitiveActionTypes, payload: any}) => {
   switch (type) {
     case types.SET_USE_PIN_PROTECTION: return {
       ...state,

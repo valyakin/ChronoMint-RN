@@ -938,9 +938,11 @@ declare module 'models/wallet/AddressesCollection' {
   }
 }
 
-// declare module '@chronobank/src/models/wallet/AddressModel' {
-//   declare export default any;
-// }
+declare module 'models/wallet/AddressModel' {
+  declare export default class AddressModel extends AbstractFetchingModel {
+    address (value?: string): ?string;
+  }
+}
 
 declare module '@chronobank/src/models/wallet/AllowanceCollection' {
   declare export default class AddressesCollection extends AbstractFetchingCollection {
@@ -2109,9 +2111,9 @@ declare module '@chronobank/src/models/TxModel.js' {
 declare module '@chronobank/src/models/wallet/AddressesCollection.js' {
   declare export default $Exports<'AddressesCollection'>;
 }
-// declare module '@chronobank/src/models/wallet/AddressModel.js' {
-//   declare export default $Exports<'@chronobank/src/models/wallet/AddressModel'>;
-// }
+declare module '@chronobank/src/models/wallet/AddressModel.js' {
+  declare export default $Exports<'sAddressModel'>;
+}
 declare module '@chronobank/src/models/wallet/AllowanceCollection.js' {
   declare export default $Exports<'AllowanceCollection'>;
 }
