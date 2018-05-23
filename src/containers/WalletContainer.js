@@ -12,9 +12,12 @@ import {
 } from 'react-native'
 import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
 import {
-  makeGetMainWalletTransactionsByBlockchainName,
-  selectMainWalletTransactionsStore,
   getSelectedWalletBalanceInSelectedCurrency,
+  makeGetMainWalletTransactionsByBlockchainName,
+  makeGetWalletInfoByBockchainAndAddress,
+  selectMainWalletTransactionsStore,
+  getSelectedWalletStore,
+  type TSelectedWallet,
 } from 'redux/wallet/selectors'
 import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
@@ -24,39 +27,47 @@ import Wallet, {
   type TTab,
 } from 'screens/Wallet'
 
-export type TWalletState ={
+export type TWalletContainerState ={
   tab: TTab,
 }
 
 const makeMapStateToProps = (origState, origProps) => {
-  const getSelectedWalletTransactions = makeGetMainWalletTransactionsByBlockchainName(origProps.blockchain, origProps.address)
+  const selectedWallet: TSelectedWallet = getSelectedWalletStore(origState)
+  const getSelectedWalletTransactions = makeGetMainWalletTransactionsByBlockchainName(selectedWallet.blockchain, selectedWallet.address)
+  const walletInfoByBcAndAddress = makeGetWalletInfoByBockchainAndAddress(origProps.blockchain, origProps.address)
   const mapStateToProps = (state, ownProps) => {
     const {
       prices,
       selectedCurrency,
     } = state.get(DUCK_MARKET)
-    const {
-      address,
-      blockchain,
-    } = state.get(DUCK_WALLET)
+    // const {
+    //   address,
+    //   blockchain,
+    // } = state.get(DUCK_WALLET)
     const tokens = state.get(DUCK_TOKENS)
     // console.log('\n\n\n\nWALLET STATE:', state.get(DUCK_WALLET))
     const walletTransactions = getSelectedWalletTransactions(state, ownProps)
+    const walletData = walletInfoByBcAndAddress(state, ownProps)
     return {
-      address,
-      blockchain,
+      // address,
       balanceCalc: getSelectedWalletBalanceInSelectedCurrency(state),
+      // blockchain,
       mainWalletTransactionLoadingStatus: selectMainWalletTransactionsStore(state),
       prices,
       selectedCurrency,
       tokens,
+      walletData,
       walletTransactions: walletTransactions,
     }
   }
   return mapStateToProps
 }
 
-class WalletContainer extends PureComponent<TWalletProps, TWalletState> {
+type TWalletContainerProps = TWalletProps & {
+  walletData: any, // TODO: to descibe flowtype
+}
+
+class WalletContainer extends PureComponent<TWalletContainerProps, TWalletContainerState> {
 
   state = {
     tab: 'transactions',
@@ -112,10 +123,11 @@ class WalletContainer extends PureComponent<TWalletProps, TWalletState> {
   handleNothing = () => {}
 
   render () {
-    console.log('Rendering wallet. Balance from selector: ', this.props.balanceCalc)
+    // console.log('Rendering wallet: ', this.props)
     return (
       <Wallet
-        balanceCalc={this.props.balanceCalc}
+        isMultisig={this.props.walletData.isMultisig}
+        balanceCalc={this.props.walletData.balance}
         navigator={this.props.navigator}
         address={this.props.address}
         balance={this.props.balance}

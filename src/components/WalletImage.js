@@ -27,6 +27,7 @@ type WalletImageProps = {
   shapeStyle?: TStyle,
   style?: TStyle,
   walletMode?: '2fa' | 'shared' | 'timeLocked',
+  size?: 'big'|'small',
 }
 
 const walletImages = {
@@ -38,7 +39,16 @@ const walletImages = {
   [BLOCKCHAIN_NEM]: require('../images/coin-nem-small.png'),
 }
 
-const getFallbackWalletImage = (bcTitle: ?string) => {
+const walletBigImages = {
+  [BLOCKCHAIN_ETHEREUM]: require('../images/coin-ethereum-big.png'),
+  [BLOCKCHAIN_BITCOIN_CASH]: require('../images/coin-bitcoin-cash-big.png'),
+  [BLOCKCHAIN_BITCOIN_GOLD]: require('../images/wallet-circle-big.png'),
+  [BLOCKCHAIN_BITCOIN]: require('../images/coin-bitcoin-big.png'),
+  [BLOCKCHAIN_LITECOIN]: require('../images/coin-litecoin-big.png'),
+  [BLOCKCHAIN_NEM]: require('../images/coin-nem-big.png'),
+}
+
+const getFallbackWalletImage = (bcTitle: ?string, size: string = 'small') => {
   const bcsList = [
     BLOCKCHAIN_BITCOIN_CASH,
     BLOCKCHAIN_BITCOIN_GOLD,
@@ -49,9 +59,9 @@ const getFallbackWalletImage = (bcTitle: ?string) => {
   ]
 
   if (bcTitle && bcsList.includes(bcTitle)) {
-    return walletImages[bcTitle]
+    return size === 'big' ? walletBigImages[bcTitle] : walletImages[bcTitle]
   } else {
-    return require('../images/wallet-circle-small.png')
+    return size === 'big' ? require('../images/wallet-circle-big.png') : require('../images/wallet-circle-small.png')
   }
 }
 
@@ -61,8 +71,16 @@ const WalletImage = ({
   shapeStyle,
   imageStyle,
   style,
+  size,
 }: WalletImageProps) => {
-  const wImage = getFallbackWalletImage(bcTitle)
+
+  // Size guard. Default is small
+  let imageSize = 'small'
+  if (size) {
+    imageSize = size
+  }
+  const wImage = getFallbackWalletImage(bcTitle, imageSize)
+
   return (
     <View style={style}>
       {

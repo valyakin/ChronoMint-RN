@@ -8,13 +8,13 @@
 import React, { PureComponent } from 'react'
 import { type Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { getWTokens } from 'redux/session/selectors'
+import { getTokens } from 'redux/tokens/selectors'
 import { mainTransfer } from 'redux/mainWallet/actions'
 // eslint-disable-next-line
 import AmountModel from 'models/Amount' // { default as AmountModel }
 import { BigNumber } from 'bignumber.js'
 import TokenModel from 'models/tokens/TokenModel'
-import ConfirmSend from '../screens/ConfirmSend'
+import ConfirmSend from 'screens/ConfirmSend'
 
 export type TConfirmSendContainerProps = {
   tokensDuck: any, // TODO: to make a flow type for this
@@ -91,9 +91,9 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
     const recipient: string = this.props.recipientAddress
     const feeMultiplier = this.props.feeMultiplier
 
-    console.log('MAIN TRANSFER')
-    console.log('token, amountToSend, recipient, feeMultiplier')
-    console.log(token, amountToSend, recipient, feeMultiplier)
+    // console.log('MAIN TRANSFER')
+    // console.log('token, amountToSend, recipient, feeMultiplier')
+    // console.log(token, amountToSend, recipient, feeMultiplier)
     this.props.mainTransfer(token, amountToSend, recipient, feeMultiplier)
   }
 
@@ -112,7 +112,7 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
 }
 
 const mapStateToProps = (state) => ({
-  tokensDuck: getWTokens()(state),
+  tokensDuck: getTokens(state),
 })
 
 const mapDispatchToProps  = (dispatch: Dispatch<any>) => {

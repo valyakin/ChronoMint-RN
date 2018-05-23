@@ -24,7 +24,6 @@ type TCalculatedToken = TPrices[]
 export type TCalculatedTokenCollection = TCalculatedToken[]
 export type TWalletsListItemProps = {
   address: string,
-  balance: number,
   blockchain: string,
   tokens: TCalculatedToken,
   walletInfo: any,
@@ -107,12 +106,14 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
   render () {
     const {
       address,
-      balance,
       blockchain,
       // tokens,
+      walletInfo,
       walletMode,
     } = this.props
 
+    const balance = walletInfo.balance
+    console.log(this.props, balance)
     // FIXME: stub for BCC in Testnet/Infura
     let tokens = this.props.tokens
     if (blockchain === 'Bitcoin Cash' && !tokens.length) {
@@ -129,7 +130,7 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
 
     const textCurrencyBalance = [
       this.props.selectedCurrency,
-      balance.toFixed(2),
+      balance && balance.toFixed(2) || '',
     ].join(' ')
 
     return (

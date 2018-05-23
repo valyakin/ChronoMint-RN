@@ -71,6 +71,7 @@ export default class WalletTransactions extends PureComponent<TWalletTransaction
       balance,
       address,
       tokensLength: tokens && Object.keys(tokens).length || 0,
+      size: 'big',
     }
   
     return (

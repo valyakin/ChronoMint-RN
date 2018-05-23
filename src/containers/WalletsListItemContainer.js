@@ -36,6 +36,7 @@ const makeMapStateToProps = (origState, origProps) => {
     return {
       blockchain: origProps.blockchain,
       selectedCurrency,
+      walletInfo,
       ...balanceAndTokens,
     }
   }
@@ -60,15 +61,17 @@ class WalletsListItemContainer extends PureComponent<TWalletsListItemContainerPr
     // Wallet will use this info by itself
     this.props.navigator.push({
       screen: 'Wallet',
+      // passProps: {
+      //   blockchain,
+      //   address,
+      // },
     })
   }
 
   render () {
-    // console.log('WALLET INFO:')
-    // console.log(this.props.walletInfo)
+
     const {
       address,
-      balance,
       blockchain,
       selectedCurrency,
       tokens,
@@ -80,7 +83,6 @@ class WalletsListItemContainer extends PureComponent<TWalletsListItemContainerPr
         address={address}
         walletInfo={this.props.walletInfo}
         selectedCurrency={selectedCurrency}
-        balance={balance}
         tokens={tokens}
         blockchain={blockchain}
         onItemPress={this.handleItemPress}
