@@ -50,8 +50,6 @@ class EnterMnemonicContainer extends PureComponent<TEnterMnemonicContainerProps,
 
     const { privateKey } = await this.props.onMnemonicLogin(mnemonic)
 
-    console.log('PRIVATE KEY: ', privateKey)
-
     this.props.navigator.push({
       screen: 'SetAccountPassword',
       title: 'Set Account Password',

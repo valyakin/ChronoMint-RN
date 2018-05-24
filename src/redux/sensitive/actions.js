@@ -38,6 +38,10 @@ export const addAccount = ({ address, privateKey }: { address: string, privateKe
       encryptedWithPasswordPrivateKey = cipherWithPassword.update(privateKey, 'utf8', 'hex')
       encryptedWithPasswordPrivateKey += cipherWithPassword.final('hex')
 
+      console.log('HAHAHA', {
+        address, privateKey, password, pin,
+      })
+
       if (typeof pin !== 'undefined') {
         const hashForPin = createHash('sha256')
         hashForPin.update(salt(pin))

@@ -16,13 +16,19 @@ type TGenerateMnemonicContainerProps = {
 
 class GenerateMnemonicContainer extends PureComponent<TGenerateMnemonicContainerProps, {}> {
   handleConfirm = () => {
-    const { mnemonic } = this.props
+    const {
+      mnemonic,
+      password,
+      privateKey,
+    } = this.props
     
     this.props.navigator.push({
       screen: 'ConfirmMnemonic',
       title: I18n.t('ConfirmMnemonic.title'),
       passProps: {
         mnemonic,
+        password,
+        privateKey,
       },
     })
   }

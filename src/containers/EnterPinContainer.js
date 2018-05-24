@@ -49,20 +49,12 @@ class EnterPinContainer extends PureComponent<TEnterPinContainerProps, TEnterPin
 
   handleLogin = async () => {
     const {
-      onMnemonicLogin,
       onLogin,
       onStoreAccount,
-      mnemonic,
       password,
       privateKey,
       pin,
     } = this.props
-
-    if (mnemonic) {
-      await onMnemonicLogin(this.props.mnemonic)
-    }
-
-    console.log(pin)
 
     onStoreAccount(privateKey, password, pin)
 

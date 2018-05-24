@@ -234,16 +234,19 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
       const {
         storedAccounts,
         selectedAccount,
+        addAccount,
       } = this.props
 
       const hasAccount = storedAccounts.has(selectedAccount)
+
+      console.log('HAS ACCOUNT', { privateKey, password, pin })
 
       if (hasAccount) {
         return
       }
 
-      await this.props.addAccount({
-        address: this.props.selectedAccount,
+      await addAccount({
+        address: selectedAccount,
         privateKey,
       }, password, pin)
     }
@@ -323,7 +326,7 @@ function mapDispatchToProps (dispatch: Dispatch<any>) {
     selectNetwork: (network) => networkService.selectNetwork(network),
     selectProvider: (providerId) => networkService.selectProvider(providerId),
     setLastAccount: (address) => dispatch(setLastAccount(address)),
-    addAccount: (account, password) => dispatch(addAccount(account, password)),
+    addAccount: (account, password, pin) => dispatch(addAccount(account, password, pin)),
   }
 }
 

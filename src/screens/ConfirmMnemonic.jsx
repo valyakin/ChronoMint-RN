@@ -30,7 +30,7 @@ type TWordProps = {
 
 export default class ConfirmMnemonic extends PureComponent<TConfirmMnemonicProps, {}> {
   
-  keyExtractor = (word: string) => word
+  keyExtractor = (word: string) => (word === 'emptyWord') ? Math.random().toString() : word
   
   renderWord = ({ item }: { item: string }) => (
     <Word word={item} onPress={this.props.onWord(item)} />
