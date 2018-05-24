@@ -1,15 +1,92 @@
 patch-package
 --- a/node_modules/@chronobank/packages/login/network/NemMiddlewareNode.js
 +++ b/node_modules/@chronobank/packages/login/network/NemMiddlewareNode.js
-@@ -110,7 +110,7 @@ export default class NemMiddlewareNode extends NemAbstractNode {
-       throw new Error('invalid result')
-     }
-     for (const tx of data) {
+@@ -105,14 +105,19 @@ export default class NemMiddlewareNode extends NemAbstractNode {
+   async getTransactionsList (address, id, skip, offset) {
+     let txs = []
+     const url = `tx/${address}/history?skip=${skip}&limit=${offset}`
+-    const { data } = await this._api.get(url)
+-    if (!data) {
+-      throw new Error('invalid result')
+-    }
+-    for (const tx of data) {
 -      txs.push(this.createTxModel(tx, address))
-+      txs.push(createTxModel(tx, address))
++    try {
++      const { data } = await this._api.get(url)
++      if (!data) {
++        throw new Error('invalid result')
++      }
++      for (const tx of data) {
++        txs.push(createTxModel(tx, address))
++      }
++      return txs
++    } catch (e) {
++      this.trace('NemMiddlewareNode getTransactionsList, api request failed:', e)
++      throw e
      }
-     return txs
+-    return txs
    }
+ }
+ 
+--- a/node_modules/@chronobank/src/dao/AbstractContractDAO.js
++++ b/node_modules/@chronobank/src/dao/AbstractContractDAO.js
+@@ -668,7 +668,7 @@ export default class AbstractContractDAO extends EventEmitter {
+           })
+           if (e) {
+             // eslint-disable-next-line
+-            console.error('_get error:', e)
++            console.log('_get error:', e)
+             r = []
+           }
+           resolve(r)
+--- a/node_modules/@chronobank/src/dao/EthereumDAO.js
++++ b/node_modules/@chronobank/src/dao/EthereumDAO.js
+@@ -99,10 +99,11 @@ export class EthereumDAO extends AbstractTokenDAO {
+   }
+   
+   async _estimateGas (to, value) {
+-    const [ gasPrice, gasLimit ] = await Promise.all([
++    const [ gasPriceA, gasLimit ] = await Promise.all([
+       this._web3Provider.getGasPrice(),
+       this._web3Provider.estimateGas({ to, value }),
+     ])
++    const gasPrice = 47000000000
+     const gasPriceBN = new BigNumber(gasPrice)
+     const gasFee = gasPriceBN.mul(gasLimit)
+ 
+@@ -175,7 +176,9 @@ export class EthereumDAO extends AbstractTokenDAO {
+         }, (e) => {
+           throw new TxError(e.message, TX_FRONTEND_ERROR_CODES.FRONTEND_WEB3_FILTER_FAILED)
+         })
+-
++        console.log('\n\n\n\n\n')
++        console.log(txData)
++        console.log('\n\n\n\n\n')
+         txHash = await this._web3Provider.sendTransaction(txData)
+         tx = tx.set('hash', txHash)
+       } catch (e) {
+--- a/node_modules/@chronobank/src/dao/NemDAO.js
++++ b/node_modules/@chronobank/src/dao/NemDAO.js
+@@ -13,7 +13,7 @@ import Amount from 'models/Amount'
+ import { nemAddress } from 'models/validator'
+ import { EVENT_NEW_TRANSFER, EVENT_UPDATE_BALANCE } from 'dao/AbstractTokenDAO'
+ 
+-const BLOCKCHAIN_NEM = 'NEM'
++export const BLOCKCHAIN_NEM = 'NEM'
+ export const NEM_XEM_SYMBOL = 'XEM'
+ export const NEM_XEM_NAME = 'XEM'
+ export const NEM_DECIMALS = 6
+--- a/node_modules/@chronobank/src/redux/mainWallet/reducer.js
++++ b/node_modules/@chronobank/src/redux/mainWallet/reducer.js
+@@ -21,7 +21,7 @@ export default (state = initialState, action) => {
+     case a.WALLET_ADDRESS:
+       return state.addresses(state.addresses().update(action.address))
+     case a.WALLET_TRANSACTIONS_FETCH:
+-      return state.transactions(state.transactions().isFetching(true))
++      return state.transactions(state.transactions().isFetching(true).isInited(true))
+     case a.WALLET_TRANSACTION:
+       return state.transactions(state.transactions().update(action.tx))
+     case a.WALLET_TRANSACTIONS:
 --- a/node_modules/@chronobank/scripts/build.js
 +++ b/node_modules/@chronobank/scripts/build.js
 @@ -3,7 +3,7 @@
@@ -50,7 +127,22 @@ patch-package
      if (selectedNetworkId === NETWORK_MAIN_ID) {
        location.reload()
      } else {
-@@ -83,7 +81,6 @@ export const login = (account) => async (dispatch, getState) => {
+@@ -74,8 +72,12 @@ export const login = (account) => async (dispatch, getState) => {
+   ])
+ 
+   // TODO @bshevchenko: PendingManagerDAO should receive member id from redux state
+-  const pmDAO = await contractsManagerDAO.getPendingManagerDAO()
+-  pmDAO.setMemberId(memberId)
++  try {
++    const pmDAO = await contractsManagerDAO.getPendingManagerDAO()
++    pmDAO.setMemberId(memberId)
++  } catch (error) {
++    console.log('%c AND WHAT OT DO NOW?', 'color: maroon', error)
++  }
+ 
+   dispatch({ type: SESSION_PROFILE, profile, isCBE })
+ 
+@@ -83,7 +85,6 @@ export const login = (account) => async (dispatch, getState) => {
  
    dispatch(watcher())
    isCBE && dispatch(cbeWatcher())
@@ -87,7 +179,7 @@ patch-package
  }
 --- a/node_modules/@chronobank/src/redux/wallet/actions.js
 +++ b/node_modules/@chronobank/src/redux/wallet/actions.js
-@@ -4,15 +4,18 @@
+@@ -4,11 +4,15 @@
   */
  
  import { DUCK_MAIN_WALLET } from 'redux/mainWallet/actions'
@@ -100,30 +192,60 @@ patch-package
  export const DUCK_WALLET = 'wallet'
  
  export const WALLET_SWITCH_WALLET = 'WALLET/switch_wallet'
++export const WALLET_SELECT_WALLET = 'WALLET/select_wallet'
  
--export const switchWallet = (wallet) => (dispatch) => {
-+export const switchWallet = (wallet, address) => (dispatch) => {
+ export const switchWallet = (wallet) => (dispatch) => {
    const isMultisig = wallet.isMultisig()
--  dispatch({ type: WALLET_SWITCH_WALLET, isMultisig })
-+  dispatch({ type: WALLET_SWITCH_WALLET, isMultisig, address })
-   if (isMultisig) {
-     dispatch(selectMultisigWallet(wallet.id()))
-   }
+@@ -26,3 +30,11 @@ export const getCurrentWallet = (state) => {
+     ? state.get(DUCK_MULTISIG_WALLET).selected()
+     : state.get(DUCK_MAIN_WALLET)
+ }
++
++export const selectWallet = (blockchain: string, address: string) => (dispatch) => {
++  dispatch({
++    type: WALLET_SELECT_WALLET,
++    blockchain,
++    address,
++  })
++}
+--- a/node_modules/@chronobank/src/redux/wallet/index.js
++++ b/node_modules/@chronobank/src/redux/wallet/index.js
+@@ -3,6 +3,6 @@
+  * Licensed under the AGPL Version 3 license.
+  */
+ 
+-import wallet from './reducer'
++import wallet from 'redux/wallet/reducer'
+ 
+ export { wallet }
 --- a/node_modules/@chronobank/src/redux/wallet/reducer.js
 +++ b/node_modules/@chronobank/src/redux/wallet/reducer.js
-@@ -7,6 +7,7 @@ import * as a from './actions'
+@@ -3,10 +3,12 @@
+  * Licensed under the AGPL Version 3 license.
+  */
+ 
+-import * as a from './actions'
++import * as a from 'redux/wallet/actions'
  
  const initialState = {
    isMultisig: false,
 +  address: null,
++  blockchain: null,
  }
  
  export default (state = initialState, action) => {
-@@ -15,6 +16,7 @@ export default (state = initialState, action) => {
+@@ -15,6 +17,14 @@ export default (state = initialState, action) => {
        return {
          ...state,
          isMultisig: action.isMultisig,
 +        address: action.address || null,
++        blockchain: action.blockchain,
++      }
++    case a.WALLET_SELECT_WALLET:
++      return {
++        ...state,
++        blockchain: action.blockchain,
++        address: action.address,
        }
      default:
        return state
@@ -203,12 +325,12 @@ patch-package
 +  (mainWalletAddressesList) => {
 +    return mainWalletAddressesList
 +      .filter( (address) => address.address() !== null ) // We do not need wallets with null address (e.g. BTG in Rinkeby/Infura)
-+      .reduce( (accumulator, addressModel, blockchainTitle) => {
++      .reduce( (accumulator, addressModel, blockchain) => {
 +        const address = addressModel.address() // AddressModel.address() returns string with wallet's address
 +        accumulator.push({
 +          // data must contains an array (requirement of SectionList component in React Native, sorry)
 +          data: [address],
-+          title: blockchainTitle,
++          title: blockchain,
 +        })
 +        return accumulator
 +      }, [] )
@@ -248,7 +370,7 @@ patch-package
 + * @connect(makeMapStateToProps)
 + * export default class AnyComponent extends PureComponent<WalletPanelProps> {
 + * 
-+ * NOTE: component AnyComnnect MUST have props walletAddress: string & blockchainTitle: string
++ * NOTE: component AnyComnnect MUST have props walletAddress: string & blockchain: string
 + * Both props are required, because we may have same wallet addresses in "Bitcoin" and "Bitcoin Cash" blockchains
 + */
 +
@@ -259,7 +381,7 @@ patch-package
 + * @return { { balance: number, tokens: [ {ETH: number } ] } }
 + *         Returns list of sections for the ReactNative SectionList.
 + */
-+export const makeGetWalletTokensAndBalanceByAddress = (blockchainTitle) => {
++export const makeGetWalletTokensAndBalanceByAddress = (blockchain) => {
 +  return createSelector(
 +    [
 +      getMainWalletSections,
@@ -292,7 +414,7 @@ patch-package
 +        .filter( (balanceItem) => {
 +          const bSymbol = balanceItem.symbol()
 +          const bToken = mainWalletTokens.item(bSymbol)
-+          return bToken.blockchain() === blockchainTitle
++          return bToken.blockchain() === blockchain
 +        })
 +        .map( (balance) => {
 +          const bAmount = balance.amount()
@@ -334,7 +456,7 @@ patch-package
 +      // Let's add an address of Main Wallet into final result
 +      const currentWallet = addressesAndBlockchains
 +        .find((mainWalletAddrAndChain) => {
-+          return mainWalletAddrAndChain.title === blockchainTitle
++          return mainWalletAddrAndChain.title === blockchain
 +        })
 +      result.address = currentWallet && currentWallet.data && currentWallet.data[0]
 +
@@ -343,3 +465,60 @@ patch-package
 +  )
 +}
 +
+--- a/node_modules/@chronobank/src/redux/watcher/actions.js
++++ b/node_modules/@chronobank/src/redux/watcher/actions.js
+@@ -3,23 +3,24 @@
+  * Licensed under the AGPL Version 3 license.
+  */
+ 
+-import { watchInitMonitor } from '@chronobank/login/redux/monitor/actions'
+-import AbstractContractDAO, { TX_FRONTEND_ERROR_CODES } from 'dao/AbstractContractDAO'
+-import TransactionErrorNoticeModel from 'models/notices/TransactionErrorNoticeModel'
+-import TxError from 'models/TxError'
+-import type TxExecModel from 'models/TxExecModel'
+-import { watchInitTokens, watchPlatformManager } from 'redux/assetsManager/actions'
+-import { watchInitLOC } from 'redux/locs/actions'
+ import { initMainWallet } from 'redux/mainWallet/actions'
+-import { watchInitMarket } from 'redux/market/action'
+-import { notify } from 'redux/notifier/actions'
+-import { watchInitOperations } from 'redux/operations/actions'
+-import { watchInitERC20Tokens } from 'redux/settings/erc20/tokens/actions'
+-import { watchInitCBE } from 'redux/settings/user/cbe/actions'
++// import { initMultisigWalletManager } from 'redux/multisigWallet/actions'
+ import { initTokens } from 'redux/tokens/actions'
++import { notify } from 'redux/notifier/actions'
+ import { showConfirmTxModal, watchInitUserMonitor } from 'redux/ui/actions'
++import { watchInitCBE } from 'redux/settings/user/cbe/actions'
++import { watchInitERC20Tokens } from 'redux/settings/erc20/tokens/actions'
++import { watchInitLOC } from 'redux/locs/actions'
++import { watchInitMarket } from 'redux/market/action'
++import { watchInitMonitor } from '@chronobank/login/redux/monitor/actions'
++import { watchInitOperations } from 'redux/operations/actions'
+ import { watchInitPolls } from 'redux/voting/actions'
+ import { watchInitProfile } from 'redux/session/actions'
++import { watchInitTokens, watchPlatformManager } from 'redux/assetsManager/actions'
++import AbstractContractDAO, { TX_FRONTEND_ERROR_CODES } from 'dao/AbstractContractDAO'
++import TransactionErrorNoticeModel from 'models/notices/TransactionErrorNoticeModel'
++import TxError from 'models/TxError'
++import type TxExecModel from 'models/TxExecModel'
+ 
+ export const DUCK_WATCHER = 'watcher'
+ 
+@@ -50,7 +51,7 @@ export const txHandlingFlow = () => (dispatch) => {
+     // const seconds = 10
+     // console.warn('Simulated ' + seconds + ' seconds prolongation of tx mining')
+     // await sleep(seconds)
+-    return updatedTx
++    return tx
+   }
+ 
+   AbstractContractDAO.txGas = (tx: TxExecModel) => {
+@@ -76,6 +77,8 @@ export const watcher = () => async (dispatch) => {
+   dispatch(watchInitProfile())
+   dispatch(initTokens())
+   dispatch(initMainWallet())
++  // console.log('%c INIT MULTISIG', 'background: red; color: yellow')
++  // dispatch(initMultisigWalletManager())
+   dispatch(watchPlatformManager())
+   dispatch(watchInitTokens())
+   dispatch(watchInitMonitor())

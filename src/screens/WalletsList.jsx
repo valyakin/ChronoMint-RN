@@ -13,14 +13,12 @@ import {
 } from 'react-native'
 import MainWalletModel from 'models/wallet/MainWalletModel'
 import SectionHeader from 'components/SectionHeader'
-import WalletsListItem from 'components/WalletsListItem'
+import WalletsListItemContainer from 'containers/WalletsListItemContainer'
 import styles from './styles/WalletsListStyles'
-
-export type TMainWalletModel = typeof MainWalletModel
 
 type TWalletItem = {
   address: string,
-  wallet: TMainWalletModel,
+  wallet: MainWalletModel,
 }
 
 export type TWalletListSection = {
@@ -34,35 +32,33 @@ type TRenderItemArgs = {
   section: TWalletListSection,
 }
 
-type IWalletsListProps = {
-  isRefreshing?: boolean,
+export type TWalletsListProps = {
+  isRefreshing: boolean,
   navigator: any,
-  onRefresh: () => void,
   sections: TWalletListSection[],
-  selectWallet(wallet: TMainWalletModel, address: string): void,
+  onRefresh(): void,
 }
 
-export default class WalletsList extends PureComponent<IWalletsListProps, {}> {
-  keyExtractor = ( section: TWalletListSection, index: number ) => [section.title, index].join('')
+export default class WalletsList extends PureComponent<TWalletsListProps> {
+  keyExtractor = ( section: TWalletListSection, index: number ) =>
+    [section.title, index].join('')
 
-  renderItem = ({ item, index, section }: TRenderItemArgs) => (
+  renderItem = ({ item, section }: TRenderItemArgs) => (
     <View style={styles.walletItemHorizontalPaddings}>
-      <WalletsListItem
+      <WalletsListItemContainer
         address={item.address}
-        index={index}
         navigator={this.props.navigator}
-        sectionName={section.title}
-        selectWallet={this.props.selectWallet}
-        wallet={item.wallet}
+        blockchain={section.title}
       />
     </View>
   )
 
-  renderSectionHeader = ({ section }: { section: TWalletListSection }) =>
-    (<SectionHeader
+  renderSectionHeader = ({ section }: { section: TWalletListSection }) => (
+    <SectionHeader
       title={`${section.title} Wallets`}
       isDark
-    />)
+    />
+  )
 
   render () {
     const {
@@ -72,7 +68,11 @@ export default class WalletsList extends PureComponent<IWalletsListProps, {}> {
     } = this.props
 
     if (isRefreshing || !sections) {
-      return <ActivityIndicator />
+      return (
+        <View style={styles.activityIndicatorContainer}>
+          <ActivityIndicator size='large' />
+        </View>
+      )
     }
 
     return (

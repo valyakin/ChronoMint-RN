@@ -8,28 +8,44 @@
 import React, { PureComponent } from 'react'
 import {
   ListView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native'
-import colors from 'utils/colors'
+import styles from './styles/SelectTokenStyles'
 
-export default class SelectToken extends PureComponent<{}, {}> {
+export type TSelectTokenProps = {
+  tokens: any[],
+  onPressAction(token: any): void,
+  navigator: any,
+}
+export type TSelectTokenState = {}
 
-  constructor (props) {
+export default class SelectToken extends PureComponent<TSelectTokenProps, TSelectTokenState> {
+
+  constructor (props: TSelectTokenProps) {
     super(props)
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    })
     const { tokens } = props
-    const tokensArray = Object.keys(tokens).map( (k) => { return { symbol: k, amount: tokens[k] } } )
+    const tokensArray = tokens
+      .map( (token) => {
+        const symbol = Object.keys(token)[0]
+        const amount = token[symbol].amount
+        return { 
+          symbol,
+          amount,
+        }
+      } )
     this.state = {
       tokens: ds.cloneWithRows(tokensArray),
     }
   }
 
-  handlePress = (token) => {
+  handlePress = (rowData) => {
+    this.props.onPressAction(rowData)
     this.props.navigator.pop()
-    this.props.onPressAction(token)
   }
 
   renderRow = (rowData) => {
@@ -37,13 +53,24 @@ export default class SelectToken extends PureComponent<{}, {}> {
     return (
       <TouchableOpacity onPress={() => this.handlePress(rowData)}>
         <View style={styles.tokenSelector}>
-          <Text style={[styles.tokenSelectorLabel, styles.symbolColumn]}>
+          <Text
+            style={[
+              styles.tokenSelectorLabel,
+              styles.symbolColumn,
+            ]}
+          >
             {
               rowData.symbol
             }
           </Text>
 
-          <Text style={[styles.tokenSelectorLabel, styles.amountColumn, notEnoughAmount]}>
+          <Text
+            style={[
+              styles.tokenSelectorLabel, 
+              styles.amountColumn, 
+              notEnoughAmount,
+            ]}
+          >
             {
               rowData.amount.toFixed(2)
             }
@@ -55,6 +82,7 @@ export default class SelectToken extends PureComponent<{}, {}> {
 
   render () {
     const { tokens } = this.state
+
     return (
       <ListView
         style={styles.container}
@@ -64,35 +92,3 @@ export default class SelectToken extends PureComponent<{}, {}> {
     )
   }
 }
-
-// FIXME: need to use project's theme
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 60,
-  },
-  tokenSelector: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 20,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#424066',
-  },
-  tokenSelectorLabel: {
-    color: colors.background,
-    fontSize: 17,
-    fontWeight: '700',
-  },
-  symbolColumn: {
-    flex: 1,
-    flexDirection: 'row',
-    textAlign: 'left',
-  },
-  amountColumn: {
-    flex: 1,
-    flexDirection: 'row',
-    textAlign: 'right',
-  },
-  zeroAmount: {
-    color: '#C25351',
-  },
-})

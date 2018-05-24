@@ -4,6 +4,7 @@
  *
  * @flow
  */
+
 import { createCipher, createHash } from 'crypto'
 import { addError } from 'login/redux/network/actions'
 import isValid from '../../utils/validators'

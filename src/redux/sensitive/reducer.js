@@ -5,6 +5,7 @@
  * @flow
  */
 /* eslint-disable import/prefer-default-export */
+
 import Immutable from 'immutable'
 import { types } from './actions'
 
