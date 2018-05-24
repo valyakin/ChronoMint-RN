@@ -49,7 +49,7 @@ export default function startAppRoot (root: string) {
     default: {
       Navigation.startSingleScreenApp({
         screen: {
-          screen: 'CreateWallet',
+          screen: 'SetAccountPassword',
           navigatorStyle: {
             navBarHidden: true,
           },

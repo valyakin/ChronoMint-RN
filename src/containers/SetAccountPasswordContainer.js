@@ -9,19 +9,20 @@ import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import withLogin from '../components/withLogin'
 import isValid from '../utils/validators'
-import CreateWallet from '../screens/CreateWallet'
+import SetAccountPassword from '../screens/SetAccountPassword'
 
-type TCreateWalletContainerProps = {
+type TSetAccountPasswordContainerProps = {
+  generateMnemonic: () => void,
+  isCreatingNewWallet?: boolean,
   navigator: any,
-  generateMnemonic: () => void
 }
 
-type TCreateWalletContainerState = {
+type TSetAccountPasswordContainerState = {
   password: string,
   passwordConfirmation: string,
 }
 
-class CreateWalletContainer extends PureComponent<TCreateWalletContainerProps, TCreateWalletContainerState> {
+class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordContainerProps, TSetAccountPasswordContainerState> {
   static navigatorStyle = {
     navBarHidden: true,
   }
@@ -51,7 +52,7 @@ class CreateWalletContainer extends PureComponent<TCreateWalletContainerProps, T
     this.setState({ passwordConfirmation })
   }
 
-  handleCreateWallet = () => {
+  handleDone = () => {
     const { password, passwordConfirmation } = this.state
 
     if (password !== passwordConfirmation) {
@@ -88,10 +89,11 @@ class CreateWalletContainer extends PureComponent<TCreateWalletContainerProps, T
 
   render () {
     return (
-      <CreateWallet
+      <SetAccountPassword
+        isCreatingNewWallet={this.props.isCreatingNewWallet}
         onChangePassword={this.handleChangePassword}
         onChangePasswordConfirmation={this.handleChangePasswordConfirmation}
-        onCreateWallet={this.handleCreateWallet}
+        onDone={this.handleDone}
         onSelectLanguage={this.handleSelectLanguage}
         onSelectNetwork={this.handleSelectNetwork}
         onUseWallet={this.handleUseWallet}
@@ -100,4 +102,4 @@ class CreateWalletContainer extends PureComponent<TCreateWalletContainerProps, T
   }
 }
 
-export default withLogin(CreateWalletContainer)
+export default withLogin(SetAccountPasswordContainer)
