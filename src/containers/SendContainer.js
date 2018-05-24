@@ -204,15 +204,11 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
   // eslint-disable-next-line complexity
   handleChangeAmount = (value: string) => {
     if (!(value.endsWith(',') || value.endsWith('.'))) {
-      // console.log(value, I18n.toNumber(value, { precision: 0 }))
       const localeValue = parseFloat(value.replace(',', '.').replace(' ', ''))
       const tokenPrice = this.props.prices &&
         this.state.selectedToken &&
         this.props.prices[ this.state.selectedToken.symbol ] &&
         this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
-      // console.log('handleChangeAmount')
-      // console.log('tokenPrice, localeValue', tokenPrice, localeValue)
-      // console.log('this.props.prices, this.state.selectedToken.symbol', this.props.prices, this.state.selectedToken.symbol)
       const dummyValidationOfAmountInput: boolean =  (localeValue !== null && localeValue !== undefined && localeValue !== '' && localeValue > 0)
       this.setState({
         amount: localeValue,

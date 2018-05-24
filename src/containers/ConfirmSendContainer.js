@@ -84,20 +84,12 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
   }
 
   sendTransaction = () => {
-    console.log('this.props.currentToken', this.props.currentToken)
     const token: TokenModel = this.props.tokensDuck.item(this.props.currentToken)
-    console.log('token.toJS()', token.toJS())
-    console.log('this.props.amountToSend.token', this.props.amountToSend.token)
-    const toSendBigNumber: BigNumber = new BigNumber(this.props.amountToSend.token)
-    console.log('toSendBigNumber', toSendBigNumber)
-    const bnWithDecimals: BigNumber = token.addDecimals(toSendBigNumber)
-    console.log('bnWithDecimals', bnWithDecimals)
-    const amountToSend = new Amount(toSendBigNumber, this.props.currentToken)
-    console.log('amountToSend', amountToSend.toString())
+    // const toSendBigNumber: BigNumber = new BigNumber(this.props.amountToSend.token)
+    const bnWithDecimals: BigNumber = token.addDecimals(this.props.amountToSend.token)
+    const amountToSend = new Amount(bnWithDecimals, this.props.currentToken)
     const recipient: string = this.props.recipientAddress
-    console.log('recipient', recipient)
     const feeMultiplier = this.props.feeMultiplier
-    console.log('feeMultiplier', feeMultiplier)
     this.props.mainTransfer(token, amountToSend, recipient, feeMultiplier)
   }
 

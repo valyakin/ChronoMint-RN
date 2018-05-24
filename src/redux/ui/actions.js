@@ -30,7 +30,6 @@ export const watchInitUserMonitor = () => (dispatch) => {
 export const showConfirmTxModal = () => (dispatch, getState) => new Promise((resolve) => {
   const isConfirmed: boolean = true
   const st = getState()
-  // console.log(st)
   const updatedTx = st.get(DUCK_WATCHER).confirmTx
   resolve({ isConfirmed: isConfirmed, updatedTx: updatedTx })
   // TODO: to implemet RN confirmation screen and enable the code below

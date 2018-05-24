@@ -43,6 +43,15 @@ type TTransactionItemState = {}
 
 export default class TransactionsList extends PureComponent<TTransactionsListProps, TTransactionsListState> {
 
+  componentDidMount () {
+    const trLoadingStatus = this.props.mainWalletTransactionLoadingStatus
+    if (!trLoadingStatus.isFetching &&
+      !trLoadingStatus.isInited
+    ) {
+      this.props.refreshTransactionsList()
+    }
+  }
+
   keyExtractor = (item: TWalletTransaction, index: number) => '' + item.address + '_' + index
 
   renderItem = ({ item }: { item: TWalletTransaction } ) => <TransactionItem {...item} />
@@ -128,7 +137,7 @@ export default class TransactionsList extends PureComponent<TTransactionsListPro
           }
         }
       } else {
-        return ( <RefreshTransactions /> )
+        return ( <TransactionsLoading /> )
       }
     }
   }

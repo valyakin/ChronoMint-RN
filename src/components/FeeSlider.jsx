@@ -72,9 +72,6 @@ const FeeSlider = ({
   handleValueChange = () => {}, // [AO] Do nothing by default
 }: FeeSliderProps) => {
 
-  // console.log('tokenSymbol', tokenSymbol)
-  // console.log('calculatedFeeValue', calculatedFeeValue)
-
   const tokenInfo = tokenSymbol &&
      calculatedFeeValue &&
      [tokenSymbol, calculatedFeeValue].join(' ') || 'EEE'

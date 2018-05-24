@@ -113,22 +113,16 @@ export default class Send extends PureComponent<TSendProps, {}> {
     }
     */
     // TODO: [AO] To remove this shame
-    // console.log(' walletTokensAndBalance.tokens', walletTokensAndBalance.tokens)
     const getTokenBalanceBySymbol = (selectedTokenSymbol) => {
       const t = walletTokensAndBalance
         .tokens
         .find( (tokenItem) => {
-          // console.log('Searching', selectedTokenSymbol, tokenItem)
           return Object.keys(tokenItem)[0] === selectedTokenSymbol
         })
       return t && t[selectedTokenSymbol].balance
     }
     const selectedTokenSymbol: ?string = selectedToken && selectedToken.symbol || null
     const currentTokenBalance = getTokenBalanceBySymbol(selectedTokenSymbol)
-    // console.log('FOUND:', currentTokenBalance)
-
-    // console.log('selectedTokenSymbol', selectedTokenSymbol)
-    // console.log(' walletTokensAndBalance.tokens', walletTokensAndBalance.tokens)
     // const currentTokenBalance = walletTokensAndBalance.tokens[selectedTokenSymbol].balance
     const strings = {
       amountInput: `Amount, ${selectedToken.symbol || ''}`,

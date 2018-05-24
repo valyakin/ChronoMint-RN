@@ -45,14 +45,10 @@ const sortArrayByObjectKeys = (a, b) => {
 }
 
 var isWalletAddressEqualish = function (v1, v2) {
-  // console.log('COMPARING')
-  // console.log(v1, v2           )
   if (v1 === v2) {
     return true
   }
-  // console.log('not equal')
   if (Array.isArray(v1) && Array.isArray(v2)) {
-    // console.log(v1.length, v2.length)
     if (v1.length !== v2.length) {
       return false
     }
@@ -64,7 +60,6 @@ var isWalletAddressEqualish = function (v1, v2) {
     }
 
     return v1.every( (v, ix) => {
-      // console.log(v2[ix], v)
       // return v2[ix] === v
       return diffObjects(v2[ix], v)
     })
@@ -503,7 +498,6 @@ export const makeGetWalletTokensAndBalanceByAddress = (blockchain: string) => {
         })
 
       const arrWalletTokensAndBalanceByAddress = [...walletTokensAndBalanceByAddress.values()]
-      // console.log(arrWalletTokensAndBalanceByAddress)
       const result = arrWalletTokensAndBalanceByAddress
         .reduce( (accumulator, tokenKeyValuePair) => {
           const { amount, symbol } = tokenKeyValuePair
@@ -929,7 +923,6 @@ var isWalletTransactionsEqualish = function (v1, v2) {
     }
 
     return v1.transactions.every( (v, ix) => {
-      // console.log(v2[ix], v)
       // return v2[ix] === v
       return diffObjects(v2.transactions[ix], v)
     })
@@ -1043,7 +1036,6 @@ export const makeGetWalletTransactionsByBlockchainAndAddress = (blockchain: stri
             const bDate = b.txDate
             return (bDate > aDate) - (bDate < aDate)
           })
-        // console.log(transactions)
         const latestTransactionDate = transactions && ( transactions[0] !== undefined ) && transactions[0].txDate || null
 
         return {
