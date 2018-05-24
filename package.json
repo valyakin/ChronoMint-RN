@@ -12,6 +12,7 @@
     "contracts:compile": "cd node_modules/chronobank-smart-contracts && node --max_old_space_size=8000 ../truffle/build/cli.bundled.js compile --all",
     "android": "react-native run-android",
     "prepare": "patch-package",
+    "postinstall": "flow-typed install --skip",
     "precommit": "lint-staged"
   },
   "dependencies": {
