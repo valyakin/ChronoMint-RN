@@ -296,6 +296,7 @@ function mapStateToProps (state: any) {
   const sensitive = state.get(DUCK_SENSITIVE)
 
   return {
+    lastAccount: sensitive.lastAccount,
     storedAccounts: sensitive.accounts,
     accounts: network.accounts,
     errors: network.errors,

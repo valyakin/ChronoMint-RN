@@ -101,7 +101,22 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
     alert(error)
   }
 
+  handleLastAccount = () => {
+    this.props.navigator.resetTo({
+      screen: 'EnterPin',
+      title: 'EnterPin',
+      passProps: {
+        isLogin: true,
+        account: this.props.lastAccount,
+      },
+    })
+  }
+
   render () {
+    if (this.props.lastAccount) {
+      this.handleLastAccount()
+    }
+
     return (
       <SetAccountPassword
         isCreatingNewWallet={this.props.isCreatingNewWallet}
