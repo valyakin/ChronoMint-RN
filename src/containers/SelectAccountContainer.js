@@ -8,9 +8,11 @@
 import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import SelectAccount, { type TAccount } from '../screens/SelectAccount'
+import withLogin from '../components/withLogin'
 
 type TSelectAccountContainerProps = {
   navigator: any,
+  storedAccounts: any,
 }
 
 class SelectAccountContainer extends PureComponent<TSelectAccountContainerProps, {}> {
@@ -28,7 +30,7 @@ class SelectAccountContainer extends PureComponent<TSelectAccountContainerProps,
   handleSelectAccount = (account: TAccount) => () => {
     this.props.navigator.push({
       screen: 'AccountPassword',
-      title: 'AccountPassword.title',
+      title: 'Enter account password',
       passProps: {
         account,
       },
@@ -37,7 +39,7 @@ class SelectAccountContainer extends PureComponent<TSelectAccountContainerProps,
 
   render () {
     return (<SelectAccount
-      accounts={[]}
+      accounts={this.props.storedAccounts.toArray()}
       onCreateWallet={this.handleCreateWallet}
       onImportAccount={this.handleImportAccount}
       onSelectAccount={this.handleSelectAccount}
@@ -45,4 +47,4 @@ class SelectAccountContainer extends PureComponent<TSelectAccountContainerProps,
   }
 }
 
-export default SelectAccountContainer
+export default withLogin(SelectAccountContainer)

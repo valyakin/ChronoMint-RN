@@ -12,7 +12,8 @@ import EnterMnemonic from '../screens/EnterMnemonic'
 import withLogin from '../components/withLogin'
 
 export type TEnterMnemonicContainerProps = {
-  onMnemonicLogin: (mnemonic: string) => void,
+  navigator: any,
+  onMnemonicLogin: (mnemonic: string) => any,
 }
 
 type TEnterMnemonicContainerState = {
@@ -40,14 +41,24 @@ class EnterMnemonicContainer extends PureComponent<TEnterMnemonicContainerProps,
     this.setState({ mnemonicWords })
   }
   
-  handleLogin = () => {
+  handleLogin = async () => {
     const mnemonic = this.state.mnemonicWords.join(' ')
 
     if (!mnemonicProvider.validateMnemonic(mnemonic)) {
       return alert('Incorrect mnemonic. Check it and try again')
     }
 
-    this.props.onMnemonicLogin(mnemonic)
+    const { privateKey } = await this.props.onMnemonicLogin(mnemonic)
+
+    console.log('PRIVATE KEY: ', privateKey)
+
+    this.props.navigator.push({
+      screen: 'SetAccountPassword',
+      title: 'Set Account Password',
+      passProps: {
+        privateKey,
+      },
+    })
   }
 
   inputs: Array<any> = []

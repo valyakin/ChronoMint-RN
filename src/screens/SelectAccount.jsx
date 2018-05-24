@@ -21,7 +21,6 @@ import TextButton from '../components/TextButton'
 
 export type TAccount = {
   address: string,
-  image: any,
 }
 
 type TSelectAccountProps = {
@@ -83,7 +82,6 @@ class Account extends PureComponent<TAccountProps, {}> {
   render () {
     const {
       address,
-      image,
       onPress,
     } = this.props
     return (
@@ -92,7 +90,7 @@ class Account extends PureComponent<TAccountProps, {}> {
         style={styles.item}
       >
         <Image
-          source={image}
+          source={require('../images/profile-circle-small.png')}
           style={styles.itemImage}
         />
         <Text style={styles.address}>

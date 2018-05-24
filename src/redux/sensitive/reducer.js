@@ -31,6 +31,11 @@ export const sensitive = (state = initialState, { type, payload }) => {
         accounts: (accounts || Immutable.Map()).set(payload.address, payload),
       }
     }
+
+    case types.SET_LAST_ACCOUNT: return {
+      ...state,
+      lastAccount: state.accounts.get(payload) || {},
+    }
     default:
       return state
   }

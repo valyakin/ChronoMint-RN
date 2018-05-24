@@ -11,22 +11,58 @@ import withLogin from '../components/withLogin'
 import WalletBackup from '../screens/WalletBackup'
 
 type TWalletBackupContainerProps = {
+  isCreatingNewWallet?: boolean,
+  mnemonic: string,
+  privateKey?: string,
   navigator: any,
+  password: string,
+  onLogin: () => void,
   onSetUsePinProtection: (value: boolean) => void,
   usePinProtection: boolean,
-  onLogin: () => void,
-  mnemonic: string,
 }
 
 class WalletBackupContainer extends PureComponent<TWalletBackupContainerProps, {}> {
   handleDone = () => {
-    this.props.navigator.push({
-      screen: 'GenerateMnemonic',
-      title: I18n.t('GenerateMnemonic.title'),
-      passProps: {
-        mnemonic: this.props.mnemonic,
-      },
-    })
+    const {
+      isCreatingNewWallet,
+      onLogin,
+      usePinProtection,
+      mnemonic,
+      privateKey,
+      password,
+    } = this.props
+
+    if (isCreatingNewWallet) {
+      return this.props.navigator.push({
+        screen: 'GenerateMnemonic',
+        title: I18n.t('GenerateMnemonic.title'),
+        passProps: {
+          mnemonic,
+          privateKey,
+          password,
+        },
+      })
+    }
+
+    if (usePinProtection) {
+      const {
+        mnemonic,
+        privateKey,
+        password,
+      } = this.props
+
+      return this.props.navigator.push({
+        screen: 'EnterPin',
+        title: 'Enter PIN',
+        passProps: {
+          mnemonic,
+          privateKey,
+          password,
+        },
+      })
+    }
+
+    onLogin()
   }
 
   render () {

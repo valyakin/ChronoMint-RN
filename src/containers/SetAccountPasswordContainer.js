@@ -14,7 +14,9 @@ import SetAccountPassword from '../screens/SetAccountPassword'
 type TSetAccountPasswordContainerProps = {
   generateMnemonic: () => void,
   isCreatingNewWallet?: boolean,
+  lastAccount: any,
   navigator: any,
+  privateKey?: string,
 }
 
 type TSetAccountPasswordContainerState = {
@@ -53,6 +55,11 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
   }
 
   handleDone = () => {
+    const {
+      privateKey,
+      generateMnemonic,
+    } = this.props
+
     const { password, passwordConfirmation } = this.state
 
     if (password !== passwordConfirmation) {
@@ -65,7 +72,9 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
     this.props.navigator.push({
       screen: 'WalletBackup',
       passProps: {
-        mnemonic: this.props.generateMnemonic(),
+        mnemonic: privateKey ? null : generateMnemonic(),
+        privateKey,
+        password,
       },
     })
   }

@@ -10,7 +10,6 @@ import {
   Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
@@ -24,8 +23,6 @@ export type TAccountPasswordProps = {
   account: TAccount,
   onChangePassword: (password: string) => void,
   onLogin: () => Promise<void>,
-  onSelectLanguage: () => void,
-  onSelectNetwork: () => void,
   onUseWallet: () => void,
 }
 
@@ -37,40 +34,11 @@ export default class AccountPassword extends PureComponent<TAccountPasswordProps
       account,
       onChangePassword,
       onLogin,
-      onSelectLanguage,
-      onSelectNetwork,
       onUseWallet,
     } = this.props
     
     return (
       <View>
-        <View style={styles.topBarActions}>
-          <TouchableOpacity
-            onPress={onSelectNetwork}
-            style={styles.topBarButton}
-          >
-            <Image
-              source={require('../images/ios-gear-outline.png')}
-              style={styles.topBarButtonImage}
-            />
-            <Text style={styles.topBarButtonLabel}>Production</Text >
-          </TouchableOpacity >
-          <View style={styles.spacer} />
-          <TouchableOpacity
-            onPress={onSelectLanguage}
-            style={styles.topBarButton}
-          >
-            <Text style={styles.topBarButtonLabel} >EN-US</Text >
-          </TouchableOpacity >
-        </View>
-        <Image
-          source={require('../images/ChronoWalletIcon.png')}
-          style={styles.logo}
-        />
-        <Image
-          source={require('../images/ChronoWalletText.png')}
-          style={styles.logoText}
-        />
         <Separator style={styles.separator} />
         <AccountItem {...account} />
         <Separator style={styles.separator} />

@@ -9,6 +9,7 @@ import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import isValid from '../utils/validators'
 import AccountPassword from '../screens/AccountPassword'
+import withLogin from '../components/withLogin'
 
 export type TAccount = {
   image: any,
@@ -22,7 +23,7 @@ export type TAccountPasswordContainerProps = {
     passwordHash: string,
   },
   navigator: any,
-  onWalletLogin: ({ encryptedPrivateKey: string, passwordHash: string }, password: string) => Promise<void>,
+  onPasswordLogin: ({ encryptedPrivateKey: string, passwordHash: string }, password: string) => Promise<void>,
 }
 
 type TAccountPasswordContainerState = {
@@ -49,7 +50,7 @@ class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerPr
       this.addError(I18n.t('AccountPassword.invalidPasswordError'))
     }
 
-    await this.props.onWalletLogin(this.props.account, password)
+    await this.props.onPasswordLogin(this.props.account, password)
   }
   
   handleSelectLanguage = () => {
@@ -87,4 +88,4 @@ class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerPr
   }
 }
 
-export default AccountPasswordContainer
+export default withLogin(AccountPasswordContainer)
