@@ -14,7 +14,6 @@ import ipfs from 'utils/IPFS'
 // import UserActiveDialog from 'components/dialogs/UserActiveDialog/UserActiveDialog'
 import { DUCK_WATCHER, WATCHER_TX_SET } from 'redux/watcher/actions'
 
-
 export const removeWatchersUserMonitor = () => () => {
   // userMonitorService
   //   .removeAllListeners('active')
@@ -27,23 +26,23 @@ export const watchInitUserMonitor = () => (dispatch) => {
   //   .start()
 }
 
-export const showConfirmTxModal = () => (dispatch, getState) => new Promise((resolve) => {
-  const isConfirmed: boolean = true
-  const st = getState()
-  // console.log(st)
-  const updatedTx = st.get(DUCK_WATCHER).confirmTx
-  resolve({ isConfirmed: isConfirmed, updatedTx: updatedTx })
-  // TODO: to implemet RN confirmation screen and enable the code below
-//   dispatch(modalsOpen({
-//     component: ConfirmTxDialog,
-//     props: {
-//       callback: (isConfirmed) => resolve(isConfirmed),
-//     },
-//   }))
-// }).catch((e) => {
-//   // eslint-disable-next-line
-//     console.error('Confirm modal error:', e)
-//   return false
+// THIS IS A FIX FOR SENDING TRAMSACTIONS
+export const showConfirmTxModal = (estimateGas, gasPriceMultiplier = 1) => (dispatch, getState) => new Promise((resolve) => {
+  if (!estimateGas) {
+    return
+  }
+  let tx = getState().get(DUCK_WATCHER).confirmTx
+  estimateGas(tx.funcName(), tx.params(), tx.value(), gasPriceMultiplier).then(({ gasPrice, gasFee, gasLimit }) => {
+    tx = tx
+      .gasPrice(gasPrice.mul(gasPriceMultiplier))
+      .setGas(gasFee.mul(gasPriceMultiplier))
+      .gasLimit(gasLimit)
+    dispatch({ type: WATCHER_TX_SET, tx })
+  })
+}).catch((e) => {
+  // eslint-disable-next-line
+  console.error('Confirm modal error:', e)
+  return { isConfirmed: false }
 })
 
 export const changeMomentLocale = (locale, dispatch) => {

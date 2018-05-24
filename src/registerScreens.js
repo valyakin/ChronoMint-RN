@@ -34,7 +34,6 @@ import Send from './containers/SendContainer'
 import Wallet from './containers/WalletContainer'
 import WalletBackup from './containers/WalletBackupContainer'
 import WalletOwners from './containers/WalletOwnersContainer'
-import WalletsApp from './screens/WalletsApp'
 import WalletsList from './containers/WalletsListContainer'
 import WalletTemplates from './containers/WalletTemplatesContainer'
 import WalletTokens from './containers/WalletTokensContainer'
@@ -67,7 +66,6 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('Wallet', () => Wallet, store, Provider)
   Navigation.registerComponent('WalletBackup', () => screenLayout(LoginScreenLayout)(WalletBackup), store, Provider)
   Navigation.registerComponent('WalletOwners', () => WalletOwners, store, Provider)
-  Navigation.registerComponent('WalletsApp', () => WalletsApp, store, Provider)
   Navigation.registerComponent('WalletsList', () => WalletsList, store, Provider)
   Navigation.registerComponent('WalletTemplates', () => WalletTemplates, store, Provider)
   Navigation.registerComponent('WalletTokens', () => WalletTokens, store, Provider)

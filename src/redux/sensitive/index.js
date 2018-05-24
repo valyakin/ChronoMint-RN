@@ -1,2 +1,2 @@
 /* eslint-disable import/prefer-default-export */
-export { sensitive } from './reducer'
+export { sensitive } from 'redux/sensitive/reducer'

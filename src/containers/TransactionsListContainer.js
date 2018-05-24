@@ -4,26 +4,27 @@
  * @flow
  */
 
-import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import WalletTransactions, { type TWalletTransactionsProps } from 'screens/WalletTransactions'
+import TransactionsList from 'components/TransactionsList'
 import {
   getSelectedWalletStore,
+  selectMainWalletTransactionsStore,
   makeGetWalletTransactionsByBlockchainAndAddress,
   type TSelectedWallet,
 } from 'redux/wallet/selectors'
 import { getAccountTransactions } from 'redux/mainWallet/actions'
 
-type TWalletTransactionsContainerProps = TWalletTransactionsProps
-
 const makeMapStateToProps = (origState) => {
   const selectedWallet: TSelectedWallet = getSelectedWalletStore(origState)
-  // const getSelectedWalletTransactions = makeGetMainWalletTransactionsByBlockchainName(selectedWallet.blockchain, selectedWallet.address)
   const walletTransactionsByBcAndAddress = makeGetWalletTransactionsByBlockchainAndAddress(selectedWallet.blockchain, selectedWallet.address)
   const mapStateToProps = (state, ownProps) => {
-    // const walletTransactions = getSelectedWalletTransactions(state, ownProps)
-    const transactions = walletTransactionsByBcAndAddress(state, ownProps)
+    const {
+      transactions,
+      latestTransactionDate,
+    } = walletTransactionsByBcAndAddress(state, ownProps)
     return {
+      latestTransactionDate,
+      mainWalletTransactionLoadingStatus: selectMainWalletTransactionsStore(state),
       transactions,
     }
   }
@@ -34,15 +35,4 @@ const mapDispatchToProps = (dispatch) => ({
   refreshTransactionsList: () => dispatch(getAccountTransactions()),
 })
 
-class WalletTransactionsContainer extends PureComponent<TWalletTransactionsContainerProps, {}> {
-
-  render () {
-    return (
-      <WalletTransactions
-        {...this.props}
-      />
-    )
-  }
-}
-
-export default connect(makeMapStateToProps, mapDispatchToProps)(WalletTransactionsContainer)
+export default connect(makeMapStateToProps, mapDispatchToProps)(TransactionsList)

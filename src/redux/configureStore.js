@@ -33,6 +33,14 @@ const getNestedReducers = (ducks) => {
 }
 
 const configureStore = () => {
+
+  // LISTEN FOR UNHANDLED PROMISE REJECTIONS
+  // [AlexO] Maybe this is a temporary solution, but...
+  window.onunhandledrejection = function (promise, reason) {
+    // eslint-disable-next-line no-console
+    console.log('%c window.onunhandledrejection', 'background: #222; color: red', promise, reason)
+  }
+
   const initialState = new Immutable.Map()
 
   const appReducer = combineReducers({

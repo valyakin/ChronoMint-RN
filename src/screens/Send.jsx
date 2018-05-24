@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import I18n from 'react-native-i18n'
 import TokenModel from 'models/tokens/TokenModel'
 import TokensCollection from 'models/tokens/TokensCollection'
 import colors from '../utils/colors'
@@ -56,22 +57,22 @@ export type TSelectedToken = {
 }
 
 type TSendProps = {
-  address: string,
   amount: ?number,
   amountInCurrency: number,
-  currentTokenBalance: number,
+  // currentTokenBalance: number,
   feeMultiplier: number,
   gasFeeAmount: ?number,
   gasFeeAmountInCurrency: ?number,
-  onChangeAmount: (amount: number) => void,
+  onChangeAmount: (amount: string) => void,
   onChangeRecipient: (recipient: string) => void,
   onFeeSliderChange: (value: number) => void,
   onSelectToken: () => void,
   recipient: string,
-  selectedBlockchainName: string,
   selectedCurrency: string,
   selectedToken: ?TSelectedToken,
-  selectedTokenSymbol: ?string,
+  // selectedTokenSymbol: ?string,
+  walletTokensAndBalance: any,
+  selectedWallet: any,
 }
 
 type TTokenSelectorProps = {
@@ -84,10 +85,9 @@ export default class Send extends PureComponent<TSendProps, {}> {
   // eslint-disable-next-line complexity
   render () {
     const {
-      address,
       amount,
       amountInCurrency,
-      currentTokenBalance,
+      // currentTokenBalance,
       feeMultiplier,
       gasFeeAmount,
       gasFeeAmountInCurrency,
@@ -96,16 +96,38 @@ export default class Send extends PureComponent<TSendProps, {}> {
       onFeeSliderChange,
       onSelectToken,
       recipient,
-      selectedBlockchainName,
       selectedCurrency,
       selectedToken,
-      selectedTokenSymbol,
+      // selectedTokenSymbol,
+      selectedWallet,
+      walletTokensAndBalance,
     } = this.props
 
+    /* Structure
+    walletTokensAndBalance {
+      balance: 0,
+      isMultisig: false,
+      tokens: [{ 'LTC': { amount: 0, balance: 0 } }],
+      tokensLength: 0,
+      walletMode: null,
+    }
+    */
+    // TODO: [AO] To remove this shame
+    const getTokenBalanceBySymbol = (selectedTokenSymbol) => {
+      const t = walletTokensAndBalance
+        .tokens
+        .find( (tokenItem) => {
+          return Object.keys(tokenItem)[0] === selectedTokenSymbol
+        })
+      return t && t[selectedTokenSymbol].balance
+    }
+    const selectedTokenSymbol: ?string = selectedToken && selectedToken.symbol || null
+    const currentTokenBalance = getTokenBalanceBySymbol(selectedTokenSymbol)
+    // const currentTokenBalance = walletTokensAndBalance.tokens[selectedTokenSymbol].balance
     const strings = {
-      amountInput: `Amount, ${selectedTokenSymbol}`,
+      amountInput: `Amount, ${selectedToken.symbol || ''}`,
       walletValue: selectedToken && [ selectedToken.symbol, selectedToken.amount ].join(' '),
-      walletTitle: `My ${selectedBlockchainName} Wallet`,
+      walletTitle: `My ${selectedWallet.blockchain} Wallet`,
       walletBalance: `${selectedCurrency} ${currentTokenBalance && currentTokenBalance.toFixed(2)}`,
       sendBalance: `${selectedCurrency} ${amountInCurrency.toFixed(2)}`,
       advancedFee: 'Advanced Fee',
@@ -122,7 +144,7 @@ export default class Send extends PureComponent<TSendProps, {}> {
           </Text>
           <Text style={styles.walletAddress}>
             { 
-              address
+              selectedWallet.address
             }
           </Text>
           <Separator style={styles.separatorDark} />
@@ -156,7 +178,7 @@ export default class Send extends PureComponent<TSendProps, {}> {
             placeholder={strings.amountInput}
             keyboardType='numeric'
             onChangeText={onChangeAmount}
-            value={amount != null ? amount.toString() : ''}
+            value={amount != null ? amount.toLocaleString(I18n.currentLocale()) : ''}
           />
           <Text style={styles.sendBalance}>
             {
@@ -175,7 +197,7 @@ export default class Send extends PureComponent<TSendProps, {}> {
             step={0.1}
             handleValueChange={onFeeSliderChange}
           />
-          <Text style={styles.advancedFee}>
+          {/*<Text style={styles.advancedFee}>
             {
               strings.advancedFee
             }
@@ -187,7 +209,7 @@ export default class Send extends PureComponent<TSendProps, {}> {
             {
               strings.scanQr
             }
-          </Text>
+          </Text>*/}
         </View>
       </ScrollView>
     )

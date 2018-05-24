@@ -8,15 +8,13 @@
 import React, { PureComponent } from 'react'
 import { type Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { getWTokens } from 'redux/session/selectors'
+import { getTokens } from 'redux/tokens/selectors'
 import { mainTransfer } from 'redux/mainWallet/actions'
-import AmountModel from 'models/Amount' // { default as AmountModel }
-import BigNumber from 'bignumber.js'
+// eslint-disable-next-line
+import Amount from 'models/Amount'
+import { BigNumber } from 'bignumber.js'
 import TokenModel from 'models/tokens/TokenModel'
-import ConfirmSend from '../screens/ConfirmSend'
-
-type TTokenModel = typeof TokenModel
-type TAmountModel = typeof AmountModel
+import ConfirmSend from 'screens/ConfirmSend'
 
 export type TConfirmSendContainerProps = {
   tokensDuck: any, // TODO: to make a flow type for this
@@ -38,8 +36,8 @@ export type TConfirmSendContainerProps = {
     token: number,
   },
   mainTransfer: (
-    token: TTokenModel,
-    amount: TAmountModel,
+    token: TokenModel,
+    amount: Amount,
     recipient: string,
     feeMultiplier: number,
   ) => void,
@@ -71,13 +69,14 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
     if (type === 'NavBarButtonPress') {
       switch (id) {
         case 'cancel': {
-          // Go back to previous screen (currently it is 'Send' screen only)
+          // Go back to previous screen
           this.props.navigator.pop()
           break
         }
+        // Close confirm screen, reset Send screen, go to Wallet screren (TODO: select transactions tab)
         case 'confirm': {
           this.sendTransaction()
-          this.props.navigator.pop()
+          this.props.navigator.resetTo({ screen: 'Wallet' })
           break
         }
       }
@@ -85,30 +84,31 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
   }
 
   sendTransaction = () => {
-    const token = this.props.tokensDuck.item(this.props.currentToken)
-    const toSendBigNumber: BigNumber = new BigNumber(this.props.amountToSend.token)
-    const bnWithDecimals = token.addDecimals(toSendBigNumber)
-    const amountToSend = new AmountModel(bnWithDecimals, this.props.currentToken)
+    const token: TokenModel = this.props.tokensDuck.item(this.props.currentToken)
+    // const toSendBigNumber: BigNumber = new BigNumber(this.props.amountToSend.token)
+    const bnWithDecimals: BigNumber = token.addDecimals(this.props.amountToSend.token)
+    const amountToSend = new Amount(bnWithDecimals, this.props.currentToken)
     const recipient: string = this.props.recipientAddress
     const feeMultiplier = this.props.feeMultiplier
-
     this.props.mainTransfer(token, amountToSend, recipient, feeMultiplier)
   }
 
   render () {
-    return (<ConfirmSend
-      amountToSend={this.props.amountToSend}
-      balance={this.props.balance}
-      currentToken={this.props.currentToken}
-      fee={this.props.fee}
-      recipientAddress={this.props.recipientAddress}
-      selectedCurrency={this.props.selectedCurrency}
-    />)
+    return (
+      <ConfirmSend
+        amountToSend={this.props.amountToSend}
+        balance={this.props.balance}
+        currentToken={this.props.currentToken}
+        fee={this.props.fee}
+        recipientAddress={this.props.recipientAddress}
+        selectedCurrency={this.props.selectedCurrency}
+      />
+    )
   }
 }
 
 const mapStateToProps = (state) => ({
-  tokensDuck: getWTokens()(state),
+  tokensDuck: getTokens(state),
 })
 
 const mapDispatchToProps  = (dispatch: Dispatch<any>) => {

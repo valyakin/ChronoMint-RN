@@ -4,12 +4,13 @@
  *
  * @flow
  */
-import Web3 from 'web3'
+
 import { bootstrap } from 'redux/session/actions'
 import networkService from 'login/network/NetworkService'
+import store from 'redux/configureStore'
+import Web3 from 'web3'
 import web3Provider from 'login/network/Web3Provider'
 import web3Utils from 'login/network/Web3Utils'
-import store from './redux/configureStore'
 
 window.web3 = Web3
 
