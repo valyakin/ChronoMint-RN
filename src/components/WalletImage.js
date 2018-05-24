@@ -21,13 +21,15 @@ import {
 } from 'login/network/BitcoinProvider'
 import { BLOCKCHAIN_NEM } from 'dao/NemDAO'
 
+export type TWalletMode =  '2fa' | 'shared' | 'timeLocked'
+
 type WalletImageProps = {
-  bcTitle: ?string,
+  blockchain: string,
   imageStyle?: TStyle,
   shapeStyle?: TStyle,
-  style?: TStyle,
-  walletMode?: '2fa' | 'shared' | 'timeLocked',
   size?: 'big'|'small',
+  style?: TStyle,
+  walletMode?: ?TWalletMode,
 }
 
 const walletImages = {
@@ -48,7 +50,7 @@ const walletBigImages = {
   [BLOCKCHAIN_NEM]: require('../images/coin-nem-big.png'),
 }
 
-const getFallbackWalletImage = (bcTitle: ?string, size: string = 'small') => {
+const getFallbackWalletImage = (blockchain: ?string, size: string = 'small') => {
   const bcsList = [
     BLOCKCHAIN_BITCOIN_CASH,
     BLOCKCHAIN_BITCOIN_GOLD,
@@ -58,15 +60,19 @@ const getFallbackWalletImage = (bcTitle: ?string, size: string = 'small') => {
     BLOCKCHAIN_NEM,
   ]
 
-  if (bcTitle && bcsList.includes(bcTitle)) {
-    return size === 'big' ? walletBigImages[bcTitle] : walletImages[bcTitle]
+  if (blockchain && bcsList.includes(blockchain)) {
+    return size === 'big'
+      ? walletBigImages[blockchain]
+      : walletImages[blockchain]
   } else {
-    return size === 'big' ? require('../images/wallet-circle-big.png') : require('../images/wallet-circle-small.png')
+    return size === 'big'
+      ? require('../images/wallet-circle-big.png')
+      : require('../images/wallet-circle-small.png')
   }
 }
 
 const WalletImage = ({
-  bcTitle,
+  blockchain,
   walletMode,
   shapeStyle,
   imageStyle,
@@ -74,12 +80,12 @@ const WalletImage = ({
   size,
 }: WalletImageProps) => {
 
-  // Size guard. Default is small
+  // Size guard. Default is small wallet icon
   let imageSize = 'small'
   if (size) {
     imageSize = size
   }
-  const wImage = getFallbackWalletImage(bcTitle, imageSize)
+  const wImage = getFallbackWalletImage(blockchain, imageSize)
 
   return (
     <View style={style}>
@@ -91,7 +97,7 @@ const WalletImage = ({
           />
       }
       {
-        (typeof bcTitle !== 'undefined') ?
+        (typeof blockchain !== 'undefined') ?
           <Image source={wImage} /> :
           <View
             style={[

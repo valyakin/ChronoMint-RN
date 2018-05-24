@@ -16,7 +16,6 @@ import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_MULTISIG_WALLET } from 'redux/multisigWallet/actions'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
 import { DUCK_WALLET, getCurrentWallet } from 'redux/wallet/actions'
-import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
 
 import Amount from 'models/Amount'
 import BalanceModel from 'models/tokens/BalanceModel'
@@ -29,6 +28,21 @@ import MultisigWalletCollection from 'models/wallet/MultisigWalletCollection'
 import TokenModel from 'models/tokens/TokenModel'
 import TokensCollection from 'models/tokens/TokensCollection'
 import TxModel from 'models/TxModel'
+
+import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
+import {
+  BLOCKCHAIN_BITCOIN_CASH,
+  BLOCKCHAIN_BITCOIN_GOLD,
+  BLOCKCHAIN_BITCOIN,
+  BLOCKCHAIN_LITECOIN,
+} from 'login/network/BitcoinProvider'
+import { BLOCKCHAIN_NEM } from 'dao/NemDAO'
+
+const sortArrayByObjectKeys = (a, b) => {
+  const oA = Object.keys(a)[0]
+  const oB = Object.keys(b)[0]
+  return (oA > oB) - (oA < oB)
+}
 
 var isWalletAddressEqualish = function (v1, v2) {
   // console.log('COMPARING')
@@ -352,10 +366,10 @@ export const selectMainWalletTransactionsStore = (state) => {
 }
 /**
  * WALLET SECTIONS
- * 
+ *
  *  Usage example:
- * 
- * 
+ *
+ *
  * const getSectionedWallets = makeGetSectionedWallets()
  *   const mapStateToProps = (state, props) => {
  *     const makeMapStateToProps = () => {
@@ -365,14 +379,14 @@ export const selectMainWalletTransactionsStore = (state) => {
  *   }
  *  return mapStateToProps
  * }
- * 
+ *
  * @connect(makeMapStateToProps)
  * export default class AnyComponent extends PureComponent {
  */
 
 /**
  * This is memoized selector. Produce the list of blockchain sections and wallets
- * 
+ *
  * @return { [{title: string, data: string | string[]}] }
  *         Returns list of sections for the ReactNative SectionList.
  */
@@ -399,7 +413,7 @@ export const getMainWalletSections = createSelector(
 /**
  * This is the factory for selector
  * It may be used in different components and each of them will have its own memoized copy
- * 
+ *
  * @return { [{title: string, data: string | string[]}] }
  *         Returns list of sections for the ReactNative SectionList.
  */
@@ -412,7 +426,7 @@ export const makeGetSectionedWallets = () => createSelector(
 
 /**
  * TOKENS AND BALANCE BY ADDRESS
- * 
+ *
  * Usage example:
  * const makeMapStateToProps = (origState, origProps) => {
  *  const getWalletTokensAndBalanceByAddress = makeGetWalletTokensAndBalanceByAddress()
@@ -424,10 +438,10 @@ export const makeGetSectionedWallets = () => createSelector(
  *   }
  *   return mapStateToProps
  * }
- * 
+ *
  * @connect(makeMapStateToProps)
  * export default class AnyComponent extends PureComponent<WalletPanelProps> {
- * 
+ *
  * NOTE: component AnyComnnect MUST have props walletAddress: string & blockchain: string
  * Both props are required, because we may have same wallet addresses in "Bitcoin" and "Bitcoin Cash" blockchains
  */
@@ -435,11 +449,11 @@ export const makeGetSectionedWallets = () => createSelector(
 /**
  * This is the factory for selector
  * It may be used in different components and each of them will have its own memoized copy
- * 
+ *
  * @return { { balance: number, tokens: [ {ETH: number } ] } }
  *         Returns list of sections for the ReactNative SectionList.
  */
-export const makeGetWalletTokensAndBalanceByAddress = (blockchain: string, address?: string) => {
+export const makeGetWalletTokensAndBalanceByAddress = (blockchain: string) => {
   return createSelector(
     [
       getMainWalletSections,
@@ -495,7 +509,7 @@ export const makeGetWalletTokensAndBalanceByAddress = (blockchain: string, addre
           const { amount, symbol } = tokenKeyValuePair
           const tokenPrice = prices[ symbol ] && prices[ symbol ][ selectedCurrency ] || null
           accumulator.balance += ( ( amount || 0 ) * ( tokenPrice || 0 ))
-          accumulator.tokens.push({ 
+          accumulator.tokens.push({
             [ symbol ]: {
               amount: amount,
               balance: amount * (tokenPrice || 0),
@@ -545,7 +559,7 @@ export const makeGetMainWalletTransactionsByBlockchainName = (
     ],
     (
       mainWalletTokens,
-      mainWalletTransactions, // Immutable Map 
+      mainWalletTransactions, // Immutable Map
       mainWalletTokensCollection, // TokensCollection
     ) => {
       /**
@@ -576,7 +590,7 @@ export const makeGetMainWalletTransactionsByBlockchainName = (
           return isNeedIt
         })
         .map( (txModel: TxModel) => {
-          const isSendTransaction = txModel.to().toLowerCase() === currentWalletAddress.toLowerCase()
+          const isSendTransaction = txModel.to() && txModel.to().toLowerCase() === currentWalletAddress.toLowerCase()
           const toAddress = txModel.to()
           const fromAddress = txModel.from()
           const transactionType = isSendTransaction
@@ -621,7 +635,7 @@ export const getSelectedWalletBalanceInSelectedCurrency = createSelector(
     prices,
     selectedCurrency,
   ) => {
-    const { blockchain, address }: { blockchain: ?string, address: ?string } = selectedWallet
+    const { blockchain }: { blockchain: ?string } = selectedWallet
 
     const convertAmountToNumber = (symbol: string, amount: Amount) =>
       mainWalletTokens
@@ -637,17 +651,18 @@ export const getSelectedWalletBalanceInSelectedCurrency = createSelector(
         return bToken.blockchain() === blockchain
       })
       // simplify format
-      .map( (balanceItem: BalanceModel) => {
-        const bAmount: Amount = balanceItem.amount()
-        const bSymbol: string = balanceItem.symbol()
-        const tAmount: number = convertAmountToNumber(bSymbol, bAmount)
-        let tokenAmountKeyValuePair = {}
-        tokenAmountKeyValuePair[bSymbol] = tAmount
-        return {
-          symbol: bSymbol,
-          amount: tAmount,
+      .reduce( (accumulator: any[], balanceItem: BalanceModel) => {
+        const bAmount: ?Amount = balanceItem.amount()
+        const bSymbol: ?string = balanceItem.symbol()
+        if (bSymbol && bAmount) {
+          const tAmount: number = convertAmountToNumber(bSymbol, bAmount)
+          accumulator.push({
+            symbol: bSymbol,
+            amount: tAmount,
+          })
         }
-      })
+        return accumulator
+      }, [])
 
     const arrWalletTokensAndBalanceByAddress = [...walletTokensAndBalanceByAddress.values()]
     const balance: number = arrWalletTokensAndBalanceByAddress
@@ -681,9 +696,49 @@ const makeGetTokenSymbolListByBlockchainName = (blockchainName: string) =>
         .toArray()
   )
 
+var isWalletInfoEqualish = function (v1, v2) {
+
+  if (v1.tokensLength !== v2.tokensLength) {
+    return false
+  }
+  if (v1.isMultisig !== v2.isMultisig) {
+    return false
+  }
+  if (v1.walletMode !== v2.walletMode) {
+    return false
+  }
+  if (v1.balance !== v2.balance) {
+    return false
+  }
+
+  if (Array.isArray(v1.tokens) && Array.isArray(v2.tokens)) {
+
+    if (v1.tokens !== v2.tokens) {
+      return false
+    }
+
+    const diffObjects = (a, b) => {
+      return Object.keys(a).concat(Object.keys(b)).reduce( (map, k) => {
+        if (a[k] !== b[k]) map[k] = b[k]
+        return map
+      }, {})
+    }
+
+    return v1.tokens.every( (v, ix) =>
+      diffObjects(v2.tokens[ix], v)
+    )
+  }
+
+  return false
+}
+
+const createEqualishWalletInfoSelector = createSelectorCreator(
+  defaultMemoize,
+  isWalletInfoEqualish,
+)
+
 export const makeGetWalletInfoByBockchainAndAddress = (blockchain: string, address: string) => {
-  const getTokenSymbolListByBlockchainName = makeGetTokenSymbolListByBlockchainName(blockchain)
-  return createSelector(
+  return createEqualishWalletInfoSelector(
     [
       getMainWalletStore,
       getMultisigWalletStore,
@@ -693,7 +748,6 @@ export const makeGetWalletInfoByBockchainAndAddress = (blockchain: string, addre
       selectTokensStore,
       selectMarketPricesListStore,
       selectMarketPricesSelectedCurrencyStore,
-      getTokenSymbolListByBlockchainName,
     ],
     (
       mainWallet,
@@ -704,6 +758,199 @@ export const makeGetWalletInfoByBockchainAndAddress = (blockchain: string, addre
       mainWalletTokens,
       prices,
       selectedCurrency,
+    ) => {
+
+      // Method to search through all wallets and detect wallet type (multisig or not)
+      const findWallet = () => {
+        let isMainWalletFound: boolean = false
+        let isMultisigWalletFound: boolean = false
+
+        const mainAddressesList: string[] = mainWallet
+          .addresses()
+          .list()
+          .toArray()
+          .map( (addrModel: AddressModel) => addrModel.address())
+
+        const multisigActiveWalletsList: string[] = multisigWallet
+          .activeWallets()
+          .map( (multiWallet: MultisigWalletModel) => multiWallet.address())
+
+        const multisigTimeLockedWalletsList: string[] = multisigWallet
+          .timeLockedWallets()
+          .map( (multiWallet: MultisigWalletModel) => multiWallet.address())
+
+        if (mainAddressesList && mainAddressesList.length) {
+          isMainWalletFound = mainAddressesList && mainAddressesList.includes(address)
+        }
+
+        // If Ethereum, then look into main and multisig
+        if (blockchain === BLOCKCHAIN_ETHEREUM) {
+          const multisigWalletsList: string[] = [...multisigActiveWalletsList, ...multisigTimeLockedWalletsList]
+          isMultisigWalletFound = multisigWalletsList.includes(address)
+        }
+
+        const searchResult = {
+          isMainWalletFound,
+          isMultisigWalletFound,
+        }
+
+        return searchResult
+      }
+
+      let result = {
+        isMultisig: false,
+        walletMode: null,
+      }
+
+      const {
+        isMainWalletFound,
+        isMultisigWalletFound,
+      } = findWallet()
+      // console.log('WALLET SEARCH: %s, %s', blockchain, address)
+      // console.log('WALLET SEARCH RESULT: Main: %s, Multi: %s', isMainWalletFound, isMultisigWalletFound)
+
+      if (isMainWalletFound) {
+        const convertAmountToNumber = (symbol, amount) =>
+          mainWalletTokens
+            .item(symbol)
+            .removeDecimals(amount)
+            .toNumber()
+
+        const balanceAndTokens = mainWalletBalances // BalancesCollection, array of BalanceModel
+          .filter( (balanceItem) => {
+            const bSymbol = balanceItem.symbol()
+            const bToken = mainWalletTokens.item(bSymbol)
+            return bToken.blockchain() === blockchain
+          })
+          .reduce( (accumulator: any[], balanceItem: BalanceModel) => {
+            const bAmount: ?Amount = balanceItem.amount()
+            const bSymbol: ?string = balanceItem.symbol()
+            if (bSymbol && bAmount) {
+              const tAmount: number = convertAmountToNumber(bSymbol, bAmount)
+              accumulator.push({
+                symbol: bSymbol,
+                amount: tAmount,
+              })
+            }
+            return accumulator
+          }, [])
+          .reduce( (accumulator, tokenKeyValuePair) => {
+            const { amount, symbol } = tokenKeyValuePair
+            const tokenPrice = prices && prices[ symbol ] && prices[ symbol ][ selectedCurrency ] || null
+
+            // Increasing balance only if we have necessary data
+            if (amount && tokenPrice) {
+              accumulator.balance += ( amount * tokenPrice )
+            }
+
+            accumulator.tokens.push({
+              [ symbol ]: {
+                amount: amount,
+                balance: amount * (tokenPrice || 0),
+              },
+            })
+
+            return accumulator
+          }, {
+            balance: 0,
+            tokens: [],
+          })
+
+        // Append single-token blockchains with empty token or sort tokens list alaphabetically
+        if (!balanceAndTokens.tokens.length) {
+          switch (blockchain) {
+            case BLOCKCHAIN_BITCOIN_CASH: {
+              balanceAndTokens.tokens = [{ 'BCC': { amount: 0, balance: 0 } }]
+              break
+            }
+            case BLOCKCHAIN_BITCOIN_GOLD: {
+              balanceAndTokens.tokens = [{ 'BTG': { amount: 0, balance: 0 } }]
+              break
+            }
+            case BLOCKCHAIN_BITCOIN: {
+              balanceAndTokens.tokens = [{ 'BTC': { amount: 0, balance: 0 } }]
+              break
+            }
+            case BLOCKCHAIN_LITECOIN: {
+              balanceAndTokens.tokens = [{ 'LTC': { amount: 0, balance: 0 } }]
+              break
+            }
+          }
+        } else {
+          balanceAndTokens.tokens.sort(sortArrayByObjectKeys)
+        }
+
+        const tokensLength = balanceAndTokens.tokens.length
+
+        const finalResult = {
+          ...result,
+          ...balanceAndTokens,
+          tokensLength,
+        }
+
+        return finalResult
+
+      } else {
+        if (isMultisigWalletFound) {
+          result.isMultisig = true
+          return 'NULLMULTISIG'
+        } else {
+          return 'NOT FOUND'
+        }
+      }
+    }
+  )
+}
+
+var isWalletTransactionsEqualish = function (v1, v2) {
+
+  if (v1.latestTransactionDate !== v2.latestTransactionDate) {
+    return false
+  }
+
+  if (Array.isArray(v1.transactions) && Array.isArray(v2.transactions)) {
+
+    if (v1.transactions.length !== v2.transactions.length) {
+      return false
+    }
+
+    const diffObjects = (a, b) => {
+      return Object.keys(a).concat(Object.keys(b)).reduce( (map, k) => {
+        if (a[k] !== b[k]) map[k] = b[k]
+        return map
+      }, {})
+    }
+
+    return v1.transactions.every( (v, ix) => {
+      // console.log(v2[ix], v)
+      // return v2[ix] === v
+      return diffObjects(v2.transactions[ix], v)
+    })
+  }
+
+  return false
+}
+
+const createEqualishWalletTransactionSelector = createSelectorCreator(
+  defaultMemoize,
+  isWalletTransactionsEqualish,
+)
+
+export const makeGetWalletTransactionsByBlockchainAndAddress = (blockchain: string, address: string) => {
+  const getTokenSymbolListByBlockchainName = makeGetTokenSymbolListByBlockchainName(blockchain)
+  return createEqualishWalletTransactionSelector(
+    [
+      getMainWalletStore,
+      getMultisigWalletStore,
+      selectMainWalletTransactionsListStore,
+      selectTokensStore,
+      getTokenSymbolListByBlockchainName,
+    ],
+    (
+      mainWallet,
+      multisigWallet,
+      mainWalletTransactionsList,
+      mainWalletTokens,
       mainWalletTokensSymbolList,
     ) => {
 
@@ -729,6 +976,7 @@ export const makeGetWalletInfoByBockchainAndAddress = (blockchain: string, addre
         if (mainAddressesList && mainAddressesList.length) {
           isMainWalletFound = mainAddressesList && mainAddressesList.includes(address)
         }
+
         // If Ethereum, then look into main and multisig
         if (blockchain === BLOCKCHAIN_ETHEREUM) {
           const multisigWalletsList: string[] = [...multisigActiveWalletsList, ...multisigTimeLockedWalletsList]
@@ -739,13 +987,8 @@ export const makeGetWalletInfoByBockchainAndAddress = (blockchain: string, addre
           isMainWalletFound,
           isMultisigWalletFound,
         }
-        return searchResult
-      }
 
-      let result = {
-        transactions: [],
-        isMultisig: false,
-        mode: null,
+        return searchResult
       }
 
       const {
@@ -754,127 +997,16 @@ export const makeGetWalletInfoByBockchainAndAddress = (blockchain: string, addre
       } = findWallet()
 
       if (isMainWalletFound) {
-        // console.log('CALC MAIN WALLET')
+
         const convertAmountToNumber = (symbol, amount) =>
           mainWalletTokens
             .item(symbol)
             .removeDecimals(amount)
             .toNumber()
 
-        // const walletTokensAndBalanceByAddress = mainWalletBalances // BalancesCollection, array of BalanceModel
-        //   .filter( (balanceItem) => {
-        //     const bSymbol = balanceItem.symbol()
-        //     const bToken = mainWalletTokens.item(bSymbol)
-        //     return bToken.blockchain() === blockchain
-        //   })
-        //   .map( (balance) => {
-        //     const bAmount = balance.amount()
-        //     const bSymbol = balance.symbol()
-        //     const tAmount = convertAmountToNumber(bSymbol, bAmount)
-        //     let tokenAmountKeyValuePair = {}
-        //     tokenAmountKeyValuePair[bSymbol] = tAmount
-        //     return {
-        //       symbol: bSymbol,
-        //       amount: tAmount,
-        //     }
-        //   })
-
-        // const arrWalletTokensAndBalanceByAddress = [...walletTokensAndBalanceByAddress.values()]
-        // const balanceAndTokens = arrWalletTokensAndBalanceByAddress
-        //   .reduce( (accumulator, tokenKeyValuePair) => {
-        //     const { amount, symbol } = tokenKeyValuePair
-        //     // if (symbol === 'XEM') {
-        //     //   console.log('XEM amount and price: %s, %s. Selectedcurrency is %s', amount, prices[ symbol ] && prices[ symbol ][ selectedCurrency ], selectedCurrency)
-        //     // }
-        //     const tokenPrice = prices && prices[ symbol ] && prices[ symbol ][ selectedCurrency ] || null
-        //     if (amount && tokenPrice) {
-        //       console.log(' \n\n>>>>>>>>>>>>>>>>>> INCREMENTING FUCK!!!', amount * tokenPrice, symbol)
-        //       accumulator['balance'] += ( amount * tokenPrice )
-            
-        //     }
-        //     accumulator.a += 1
-        //     if (symbol === 'XEM' && prices && prices[ symbol ]) {
-        //       console.log('prices[XEM], prices[XEM][ selectedCurrency ]', prices[ symbol ], prices[ symbol ][ selectedCurrency ])
-        //       console.log('balance: %s, amount: %s, tokenPrice: %s', accumulator.balance, amount, tokenPrice)
-        //     }
-        //     accumulator.tokens.push({ 
-        //       [ symbol ]: {
-        //         amount: amount,
-        //         balance: amount * (tokenPrice || 0),
-        //       },
-        //     })
-        //     accumulator.tokens = accumulator.tokens.sort((a, b) => {
-        //       const oA = a.symbol
-        //       const oB = b.symbol
-        //       return (oA > oB) - (oA < oB)
-        //     })
-        //     return accumulator
-        //   }, {
-        //     balance: 33,
-        //     a: 0,
-        //     tokens: [],
-        //   })
-
-        const balanceAndTokens = mainWalletBalances // BalancesCollection, array of BalanceModel
-          .filter( (balanceItem) => {
-            const bSymbol = balanceItem.symbol()
-            const bToken = mainWalletTokens.item(bSymbol)
-            return bToken.blockchain() === blockchain
-          })
-          .map( (balance) => {
-            const bAmount = balance.amount()
-            const bSymbol = balance.symbol()
-            const tAmount = convertAmountToNumber(bSymbol, bAmount)
-            let tokenAmountKeyValuePair = {}
-            tokenAmountKeyValuePair[bSymbol] = tAmount
-            return {
-              symbol: bSymbol,
-              amount: tAmount,
-            }
-          })
-          .reduce( (accumulator, tokenKeyValuePair) => {
-            const { amount, symbol } = tokenKeyValuePair
-            if (symbol === 'ETH') {
-              console.log('ETH amount and price: %s, %s. Selectedcurrency is %s', amount, prices[ symbol ] && prices[ symbol ][ selectedCurrency ], selectedCurrency)
-            }
-            const tokenPrice = prices && prices[ symbol ] && prices[ symbol ][ selectedCurrency ] || null
-            if (amount && tokenPrice) {
-              accumulator.balance += ( amount * tokenPrice )
-              console.log(' \n\n>>>>>>>>>>>>>>>>>> INCREMENTING FUCK!!!', accumulator.balance, symbol)
-            
-            }
-            accumulator.a += 1
-            if (symbol === 'ETH' && prices && prices[ symbol ]) {
-              console.log('prices[ETH], prices[ETH][ selectedCurrency ]', prices[ symbol ], prices[ symbol ][ selectedCurrency ])
-              console.log('balance: %s, amount: %s, tokenPrice: %s', accumulator.balance, amount, tokenPrice)
-            }
-            accumulator.tokens.push({ 
-              [ symbol ]: {
-                amount: amount,
-                balance: amount * (tokenPrice || 0),
-              },
-            })
-            accumulator.tokens = accumulator.tokens.sort((a, b) => {
-              const oA = a.symbol
-              const oB = b.symbol
-              return (oA > oB) - (oA < oB)
-            })
-            return accumulator
-          }, {
-            balance: 0,
-            a: 0,
-            tokens: [],
-          })
-
-        if (blockchain === 'Ethereum' && prices && prices[ 'ETH' ]) {
-          console.log('Now we have a price. Balance is:', balanceAndTokens)
-        }
-        // if (blockchain === 'Ethereum') {
-        //   console.log(balanceAndTokens)
-        // }
-        result['transactions'] = mainWalletTransactionsList
+        const transactions = mainWalletTransactionsList
           .filter( (txModel: TxModel) => {
-            const isNeedIt = mainWalletTokensSymbolList.includes(txModel.symbol()) // if sumbol of a transaction in range of current blockchain
+            const isNeedIt = mainWalletTokensSymbolList.includes(txModel.symbol()) // if symbol of a transaction in range of current blockchain
               && [txModel.to(), txModel.from()].includes(address) // if to or from address of a transaction contians curent wallet's address
             return isNeedIt
           })
@@ -894,18 +1026,25 @@ export const makeGetWalletInfoByBockchainAndAddress = (blockchain: string, addre
               address: transactionAddress,
               amount: convertAmountToNumber(txModel.symbol(), txModel.value()),
               symbol: txModel.symbol(),
-              confirmations: 1,
+              confirmations: 1, // TODO
               txDate: txModel.get('time'),
             }
           })
           .toArray()
+          .sort( (a, b) => {
+            const aDate = a.txDate
+            const bDate = b.txDate
+            return (aDate > bDate) - (aDate < bDate)
+          })
+        // console.log(transactions)
+        const latestTransactionDate = transactions && ( transactions[0] !== undefined ) && transactions[0].txDate || null
 
-        result = { ...result, ...balanceAndTokens }
-        // console.log('\n\n\n\n\nMEGARESULT:', result)
-        return result
+        return {
+          transactions,
+          latestTransactionDate,
+        }
       } else {
         if (isMultisigWalletFound) {
-          result.isMultisig = true
           return 'NULLMULTISIG'
         } else {
           return 'NOT FOUND'
@@ -914,95 +1053,3 @@ export const makeGetWalletInfoByBockchainAndAddress = (blockchain: string, addre
     }
   )
 }
-/*
-
-export const getMainWalletStore = (state: any): MainWalletModel =>
-  state.get(DUCK_MAIN_WALLET)
-
-export const getMultisigWalletStore = (state: any): MultisigWalletModel => {
-
-export const makeGetWalletTokensAndBalanceByAddress = (blockchain: string, address?: string) => {
-  return createSelector(
-    [
-      getMainWalletSections,
-      selectMainWalletTransactionsListStore,
-      selectMainWalletAddressesListStore,
-      selectMainWalletBalancesListStore,
-      selectTokensStore,
-      selectMarketPricesListStore,
-      selectMarketPricesSelectedCurrencyStore,
-    ],
-    (
-      addressesAndBlockchains,
-      mainWalletTransactionsList,
-      mainWalletAddressesList,
-      mainWalletBalances,
-      mainWalletTokens,
-      prices,
-      selectedCurrency,
-    ) => {
-
-      /**
-       * Internal utility
-       * @private
-
-      const convertAmountToNumber = (symbol, amount) =>
-        mainWalletTokens
-          .item(symbol)
-          .removeDecimals(amount)
-          .toNumber()
-
-      const walletTokensAndBalanceByAddress = mainWalletBalances // BalancesCollection, array of BalanceModel
-        .filter( (balanceItem) => {
-          const bSymbol = balanceItem.symbol()
-          const bToken = mainWalletTokens.item(bSymbol)
-          return bToken.blockchain() === blockchain
-        })
-        .map( (balance) => {
-          const bAmount = balance.amount()
-          const bSymbol = balance.symbol()
-          const tAmount = convertAmountToNumber(bSymbol, bAmount)
-          let tokenAmountKeyValuePair = {}
-          tokenAmountKeyValuePair[bSymbol] = tAmount
-          return {
-            symbol: bSymbol,
-            amount: tAmount,
-          }
-        })
-
-      const arrWalletTokensAndBalanceByAddress = [...walletTokensAndBalanceByAddress.values()]
-      // console.log(arrWalletTokensAndBalanceByAddress)
-      const result = arrWalletTokensAndBalanceByAddress
-        .reduce( (accumulator, tokenKeyValuePair) => {
-          const { amount, symbol } = tokenKeyValuePair
-          const tokenPrice = prices[ symbol ] && prices[ symbol ][ selectedCurrency ] || null
-          accumulator.balance += ( ( amount || 0 ) * ( tokenPrice || 0 ))
-          accumulator.tokens.push({ 
-            [ symbol ]: {
-              amount: amount,
-              balance: amount * (tokenPrice || 0),
-            },
-          })
-          accumulator.tokens = accumulator.tokens.sort((a, b) => {
-            const oA = a.symbol
-            const oB = b.symbol
-            return (oA > oB) - (oA < oB)
-          })
-          return accumulator
-        }, {
-          balance: 0,
-          tokens: [],
-        })
-
-      // Let's add an address of Main Wallet into final result
-      const currentWallet = addressesAndBlockchains
-        .find((mainWalletAddrAndChain) => {
-          return mainWalletAddrAndChain.title === blockchain
-        })
-      result.address = currentWallet && currentWallet.data && currentWallet.data[0]
-
-      return result
-    }
-  )
-}
-*/

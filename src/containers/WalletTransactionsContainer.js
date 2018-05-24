@@ -1,16 +1,44 @@
-/**
- * Copyright 2017–2018, LaborX PTY
+/* Copyright 2017–2018, LaborX PTY
  * Licensed under the AGPL Version 3 license.
  *
  * @flow
  */
 
 import React, { PureComponent } from 'react'
-import WalletTransactions, { type TWalletTransactionsProps } from '../screens/WalletTransactions'
+import { connect } from 'react-redux'
+import WalletTransactions, { type TWalletTransactionsProps } from 'screens/WalletTransactions'
+import {
+  getSelectedWalletStore,
+  makeGetWalletTransactionsByBlockchainAndAddress,
+  type TSelectedWallet,
+} from 'redux/wallet/selectors'
+import { getAccountTransactions } from 'redux/mainWallet/actions'
 
 type TWalletTransactionsContainerProps = TWalletTransactionsProps
 
+const makeMapStateToProps = (origState) => {
+  const selectedWallet: TSelectedWallet = getSelectedWalletStore(origState)
+  // const getSelectedWalletTransactions = makeGetMainWalletTransactionsByBlockchainName(selectedWallet.blockchain, selectedWallet.address)
+  const walletTransactionsByBcAndAddress = makeGetWalletTransactionsByBlockchainAndAddress(selectedWallet.blockchain, selectedWallet.address)
+  const mapStateToProps = (state, ownProps) => {
+    // const walletTransactions = getSelectedWalletTransactions(state, ownProps)
+    const transactions = walletTransactionsByBcAndAddress(state, ownProps)
+    return {
+      transactions,
+    }
+  }
+  return mapStateToProps
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  refreshTransactionsList: () => dispatch(getAccountTransactions()),
+})
+
 class WalletTransactionsContainer extends PureComponent<TWalletTransactionsContainerProps, {}> {
+  getDerivedStateFromProps (nextProps, prevState) {
+    console.log('DERIVED WalletTransactionsContainer')
+    console.log(nextProps)
+  }
   render () {
     return (
       <WalletTransactions
@@ -20,4 +48,4 @@ class WalletTransactionsContainer extends PureComponent<TWalletTransactionsConta
   }
 }
 
-export default WalletTransactionsContainer
+export default connect(makeMapStateToProps, mapDispatchToProps)(WalletTransactionsContainer)

@@ -11,29 +11,33 @@ import {
   View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-import WalletImage from './WalletImage'
+import WalletImage, { type TWalletMode } from './WalletImage'
 import styles from './styles/DetailsSectionStyles'
 
 export type TDetailSection = {
-  mode: '2fa' | 'shared' | 'timeLocked',
+  walletMode?: ?TWalletMode,
   address: string,
   balance: number,
   tokensLength: number,
+  blockchain: string,
 }
 
 const DetailsSection = (
   {
-    mode,
+    walletMode,
     address,
     balance,
     tokensLength,
+    blockchain,
   }: TDetailSection
 ) => (
   <View style={styles.walletDetailsSection}>
     <WalletImage
-      walletMode={mode}
-      shapeStyle={styles.walletImageShape}
+      blockchain={blockchain}
       imageStyle={styles.walletImageIcon}
+      shapeStyle={styles.walletImageShape}
+      size='big'
+      walletMode={walletMode}
     />
     <Text style={styles.address}>
       {

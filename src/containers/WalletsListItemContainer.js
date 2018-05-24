@@ -61,10 +61,6 @@ class WalletsListItemContainer extends PureComponent<TWalletsListItemContainerPr
     // Wallet will use this info by itself
     this.props.navigator.push({
       screen: 'Wallet',
-      // passProps: {
-      //   blockchain,
-      //   address,
-      // },
     })
   }
 

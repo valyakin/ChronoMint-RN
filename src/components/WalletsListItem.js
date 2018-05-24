@@ -13,7 +13,7 @@ import {
   View,
 } from 'react-native'
 import styles from 'components/styles/WalletListItemStyles'
-import WalletImage from 'components/WalletImage'
+import WalletImage, { type TWalletMode } from 'components/WalletImage'
 
 type TPrices = {
   [token: string]: {
@@ -27,7 +27,7 @@ export type TWalletsListItemProps = {
   blockchain: string,
   tokens: TCalculatedToken,
   walletInfo: any,
-  walletMode?: '2fa' | 'shared' | 'timeLocked',
+  walletMode?: ?TWalletMode,
   selectedCurrency: string,
   onItemPress(
     blockchain: string,
@@ -38,7 +38,7 @@ export type TWalletsListItemProps = {
 const Transactions = ({ transactions }) => !transactions ? null : (
   !transactions[1] ? (
     <Image
-      source={require('../images/indicator-receiving-25.png')}
+      source={require('../images/indicator-receiving-0.png')}
     />
   ) : (
     <View style={styles.transactionsNumberContainer}>
@@ -49,10 +49,14 @@ const Transactions = ({ transactions }) => !transactions ? null : (
   )
 )
 
-// TODO [AO]: Refactoring required
+// TODO: [AO] Refactoring required
 const TokensList = ({ tokens }) => {
   if (!tokens || !tokens.length) {
-    return null
+    return (
+      <Text style={styles.tokens}>
+        {''}
+      </Text>
+    )
   }
   const tokensIndex = Object.create(null)
   tokens
@@ -83,11 +87,13 @@ const TokensList = ({ tokens }) => {
   )
 }
 
-const Exchange = ({ exchange }) => !exchange ? null : (
-  <Text style={styles.exchange}>
-    {exchange.currency} {exchange.amount}
-  </Text>
-)
+// TEMPORARY DISABLED
+//
+// const Exchange = ({ exchange }) => !exchange ? null : (
+//   <Text style={styles.exchange}>
+//     {exchange.currency} {exchange.amount}
+//   </Text>
+// )
 
 export default class WalletsListItem extends PureComponent<TWalletsListItemProps> {
 
@@ -107,18 +113,14 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
     const {
       address,
       blockchain,
-      // tokens,
       walletInfo,
       walletMode,
     } = this.props
 
-    const balance = walletInfo.balance
-    console.log(this.props, balance)
-    // FIXME: stub for BCC in Testnet/Infura
-    let tokens = this.props.tokens
-    if (blockchain === 'Bitcoin Cash' && !tokens.length) {
-      tokens.push({ 'BCC': { amount: 0, balance: 0 } })
-    }
+    const {
+      balance,
+      tokens,
+    } = walletInfo
 
     let walletTitle = `My ${blockchain} Wallet`
     if (walletMode === 'shared') {
@@ -130,7 +132,7 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
 
     const textCurrencyBalance = [
       this.props.selectedCurrency,
-      balance && balance.toFixed(2) || '',
+      balance !== undefined && balance.toFixed(2) || '--.--',
     ].join(' ')
 
     return (
@@ -144,7 +146,7 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
           </View>
           <View style={styles.content}>
             <WalletImage
-              bcTitle={blockchain}
+              blockchain={blockchain}
               walletMode={walletMode}
               style={styles.image}
             />

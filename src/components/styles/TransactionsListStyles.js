@@ -27,6 +27,28 @@ const styles = StyleSheet.create({
   sending: {
     color: colors.foreground,
   },
+  transactionsListContainer: {
+    backgroundColor: colors.background,
+    borderRadius: 3,
+    marginBottom: 32,
+    marginTop: 8,
+    paddingVertical: 8,
+  },
+  transactionsListTitle: {
+    paddingBottom: 8,
+    paddingHorizontal: 24,
+    paddingTop: 4,
+  },
+  refreshTouch: {
+    flexDirection: 'row',
+  },
+  refreshText: {
+    flex: 1,
+  },
+  refreshImage: {
+    marginLeft: 4,
+    marginRight: 4,
+  },
 })
 
 export default styles

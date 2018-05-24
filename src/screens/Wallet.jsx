@@ -15,13 +15,15 @@ import {
 import I18n from 'react-native-i18n'
 import { type Navigator as TNavigator } from 'react-native-navigation'
 import MainWalletModel from 'models/wallet/MainWalletModel'
-import Separator from 'components/Separator'
-import WalletOwners from 'containers/WalletOwnersContainer'
-import WalletTemplates from 'containers/WalletTemplatesContainer'
-import WalletTokens from 'containers/WalletTokensContainer'
-import WalletTransactionsContainer from 'containers/WalletTransactionsContainer'
-import { type TWalletTransaction } from './WalletTransactions'
-import styles from './styles/WalletStyles'
+// TEMPORARY DISABLED
+//
+// import Separator from 'components/Separator'
+// import WalletOwners from 'containers/WalletOwnersContainer'
+// import WalletTemplates from 'containers/WalletTemplatesContainer'
+// import WalletTokens from 'containers/WalletTokensContainer'
+import WalletTransactions, { type TWalletTransaction } from 'screens/WalletTransactions'
+import styles from 'screens/styles/WalletStyles'
+import { type TWalletMode } from 'components/WalletImage'
 
 export type TMainWalletModel = typeof MainWalletModel
 
@@ -41,21 +43,23 @@ export type TTab = 'transactions' | 'tokens' | 'owners' | 'templates'
 
 export type TWalletProps = {
   isMultisig: boolean,
+  tokensLength: number,
   address: string,
   balance: any,
   blockchain: string,
+  latestTransactionDate: any,
   mainWalletTransactionLoadingStatus: any,
   navigator: TNavigator,
-  prices: TPrices, // TODO: we do not need to get prices here and send it via props. It should be done on 'Send' screen
+  // prices: TPrices, // TODO: we do not need to get prices here and send it via props. It should be done on 'Send' screen
   tab: TTab,
-  tokens: any,
-  wallet: TMainWalletModel,
-  walletTransactions: TWalletTransaction[],
-  balanceCalc: number,
+  walletMode?: ?TWalletMode,
+  // walletTransactions: TWalletTransaction[],
+  // balanceCalc: number,
   onPressTabOwners(): void,
   onPressTabTemplates(): void,
   onPressTabTokens(): void,
   onPressTabTransactions(): void,
+  // handleTransactionsRefresh(): void,
   onSend(): void,
 }
 
@@ -75,46 +79,36 @@ const ActionButton = ({ title, image, onPress }: TActionButtonProps) => (
 )
 
 export default class Wallet extends PureComponent<TWalletProps, {}> {
+
+  getDerivedStateFromProps (nextProps, prevState) {
+    console.log('DERIVED Wallet')
+    console.log(nextProps)
+  }
+
   render () {
-    // console.log('Wallet: this.props', this.props)
     const {
       address,
       balance,
-      balanceCalc,
-      mainWalletTransactionLoadingStatus,
-      onPressTabOwners,
-      onPressTabTemplates,
-      onPressTabTokens,
-      onPressTabTransactions,
+      // balanceCalc,
+      // onPressTabOwners,
+      // onPressTabTemplates,
+      // onPressTabTokens,
+      // onPressTabTransactions,
       onSend,
-      tab,
-      tokens,
-      wallet,
-      walletTransactions,
+      // tab,
+      blockchain,
+      walletMode,
+      tokensLength,
     } = this.props
-
-    /**
-     * [Alexey Ozerov] Need to clarify: does 'mode' used only for multisig?
-     * Also need a better place for the mode "calculations"
-     */
-    let mode = '2fa'
-    if (this.props.isMultisig) {
-      if (wallet.isTimeLocked()) {
-        mode = 'timeLocked'
-      } else {
-        mode = 'shared'
-      }
-    }
 
     return (
       <View style={styles.screenView}>
-        <WalletTransactionsContainer
+        <WalletTransactions
+          balance={balance}
           address={address}
-          balance={balanceCalc}
-          tokens={tokens}
-          wallet={wallet}
-          mainWalletTransactionLoadingStatus={mainWalletTransactionLoadingStatus}
-          walletTransactions={walletTransactions}
+          blockchain={blockchain}
+          tokensLength={tokensLength}
+          walletMode={walletMode}
         />
         <View style={styles.actions}>
           <ActionButton

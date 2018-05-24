@@ -13,65 +13,79 @@ import {
 import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
 import {
   getSelectedWalletBalanceInSelectedCurrency,
-  makeGetMainWalletTransactionsByBlockchainName,
-  makeGetWalletInfoByBockchainAndAddress,
-  selectMainWalletTransactionsStore,
   getSelectedWalletStore,
+  // makeGetMainWalletTransactionsByBlockchainName,
+  makeGetWalletInfoByBockchainAndAddress,
+  makeGetWalletTransactionsByBlockchainAndAddress,
+  selectMainWalletTransactionsStore,
   type TSelectedWallet,
 } from 'redux/wallet/selectors'
-import { DUCK_MARKET } from 'redux/market/action'
+// import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
-import { DUCK_WALLET } from 'redux/wallet/actions'
 import Wallet, {
   type TWalletProps,
   type TTab,
 } from 'screens/Wallet'
+import { getAccountTransactions } from 'redux/mainWallet/actions'
 
 export type TWalletContainerState ={
   tab: TTab,
 }
 
-const makeMapStateToProps = (origState, origProps) => {
+type TWalletContainerProps = TWalletProps & {
+  walletData: any, // TODO: to descibe flowtype
+  selectedWallet: TSelectedWallet,
+  getAccountTransactions: any,
+  transactions: any,
+}
+
+const makeMapStateToProps = (origState /*, origProps*/) => {
   const selectedWallet: TSelectedWallet = getSelectedWalletStore(origState)
-  const getSelectedWalletTransactions = makeGetMainWalletTransactionsByBlockchainName(selectedWallet.blockchain, selectedWallet.address)
-  const walletInfoByBcAndAddress = makeGetWalletInfoByBockchainAndAddress(origProps.blockchain, origProps.address)
+  // const getSelectedWalletTransactions = makeGetMainWalletTransactionsByBlockchainName(selectedWallet.blockchain, selectedWallet.address)
+  const walletInfoByBcAndAddress = makeGetWalletInfoByBockchainAndAddress(selectedWallet.blockchain, selectedWallet.address)
+  const walletTransactionsByBcAndAddress = makeGetWalletTransactionsByBlockchainAndAddress(selectedWallet.blockchain, selectedWallet.address)
   const mapStateToProps = (state, ownProps) => {
-    const {
-      prices,
-      selectedCurrency,
-    } = state.get(DUCK_MARKET)
     // const {
-    //   address,
-    //   blockchain,
-    // } = state.get(DUCK_WALLET)
+    //   // prices,
+    //   selectedCurrency,
+    // } = state.get(DUCK_MARKET)
     const tokens = state.get(DUCK_TOKENS)
-    // console.log('\n\n\n\nWALLET STATE:', state.get(DUCK_WALLET))
-    const walletTransactions = getSelectedWalletTransactions(state, ownProps)
+    // const walletTransactions = getSelectedWalletTransactions(state, ownProps)
     const walletData = walletInfoByBcAndAddress(state, ownProps)
     return {
-      // address,
       balanceCalc: getSelectedWalletBalanceInSelectedCurrency(state),
-      // blockchain,
       mainWalletTransactionLoadingStatus: selectMainWalletTransactionsStore(state),
-      prices,
-      selectedCurrency,
+      // prices,
+      // selectedCurrency,
       tokens,
       walletData,
-      walletTransactions: walletTransactions,
+      selectedWallet,
+      transactions: walletTransactionsByBcAndAddress,
+      // walletTransactions: walletTransactions,
     }
   }
   return mapStateToProps
 }
 
-type TWalletContainerProps = TWalletProps & {
-  walletData: any, // TODO: to descibe flowtype
-}
+const mapDispatchToProps = (dispatch) => ({
+  getAccountTransactions: () => dispatch(getAccountTransactions()),
+})
 
 class WalletContainer extends PureComponent<TWalletContainerProps, TWalletContainerState> {
+
+  constructor (props){
+    super(props)
+    this.props.navigator.setTitle({ title: `My ${props.selectedWallet.blockchain} Wallet` }) // TODO: to fix bug with blinking header
+  }
 
   state = {
     tab: 'transactions',
   }
+
+  // getDerivedStateFromProps (nextProps, prevState) {
+  //   console.log('DERIVED WalletContainer')
+  //   console.log(nextProps)
+  // }
 
   handleTransactionsTabClick = () => {
     this.setState({ tab: 'transactions' })
@@ -90,17 +104,15 @@ class WalletContainer extends PureComponent<TWalletContainerProps, TWalletContai
   }
 
   handleSend = () => {
-    // [AO] This is temporary limitation. At the moment we can't send not-ETH funds
-    if (this.props.blockchain !== BLOCKCHAIN_ETHEREUM) {
+    // TODO: [AO] This is temporary limitation. At the moment we can't send not-ETH funds
+    if (this.props.selectedWallet.blockchain !== BLOCKCHAIN_ETHEREUM) {
       Alert.alert('Work in progress', 'Sorry, sending non-Ethereum funds still in development. Please choose Ethereum wallet to continue.', [{ text: 'Ok', onPress: () => {}, style: 'cancel' }])
     } else {
       const {
         address,
-        balance,
+        // balance,
         blockchain,
-        prices,
-        tokens,
-        wallet,
+        // prices,
       } = this.props
 
       this.props.navigator.push({
@@ -108,45 +120,42 @@ class WalletContainer extends PureComponent<TWalletContainerProps, TWalletContai
         title: 'Send Funds',
         passProps: {
           address: address,
-          balance: balance,
+          // balance: balance,
           blockchain: blockchain,
-          prices: prices,
-          selectedBlockchainName: blockchain,
-          tokens: tokens,
-          wallet: wallet,
-          walletAddress: address,
+          // prices: prices,
+          // selectedBlockchainName: blockchain,
+          // walletAddress: address,
         },
       })
     }
   }
 
-  handleNothing = () => {}
+  onPressTransactionsRefresh = () => {
+    this.props.getAccountTransactions()
+  }
 
   render () {
-    // console.log('Rendering wallet: ', this.props)
     return (
       <Wallet
+        address={this.props.selectedWallet.address}
+        balance={this.props.walletData.balance}
+        blockchain={this.props.selectedWallet.blockchain}
         isMultisig={this.props.walletData.isMultisig}
-        balanceCalc={this.props.walletData.balance}
+        latestTransactionDate={this.props.walletData.latestTransactionDate}
+        mainWalletTransactionLoadingStatus={this.props.mainWalletTransactionLoadingStatus}
         navigator={this.props.navigator}
-        address={this.props.address}
-        balance={this.props.balance}
-        blockchain={this.props.blockchain}
-        onPressTabTransactions={this.handleTransactionsTabClick}
         onPressTabOwners={this.handleOwnersTabClick}
         onPressTabTemplates={this.handleTemplatesTabClick}
         onPressTabTokens={this.handleTokensTabClick}
+        onPressTabTransactions={this.handleTransactionsTabClick}
         onSend={this.handleSend}
-        prices={this.props.prices}
         tab={this.state.tab}
-        tokens={this.props.tokens}
-        wallet={this.props.wallet}
-        walletTransactions={this.props.walletTransactions}
-        mainWalletTransactionLoadingStatus={this.props.mainWalletTransactionLoadingStatus}
+        tokensLength={this.props.walletData.tokensLength}
+        walletMode={this.props.walletData.walletMode}
       />
     )
   }
 
 }
 
-export default connect(makeMapStateToProps, null)(WalletContainer)
+export default connect(makeMapStateToProps, mapDispatchToProps)(WalletContainer)
