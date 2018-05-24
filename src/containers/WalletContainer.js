@@ -82,11 +82,6 @@ class WalletContainer extends PureComponent<TWalletContainerProps, TWalletContai
     tab: 'transactions',
   }
 
-  // getDerivedStateFromProps (nextProps, prevState) {
-  //   console.log('DERIVED WalletContainer')
-  //   console.log(nextProps)
-  // }
-
   handleTransactionsTabClick = () => {
     this.setState({ tab: 'transactions' })
   }
