@@ -54,6 +54,17 @@ patch-package
      const gasPriceBN = new BigNumber(gasPrice)
      const gasFee = gasPriceBN.mul(gasLimit)
  
+@@ -175,7 +176,9 @@ export class EthereumDAO extends AbstractTokenDAO {
+         }, (e) => {
+           throw new TxError(e.message, TX_FRONTEND_ERROR_CODES.FRONTEND_WEB3_FILTER_FAILED)
+         })
+-
++        console.log('\n\n\n\n\n')
++        console.log(txData)
++        console.log('\n\n\n\n\n')
+         txHash = await this._web3Provider.sendTransaction(txData)
+         tx = tx.set('hash', txHash)
+       } catch (e) {
 --- a/node_modules/@chronobank/src/dao/NemDAO.js
 +++ b/node_modules/@chronobank/src/dao/NemDAO.js
 @@ -13,7 +13,7 @@ import Amount from 'models/Amount'
