@@ -806,8 +806,6 @@ export const makeGetWalletInfoByBockchainAndAddress = (blockchain: string, addre
         isMainWalletFound,
         isMultisigWalletFound,
       } = findWallet()
-      // console.log('WALLET SEARCH: %s, %s', blockchain, address)
-      // console.log('WALLET SEARCH RESULT: Main: %s, Multi: %s', isMainWalletFound, isMultisigWalletFound)
 
       if (isMainWalletFound) {
         const convertAmountToNumber = (symbol, amount) =>
@@ -887,6 +885,15 @@ export const makeGetWalletInfoByBockchainAndAddress = (blockchain: string, addre
           ...balanceAndTokens,
           tokensLength,
         }
+        /* Structure
+        finalResult {
+          balance: 0,
+          isMultisig: false,
+          tokens: [{ 'LTC': { amount: 0, balance: 0 } }],
+          tokensLength: 0,
+          walletMode: null,
+        }
+        */
 
         return finalResult
 
@@ -1012,15 +1019,15 @@ export const makeGetWalletTransactionsByBlockchainAndAddress = (blockchain: stri
           })
           .map( (txModel: TxModel) => {
             const recipient = txModel.to()
-            const isSendTransaction = recipient && recipient.toLowerCase() === address.toLowerCase()
+            const isReceivingTransaction = recipient && recipient.toLowerCase() === address.toLowerCase()
             const toAddress = txModel.to()
             const fromAddress = txModel.from()
-            const transactionType = isSendTransaction
-              ? 'sending'
-              : 'receiving'
-            const transactionAddress = isSendTransaction
-              ? toAddress
-              : fromAddress
+            const transactionType = isReceivingTransaction
+              ? 'receiving'
+              : 'sending'
+            const transactionAddress = isReceivingTransaction
+              ? fromAddress
+              : toAddress
             return {
               type: transactionType,
               address: transactionAddress,
@@ -1034,7 +1041,7 @@ export const makeGetWalletTransactionsByBlockchainAndAddress = (blockchain: stri
           .sort( (a, b) => {
             const aDate = a.txDate
             const bDate = b.txDate
-            return (aDate > bDate) - (aDate < bDate)
+            return (bDate > aDate) - (bDate < aDate)
           })
         // console.log(transactions)
         const latestTransactionDate = transactions && ( transactions[0] !== undefined ) && transactions[0].txDate || null

@@ -25,30 +25,33 @@ export default class SelectToken extends PureComponent<TSelectTokenProps, TSelec
 
   constructor (props: TSelectTokenProps) {
     super(props)
-    // console.log(props)
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     })
     const { tokens } = props
-    const tokensArray = Object.keys(tokens)
-      .map( (k) => {
-        return { symbol: k, amount: tokens[k] }
+    const tokensArray = tokens
+      .map( (token) => {
+        const symbol = Object.keys(token)[0]
+        const amount = token[symbol].amount
+        return { 
+          symbol,
+          amount,
+        }
       } )
-    console.log(tokensArray)
     this.state = {
       tokens: ds.cloneWithRows(tokensArray),
     }
   }
 
-  handlePress = (token) => {
+  handlePress = (rowData) => {
+    this.props.onPressAction(rowData)
     this.props.navigator.pop()
-    this.props.onPressAction(token)
   }
 
   renderRow = (rowData) => {
     const notEnoughAmount = rowData.amount ? null : styles.zeroAmount
     return (
-      <TouchableOpacity onPress={this.handlePress(rowData)}>
+      <TouchableOpacity onPress={() => this.handlePress(rowData)}>
         <View style={styles.tokenSelector}>
           <Text
             style={[
@@ -79,6 +82,7 @@ export default class SelectToken extends PureComponent<TSelectTokenProps, TSelec
 
   render () {
     const { tokens } = this.state
+
     return (
       <ListView
         style={styles.container}

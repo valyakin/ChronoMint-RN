@@ -35,10 +35,7 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 class WalletTransactionsContainer extends PureComponent<TWalletTransactionsContainerProps, {}> {
-  getDerivedStateFromProps (nextProps, prevState) {
-    console.log('DERIVED WalletTransactionsContainer')
-    console.log(nextProps)
-  }
+
   render () {
     return (
       <WalletTransactions

@@ -80,11 +80,6 @@ const ActionButton = ({ title, image, onPress }: TActionButtonProps) => (
 
 export default class Wallet extends PureComponent<TWalletProps, {}> {
 
-  getDerivedStateFromProps (nextProps, prevState) {
-    console.log('DERIVED Wallet')
-    console.log(nextProps)
-  }
-
   render () {
     const {
       address,
