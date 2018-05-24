@@ -59,6 +59,7 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
       privateKey,
       generateMnemonic,
     } = this.props
+    let mnemonic
 
     const { password, passwordConfirmation } = this.state
 
@@ -69,10 +70,14 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
       return this.addError(I18n.t('CreateWallet.invalidPassword'))
     }
 
+    if (!privateKey) {
+      mnemonic = generateMnemonic()
+    }
+
     this.props.navigator.push({
       screen: 'WalletBackup',
       passProps: {
-        mnemonic: privateKey ? null : generateMnemonic(),
+        mnemonic,
         privateKey,
         password,
       },
@@ -96,7 +101,22 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
     alert(error)
   }
 
+  handleLastAccount = () => {
+    this.props.navigator.resetTo({
+      screen: 'EnterPin',
+      title: 'EnterPin',
+      passProps: {
+        isLogin: true,
+        account: this.props.lastAccount,
+      },
+    })
+  }
+
   render () {
+    if (this.props.lastAccount) {
+      this.handleLastAccount()
+    }
+
     return (
       <SetAccountPassword
         isCreatingNewWallet={this.props.isCreatingNewWallet}
