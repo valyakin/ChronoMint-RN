@@ -10,7 +10,6 @@ import {
   Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
@@ -21,11 +20,9 @@ import Separator from '../components/Separator'
 import TextButton from '../components/TextButton'
 
 export type TAccountPasswordProps = {
-  accounts: Array<TAccount>,
+  account: TAccount,
   onChangePassword: (password: string) => void,
-  onLogin: () => void,
-  onSelectLanguage: () => void,
-  onSelectNetwork: () => void,
+  onLogin: () => Promise<void>,
   onUseWallet: () => void,
 }
 
@@ -34,45 +31,16 @@ type TAccountItemProps = TAccount
 export default class AccountPassword extends PureComponent<TAccountPasswordProps, {}> {
   render () {
     const {
-      accounts,
+      account,
       onChangePassword,
       onLogin,
-      onSelectLanguage,
-      onSelectNetwork,
       onUseWallet,
     } = this.props
     
     return (
       <View>
-        <View style={styles.topBarActions}>
-          <TouchableOpacity
-            onPress={onSelectNetwork}
-            style={styles.topBarButton}
-          >
-            <Image
-              source={require('../images/ios-gear-outline.png')}
-              style={styles.topBarButtonImage}
-            />
-            <Text style={styles.topBarButtonLabel}>Production</Text >
-          </TouchableOpacity >
-          <View style={styles.spacer} />
-          <TouchableOpacity
-            onPress={onSelectLanguage}
-            style={styles.topBarButton}
-          >
-            <Text style={styles.topBarButtonLabel} >EN-US</Text >
-          </TouchableOpacity >
-        </View>
-        <Image
-          source={require('../images/ChronoWalletIcon.png')}
-          style={styles.logo}
-        />
-        <Image
-          source={require('../images/ChronoWalletText.png')}
-          style={styles.logoText}
-        />
         <Separator style={styles.separator} />
-        <AccountItem {...accounts[0]} />
+        <AccountItem {...account} />
         <Separator style={styles.separator} />
         <Input
           autoCorrect={false}
@@ -102,12 +70,12 @@ export default class AccountPassword extends PureComponent<TAccountPasswordProps
 
 class AccountItem extends PureComponent<TAccountItemProps, {}> {
   render () {
-    const { accountImage, address } = this.props
+    const { image, address } = this.props
 
     return (
       <View style={styles.item}>
         <Image
-          source={accountImage}
+          source={image}
           style={styles.itemImage}
         />
         <Text style={styles.address}>

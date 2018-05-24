@@ -6,7 +6,6 @@
  */
 import { createCipher, createHash } from 'crypto'
 import { addError } from 'login/redux/network/actions'
-import isValid from '../../utils/validators'
 import salt from '../../utils/salt'
 
 export const DUCK_SENSITIVE = 'sensitive'
@@ -18,6 +17,7 @@ export type TSensitiveActionTypes = {
 export const types = {
   SET_USE_PIN_PROTECTION: 'sensitive/SET_USE_PIN_PROTECTION',
   SET_PIN: 'sensitive/SET_PIN',
+  SET_LAST_ACCOUNT: 'sensitive/SET_LAST_ACCOUNT',
   ADD_ACCOUNT: 'sensitive/ADD_ACCOUNT',
 }
 
@@ -26,41 +26,48 @@ export const setUsePinProtection = (payload: boolean) => ({
   payload,
 })
 
-export const setPin = (pin: string) => async (dispatch) => {
-  try {
-    if (!isValid.pin(pin)) throw 'Invalid pin'
-
-    const payload = await createHash(pin)
-
-    dispatch({
-      type: types.SET_PIN,
-      payload,
-    })
-  } catch (error) {
-    dispatch(addError(error))
-  }
-}
-
-export const addAccount = ({ address, privateKey }, password: string) =>
+export const addAccount = ({ address, privateKey }: { address: string, privateKey: string }, password: string, pin?: string) =>
   async (dispatch) => {
     try {
-      const hash = createHash('sha256')
-      hash.update(salt(password))
-      const passwordHash = hash.digest('hex')
+      let passwordHash
+      let pinHash
+      let encryptedWithPasswordPrivateKey
+      let encryptedWithPinPrivateKey
 
-      const cipher = createCipher('aes-256-cbc', password)
-      let encryptedPrivateKey = cipher.update(privateKey, 'utf8', 'hex')
-      encryptedPrivateKey += cipher.final('hex')
+      const hashForPassword = createHash('sha256')
+      hashForPassword.update(salt(password))
+      passwordHash = hashForPassword.digest('hex')
+
+      const cipherWithPassword = createCipher('aes-256-cbc', password)
+      encryptedWithPasswordPrivateKey = cipherWithPassword.update(privateKey, 'utf8', 'hex')
+      encryptedWithPasswordPrivateKey += cipherWithPassword.final('hex')
+
+      if (typeof pin !== 'undefined') {
+        const hashForPin = createHash('sha256')
+        hashForPin.update(salt(pin))
+        pinHash = hashForPin.digest('hex')
+
+        const cipherWithPin = createCipher('aes-256-cbc', salt(pin))
+        encryptedWithPinPrivateKey = cipherWithPin.update(privateKey, 'utf8', 'hex')
+        encryptedWithPinPrivateKey += cipherWithPin.final('hex')
+      }
 
       dispatch({
         type: types.ADD_ACCOUNT,
         payload: {
           address,
-          encryptedPrivateKey,
+          encryptedWithPasswordPrivateKey,
+          encryptedWithPinPrivateKey,
           passwordHash,
+          pinHash,
         },
       })
     } catch (error) {
       dispatch(addError(error))
     }
   }
+
+export const setLastAccount = (address: string) => ({
+  type: types.SET_LAST_ACCOUNT,
+  payload: address,
+})

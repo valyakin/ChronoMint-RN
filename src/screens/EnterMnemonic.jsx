@@ -13,7 +13,7 @@ import PrimaryButton from 'components/PrimaryButton'
 export type TEnterMnemonicProps = {
   inputsList: Array<any>,
   onEnterWord: (wordIndex: number) => (word: string) => void,
-  onLogin: () => void,
+  onLogin: () => Promise<void>,
   refInput: (inputIndex: number) => (component: any) => void,
 }
 

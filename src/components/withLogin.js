@@ -34,15 +34,15 @@ import startAppRoot from '../app'
 import {
   addAccount,
   DUCK_SENSITIVE,
-  setPin,
   setUsePinProtection,
+  setLastAccount,
 } from '../redux/sensitive/actions'
 import isValid from '../utils/validators'
 import salt from '../utils/salt'
 
 export type LoginHOCProps = {
   accounts: Array<any>,
-  addAccount: (account: { address: string, privateKey: string }, password: string) => void,
+  addAccount: (account: { address: string, privateKey: string }, password: string, pin?: string) => void,
   addError: (error: string) => void,
   checkNetwork: typeof networkService.checkNetwork,
   children (login: any): any,
@@ -55,7 +55,8 @@ export type LoginHOCProps = {
   loading: () => void,
   login (account: any): void,
   navigator: any,
-  onUsePinProtection (value: boolean): void,
+  onSetUsePinProtection: (value: boolean) => void,
+  setLastAccount: (address: string) => void,
   selectAccount: (account: any) => void,
   selectedAccount: string,
   selectedNetworkId: number,
@@ -78,7 +79,6 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
     }
     
     loginSetup = async ({ ethereum, btc, bcc, btg, ltc, nem }) => {
-      // setup
       const web3 = new Web3()
       const eProvider = ethereum.getProvider()
   
@@ -86,7 +86,6 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
       web3Provider.setProvider(eProvider)
       web3Provider.reinit(web3, eProvider)
       
-      // login
       try {
         await this.props.loadAccounts()
         await this.props.selectAccount(this.props.accounts[ 0 ])
@@ -96,9 +95,7 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
         btgProvider.setEngine(btg)
         ltcProvider.setEngine(ltc)
         nemProvider.setEngine(nem)
-
       } catch (e) {
-
         this.props.addError(e.message)
       }
     }
@@ -115,9 +112,11 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
           this.props.selectedNetworkId
         )
         
-        await this.props.login(this.props.selectedAccount)
+        this.props.login(this.props.selectedAccount)
 
         this.gotoWallet()
+
+        this.props.setLastAccount(this.props.selectedAccount)
       }
     }
 
@@ -128,7 +127,6 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
     generateMnemonic = mnemonicProvider.generateMnemonic
 
     onMnemonicLogin = async (mnemonic: string = mnemonicProvider.generateMnemonic()) => {
-
       this.props.loading()
       this.props.clearErrors()
 
@@ -137,15 +135,12 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
 
       await this.loginSetup(provider)
 
-      await this.addAccount(provider.ethereum.getPrivateKey())
+      const privateKey = provider.ethereum.getPrivateKey()
 
-      return mnemonic
+      return { mnemonic, privateKey }
     }
 
     onPrivateKeyLogin = async (privateKey) => {
-      const { storedAccounts } = this.props
-      const { password } = this.state
-
       this.props.loading()
       this.props.clearErrors()
 
@@ -154,20 +149,16 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
         const provider = privateKeyProvider.getPrivateKeyProvider(privateKey, providerSettings)
 
         await this.loginSetup(provider)
-
-        const address = provider.ethereum.getAddress()
-        const hasAccount = storedAccounts.has(address)
-        const hasPassword = !!password
-
-        if (!hasAccount && hasPassword) {
-          await this.addAccount(privateKey)
-        }
       } catch (e) {
         this.props.addError(e.message)
       }
     }
 
-    onWalletLogin = async ({ encryptedPrivateKey, passwordHash }, password: string) => {
+    onPasswordLogin = async (account, password: string) => {
+      const {
+        encryptedWithPasswordPrivateKey,
+        passwordHash,
+      } = account
       try {
         this.props.clearErrors()
 
@@ -183,7 +174,38 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
         }
 
         const decipher = createDecipher('aes-256-cbc', password)
-        let privateKey = decipher.update(encryptedPrivateKey, 'hex', 'utf8')
+        let privateKey = decipher.update(encryptedWithPasswordPrivateKey, 'hex', 'utf8')
+        privateKey += decipher.final('utf8')
+        
+        await this.onPrivateKeyLogin(privateKey)
+        
+        this.onLogin()
+      } catch (error) {
+        this.props.addError(error)
+      }
+    }
+
+    onPinLogin = async (account, pin: string) => {
+      const {
+        encryptedWithPinPrivateKey,
+        pinHash,
+      } = account
+      try {
+        this.props.clearErrors()
+
+        if (!isValid.pin(pin)) {
+          throw('Invalid password')
+        }
+
+        const hash = createHash('sha256')
+        hash.update(salt(pin))
+
+        if (hash.digest('hex') !== pinHash) {
+          throw('Incorrect password')
+        }
+
+        const decipher = createDecipher('aes-256-cbc', salt(pin))
+        let privateKey = decipher.update(encryptedWithPinPrivateKey, 'hex', 'utf8')
         privateKey += decipher.final('utf8')
         
         await this.onPrivateKeyLogin(privateKey)
@@ -208,11 +230,22 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
         this.setState({ password }, resolve)
       })
 
-    addAccount = async (privateKey: string) => {
+    storeAccount = async (privateKey: string, password?: string = this.state.password, pin?: string) => {
+      const {
+        storedAccounts,
+        selectedAccount,
+      } = this.props
+
+      const hasAccount = storedAccounts.has(selectedAccount)
+
+      if (hasAccount) {
+        return
+      }
+
       await this.props.addAccount({
         address: this.props.selectedAccount,
         privateKey,
-      }, this.state.password)
+      }, password, pin)
     }
     
     renderError = (error) => {
@@ -234,12 +267,15 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
 
       const props = {
         ...this.props,
+        isCreatingNewWallet: !this.props.selectedAccount,
         generateMnemonic: this.generateMnemonic,
         onLogin: this.onLogin,
         onMnemonicLogin: this.onMnemonicLogin,
         onPrivateKeyLogin: this.onPrivateKeyLogin,
         onSetPassword: this.onSetPassword,
-        onWalletLogin: this.onWalletLogin,
+        onPasswordLogin: this.onPasswordLogin,
+        onPinLogin: this.onPinLogin,
+        onStoreAccount: this.storeAccount,
       }
 
       return <Screen {...props} />
@@ -282,12 +318,11 @@ function mapDispatchToProps (dispatch: Dispatch<any>) {
     loadAccounts: () => networkService.loadAccounts(),
     loading: () => dispatch(loading()),
     login: (account) => dispatch(login(account)),
-    onUsePinProtection: (value) => dispatch(setUsePinProtection(value)),
+    onSetUsePinProtection: (value) => dispatch(setUsePinProtection(value)),
     selectAccount: (value) => networkService.selectAccount(value),
     selectNetwork: (network) => networkService.selectNetwork(network),
     selectProvider: (providerId) => networkService.selectProvider(providerId),
-    setUsePinProtection: (value) => dispatch(setUsePinProtection(value)),
-    onSetPin: (pin: string) => dispatch(setPin(pin)),
+    setLastAccount: (address) => dispatch(setLastAccount(address)),
     addAccount: (account, password) => dispatch(addAccount(account, password)),
   }
 }

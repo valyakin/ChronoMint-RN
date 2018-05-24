@@ -35,6 +35,11 @@ export const sensitive = (state: TSensitiveInitialState = initialState, { type, 
         accounts: (accounts || Immutable.Map()).set(payload.address, payload),
       }
     }
+
+    case types.SET_LAST_ACCOUNT: return {
+      ...state,
+      lastAccount: state.accounts.get(payload) || {},
+    }
     default:
       return state
   }

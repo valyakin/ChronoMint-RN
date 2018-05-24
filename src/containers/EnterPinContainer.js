@@ -14,6 +14,9 @@ import { PIN_LENGTH } from '../utils/globals'
 export type TEnterPinContainerProps = {
   navigator: any,
   pin: string,
+  privateKey: string,
+  password?: string,
+  onStoreAccount: (privateKey: string, password?: string, pin?: string) => void,
   onMnemonicLogin: (mnemonic: string) => void,
   mnemonic: string,
   onLogin: () => void,
@@ -35,13 +38,35 @@ class EnterPinContainer extends PureComponent<TEnterPinContainerProps, TEnterPin
 
     if (!this.props.pin) return this.gotoConfirmPin(pin)
 
-    if (this.props.pin === pin) return this.handleLogin()
+    if (this.props.pin === pin) {
+      this.handleLogin()
+
+      return
+    }
 
     alert(I18n.t('EnterPin.pinsNotMatch'))
   }
 
-  handleLogin = () => {
-    this.props.onMnemonicLogin(this.props.mnemonic)
+  handleLogin = async () => {
+    const {
+      onMnemonicLogin,
+      onLogin,
+      onStoreAccount,
+      mnemonic,
+      password,
+      privateKey,
+      pin,
+    } = this.props
+
+    if (mnemonic) {
+      await onMnemonicLogin(this.props.mnemonic)
+    }
+
+    console.log(pin)
+
+    onStoreAccount(privateKey, password, pin)
+
+    onLogin()
   }
 
   gotoConfirmPin = (pin) => {
@@ -50,7 +75,8 @@ class EnterPinContainer extends PureComponent<TEnterPinContainerProps, TEnterPin
       title: I18n.t('EnterPin.confirmTitle'),
       passProps: {
         pin,
-        onLogin: this.props.onLogin,
+        privateKey: this.props.privateKey,
+        password: this.props.password,
       },
     })
   }

@@ -9,14 +9,21 @@ import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import isValid from '../utils/validators'
 import AccountPassword from '../screens/AccountPassword'
+import withLogin from '../components/withLogin'
 
 export type TAccount = {
-  accountImage: any,
+  image: any,
   address: string,
 }
 
 export type TAccountPasswordContainerProps = {
-  navigator: any
+  account: {
+    address: string,
+    encryptedPrivateKey: string,
+    passwordHash: string,
+  },
+  navigator: any,
+  onPasswordLogin: ({ encryptedPrivateKey: string, passwordHash: string }, password: string) => Promise<void>,
 }
 
 type TAccountPasswordContainerState = {
@@ -36,16 +43,14 @@ class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerPr
     this.setState({ password })
   }
   
-  handleLogin = () => {
+  handleLogin = async () => {
     const { password } = this.state
+
     if (!isValid.password(password)) {
       this.addError(I18n.t('AccountPassword.invalidPasswordError'))
     }
 
-    this.props.navigator.push({
-      screen: 'WalletsList',
-      title: I18n.t('WalletsList.title'),
-    })
+    await this.props.onPasswordLogin(this.props.account, password)
   }
   
   handleSelectLanguage = () => {
@@ -70,7 +75,10 @@ class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerPr
 
   render () {
     return (<AccountPassword
-      accounts={accounts}
+      account={{
+        ...this.props.account,
+        image: require('../images/profile-circle-small.png'),
+      }}
       onChangePassword={this.handleChangePassword}
       onLogin={this.handleLogin}
       onSelectLanguage={this.handleSelectLanguage}
@@ -80,10 +88,4 @@ class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerPr
   }
 }
 
-export default AccountPasswordContainer
-
-const accounts = [{
-  id: '1',
-  address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-  accountImage: require('../images/profile-photo-1.jpg'),
-}]
+export default withLogin(AccountPasswordContainer)
