@@ -21,9 +21,9 @@ import Separator from '../components/Separator'
 import TextButton from '../components/TextButton'
 
 export type TAccountPasswordProps = {
-  accounts: Array<TAccount>,
+  account: TAccount,
   onChangePassword: (password: string) => void,
-  onLogin: () => void,
+  onLogin: () => Promise<void>,
   onSelectLanguage: () => void,
   onSelectNetwork: () => void,
   onUseWallet: () => void,
@@ -34,7 +34,7 @@ type TAccountItemProps = TAccount
 export default class AccountPassword extends PureComponent<TAccountPasswordProps, {}> {
   render () {
     const {
-      accounts,
+      account,
       onChangePassword,
       onLogin,
       onSelectLanguage,
@@ -72,7 +72,7 @@ export default class AccountPassword extends PureComponent<TAccountPasswordProps
           style={styles.logoText}
         />
         <Separator style={styles.separator} />
-        <AccountItem {...accounts[0]} />
+        <AccountItem {...account} />
         <Separator style={styles.separator} />
         <Input
           autoCorrect={false}
@@ -102,12 +102,12 @@ export default class AccountPassword extends PureComponent<TAccountPasswordProps
 
 class AccountItem extends PureComponent<TAccountItemProps, {}> {
   render () {
-    const { accountImage, address } = this.props
+    const { image, address } = this.props
 
     return (
       <View style={styles.item}>
         <Image
-          source={accountImage}
+          source={image}
           style={styles.itemImage}
         />
         <Text style={styles.address}>
