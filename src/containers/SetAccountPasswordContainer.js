@@ -11,6 +11,8 @@ import withLogin from '../components/withLogin'
 import isValid from '../utils/validators'
 import SetAccountPassword from '../screens/SetAccountPassword'
 
+let lastAccount = false
+
 type TSetAccountPasswordContainerProps = {
   generateMnemonic: () => void,
   isCreatingNewWallet?: boolean,
@@ -96,13 +98,13 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
       screen: 'WalletsList',
     })
   }
-
-  addError = (error: string) => {
-    alert(error)
-  }
-
+  
   handleLastAccount = () => {
-    this.props.navigator.resetTo({
+    if (lastAccount) return
+
+    lastAccount = true
+    
+    this.props.navigator.push({
       screen: 'EnterPin',
       title: 'EnterPin',
       passProps: {
@@ -110,6 +112,10 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
         account: this.props.lastAccount,
       },
     })
+  }
+
+  addError = (error: string) => {
+    alert(error)
   }
 
   render () {
