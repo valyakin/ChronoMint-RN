@@ -5,7 +5,7 @@
  * @flow
  */
 
-import React from 'react'
+import React, { PureComponent } from 'react'
 import {
   StyleSheet,
   Image,
@@ -19,23 +19,87 @@ import PrimaryButton from '../components/PrimaryButton'
 import TextButton from '../components/TextButton'
 
 export type TCreateWalletProps = {
+  isCreatingNewWallet?: boolean,
   onChangePassword: (password: string) => void,
   onChangePasswordConfirmation: (passwordConfirmation: string) => void,
-  onCreateWallet: () => void,
+  onDone: () => void,
   onSelectLanguage: () => void,
   onSelectNetwork: () => void,
   onUseWallet: () => void,
 }
 
-export default class CreateWallet extends React.Component<TCreateWalletProps, {}> {
+type THeaderProps = {
+  onSelectLanguage: () => void,
+  onSelectNetwork: () => void,
+}
+
+export default class CreateWallet extends PureComponent<TCreateWalletProps, {}> {
   render () {
     const {
+      isCreatingNewWallet,
       onChangePassword,
       onChangePasswordConfirmation,
-      onCreateWallet,
+      onDone,
       onSelectLanguage,
       onSelectNetwork,
       onUseWallet,
+    } = this.props
+
+    return (
+      <View>
+        { isCreatingNewWallet && (
+          <Header
+            onSelectLanguage={onSelectLanguage}
+            onSelectNetwork={onSelectNetwork}
+          />
+        ) }
+        <Input
+          autoCorrect={false}
+          onChangeText={onChangePassword}
+          placeholder={I18n.t('CreateWallet.password')}
+          secureTextEntry
+          style={styles.input}
+        />
+        <Input
+          autoCorrect={false}
+          onChangeText={onChangePasswordConfirmation}
+          placeholder={I18n.t('CreateWallet.confirmPassword')}
+          secureTextEntry
+          style={styles.input}
+        />
+        { isCreatingNewWallet ? (
+          <View>
+            <PrimaryButton
+              label={I18n.t('CreateWallet.createWallet').toUpperCase()}
+              onPress={onDone}
+            />
+            <Text style={styles.or}>
+              {I18n.t('CreateWallet.or')}
+            </Text>
+            <TextButton
+              label={I18n.t('CreateWallet.useExistingWallet')}
+              onPress={onUseWallet}
+            />
+          </View>
+        ) : (
+          <PrimaryButton
+            label='Set password'
+            onPress={onDone}
+          />
+        ) }
+        <Text style={styles.copyright}>
+          {I18n.t('CreateWallet.copyright')}
+        </Text>
+      </View>
+    )
+  }
+}
+
+class Header extends PureComponent<THeaderProps, {}> {
+  render () {
+    const {
+      onSelectLanguage,
+      onSelectNetwork,
     } = this.props
 
     return (
@@ -71,34 +135,6 @@ export default class CreateWallet extends React.Component<TCreateWalletProps, {}
           source={require('../images/ChronoWalletText.png')}
           style={styles.logoText}
         />
-        <Input
-          autoCorrect={false}
-          onChangeText={onChangePassword}
-          placeholder={I18n.t('CreateWallet.password')}
-          secureTextEntry
-          style={styles.input}
-        />
-        <Input
-          autoCorrect={false}
-          onChangeText={onChangePasswordConfirmation}
-          placeholder={I18n.t('CreateWallet.confirmPassword')}
-          secureTextEntry
-          style={styles.input}
-        />
-        <PrimaryButton
-          label={I18n.t('CreateWallet.createWallet').toUpperCase()}
-          onPress={onCreateWallet}
-        />
-        <Text style={styles.or}>
-          {I18n.t('CreateWallet.or')}
-        </Text>
-        <TextButton
-          label={I18n.t('CreateWallet.useExistingWallet')}
-          onPress={onUseWallet}
-        />
-        <Text style={styles.copyright}>
-          {I18n.t('CreateWallet.copyright')}
-        </Text>
       </View>
     )
   }

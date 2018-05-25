@@ -5,6 +5,8 @@
  * @flow
  */
 /* eslint-disable import/prefer-default-export */
+import Immutable from 'immutable'
+import { types } from './actions'
 
 import Immutable from 'immutable'
 import { types } from './actions'
@@ -31,6 +33,10 @@ export const sensitive = (state = initialState, { type, payload }) => {
         ...restState,
         accounts: (accounts || Immutable.Map()).set(payload.address, payload),
       }
+    }
+    case types.SET_LAST_ACCOUNT: return {
+      ...state,
+      lastAccount: state.accounts.get(payload) || {},
     }
     default:
       return state

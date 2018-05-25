@@ -9,6 +9,7 @@ import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import ConfirmMnemonic from '../screens/ConfirmMnemonic'
 import { MNEMONIC_LENGTH } from '../utils/globals'
+import withLogin from '../components/withLogin'
 
 export type TConfirmMnemonicContainerProps = {
   mnemonic: string,
@@ -28,16 +29,27 @@ class ConfirmMnemonicContainer extends PureComponent<TConfirmMnemonicContainerPr
     this.state = this.createInitialState()
   }
 
-  handleDone = () => {
-    const { usePinProtection, navigator, mnemonic } = this.props
+  handleDone = async () => {
+    const { usePinProtection, navigator, mnemonic, password } = this.props
     
     if (mnemonic !== this.state.mnemonic.join(' ')) {
       this.addError(I18n.t('ConfirmMnemonic.wrongMnemonicError'))
       return this.resetState()
     }
+
+    const { privateKey } = await this.props.onMnemonicLogin(mnemonic)
+
+    if (!usePinProtection) {
+      return this.props.onLogin()
+    }
     
     navigator.push({
-      screen: usePinProtection ? 'EnterPin' : 'WalletsList',
+      screen: 'EnterPin',
+      passProps: {
+        mnemonic,
+        password,
+        privateKey,
+      },
     })
   }
   
@@ -80,4 +92,4 @@ class ConfirmMnemonicContainer extends PureComponent<TConfirmMnemonicContainerPr
   }
 }
 
-export default ConfirmMnemonicContainer
+export default withLogin(ConfirmMnemonicContainer)

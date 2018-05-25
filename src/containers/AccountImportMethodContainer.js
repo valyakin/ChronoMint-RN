@@ -42,7 +42,7 @@ const accountImportMethods: Array<TAccountImportMethod> = [
   {
     id: 'mnemonic',
     screen: 'EnterMnemonic',
-    title: 'Enter mnemonic to reset password',
+    title: 'Enter mnemonic',
     label: I18n.t('ImportAccount.mnemonic'),
     image: require('../images/mnemonic.png'),
   },

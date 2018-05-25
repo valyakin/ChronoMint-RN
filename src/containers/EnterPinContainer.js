@@ -10,10 +10,14 @@ import I18n from 'react-native-i18n'
 import EnterPin from '../screens/EnterPin'
 import withLogin from '../components/withLogin'
 import { PIN_LENGTH } from '../utils/globals'
+import { ENGINE_METHOD_CIPHERS } from 'constants';
 
 export type TEnterPinContainerProps = {
   navigator: any,
   pin: string,
+  privateKey: string,
+  password?: string,
+  onStoreAccount: (privateKey: string, password?: string, pin?: string) => void,
   onMnemonicLogin: (mnemonic: string) => void,
   mnemonic: string,
   onLogin: () => void,
@@ -35,13 +39,35 @@ class EnterPinContainer extends PureComponent<TEnterPinContainerProps, TEnterPin
 
     if (!this.props.pin) return this.gotoConfirmPin(pin)
 
-    if (this.props.pin === pin) return this.handleLogin()
+    if (this.props.pin === pin) {
+      this.handleLogin()
+
+      return
+    }
 
     alert(I18n.t('EnterPin.pinsNotMatch'))
   }
 
-  handleLogin = () => {
-    this.props.onMnemonicLogin(this.props.mnemonic)
+  handleLogin = async () => {
+    const {
+      onLogin,
+      onStoreAccount,
+      password,
+      privateKey,
+      pin,
+      isLogin,
+      account,
+    } = this.props
+
+    if (isLogin) {
+      await this.props.onPinLogin(account, pin)
+
+      return
+    }
+
+    onStoreAccount(privateKey, password, pin)
+
+    onLogin()
   }
 
   gotoConfirmPin = (pin) => {
@@ -50,7 +76,10 @@ class EnterPinContainer extends PureComponent<TEnterPinContainerProps, TEnterPin
       title: I18n.t('EnterPin.confirmTitle'),
       passProps: {
         pin,
-        onLogin: this.props.onLogin,
+        privateKey: this.props.privateKey,
+        password: this.props.password,
+        isLogin: this.props.isLogin,
+        account: this.props.account,
       },
     })
   }

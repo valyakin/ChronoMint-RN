@@ -9,19 +9,24 @@ import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import withLogin from '../components/withLogin'
 import isValid from '../utils/validators'
-import CreateWallet from '../screens/CreateWallet'
+import SetAccountPassword from '../screens/SetAccountPassword'
 
-type TCreateWalletContainerProps = {
+let lastAccount = false
+
+type TSetAccountPasswordContainerProps = {
+  generateMnemonic: () => void,
+  isCreatingNewWallet?: boolean,
+  lastAccount: any,
   navigator: any,
-  generateMnemonic: () => void
+  privateKey?: string,
 }
 
-type TCreateWalletContainerState = {
+type TSetAccountPasswordContainerState = {
   password: string,
   passwordConfirmation: string,
 }
 
-class CreateWalletContainer extends PureComponent<TCreateWalletContainerProps, TCreateWalletContainerState> {
+class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordContainerProps, TSetAccountPasswordContainerState> {
   static navigatorStyle = {
     navBarHidden: true,
   }
@@ -51,7 +56,13 @@ class CreateWalletContainer extends PureComponent<TCreateWalletContainerProps, T
     this.setState({ passwordConfirmation })
   }
 
-  handleCreateWallet = () => {
+  handleDone = () => {
+    const {
+      privateKey,
+      generateMnemonic,
+    } = this.props
+    let mnemonic
+
     const { password, passwordConfirmation } = this.state
 
     if (password !== passwordConfirmation) {
@@ -61,10 +72,16 @@ class CreateWalletContainer extends PureComponent<TCreateWalletContainerProps, T
       return this.addError(I18n.t('CreateWallet.invalidPassword'))
     }
 
+    if (!privateKey) {
+      mnemonic = generateMnemonic()
+    }
+
     this.props.navigator.push({
       screen: 'WalletBackup',
       passProps: {
-        mnemonic: this.props.generateMnemonic(),
+        mnemonic,
+        privateKey,
+        password,
       },
     })
   }
@@ -81,17 +98,37 @@ class CreateWalletContainer extends PureComponent<TCreateWalletContainerProps, T
       screen: 'WalletsList',
     })
   }
+  
+  handleLastAccount = () => {
+    if (lastAccount) return
+
+    lastAccount = true
+    
+    this.props.navigator.push({
+      screen: 'EnterPin',
+      title: 'EnterPin',
+      passProps: {
+        isLogin: true,
+        account: this.props.lastAccount,
+      },
+    })
+  }
 
   addError = (error: string) => {
     alert(error)
   }
 
   render () {
+    if (this.props.lastAccount) {
+      this.handleLastAccount()
+    }
+
     return (
-      <CreateWallet
+      <SetAccountPassword
+        isCreatingNewWallet={this.props.isCreatingNewWallet}
         onChangePassword={this.handleChangePassword}
         onChangePasswordConfirmation={this.handleChangePasswordConfirmation}
-        onCreateWallet={this.handleCreateWallet}
+        onDone={this.handleDone}
         onSelectLanguage={this.handleSelectLanguage}
         onSelectNetwork={this.handleSelectNetwork}
         onUseWallet={this.handleUseWallet}
@@ -100,4 +137,4 @@ class CreateWalletContainer extends PureComponent<TCreateWalletContainerProps, T
   }
 }
 
-export default withLogin(CreateWalletContainer)
+export default withLogin(SetAccountPasswordContainer)

@@ -19,7 +19,6 @@ import AddTokenToAdvancedWallet from './containers/AddTokenToAdvancedWalletConta
 import AddWallet from './containers/AddWalletContainer'
 import ConfirmMnemonic from './containers/ConfirmMnemonicContainer'
 import ConfirmSend from './containers/ConfirmSendContainer'
-import CreateWallet from './containers/CreateWalletContainer'
 import Download2FAApp from './containers/Download2FAAppContainer'
 import Drawer from './containers/DrawerContainer'
 import EnterMnemonic from './containers/EnterMnemonicContainer'
@@ -31,6 +30,7 @@ import SelectLanguage from './containers/SelectLanguageContainer'
 import SelectNetwork from './containers/SelectNetworkContainer'
 import SelectToken from './screens/SelectToken'
 import Send from './containers/SendContainer'
+import SetAccountPassword from './containers/SetAccountPasswordContainer'
 import Wallet from './containers/WalletContainer'
 import WalletBackup from './containers/WalletBackupContainer'
 import WalletOwners from './containers/WalletOwnersContainer'
@@ -51,7 +51,6 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('AddWallet', () => AddWallet, store, Provider)
   Navigation.registerComponent('ConfirmMnemonic', () => screenLayout(LoginScreenLayout)(ConfirmMnemonic), store, Provider)
   Navigation.registerComponent('ConfirmSend', () => ConfirmSend, store, Provider)
-  Navigation.registerComponent('CreateWallet', () => screenLayout(LoginScreenLayout)(CreateWallet), store, Provider)
   Navigation.registerComponent('Download2FAApp', () => Download2FAApp, store, Provider)
   Navigation.registerComponent('Drawer', () => Drawer, store, Provider)
   Navigation.registerComponent('EnterMnemonic', () => screenLayout(LoginScreenLayout)(EnterMnemonic), store, Provider)
@@ -63,6 +62,7 @@ export default function registerScreens (store, Provider) {
   Navigation.registerComponent('SelectNetwork', () => SelectNetwork, store, Provider)
   Navigation.registerComponent('SelectToken', () => SelectToken, store, Provider)
   Navigation.registerComponent('Send', () => Send, store, Provider)
+  Navigation.registerComponent('SetAccountPassword', () => screenLayout(LoginScreenLayout)(SetAccountPassword), store, Provider)
   Navigation.registerComponent('Wallet', () => Wallet, store, Provider)
   Navigation.registerComponent('WalletBackup', () => screenLayout(LoginScreenLayout)(WalletBackup), store, Provider)
   Navigation.registerComponent('WalletOwners', () => WalletOwners, store, Provider)

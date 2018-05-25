@@ -38,6 +38,7 @@ export const showConfirmTxModal = (estimateGas, gasPriceMultiplier = 1) => (disp
       .setGas(gasFee.mul(gasPriceMultiplier))
       .gasLimit(gasLimit)
     dispatch({ type: WATCHER_TX_SET, tx })
+    resolve({ isConfirmed: true, updatedTx: tx })
   })
 }).catch((e) => {
   // eslint-disable-next-line
