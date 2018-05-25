@@ -1,57 +1,122 @@
-/* @flow */
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import * as React from 'react'
-import { View, Image, StyleSheet } from 'react-native'
-import { badges } from '../utils/globals'
-import colors from '../utils/colors'
-import images from '../assets/images'
+import {
+  View,
+  Image,
+} from 'react-native'
+import { indicators } from 'utils/globals'
+import { type StyleObj as TStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
+import styles from 'components/styles/WalletImageStyles'
+import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
+import {
+  BLOCKCHAIN_BITCOIN_CASH,
+  BLOCKCHAIN_BITCOIN_GOLD,
+  BLOCKCHAIN_BITCOIN,
+  BLOCKCHAIN_LITECOIN,
+} from 'login/network/BitcoinProvider'
+import { BLOCKCHAIN_NEM } from 'dao/NemDAO'
 
-const WalletImage = ({ image, walletMode, shapeStyle, imageStyle, style }: WalletImageProps) => (
-  <View style={style}>
-    { walletMode && <Image source={badges[walletMode]} style={styles.walletBadge} /> }
-    { (typeof image !== 'undefined') ?
-      <Image source={image} /> :
-      <View style={[
-        styles.walletImageShape,
-        shapeStyle,
-      ]}
-      >
-        <Image
-          source={images.wallet}
-          style={[
-            styles.walletImage,
-            imageStyle,
-          ]}
-        />
-      </View>
-    }
-  </View>
-)
+export type TWalletMode =  '2fa' | 'shared' | 'timeLocked'
+
+type WalletImageProps = {
+  blockchain: string,
+  imageStyle?: TStyle,
+  shapeStyle?: TStyle,
+  size?: 'big'|'small',
+  style?: TStyle,
+  walletMode?: ?TWalletMode,
+}
+
+const walletImages = {
+  [BLOCKCHAIN_ETHEREUM]: require('../images/coin-ethereum-small.png'),
+  [BLOCKCHAIN_BITCOIN_CASH]: require('../images/coin-bitcoin-cash-small.png'),
+  [BLOCKCHAIN_BITCOIN_GOLD]: require('../images/wallet-circle-small.png'),
+  [BLOCKCHAIN_BITCOIN]: require('../images/coin-bitcoin-small.png'),
+  [BLOCKCHAIN_LITECOIN]: require('../images/coin-litecoin-small.png'),
+  [BLOCKCHAIN_NEM]: require('../images/coin-nem-small.png'),
+}
+
+const walletBigImages = {
+  [BLOCKCHAIN_ETHEREUM]: require('../images/coin-ethereum-big.png'),
+  [BLOCKCHAIN_BITCOIN_CASH]: require('../images/coin-bitcoin-cash-big.png'),
+  [BLOCKCHAIN_BITCOIN_GOLD]: require('../images/wallet-circle-big.png'),
+  [BLOCKCHAIN_BITCOIN]: require('../images/coin-bitcoin-big.png'),
+  [BLOCKCHAIN_LITECOIN]: require('../images/coin-litecoin-big.png'),
+  [BLOCKCHAIN_NEM]: require('../images/coin-nem-big.png'),
+}
+
+const getFallbackWalletImage = (blockchain: ?string, size: string = 'small') => {
+  const bcsList = [
+    BLOCKCHAIN_BITCOIN_CASH,
+    BLOCKCHAIN_BITCOIN_GOLD,
+    BLOCKCHAIN_BITCOIN,
+    BLOCKCHAIN_ETHEREUM,
+    BLOCKCHAIN_LITECOIN,
+    BLOCKCHAIN_NEM,
+  ]
+
+  if (blockchain && bcsList.includes(blockchain)) {
+    return size === 'big'
+      ? walletBigImages[blockchain]
+      : walletImages[blockchain]
+  } else {
+    return size === 'big'
+      ? require('../images/wallet-circle-big.png')
+      : require('../images/wallet-circle-small.png')
+  }
+}
+
+const WalletImage = ({
+  blockchain,
+  walletMode,
+  shapeStyle,
+  imageStyle,
+  style,
+  size,
+}: WalletImageProps) => {
+
+  // Size guard. Default is small wallet icon
+  let imageSize = 'small'
+  if (size) {
+    imageSize = size
+  }
+  const wImage = getFallbackWalletImage(blockchain, imageSize)
+
+  return (
+    <View style={style}>
+      {
+        walletMode &&
+          <Image
+            source={indicators[walletMode]}
+            style={styles.walletBadge}
+          />
+      }
+      {
+        (typeof blockchain !== 'undefined') ?
+          <Image source={wImage} /> :
+          <View
+            style={[
+              styles.walletImageShape,
+              shapeStyle,
+            ]}
+          >
+            <Image
+              source={wImage}
+              style={[
+                styles.walletImage,
+                imageStyle,
+              ]}
+            />
+          </View>
+      }
+    </View>
+  )
+}
 
 export default WalletImage
 
-const styles = StyleSheet.create({
-  walletBadge: {
-    position: 'absolute',
-    zIndex: 1,
-  },
-  walletImageShape: {
-    backgroundColor: colors.primary,
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  walletImage: {
-    tintColor: colors.background,
-    width: 24,
-    height: 24,
-  },
-})
-
-type WalletImageProps = {
-  image?: number,
-  walletMode?: 'default' | 'shared' | 'locked',
-  shapeStyle?: StyleSheet.NamedStyles,
-  imageStyle?: StyleSheet.NamedStyles,
-}

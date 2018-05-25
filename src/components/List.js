@@ -1,4 +1,9 @@
-/* @flow */
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import React from 'react'
 import { FlatList, SectionList, View, Text, StyleSheet } from 'react-native'
 import ListItem from './ListItem'

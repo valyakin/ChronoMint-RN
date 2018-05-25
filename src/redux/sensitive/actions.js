@@ -1,45 +1,81 @@
-export const KEY_ADD = 'sensitive/KEY_ADD'
-import { AES, enc } from 'crypto-js'
-import { getEncryptedKeys } from './selectors'
-import { verifyPinCode } from '../pincode/actions'
-import DeviceInfo from 'react-native-device-info'
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 
-const salt = DeviceInfo.getUniqueID()
+import { createCipher, createHash } from 'crypto'
+import { addError } from 'login/redux/network/actions'
+import salt from '../../utils/salt'
 
-export const addKey = ({ key, provider, network }) => async (dispatch, getState) => {
-  const { pinCodeHash } = getState().pincode
+export const DUCK_SENSITIVE = 'sensitive'
 
-  const payload = {
-    provider,
-    network,
-    key: AES.encrypt(key, pinCodeHash).toString(),
-  }
-  
-  dispatch({ type: KEY_ADD, payload })
+import { createCipher, createHash } from 'crypto'
+import { addError } from 'login/redux/network/actions'
+import isValid from '../../utils/validators'
+import salt from '../../utils/salt'
 
-  return {}
+export const DUCK_SENSITIVE = 'sensitive'
+
+export const types = {
+  SET_USE_PIN_PROTECTION: 'sensitive/SET_USE_PIN_PROTECTION',
+  SET_PIN: 'sensitive/SET_PIN',
+  SET_LAST_ACCOUNT: 'sensitive/SET_LAST_ACCOUNT',
+  ADD_ACCOUNT: 'sensitive/ADD_ACCOUNT',
 }
 
-export const getKey = ({ provider, network, pinCode, isFingerprintCorrect }) =>
-  async (dispatch, getState) => {
-    const { key } = getEncryptedKeys(getState(), provider, network)[0]
+export const setUsePinProtection = (payload: boolean) => ({
+  type: types.SET_USE_PIN_PROTECTION,
+  payload,
+})
 
-    if (!key) {
-      return { error: 'No stored keys available' }
-    }
+export const addAccount = ({ address, privateKey }: { address: string, privateKey: string }, password: string, pin?: string) =>
+  async (dispatch) => {
+    try {
+      let passwordHash
+      let pinHash
+      let encryptedWithPasswordPrivateKey
+      let encryptedWithPinPrivateKey
 
-    if (!isFingerprintCorrect) { 
-      const isPinCodeCorrect = await dispatch(verifyPinCode(pinCode)) 
-      
-      if (!isPinCodeCorrect) {
-        return { error: 'Incorrect pin-code' }
+      const hashForPassword = createHash('sha256')
+      hashForPassword.update(salt(password))
+      passwordHash = hashForPassword.digest('hex')
+
+      const cipherWithPassword = createCipher('aes-256-cbc', password)
+      encryptedWithPasswordPrivateKey = cipherWithPassword.update(privateKey, 'utf8', 'hex')
+      encryptedWithPasswordPrivateKey += cipherWithPassword.final('hex')
+
+      console.log('HAHAHA', {
+        address, privateKey, password, pin,
+      })
+
+      if (typeof pin !== 'undefined') {
+        const hashForPin = createHash('sha256')
+        hashForPin.update(salt(pin))
+        pinHash = hashForPin.digest('hex')
+
+        const cipherWithPin = createCipher('aes-256-cbc', salt(pin))
+        encryptedWithPinPrivateKey = cipherWithPin.update(privateKey, 'utf8', 'hex')
+        encryptedWithPinPrivateKey += cipherWithPin.final('hex')
       }
 
-    }
-    
-    const { pinCodeHash } = getState().pincode
-
-    return {
-      key: AES.decrypt(key, pinCodeHash).toString(enc.Utf8),
+      dispatch({
+        type: types.ADD_ACCOUNT,
+        payload: {
+          address,
+          encryptedWithPasswordPrivateKey,
+          encryptedWithPinPrivateKey,
+          passwordHash,
+          pinHash,
+        },
+      })
+    } catch (error) {
+      dispatch(addError(error))
     }
   }
+
+export const setLastAccount = (address: string) => ({
+  type: types.SET_LAST_ACCOUNT,
+  payload: address,
+})

@@ -1,7 +1,11 @@
-/* @flow */
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import React from 'react'
 import { Image, TouchableOpacity, StyleSheet, Text } from 'react-native'
-import images from '../assets/images'
 import colors from '../utils/colors'
 
 type Props = {
@@ -13,8 +17,8 @@ type Props = {
 
 const checkboxIcon = (isChecked) => {
   return isChecked ?
-    images.checkboxChecked :
-    images.checkbox
+    require('../images/checkbox-checked.png') :
+    require('../images/checkbox.png')
 }
 
 const Checkbox = ({ label, isDark, isChecked, onPress }: Props) => (

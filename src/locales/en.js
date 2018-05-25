@@ -1,7 +1,15 @@
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 export default {
   usd: 'USD',
   eth: 'ETH',
   btc: 'BTC',
+  or: 'or',
+  copyright: 'Copyright ©2018 LaborX Australia Pty Ltd. All Rights Reserved.',
   WalletsList: {
     title: 'My wallets',
   },
@@ -107,4 +115,68 @@ export default {
     receiving: 'Receiving from',
     sending: 'Sending to',
   },
-}
+  CreateWallet: {
+    password: 'Password',
+    confirmPassword: 'Confirm password',
+    createWallet: 'Create a wallet',
+    or: 'or',
+    useExistingWallet: 'Use an existing wallet',
+    copyright: 'Copyright ©2018 LaborX Australia Pty Ltd. All Rights Reserved.',
+    mismatchPasswords: 'Passwords do not match',
+    invalidPassword: 'Password is not valid',
+  },
+  WalletBackup: {
+    title: 'Wallet Back-up',
+    subtitle: 'Get you wallet back up phrase and use it as a recovery option.',
+    usePinProtection: 'Use PIN protection',
+    backupWallet: 'Back-up my wallet',
+    or: 'or',
+    later: 'Backup later',
+  },
+  ConfirmMnemonic: {
+    title: 'Confirm recovery phrase',
+    done: 'Done',
+    wrongMnemonicError: 'Wrong mnemonic. Try again',
+  },
+  GenerateMnemonic: {
+    title: 'Write down recovery phrase',
+    description: 'You can use the phrase shown below to restore or login to your wallet by using additional wallet\'s login options.',
+    warningTitle: 'Important!\nRead the security guidelines',
+    warningItem1Title: 'Don\'t share your mnemonic phrase with someone you don\'t trust.',
+    warningItem1Content: 'Double check services you\'re giving your mnemonic to and don\'t share your phrase with anyone.',
+    confirm: 'Confirm phrase',
+    warnings: {
+      '0': {
+        title: 'Don\'t share your mnemonic phrase with someone you don\'t trust.',
+        content: 'Double check services you\'re giving your mnemonic to and don\'t share your phrase with anyone.',
+      },
+      '1': {
+        title: 'Don\'t loose your key.',
+        content: 'We do not store this information and Your account will be lost together with all your funds and history.',
+      },
+    },
+  },
+  EnterPin: {
+    setupTitle: 'Setup PIN',
+    confirmTitle: 'Confirm PIN',
+    pinsNotMatch: 'PINs did not match',
+  },
+  SelectAccount: {
+    title: 'My addresses',
+    importNew: 'Import new',
+    or: 'or',
+    createNew: 'Create a new wallet',
+  },
+  AccountPassword: {
+    login: 'Log in',
+    enterPassword: 'Enter password',
+    recoverUsingMnemonic: 'Recover using mnemonic',
+    or: 'common.or',
+  },
+  ImportAccount: {
+    title: 'Import Address',
+    mnemonic: 'Mnemonic',
+    privateKey: 'Private key',
+    walletFile: 'Wallet File',
+  },
+} 

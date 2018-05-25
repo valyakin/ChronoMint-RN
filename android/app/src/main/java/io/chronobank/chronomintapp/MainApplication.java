@@ -1,19 +1,20 @@
 package io.chronobank.chronomintapp;
 
 import android.support.annotation.Nullable;
-import com.bitgo.randombytes.RandomBytesPackage;
-import com.reactnativenavigation.NavigationApplication;
-import com.facebook.react.ReactApplication;
+import br.com.classapp.RNSensitiveInfo.RNSensitiveInfoPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
-import com.rnfs.RNFSPackage;
-import com.peel.react.rnos.RNOSModule;
-import com.tradle.react.UdpSocketsModule;
-import com.peel.react.TcpSocketsModule;
-import com.hieuvp.fingerprint.ReactNativeFingerprintScannerPackage;
-import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.bitgo.randombytes.RandomBytesPackage;
+import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+import com.hieuvp.fingerprint.ReactNativeFingerprintScannerPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.peel.react.rnos.RNOSModule;
+import com.peel.react.TcpSocketsModule;
+import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
+import com.reactnativenavigation.NavigationApplication;
+import com.rnfs.RNFSPackage;
+import com.tradle.react.UdpSocketsModule;
 
 
 import java.util.Arrays;
@@ -29,12 +30,14 @@ public class MainApplication extends NavigationApplication {
 
   protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
-          new ReactNativeFingerprintScannerPackage(),
+          new RNI18nPackage(),
+          new RandomBytesPackage(),
           new ReactNativeDocumentPicker(),
+          new ReactNativeFingerprintScannerPackage(),
           new RNDeviceInfo(),
           new RNFSPackage(),
           new RNOSModule(),
-          new RandomBytesPackage()
+          new RNSensitiveInfoPackage()
     );
   }
 

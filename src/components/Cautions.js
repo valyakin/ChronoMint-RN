@@ -1,8 +1,12 @@
-/* @flex */
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import * as React from 'react'
 import { View, Image, Text, StyleSheet } from 'react-native'
 import I18n from 'react-native-i18n'
-import images from '../assets/images'
 import colors from '../utils/colors'
 
 type CautionTextProps = {
@@ -20,7 +24,7 @@ const Cautions = () => (
   <View style={styles.container}>
     <Image
       style={styles.image}
-      source={images.alert}
+      source={require('../images/alert.png')}
     />
     <View style={styles.list}>
       <CautionItem text={I18n.t('Cautions.keepitSafe')} />

@@ -20,3 +20,9 @@ Run app on android device or emulator:
 ```bash
 yarn run android
 ```
+
+## License
+ [GNU AGPLv3](LICENSE)
+
+## Copyright
+LaborX PTY

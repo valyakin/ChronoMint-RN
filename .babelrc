@@ -6,10 +6,24 @@
     "functional-hmr",
     "transform-new-target",
     "transform-exponentiation-operator",
+    ["babel-plugin-transform-builtin-extend", {
+      "globals": ["Error", "Array"]
+    }],
     ["module-resolver", {
-      "root": ["./src", "./mint/src"],
+      "root": [
+        "./",
+        "./src",
+        "./node_modules/@chronobank/src",
+        "./node_modules/@chronobank/packages"
+      ],
+      "paths": [
+        "./",
+        "./src",
+        "./node_modules/@chronobank/src",
+        "./node_modules/@chronobank/packages"
+      ],
       "alias": {
-        "chronobank/login": "./mint/packages/login",
+        "@chronobank/login": "@chronobank/packages/login",
         "crypto": "react-native-crypto",
         "zlib": "browserify-zlib",
         "console": "console-browserify",
@@ -36,6 +50,12 @@
         "vm": "vm-browserify",
         "tls": "./"
       }
+    }],
+    ["transform-inline-environment-variables", {
+      "include": [
+        "NODE_ENV",
+        "REDUX_LOGGER"
+      ]
     }]
   ]
 }

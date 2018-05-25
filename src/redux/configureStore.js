@@ -1,45 +1,46 @@
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import Immutable from 'immutable'
 // import { browserHistory, createMemoryHistory } from 'react-router'
 import { combineReducers } from 'redux-immutable'
 import { createStore, applyMiddleware, compose } from 'redux'
+import { persistStore, autoRehydrate } from 'redux-persist-immutable'
+import createSensitiveStorage from 'redux-persist-sensitive-storage'
 // import { reducer as formReducer } from 'redux-form/immutable'
 // import { loadTranslations, setLocale, i18nReducer, I18n } from 'platform/i18n'
 // import moment from 'moment'
-import { composeWithDevTools } from 'remote-redux-devtools'
-import saveAccountMiddleWare from 'redux/session/saveAccountMiddleWare'
 import thunk from 'redux-thunk'
+import { composeWithDevTools } from 'redux-devtools-extension'
+import { createLogger as rCreateLogger } from 'redux-logger'
+import saveAccountMiddleWare from 'redux/session/saveAccountMiddleWare'
 // import ls from 'utils/LocalStorage'
 // import { globalWatcher } from '@chronobank/mint/src/redux/watcher/actions'
 import { SESSION_DESTROY } from 'redux/session/actions'
-import * as ducks from './ducks'
+import * as ducks from 'redux/ducks'
 
 const getNestedReducers = (ducks) => {
   let reducers = {}
 
   Object.keys(ducks).forEach((r) => {
+    // eslint-disable-next-line import/namespace
     reducers = { ...reducers, ...(typeof (ducks[r]) === 'function' ? { [r]: ducks[r] } : getNestedReducers(ducks[r])) }
   })
-
   return reducers
 }
 
-// add noised action here
-// const IGNORED_ACTIONS = [
-//   'market/UPDATE_RATES',
-//   'market/UPDATE_LAST_MARKET',
-// ]
-
-// let logActions = process.env.NODE_ENV === 'development'
-//   ? function (action) {
-//     if (IGNORED_ACTIONS.includes(action.type)) {
-//       return
-//     }
-//     // eslint-disable-next-line
-//     console.log(`%c ${action.type} `, 'color: #999; background: #333')
-//   }
-//   : function () {}
-
 const configureStore = () => {
+
+  // LISTEN FOR UNHANDLED PROMISE REJECTIONS
+  // [AlexO] Maybe this is a temporary solution, but...
+  window.onunhandledrejection = function (promise, reason) {
+    // eslint-disable-next-line no-console
+    console.log('%c window.onunhandledrejection', 'background: #222; color: red', promise, reason)
+  }
+
   const initialState = new Immutable.Map()
 
   const appReducer = combineReducers({
@@ -47,37 +48,68 @@ const configureStore = () => {
   })
 
   const rootReducer = (state, action) => {
-    // workaround until fix redux devtool
-    // logActions(action)
-
+    let newState = state
     if (action.type === SESSION_DESTROY) {
       // const i18nState = state.get('i18n')
-      state = new Immutable.Map()
-      // state = state.set('i18n', i18nState)
+      newState = new Immutable.Map()
+      // newState = newState.set('i18n', i18nState)
     }
 
-    return appReducer(state, action)
+    return appReducer(newState, action)
   }
 
   const composeEnhancers = __DEV__ ? composeWithDevTools({ realtime: true }) : compose
-  // const composeEnhancers = composeWithDevTools({ realtime: true })
 
+  // MIDDLEWARE
+  const middleware = [thunk, saveAccountMiddleWare]
+
+  // LOGGER
+
+  // Two lines below to avoid strange behaviour, when process.env.NODE_ENV is undefined,
+  // but console.log(process.env) dispalys Object {NODE_ENV: 'development} 
+  const processEnv = process.env
+  const isDevelopmentEnv = processEnv.NODE_ENV
+
+  if (process.env['REDUX_LOGGER'] && isDevelopmentEnv === 'development') {
+    const IGNORED_ACTIONS = [
+      'mainWallet/TOKEN_BALANCE',
+      'market/UPDATE_LAST_MARKET',
+      'market/UPDATE_PRICES',
+      'market/UPDATE_RATES',
+      'tokens/fetched',
+    ]
+    const rLogger = rCreateLogger({
+      collapsed: true,
+      predicate: (getState, action) => !IGNORED_ACTIONS.includes(action.type),
+    })
+    middleware.push(rLogger)
+  }
+
+  //STORE
   // noinspection JSUnresolvedVariable,JSUnresolvedFunction
   const createStoreWithMiddleware = composeEnhancers(
-    applyMiddleware(
-      thunk,
-      // routerMiddleware(historyEngine),
-      saveAccountMiddleWare
-    )
+    applyMiddleware(...middleware), 
+    autoRehydrate(),
   )(createStore)
-
+  
   return createStoreWithMiddleware(
     rootReducer,
     initialState,
   )
 }
 
-export const store = configureStore()
+const store = configureStore()
+export default store
+
+persistStore(store,
+  {
+    storage: createSensitiveStorage({
+      keychainService: "ChronoMint",
+      sharedPreferencesName: "ChronoMint",
+    }),
+    whitelist: ['sensitive'],
+  }
+)
 // store.dispatch(globalWatcher())
 
 // export const DUCK_I18N = 'i18n'

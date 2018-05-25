@@ -1,36 +1,44 @@
-/* @flow */
-import * as React from 'react'
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import images from '../assets/images'
-import colors from '../utils/colors'
-import WalletImage from './WalletImage'
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 
-type Token = { id: string, amount: number }
+import React, { PureComponent }  from 'react'
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import styles from 'components/styles/WalletListItemStyles'
+import WalletImage, { type TWalletMode } from 'components/WalletImage'
 
-type Transaction = { status?: 'receiving' | null }
-
-type ExchangeType = { currency: string, amount: number }
-
-type WalletMode = 'default' | 'shared' | 'locked'
-
-type Props = {
-  title: string,
+type TPrices = {
+  [token: string]: {
+    [currency: string]: number
+  }
+}
+type TCalculatedToken = TPrices[]
+export type TCalculatedTokenCollection = TCalculatedToken[]
+export type TWalletsListItemProps = {
   address: string,
-  balance: {
-    currency: string,
-    amount: number
-  },
-  transactions?: Transaction[],
-  tokens?: Token[],
-  exchange?: ExchangeType,
-  image?: number,
-  mode?: WalletMode,
+  blockchain: string,
+  tokens: TCalculatedToken,
+  walletInfo: any,
+  walletMode?: ?TWalletMode,
+  selectedCurrency: string,
+  onItemPress(
+    blockchain: string,
+    address: string,
+  ): void,
 }
 
 const Transactions = ({ transactions }) => !transactions ? null : (
   !transactions[1] ? (
     <Image
-      source={images.transactionReceiving}
+      source={require('../images/indicator-receiving-0.png')}
     />
   ) : (
     <View style={styles.transactionsNumberContainer}>
@@ -41,128 +49,137 @@ const Transactions = ({ transactions }) => !transactions ? null : (
   )
 )
 
-const TokensList = ({ tokens }) => !(tokens || [])[0] ? null : (
-  <Text style={styles.tokens}>
-    {tokens[0].id} {tokens[0].amount.toFixed(2)}
-    {tokens[1] && ', '}
-    {tokens[2] ?
-      `+ ${tokens.length - 1} more` :
-      `${tokens[1].id} ${tokens[1].amount.toFixed(2)}`
-    }
-  </Text>
-)
-
-const Exchange = ({ exchange }: ExchangeType) => !exchange ? null : (
-  <Text style={styles.exchange}>
-    {exchange.currency} {exchange.amount.tol}
-  </Text>
-) 
-
-export default class WalletsListItem extends React.Component<Props, {}> {
-  handlePress = () => {
-    const { navigator, mode, address, token } = this.props
-    navigator.push({
-      screen: 'Wallet',
-      passProps: {
-        mode,
-        address,
-        token,
-      },
+// TODO: [AO] Refactoring required
+const TokensList = ({ tokens }) => {
+  if (!tokens || !tokens.length) {
+    return (
+      <Text style={styles.tokens}>
+        {''}
+      </Text>
+    )
+  }
+  const tokensIndex = Object.create(null)
+  tokens
+    .forEach( (tokenObj) => {
+      const tKey = Object.keys(tokenObj)[0]
+      tokensIndex[tKey] = tokenObj[tKey]
     })
+  let tokensStrings = tokens
+    .map( (tokenObj) => Object.keys(tokenObj)[0])
+    .sort()
+    .reduce( (accumulator, tokenSymbol) => {
+      accumulator.push([tokenSymbol, tokensIndex[tokenSymbol].amount.toFixed(2)].join(': '))
+      return accumulator
+    }, [])
+
+  if (tokensStrings && tokensStrings.length > 2) {
+    tokensStrings = [
+      tokensStrings[0],
+      ['+', tokensStrings.length - 1, 'more'].join(' '),
+    ]
+  }
+  tokensStrings = tokensStrings && tokensStrings.join(', ')
+
+  return (
+    <Text style={styles.tokens}>
+      {tokensStrings || ''}
+    </Text>
+  )
+}
+
+// TEMPORARY DISABLED
+//
+// const Exchange = ({ exchange }) => !exchange ? null : (
+//   <Text style={styles.exchange}>
+//     {exchange.currency} {exchange.amount}
+//   </Text>
+// )
+
+export default class WalletsListItem extends PureComponent<TWalletsListItemProps> {
+
+  constructor (props: TWalletsListItemProps) {
+    super(props)
+  }
+
+  handleOnPress = () => {
+    const {
+      address,
+      blockchain,
+    } = this.props
+    this.props.onItemPress(blockchain, address)
   }
 
   render () {
-    const { title, address, balance } = this.props
+    const {
+      address,
+      blockchain,
+      walletInfo,
+      walletMode,
+    } = this.props
+
+    const {
+      balance,
+      tokens,
+    } = walletInfo
+
+    let walletTitle = `My ${blockchain} Wallet`
+    if (walletMode === 'shared') {
+      walletTitle = 'My Shared Wallet'
+    }
+    if (walletMode === 'timeLocked') {
+      walletTitle = 'My TimeLocked Wallet'
+    }
+
+    const textCurrencyBalance = [
+      this.props.selectedCurrency,
+      balance !== undefined && balance.toFixed(2) || '--.--',
+    ].join(' ')
+
     return (
-      <TouchableOpacity style={styles.container} onPress={this.handlePress}>
-        <View style={styles.transactions}>
-          <Transactions transactions={this.props.transactions} />
-        </View>
-        <View style={styles.content}>
-          <WalletImage
-            image={this.props.image}
-            walletMode={this.props.mode}
-            style={styles.image}
-          />
-          <View style={styles.contentColumn}>
-            <Text style={styles.title}>
-              {title}
-            </Text>
-            <Text style={styles.address}>
-              {address}
-            </Text>
-            <Text style={styles.balance}>
-              {balance.currency} {balance.amount.toFixed(2)}
-            </Text>
-            <TokensList tokens={this.props.tokens} />
-            <Exchange exchange={this.props.exchange} />
+      <TouchableOpacity
+        style={styles.container}
+        onPress={this.handleOnPress}
+      >
+        <View>
+          <View style={styles.transactions}>
+            <Transactions transactions={[1]} />
+          </View>
+          <View style={styles.content}>
+            <WalletImage
+              blockchain={blockchain}
+              walletMode={walletMode}
+              style={styles.image}
+            />
+            <View style={styles.contentColumn}>
+              <Text style={styles.title}>
+                {
+                  walletTitle
+                }
+              </Text>
+              <Text
+                style={styles.address}
+                ellipsizeMode='middle'
+                numberOfLines={1}
+              >
+                {
+                  address
+                }
+              </Text>
+              <Text style={styles.balance}>
+                {
+                  textCurrencyBalance
+                }
+              </Text>
+              <TokensList tokens={tokens} />
+              {/* TEMPORARY DISABLED
+                <View>
+                  <Exchange exchange={wallet.exchange} />
+                </View>
+              */}
+            </View>
           </View>
         </View>
       </TouchableOpacity>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.background,
-    borderRadius: 4,
-    padding: 8,
-    marginHorizontal: 16,
-    marginVertical: 4,
-    paddingBottom: 40,
-  },
-  transactions: {
-    flexDirection: 'row',
-    margin: 4,
-    minHeight: 20,
-    justifyContent: 'flex-end',
-  },
-  transactionsNumberContainer: {
-    height: 20,
-    minWidth: 20,
-    backgroundColor: colors.red,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  image: {
-    marginRight: 16,
-    marginLeft: 8,
-  },
-  transactionsNumber: {
-    color: colors.background,
-    fontWeight: '900',
-  },
-  content: {
-    flexDirection: 'row',
-  },
-  contentColumn: {
-    flex: 1,
-  },
-  title: {
-    marginTop: 8,
-    fontWeight: '700',
-  },
-  address: {
-    marginTop: 4,
-    fontWeight: '200',
-    fontSize: 12,
-  },
-  balance: {
-    fontSize: 22,
-    fontWeight: '700',
-    marginTop: 24,
-  },
-  tokens: {
-    color: colors.foregroundLighter,
-    fontWeight: '200',
-    marginTop: 4,
-  },
-  exchange: {
-    color: colors.foregroundLighter,
-    fontWeight: '200',
-    marginTop: 4,
-  },
-})

@@ -1,8 +1,13 @@
-// @flow
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import React from 'react'
 import { View, StyleSheet, Text } from 'react-native'
 import I18n from 'react-native-i18n'
-import colors from '../utils/colors'
+import colors from 'utils/colors'
 
 type FetchingStatus = 'FETCHING' | 'SYNCING' | 'SYNCED'
 

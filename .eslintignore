@@ -1,5 +1,4 @@
-node_modules/**
-**/node_modules/**
+# /node_modules/* and /bower_components/* in the project root are ignored by default
 build/**
 .tmp/**
 mocks/**
@@ -9,4 +8,5 @@ docs/**
 *.less
 *.scss
 *.svg
+patches/**
 git

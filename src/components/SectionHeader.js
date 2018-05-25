@@ -1,15 +1,23 @@
-/* @flow */
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
 import * as React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
 import colors from '../utils/colors'
 
-type Props = {
-  title: string
+type SectionHeaderProps = {
+  title: string,
+  isDark?: boolean,
+  style?: StyleObj,
 }
 
-export default class SectionHeader extends React.Component<Props, void> {
+export default class SectionHeader extends React.Component<SectionHeaderProps, void> {
   render () {
-    const { title, isDark, style } = this.props
+    const { title, isDark = false, style } = this.props
     
     if (isDark) {
       return (
@@ -34,7 +42,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     color: colors.background,
-    backgroundColor: colors.foreground,
     fontWeight: '900',
   },
   container: {
