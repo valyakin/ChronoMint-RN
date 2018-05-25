@@ -4,15 +4,19 @@
  *
  * @flow
  */
+
 import { createCipher, createHash } from 'crypto'
 import { addError } from 'login/redux/network/actions'
 import salt from '../../utils/salt'
 
 export const DUCK_SENSITIVE = 'sensitive'
 
-export type TSensitiveActionTypes = {
-  SET_USE_PIN_PROTECTION: 'sensitive/SET_USE_PIN_PROTECTION',
-}
+import { createCipher, createHash } from 'crypto'
+import { addError } from 'login/redux/network/actions'
+import isValid from '../../utils/validators'
+import salt from '../../utils/salt'
+
+export const DUCK_SENSITIVE = 'sensitive'
 
 export const types = {
   SET_USE_PIN_PROTECTION: 'sensitive/SET_USE_PIN_PROTECTION',

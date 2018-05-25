@@ -153,7 +153,7 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
         this.props.addError(e.message)
       }
     }
-
+    
     onPasswordLogin = async (account, password: string) => {
       const {
         encryptedWithPasswordPrivateKey,

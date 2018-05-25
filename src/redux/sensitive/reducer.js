@@ -8,16 +8,15 @@
 import Immutable from 'immutable'
 import { types } from './actions'
 
-export type TSensitiveInitialState = {
-  usePinProtection: boolean,
-}
+import Immutable from 'immutable'
+import { types } from './actions'
 
-const initialState: TSensitiveInitialState = {
+const initialState = {
   usePinProtection: true,
   accounts: Immutable.Map(),
 }
 
-export const sensitive = (state: TSensitiveInitialState = initialState, { type, payload }: { type: TSensitiveActionTypes, payload: any}) => {
+export const sensitive = (state = initialState, { type, payload }) => {
   switch (type) {
     case types.SET_USE_PIN_PROTECTION: return {
       ...state,
@@ -35,7 +34,6 @@ export const sensitive = (state: TSensitiveInitialState = initialState, { type, 
         accounts: (accounts || Immutable.Map()).set(payload.address, payload),
       }
     }
-
     case types.SET_LAST_ACCOUNT: return {
       ...state,
       lastAccount: state.accounts.get(payload) || {},
