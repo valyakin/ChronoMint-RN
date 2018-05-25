@@ -9,6 +9,7 @@
     "contracts:compile": "cd node_modules/chronobank-smart-contracts && node --max_old_space_size=8000 ../truffle/build/cli.bundled.js compile --all",
     "ios": "react-native run-ios --simulator 'iPhone SE'",
     "postinstall": "flow-typed install --skip",
+    "postversion": "react-native-version",
     "precommit": "lint-staged",
     "prepare": "patch-package",
     "start:logredux": "cross-env REDUX_LOGGER=1 node node_modules/react-native/local-cli/cli.js start",
@@ -113,6 +114,7 @@
     "lint-staged": "^7.0.4",
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
+    "react-native-version": "^2.6.0",
     "react-test-renderer": "16.2.0",
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6"
