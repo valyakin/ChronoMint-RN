@@ -5,15 +5,15 @@
   "author": "chronobank",
   "license": "AGPL-3.0",
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "start:logredux": "cross-env REDUX_LOGGER=1 node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest",
-    "ios": "react-native run-ios --simulator 'iPhone SE'",
-    "contracts:compile": "cd node_modules/chronobank-smart-contracts && node --max_old_space_size=8000 ../truffle/build/cli.bundled.js compile --all",
     "android": "react-native run-android",
-    "prepare": "patch-package",
+    "contracts:compile": "cd node_modules/chronobank-smart-contracts && node --max_old_space_size=8000 ../truffle/build/cli.bundled.js compile --all",
+    "ios": "react-native run-ios --simulator 'iPhone SE'",
     "postinstall": "flow-typed install --skip",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prepare": "patch-package",
+    "start:logredux": "cross-env REDUX_LOGGER=1 node node_modules/react-native/local-cli/cli.js start",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
   },
   "dependencies": {
     "@chronobank": "https://github.com/ChronoBank/ChronoMint.git#89c4e00ff3cdef0d06af2296493446d9ec8cbc85",
