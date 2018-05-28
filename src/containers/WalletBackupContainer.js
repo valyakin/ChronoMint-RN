@@ -27,10 +27,11 @@ class WalletBackupContainer extends PureComponent<TWalletBackupContainerProps, {
       mnemonic,
       privateKey,
       password,
+      navigator,
     } = this.props
 
     if (isCreatingNewWallet) {
-      return this.props.navigator.push({
+      return navigator.push({
         screen: 'GenerateMnemonic',
         title: I18n.t('GenerateMnemonic.title'),
         passProps: {

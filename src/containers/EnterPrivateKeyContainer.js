@@ -27,13 +27,21 @@ class EnterPrivateKeyContainer extends PureComponent<TEnterPrivateKeyContainerPr
   }
 
   handleDone = (): void => {
-    this.props.onPrivateKeyLogin(this.state.privateKey)
+    const {
+      navigator,
+      onPrivateKeyLogin,
+    } = this.props
+    const {
+      privateKey,
+    } = this.state
 
-    this.props.navigator.push({
+    onPrivateKeyLogin(privateKey)
+
+    navigator.push({
       screen: 'SetAccountPassword',
       title: 'Set Account Password',
       passProps: {
-        privateKey: this.state.privateKey,
+        privateKey: privateKey,
       },
     })
   }

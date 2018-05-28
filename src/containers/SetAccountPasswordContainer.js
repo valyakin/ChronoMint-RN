@@ -60,6 +60,7 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
     const {
       privateKey,
       generateMnemonic,
+      navigator,
     } = this.props
     let mnemonic
 
@@ -76,7 +77,7 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
       mnemonic = generateMnemonic()
     }
 
-    this.props.navigator.push({
+    navigator.push({
       screen: 'WalletBackup',
       passProps: {
         mnemonic,

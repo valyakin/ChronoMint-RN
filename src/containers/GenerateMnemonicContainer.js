@@ -22,9 +22,10 @@ class GenerateMnemonicContainer extends PureComponent<TGenerateMnemonicContainer
       mnemonic,
       password,
       privateKey,
+      navigator,
     } = this.props
     
-    this.props.navigator.push({
+    navigator.push({
       screen: 'ConfirmMnemonic',
       title: I18n.t('ConfirmMnemonic.title'),
       passProps: {
