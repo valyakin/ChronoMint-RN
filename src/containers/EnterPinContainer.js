@@ -54,11 +54,10 @@ class EnterPinContainer extends PureComponent<TEnterPinContainerProps, TEnterPin
       password,
       privateKey,
       pin,
-      isLogin,
       account,
     } = this.props
 
-    if (isLogin) {
+    if (account) {
       await this.props.onPinLogin(account, pin)
 
       return
@@ -77,7 +76,6 @@ class EnterPinContainer extends PureComponent<TEnterPinContainerProps, TEnterPin
         pin,
         privateKey: this.props.privateKey,
         password: this.props.password,
-        isLogin: this.props.isLogin,
         account: this.props.account,
       },
     })
