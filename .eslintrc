@@ -1,6 +1,7 @@
 {
   "extends": [
-    "plugin:chronobank-react/recommended"
+    "plugin:chronobank-react/recommended",
+    "plugin:flowtype/recommended"
   ],
   "plugins": [
     "flowtype",
