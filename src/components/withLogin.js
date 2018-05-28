@@ -40,9 +40,9 @@ import {
 import isValid from '../utils/validators'
 import salt from '../utils/salt'
 
-export type LoginHOCProps = {
+type TLoginHOCProps = {
   accounts: Array<any>,
-  addAccount: (account: { address: string, privateKey: string }, password: string, pin?: string) => void,
+  addAccount: (account: { address: string, privateKey: string }, password: string, pin?: string) => Promise<void>,
   addError: (error: string) => void,
   checkNetwork: typeof networkService.checkNetwork,
   children (login: any): any,
@@ -67,18 +67,18 @@ export type LoginHOCProps = {
   usePinProtection: boolean, 
 }
 
-type LoginHOCState = {
+type TLoginHOCState = {
   password: string,
 }
 
 export default function withLogin (Screen: ComponentType<any>): ComponentType<any> {
-  class LoginHOC extends PureComponent<LoginHOCProps, LoginHOCState> {
+  class LoginHOC extends PureComponent<TLoginHOCProps, TLoginHOCState> {
 
     state = {
       password: '',
     }
     
-    loginSetup = async ({ ethereum, btc, bcc, btg, ltc, nem }) => {
+    loginSetup = async ({ ethereum, btc, bcc, btg, ltc, nem }): Promise<void> => {
       const web3 = new Web3()
       const eProvider = ethereum.getProvider()
   
@@ -100,7 +100,7 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
       }
     }
 
-    onLogin = async () => {
+    onLogin = async (): Promise<void> => {
       this.props.clearErrors()
       
       const isPassed = await this.props.checkNetwork()
@@ -114,19 +114,15 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
         
         this.props.login(this.props.selectedAccount)
 
-        this.gotoWallet()
+        startAppRoot('wallet')
 
         this.props.setLastAccount(this.props.selectedAccount)
       }
     }
 
-    gotoWallet = () => {
-      startAppRoot('wallet')
-    }
-
     generateMnemonic = mnemonicProvider.generateMnemonic
 
-    onMnemonicLogin = async (mnemonic: string = mnemonicProvider.generateMnemonic()) => {
+    onMnemonicLogin = async (mnemonic: string = mnemonicProvider.generateMnemonic()): Promise<{ mnemonic: string, privateKey: string }> => {
       this.props.loading()
       this.props.clearErrors()
 
@@ -140,7 +136,7 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
       return { mnemonic, privateKey }
     }
 
-    onPrivateKeyLogin = async (privateKey) => {
+    onPrivateKeyLogin = async (privateKey: string): Promise<void> => {
       this.props.loading()
       this.props.clearErrors()
 
@@ -154,7 +150,7 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
       }
     }
     
-    onPasswordLogin = async (account, password: string) => {
+    onPasswordLogin = async (account, password: string): Promise<void> => {
       const {
         encryptedWithPasswordPrivateKey,
         passwordHash,
@@ -185,7 +181,7 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
       }
     }
 
-    onPinLogin = async (account, pin: string) => {
+    onPinLogin = async (account, pin: string): Promise<void> => {
       const {
         encryptedWithPinPrivateKey,
         pinHash,
@@ -216,7 +212,7 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
       }
     }
 
-    onSetPassword = (password: string, passwordConfirmation: string) => 
+    onSetPassword = (password: string, passwordConfirmation: string): Promise<void> => 
       new Promise((resolve, reject) => {
         this.props.clearErrors()
 
@@ -230,28 +226,24 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
         this.setState({ password }, resolve)
       })
 
-    storeAccount = async (privateKey: string, password?: string = this.state.password, pin?: string) => {
+    storeAccount = (privateKey: string, password?: string = this.state.password, pin?: string): Promise<void> => {
       const {
         storedAccounts,
         selectedAccount,
         addAccount,
       } = this.props
 
-      const hasAccount = storedAccounts.has(selectedAccount)
-
-      console.log('HAS ACCOUNT', { privateKey, password, pin })
-
-      if (hasAccount) {
-        return
+      if (storedAccounts.has(selectedAccount)) {
+        return Promise.resolve()
       }
 
-      await addAccount({
+      return addAccount({
         address: selectedAccount,
         privateKey,
       }, password, pin)
     }
     
-    renderError = (error) => {
+    renderError = (error: string): void => {
       Alert.alert(
         'Error',
         error,
@@ -270,14 +262,14 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
 
       const props = {
         ...this.props,
-        isCreatingNewWallet: !this.props.selectedAccount,
         generateMnemonic: this.generateMnemonic,
+        isCreatingNewWallet: !this.props.selectedAccount,
         onLogin: this.onLogin,
         onMnemonicLogin: this.onMnemonicLogin,
-        onPrivateKeyLogin: this.onPrivateKeyLogin,
-        onSetPassword: this.onSetPassword,
         onPasswordLogin: this.onPasswordLogin,
         onPinLogin: this.onPinLogin,
+        onPrivateKeyLogin: this.onPrivateKeyLogin,
+        onSetPassword: this.onSetPassword,
         onStoreAccount: this.storeAccount,
       }
 
