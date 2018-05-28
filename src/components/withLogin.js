@@ -39,6 +39,7 @@ import {
 } from '../redux/sensitive/actions'
 import isValid from '../utils/validators'
 import salt from '../utils/salt'
+import { type TStoredAccount } from '../redux/sensitive/reducer'
 
 type TLoginHOCProps = {
   accounts: Array<any>,
@@ -69,6 +70,18 @@ type TLoginHOCProps = {
 
 type TLoginHOCState = {
   password: string,
+}
+
+export type TWithLoginProps = TLoginHOCProps & {
+  isCreatingNewWallet?: boolean,
+  generateMnemonic: () => string,
+  onLogin: () => Promise<void>,
+  onMnemonicLogin: (mnemonic: string) => Promise<{ mnemonic: string, privateKey: string }>,
+  onPasswordLogin: (account: TStoredAccount, password: string) => Promise<void>,
+  onPinLogin: (account: TStoredAccount, pin: string) => Promise<void>,
+  onPrivateKeyLogin: (privateKey: string) => Promise<void>,
+  onSetPassword: (password: string, passwordConfirmation: string) => Promise<void>,
+  onStoreAccount: (privateKey: string, password?: string, pin?: string) => Promise<void>
 }
 
 export default function withLogin (Screen: ComponentType<any>): ComponentType<any> {
