@@ -45,13 +45,7 @@ class WalletBackupContainer extends PureComponent<TWalletBackupContainerProps, {
     }
 
     if (usePinProtection) {
-      const {
-        mnemonic,
-        privateKey,
-        password,
-      } = this.props
-
-      return this.props.navigator.push({
+      return navigator.push({
         screen: 'EnterPin',
         title: 'Enter PIN',
         passProps: {

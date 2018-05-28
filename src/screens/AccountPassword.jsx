@@ -122,15 +122,6 @@ const styles = StyleSheet.create({
     marginRight: 20,
     width: 40,
   },
-  logo: {
-    alignSelf: 'center',
-    marginBottom: 20,
-    marginTop: -20,
-  },
-  logoText: {
-    alignSelf: 'center',
-    marginBottom: 30,
-  },
   or: {
     alignSelf: 'center',
     color: '#A3A3CC',
@@ -139,25 +130,6 @@ const styles = StyleSheet.create({
   separator: {
     backgroundColor: '#9997B2',
     marginHorizontal: 20,
-  },
-  spacer: {
-    flex: 1,
-  },
-  topBarActions: {
-    flexDirection: 'row',
-    margin: 20,
-    top: -44,
-  },
-  topBarButton: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  topBarButtonImage: {
-    marginRight: 10,
-    tintColor: '#ffffff',
-  },
-  topBarButtonLabel: {
-    color: '#FFFFFF',
   },
 })
 

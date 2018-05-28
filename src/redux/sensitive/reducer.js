@@ -8,9 +8,6 @@
 import Immutable from 'immutable'
 import { types } from './actions'
 
-import Immutable from 'immutable'
-import { types } from './actions'
-
 const initialState = {
   usePinProtection: true,
   accounts: Immutable.Map(),

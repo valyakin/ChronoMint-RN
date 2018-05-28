@@ -52,18 +52,6 @@ class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerPr
 
     await this.props.onPasswordLogin(this.props.account, password)
   }
-  
-  handleSelectLanguage = () => {
-    this.props.navigator.push({
-      screen: 'SelectLanguage',
-    })
-  }
-
-  handleSelectNetwork = () => {
-    this.props.navigator.push({
-      screen: 'SelectNetwork',
-    })
-  }
 
   handleUseWallet = () => {
     this.props.navigator.push({ screen: 'SelectAccount' })
@@ -81,8 +69,6 @@ class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerPr
       }}
       onChangePassword={this.handleChangePassword}
       onLogin={this.handleLogin}
-      onSelectLanguage={this.handleSelectLanguage}
-      onSelectNetwork={this.handleSelectNetwork}
       onUseWallet={this.handleUseWallet}
     />)
   }

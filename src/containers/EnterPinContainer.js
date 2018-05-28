@@ -10,7 +10,6 @@ import I18n from 'react-native-i18n'
 import EnterPin from '../screens/EnterPin'
 import withLogin from '../components/withLogin'
 import { PIN_LENGTH } from '../utils/globals'
-import { ENGINE_METHOD_CIPHERS } from 'constants';
 
 export type TEnterPinContainerProps = {
   navigator: any,

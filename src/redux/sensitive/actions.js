@@ -11,13 +11,6 @@ import salt from '../../utils/salt'
 
 export const DUCK_SENSITIVE = 'sensitive'
 
-import { createCipher, createHash } from 'crypto'
-import { addError } from 'login/redux/network/actions'
-import isValid from '../../utils/validators'
-import salt from '../../utils/salt'
-
-export const DUCK_SENSITIVE = 'sensitive'
-
 export const types = {
   SET_USE_PIN_PROTECTION: 'sensitive/SET_USE_PIN_PROTECTION',
   SET_PIN: 'sensitive/SET_PIN',
@@ -45,10 +38,6 @@ export const addAccount = ({ address, privateKey }: { address: string, privateKe
       const cipherWithPassword = createCipher('aes-256-cbc', password)
       encryptedWithPasswordPrivateKey = cipherWithPassword.update(privateKey, 'utf8', 'hex')
       encryptedWithPasswordPrivateKey += cipherWithPassword.final('hex')
-
-      console.log('HAHAHA', {
-        address, privateKey, password, pin,
-      })
 
       if (typeof pin !== 'undefined') {
         const hashForPin = createHash('sha256')
