@@ -26,7 +26,7 @@ class EnterMnemonicContainer extends PureComponent<TEnterMnemonicContainerProps,
     mnemonicWords: [],
   }
 
-  handleEnterWord = (index: number) => (word: string) => {
+  handleEnterWord = (index: number) => (word: string): void => {
     const { mnemonicWords } = this.state
     
     mnemonicWords[index] = word.trim()
@@ -40,7 +40,7 @@ class EnterMnemonicContainer extends PureComponent<TEnterMnemonicContainerProps,
     this.setState({ mnemonicWords })
   }
   
-  handleLogin = async () => {
+  handleLogin = async (): Promise<void> => {
     const mnemonic = this.state.mnemonicWords.join(' ')
 
     if (!mnemonicProvider.validateMnemonic(mnemonic)) {

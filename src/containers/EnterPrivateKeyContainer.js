@@ -22,11 +22,11 @@ class EnterPrivateKeyContainer extends PureComponent<TEnterPrivateKeyContainerPr
     privateKey: '',
   }
 
-  handleChangePrivateKey = (privateKey: string) => {
+  handleChangePrivateKey = (privateKey: string): void => {
     this.setState({ privateKey })
   }
 
-  handleDone = () => {
+  handleDone = (): void => {
     this.props.onPrivateKeyLogin(this.state.privateKey)
 
     this.props.navigator.push({
