@@ -45,7 +45,9 @@ class EnterMnemonicContainer extends PureComponent<TEnterMnemonicContainerProps,
     const mnemonic = this.state.mnemonicWords.join(' ')
 
     if (!mnemonicProvider.validateMnemonic(mnemonic)) {
-      return alert('Incorrect mnemonic. Check it and try again')
+      this.props.addError('Incorrect mnemonic. Check it and try again')
+
+      return
     }
 
     const { privateKey } = await this.props.onMnemonicLogin(mnemonic)
