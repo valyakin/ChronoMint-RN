@@ -54,7 +54,10 @@ class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerPr
   }
 
   handleUseWallet = () => {
-    this.props.navigator.push({ screen: 'SelectAccount' })
+    this.props.navigator.push({
+      screen: 'SelectAccount',
+      title: 'Select account',
+    })
   }
 
   addError = (error: string) => {

@@ -10,6 +10,7 @@ import EnterPrivateKey from '../screens/EnterPrivateKey'
 import withLogin from '../components/withLogin'
 
 export type TEnterPrivateKeyContainerProps = {
+  navigator: any,
   onPrivateKeyLogin: (privateKey: string) => void,
 }
 

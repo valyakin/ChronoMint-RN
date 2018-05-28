@@ -12,6 +12,8 @@ import GenerateMnemonic from '../screens/GenerateMnemonic'
 type TGenerateMnemonicContainerProps = {
   mnemonic: string,
   navigator: any,
+  password: string,
+  privateKey: string,
 }
 
 class GenerateMnemonicContainer extends PureComponent<TGenerateMnemonicContainerProps, {}> {
