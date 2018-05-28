@@ -7,18 +7,15 @@
 
 import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
-import withLogin from '../components/withLogin'
+import withLogin, { type TWithLoginProps } from '../components/withLogin'
 import WalletBackup from '../screens/WalletBackup'
 
-type TWalletBackupContainerProps = {
+type TWalletBackupContainerProps = TWithLoginProps & {
   isCreatingNewWallet?: boolean,
   mnemonic: string,
   privateKey?: string,
   navigator: any,
   password: string,
-  onLogin: () => void,
-  onSetUsePinProtection: (value: boolean) => void,
-  usePinProtection: boolean,
 }
 
 class WalletBackupContainer extends PureComponent<TWalletBackupContainerProps, {}> {

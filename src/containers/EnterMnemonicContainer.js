@@ -9,11 +9,10 @@ import React, { PureComponent } from 'react'
 import mnemonicProvider from 'login/network/mnemonicProvider'
 import { MNEMONIC_LENGTH } from '../utils/globals'
 import EnterMnemonic from '../screens/EnterMnemonic'
-import withLogin from '../components/withLogin'
+import withLogin, { type TWithLoginProps } from '../components/withLogin'
 
-export type TEnterMnemonicContainerProps = {
+export type TEnterMnemonicContainerProps = TWithLoginProps & {
   navigator: any,
-  onMnemonicLogin: (mnemonic: string) => any,
 }
 
 type TEnterMnemonicContainerState = {

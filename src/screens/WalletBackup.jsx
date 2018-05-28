@@ -14,7 +14,7 @@ import TextButton from 'components/TextButton'
 
 type TWalletBackupProps = {
   onDone: () => void,
-  onLater: () => void,
+  onLater: () => Promise<void>,
   onSwitchUsePinProtection: (value: boolean) => void,
   usePinProtection?: boolean,
 }

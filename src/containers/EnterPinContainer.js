@@ -8,10 +8,11 @@
 import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import EnterPin from '../screens/EnterPin'
-import withLogin from '../components/withLogin'
+import withLogin, { type TWithLoginProps } from '../components/withLogin'
 import { PIN_LENGTH } from '../utils/globals'
+import { type TStoredAccount } from '../redux/sensitive/reducer'
 
-export type TEnterPinContainerProps = {
+export type TEnterPinContainerProps = TWithLoginProps & {
   navigator: any,
   pin: string,
   privateKey: string,
@@ -20,6 +21,7 @@ export type TEnterPinContainerProps = {
   onMnemonicLogin: (mnemonic: string) => void,
   mnemonic: string,
   onLogin: () => void,
+  account?: TStoredAccount,
 }
 
 type TEnterPinContainerState = {

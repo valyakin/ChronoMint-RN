@@ -9,12 +9,13 @@ import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
 import ConfirmMnemonic from '../screens/ConfirmMnemonic'
 import { MNEMONIC_LENGTH } from '../utils/globals'
-import withLogin from '../components/withLogin'
+import withLogin, { type TWithLoginProps } from '../components/withLogin'
 
-export type TConfirmMnemonicContainerProps = {
+export type TConfirmMnemonicContainerProps = TWithLoginProps & {
   mnemonic: string,
   navigator: any,
   usePinProtection?: boolean,
+  password: string,
 }
 
 export type TConfirmMnemonicContainerState = {
@@ -29,7 +30,7 @@ class ConfirmMnemonicContainer extends PureComponent<TConfirmMnemonicContainerPr
     this.state = this.createInitialState()
   }
 
-  handleDone = async () => {
+  handleDone = async (): Promise<void> => {
     const { usePinProtection, navigator, mnemonic, password } = this.props
     
     if (mnemonic !== this.state.mnemonic.join(' ')) {
@@ -53,7 +54,7 @@ class ConfirmMnemonicContainer extends PureComponent<TConfirmMnemonicContainerPr
     })
   }
   
-  handleWord = (word: string) => () => {
+  handleWord = (word: string) => (): void => {
     this.setState(({ words, mnemonic }) => {
       words.splice(words.indexOf(word), 1)
       words.push('emptyWord')
@@ -69,7 +70,7 @@ class ConfirmMnemonicContainer extends PureComponent<TConfirmMnemonicContainerPr
     })
   }
   
-  createInitialState = () => ({
+  createInitialState = (): TConfirmMnemonicContainerState => ({
     mnemonic: [],
     words: this.props.mnemonic.split(' ').sort(() => Math.random() - 0.5),
   })

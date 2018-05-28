@@ -17,7 +17,7 @@ import I18n from 'react-native-i18n'
 import PrimaryButton from '../components/PrimaryButton'
 
 export type TConfirmMnemonicProps = {
-  onDone: () => void,
+  onDone: () => Promise<void>,
   onWord: (word: string) => () => void,
   mnemonic: string,
   words: Array<string>,

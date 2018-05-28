@@ -7,11 +7,10 @@
 
 import React, { PureComponent } from 'react'
 import EnterPrivateKey from '../screens/EnterPrivateKey'
-import withLogin from '../components/withLogin'
+import withLogin, { type TWithLoginProps } from '../components/withLogin'
 
-export type TEnterPrivateKeyContainerProps = {
+export type TEnterPrivateKeyContainerProps = TWithLoginProps & {
   navigator: any,
-  onPrivateKeyLogin: (privateKey: string) => void,
 }
 
 type TEnterPrivateKeyContainerState = {
