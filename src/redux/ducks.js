@@ -4,6 +4,7 @@
  *
  * @flow
  */
+
 import * as assetsHolder from 'redux/assetsHolder'
 import * as assetsManager from 'redux/assetsManager'
 import * as exchange from 'redux/exchange'
@@ -22,6 +23,8 @@ import * as wallet from 'redux/wallet'
 import * as watcher from 'redux/watcher'
 import * as network from 'login/redux/network/'
 import * as sensitive from './sensitive'
+
+import { type TStateSensitive } from './sensitive/reducer'
 
 export {
   assetsHolder,
@@ -42,4 +45,8 @@ export {
   voting,
   wallet,
   watcher,
+}
+
+export type TState = {
+  sensitive: TStateSensitive
 }

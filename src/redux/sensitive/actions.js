@@ -5,9 +5,11 @@
  * @flow
  */
 
+import { type Dispatch } from 'redux'
 import { createCipher, createHash } from 'crypto'
 import { addError } from 'login/redux/network/actions'
 import salt from '../../utils/salt'
+import { type TStoredAccount } from './reducer'
 
 export const DUCK_SENSITIVE = 'sensitive'
 
@@ -24,7 +26,7 @@ export const setUsePinProtection = (payload: boolean) => ({
 })
 
 export const addAccount = ({ address, privateKey }: { address: string, privateKey: string }, password: string, pin?: string) =>
-  async (dispatch) => {
+  async (dispatch: Dispatch<{type: string, payload: TStoredAccount }>) => {
     try {
       let passwordHash
       let pinHash
