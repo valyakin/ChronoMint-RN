@@ -16,7 +16,7 @@ type TAccountImportMethodContainerProps = {
 class AccountImportMethodContainer extends PureComponent<TAccountImportMethodContainerProps, {}> {
   handleCreateWallet = () => {
     this.props.navigator.push({
-      screen: 'CreateWallet',
+      screen: 'SetAccountPassword',
     })
   }
 

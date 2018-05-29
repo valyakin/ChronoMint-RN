@@ -45,7 +45,7 @@ export default class AccountPassword extends PureComponent<TAccountPasswordProps
         <Input
           autoCorrect={false}
           onChangeText={onChangePassword}
-          placeholder={I18n.t('CreateWallet.password')}
+          placeholder={I18n.t('SetAccountPassword.password')}
           secureTextEntry
           style={styles.input}
         />

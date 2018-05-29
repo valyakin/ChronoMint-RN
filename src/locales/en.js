@@ -115,7 +115,7 @@ export default {
     receiving: 'Receiving from',
     sending: 'Sending to',
   },
-  CreateWallet: {
+  SetAccountPassword: {
     password: 'Password',
     confirmPassword: 'Confirm password',
     createWallet: 'Create a wallet',

@@ -8,7 +8,7 @@ export default {
   WalletsList: {
     title: 'Мои кошельки',
   },
-  CreateWallet: {
+  SetAccountPassword: {
     password: 'Пароль',
     confirmPassword: 'Подтверждение пароля',
     createWallet: 'Создать кошелек',

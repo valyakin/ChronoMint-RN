@@ -17,7 +17,7 @@ type TSelectAccountContainerProps = {
 
 class SelectAccountContainer extends PureComponent<TSelectAccountContainerProps, {}> {
   handleCreateWallet = () => {
-    this.props.navigator.resetTo({ screen: 'CreateWallet' })
+    this.props.navigator.resetTo({ screen: 'SetAccountPassword' })
   }
 
   handleImportAccount = () => {

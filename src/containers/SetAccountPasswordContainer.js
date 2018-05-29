@@ -67,10 +67,10 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
     const { password, passwordConfirmation } = this.state
 
     if (password !== passwordConfirmation) {
-      return this.addError(I18n.t('CreateWallet.mismatchPasswords'))
+      return this.addError(I18n.t('SetAccountPassword.mismatchPasswords'))
     }
     if (!isValid.password(password) || !isValid.password(passwordConfirmation)) {
-      return this.addError(I18n.t('CreateWallet.invalidPassword'))
+      return this.addError(I18n.t('SetAccountPassword.invalidPassword'))
     }
 
     if (!privateKey) {

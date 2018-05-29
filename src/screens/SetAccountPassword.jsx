@@ -18,7 +18,7 @@ import Input from '../components/Input'
 import PrimaryButton from '../components/PrimaryButton'
 import TextButton from '../components/TextButton'
 
-export type TCreateWalletProps = {
+export type TSetAccountPasswordProps = {
   isCreatingNewWallet?: boolean,
   onChangePassword: (password: string) => void,
   onChangePasswordConfirmation: (passwordConfirmation: string) => void,
@@ -33,7 +33,7 @@ type THeaderProps = {
   onSelectNetwork: () => void,
 }
 
-export default class CreateWallet extends PureComponent<TCreateWalletProps, {}> {
+export default class SetAccountPassword extends PureComponent<TSetAccountPasswordProps, {}> {
   render () {
     const {
       isCreatingNewWallet,
@@ -56,28 +56,28 @@ export default class CreateWallet extends PureComponent<TCreateWalletProps, {}> 
         <Input
           autoCorrect={false}
           onChangeText={onChangePassword}
-          placeholder={I18n.t('CreateWallet.password')}
+          placeholder={I18n.t('SetAccountPassword.password')}
           secureTextEntry
           style={styles.input}
         />
         <Input
           autoCorrect={false}
           onChangeText={onChangePasswordConfirmation}
-          placeholder={I18n.t('CreateWallet.confirmPassword')}
+          placeholder={I18n.t('SetAccountPassword.confirmPassword')}
           secureTextEntry
           style={styles.input}
         />
         { isCreatingNewWallet ? (
           <View>
             <PrimaryButton
-              label={I18n.t('CreateWallet.createWallet').toUpperCase()}
+              label={I18n.t('SetAccountPassword.createWallet').toUpperCase()}
               onPress={onDone}
             />
             <Text style={styles.or}>
-              {I18n.t('CreateWallet.or')}
+              {I18n.t('SetAccountPassword.or')}
             </Text>
             <TextButton
-              label={I18n.t('CreateWallet.useExistingWallet')}
+              label={I18n.t('SetAccountPassword.useExistingWallet')}
               onPress={onUseWallet}
             />
           </View>
@@ -88,7 +88,7 @@ export default class CreateWallet extends PureComponent<TCreateWalletProps, {}> 
           />
         ) }
         <Text style={styles.copyright}>
-          {I18n.t('CreateWallet.copyright')}
+          {I18n.t('SetAccountPassword.copyright')}
         </Text>
       </View>
     )

@@ -31,7 +31,7 @@ export default class LoginScreenLayout extends React.Component {
             source={require('../images/background.jpg')}
             style={[
               styles.backgroundImage,
-              this.props.screenOptions.screen === 'CreateWallet' ? styles.backgroundImageFull : {},
+              this.props.screenOptions.screen === 'SetAccountPassword' ? styles.backgroundImageFull : {},
             ]}
           />
           <View style={styles.screenContent}>
