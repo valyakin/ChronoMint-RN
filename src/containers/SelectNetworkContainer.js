@@ -35,7 +35,7 @@ class SelectNetworkContainer extends PureComponent<TSelectNetworkContainerProps,
 }
 
 const mapStateToProps = (state) => {
-  const network = state.get(DUCK_NETWORK)
+  const network = state.get(DUCK_NETWORK) || {}
 
   return {
     networks: network.networks,

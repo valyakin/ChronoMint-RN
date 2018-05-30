@@ -297,8 +297,8 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
 }
 
 function mapStateToProps (state: any) {
-  const network = state.get(DUCK_NETWORK)
-  const sensitive = state.get(DUCK_SENSITIVE)
+  const network = state.get(DUCK_NETWORK) || {}
+  const sensitive = state.get(DUCK_SENSITIVE) || {}
 
   return {
     lastAccount: sensitive.lastAccount,
