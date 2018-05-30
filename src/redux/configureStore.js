@@ -16,7 +16,6 @@ import createSensitiveStorage from 'redux-persist-sensitive-storage'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { createLogger as rCreateLogger } from 'redux-logger'
-import saveAccountMiddleWare from 'redux/session/saveAccountMiddleWare'
 // import ls from 'utils/LocalStorage'
 // import { globalWatcher } from '@chronobank/mint/src/redux/watcher/actions'
 import { SESSION_DESTROY } from 'redux/session/actions'
@@ -61,7 +60,7 @@ const configureStore = () => {
   const composeEnhancers = __DEV__ ? composeWithDevTools({ realtime: true }) : compose
 
   // MIDDLEWARE
-  const middleware = [thunk, saveAccountMiddleWare]
+  const middleware = [thunk]
 
   // LOGGER
 
