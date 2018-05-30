@@ -13,8 +13,7 @@ import createSensitiveStorage from 'redux-persist-sensitive-storage'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { createLogger as rCreateLogger } from 'redux-logger'
-import { SESSION_DESTROY } from 'redux/session/actions'
-import * as ducks from 'redux/ducks'
+import { SESSION_DESTROY } from '../utils/globals'
 
 const getNestedReducers = (ducks) => {
   let reducers = {}
