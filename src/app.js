@@ -12,6 +12,12 @@ import store from './redux/configureStore'
 import registerScreens from './registerScreens'
 import './init'
 
+// Listen for unhandled promise rejections
+window.onunhandledrejection = function (promise, reason) {
+  // eslint-disable-next-line no-console
+  console.log('%c window.onunhandledrejection', 'background: #222; color: red', promise, reason)
+}
+
 registerScreens(store, Provider)
 
 let currentRoot = ''
