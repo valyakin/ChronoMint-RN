@@ -7,13 +7,14 @@
 
 import Immutable from 'immutable'
 import { combineReducers } from 'redux-immutable'
-import { createStore, applyMiddleware, compose } from 'redux'
+import { createStore, applyMiddleware, compose, type Store } from 'redux'
 import { persistStore, autoRehydrate } from 'redux-persist-immutable'
 import createSensitiveStorage from 'redux-persist-sensitive-storage'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { createLogger as rCreateLogger } from 'redux-logger'
 import { SESSION_DESTROY } from '../utils/globals'
+import { type TState } from './ducks'
 
 const getNestedReducers = (ducks) => {
   let reducers = {}
@@ -25,21 +26,21 @@ const getNestedReducers = (ducks) => {
   return reducers
 }
 
-const configureStore = () => {
+const appReducer = (reducers) => combineReducers({
+  ...getNestedReducers(reducers),
+})
+
+const configureStore = (): Store<TState, { type: string }> => {
   const initialState = new Immutable.Map()
 
-  const appReducer = combineReducers({
-    ...getNestedReducers(ducks),
-  })
-
-  const rootReducer = (state, action) => {
+  const rootReducer = (state = {}, action) => {
     let newState = state
 
     if (action.type === SESSION_DESTROY) {
       newState = new Immutable.Map()
     }
 
-    return appReducer(newState, action)
+    return newState
   }
 
   const composeEnhancers = __DEV__ ? composeWithDevTools({ realtime: true }) : compose
@@ -81,6 +82,10 @@ const configureStore = () => {
 
 const store = configureStore()
 export default store
+
+export const injectReducer = (ducks: {}) => {
+  store.replaceReducer(appReducer(ducks))
+}
 
 persistStore(store,
   {
