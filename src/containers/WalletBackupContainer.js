@@ -21,14 +21,16 @@ type TWalletBackupContainerProps = TWithLoginProps & {
 class WalletBackupContainer extends PureComponent<TWalletBackupContainerProps, {}> {
   handleDone = () => {
     const {
+      generateMnemonic,
       isCreatingNewWallet,
       onLogin,
       usePinProtection,
-      mnemonic,
       privateKey,
       password,
       navigator,
     } = this.props
+
+    let mnemonic = this.props.mnemonic || generateMnemonic()
 
     if (isCreatingNewWallet) {
       return navigator.push({

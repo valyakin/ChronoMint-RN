@@ -7,7 +7,6 @@
 
 import React, { PureComponent } from 'react'
 import I18n from 'react-native-i18n'
-import withLogin from '../components/withLogin'
 import isValid from '../utils/validators'
 import SetAccountPassword from '../screens/SetAccountPassword'
 
@@ -58,11 +57,10 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
 
   handleDone = () => {
     const {
+      mnemonic,
       privateKey,
-      generateMnemonic,
       navigator,
     } = this.props
-    let mnemonic
 
     const { password, passwordConfirmation } = this.state
 
@@ -71,10 +69,6 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
     }
     if (!isValid.password(password) || !isValid.password(passwordConfirmation)) {
       return this.addError(I18n.t('SetAccountPassword.invalidPassword'))
-    }
-
-    if (!privateKey) {
-      mnemonic = generateMnemonic()
     }
 
     navigator.push({
@@ -138,4 +132,4 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
   }
 }
 
-export default withLogin(SetAccountPasswordContainer)
+export default SetAccountPasswordContainer
