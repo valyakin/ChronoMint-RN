@@ -4,7 +4,10 @@
  *
  * @flow
  */
+import { type Store } from 'redux'
+import { type Provider } from 'react-redux'
 import { Navigation } from 'react-native-navigation'
+import { type TState } from './redux/ducks'
 import screenLayout from './utils/screenLayout'
 import LoginScreenLayout from './components/LoginScreenLayout'
 import AccountImportMethod from './containers/AccountImportMethodContainer'
@@ -38,7 +41,7 @@ import WalletsList from './containers/WalletsListContainer'
 import WalletTemplates from './containers/WalletTemplatesContainer'
 import WalletTokens from './containers/WalletTokensContainer'
 
-export default function registerScreens (store, Provider) {
+export default function registerScreens (store: Store<TState, { type: string }>, Provider: Provider<TState, { type: string }>) {
   Navigation.registerComponent('AccountImportMethod', () => screenLayout(LoginScreenLayout)(AccountImportMethod), store, Provider)
   Navigation.registerComponent('AccountPassword', () => screenLayout(LoginScreenLayout)(AccountPassword), store, Provider)
   Navigation.registerComponent('Add2FAWallet', () => Add2FAWallet, store, Provider)

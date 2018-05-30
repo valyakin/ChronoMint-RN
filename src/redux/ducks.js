@@ -47,6 +47,6 @@ export {
   watcher,
 }
 
-export type TState = {
+export type TState = {} | {
   sensitive: TStateSensitive
 }
