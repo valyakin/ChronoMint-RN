@@ -40,8 +40,9 @@ export type TWalletsListProps = {
 }
 
 export default class WalletsList extends PureComponent<TWalletsListProps> {
-  keyExtractor = ( section: TWalletListSection, index: number ) =>
-    [section.title, index].join('')
+
+  keyExtractor = ( section: TWalletListSection, index: number) =>
+    [section.blockchain, section.address, index].join('_').replace(/\s/g, '')
 
   renderItem = ({ item, section }: TRenderItemArgs) => (
     <View style={styles.walletItemHorizontalPaddings}>
@@ -67,7 +68,7 @@ export default class WalletsList extends PureComponent<TWalletsListProps> {
       onRefresh,
     } = this.props
 
-    if (isRefreshing || !sections) {
+    if (isRefreshing || !sections || !sections.length) {
       return (
         <View style={styles.activityIndicatorContainer}>
           <ActivityIndicator size='large' />
@@ -79,7 +80,7 @@ export default class WalletsList extends PureComponent<TWalletsListProps> {
       <SectionList
         renderItem={this.renderItem}
         renderSectionHeader={this.renderSectionHeader}
-        sections={this.props.sections}
+        sections={sections}
         keyExtractor={this.keyExtractor}
         onRefresh={onRefresh}
         refreshing={isRefreshing}

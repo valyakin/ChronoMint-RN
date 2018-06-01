@@ -1,0 +1,261 @@
+/**
+ * Copyright 2017–2018, LaborX PTY
+ * Licensed under the AGPL Version 3 license.
+ *
+ * @flow
+ */
+
+import {
+  createSelector,
+  createSelectorCreator,
+  defaultMemoize,
+} from 'reselect'
+import { DUCK_MAIN_WALLET } from 'redux/mainWallet/actions'
+import { DUCK_MARKET } from 'redux/market/action'
+import { DUCK_TOKENS } from 'redux/tokens/actions'
+import type AddressModel from 'models/wallet/AddressModel'
+import type BalanceModel from 'models/tokens/BalanceModel'
+import type MainWalletModel from 'models/wallet/MainWalletModel'
+import type TokensCollection from 'models/tokens/TokensCollection'
+
+/**
+ * DUCKS GETTERS BEGIN
+*/
+
+const mainWalletStore = (state: any): MainWalletModel =>
+  state.get(DUCK_MAIN_WALLET)
+
+const getMainWalletBalancesListStore = (state: any): BalanceModel[] =>
+  state.get(DUCK_MAIN_WALLET).balances().list()
+
+const selectedCurrencyStore = (state: any): string =>
+  state.get(DUCK_MARKET).selectedCurrency
+
+const pricesStore = (state: any) =>
+  state.get(DUCK_MARKET).prices
+
+const tokensStore = (state: any): TokensCollection =>
+  state.get(DUCK_TOKENS)
+
+/**
+ * DUCKS GETTERS END
+*/
+
+export const getTxsFromDuck = (state: any) => {
+  const wallet = state.get(DUCK_MAIN_WALLET)
+  return wallet.transactions()
+}
+
+export const getTxs = () => createSelector(
+  [ getTxsFromDuck ],
+  (txs) => {
+    return txs
+  },
+)
+
+/**
+ * INTERNAL NOT EXPORTED SELECTORS BEGIN
+*/
+
+const selectMainWalletsList = createSelector(
+  [
+    mainWalletStore,
+  ],
+  (mainWallet: MainWalletModel): any[] =>
+    mainWallet
+      .addresses()
+      .items()
+      .filter( (addressModel: AddressModel) =>
+        addressModel.id() && addressModel.address()
+      )
+      .map( (addressModel: AddressModel) => {
+        const blockchain: string = addressModel.id()
+        const address: ?string = addressModel.address()
+        const jsWallet = Object.create(null)
+        jsWallet['address'] = address
+        jsWallet['blockchain'] = blockchain
+        return jsWallet
+      })
+      .sort( ({ blockchain: a }, { blockchain: b }) =>
+        (a > b) - (a < b)
+      )
+)
+
+const createSectionsSelector = createSelectorCreator(
+  defaultMemoize,
+  (a, b) => {
+    if (a.length !== b.length) {
+      return false
+    }
+    let compareResult = true
+    for (let i = 0; i++; i <= a.length) {
+      if (a[i].blockchain !== b[i].blockchain || a[i].address !== b[i].address) {
+        compareResult = false
+        break
+      }
+    }
+    return compareResult
+  }
+)
+
+const filteredBalances = (blockchain: string) => createSelector(
+  [
+    getMainWalletBalancesListStore,
+    tokensStore,
+  ],
+  (
+    balances,
+    tokens,
+  ) => {
+    return balances
+      .filter( (balance) => {
+        const symbol = balance.symbol()
+        const token = symbol && tokens.item(symbol)
+        return token && token.blockchain() === blockchain
+      })
+  }
+)
+
+const filteredBalancesAndTokens = (blockchain: string) => createSelector(
+  [
+    filteredBalances(blockchain),
+    tokensStore,
+  ],
+  (
+    balances,
+    tokens,
+  ) => {
+    return balances
+      .map( (balance) => {
+        return {
+          balance: balance,
+          token: tokens.item(balance.symbol()),
+        }
+      })
+  }
+)
+
+const balanceCalculator = (blockchain: string) => createSelector(
+  [
+    tokensAndAmountsSelector(blockchain),
+    selectedCurrencyStore,
+    pricesStore,
+  ],
+  (
+    balances,
+    selectedCurrency,
+    priceList,
+  ) => {
+    // console.log(balances, selectedCurrency, priceList)
+    // console.log(balances)
+    return balances
+      .reduce( (accumulator, tokenBalance) => {
+        if (tokenBalance) {
+          const symbol = Object.keys(tokenBalance)[0]
+          const balance = Object.values(tokenBalance)[0]
+          const tokenPrice = priceList[ symbol ]
+            && priceList[ symbol ][ selectedCurrency ]
+            || null
+          // console.log(symbol, balance, tokenPrice)
+          accumulator += ( ( balance || 0 ) * ( tokenPrice || 0 ))
+        }
+        return accumulator
+      }, 0)
+  }
+)
+
+/**
+ * INTERNAL NOT EXPORTED SELECTORS END
+*/
+
+/**
+ * Provides list of wallets sections
+ * Output example:
+[
+  {
+    blockchain: 'Bitcoin',
+    address: ''
+  },
+  {
+    blockchain: 'Ethereum',
+    address: ''
+  }
+]
+*/
+export const sectionsSelector = createSectionsSelector(
+  [
+    selectMainWalletsList,
+  ],
+  (
+    mainWalletsList,
+  ) => {
+
+    const sectionsObject = []
+
+    mainWalletsList
+      .forEach( (mainWallet) => {
+        const { address, blockchain } = mainWallet
+        sectionsObject.push({
+          title: blockchain,
+          data: [{
+            address: address,
+            blockchain,
+          }],
+        })
+      })
+    return sectionsObject
+  }
+)
+
+/**
+ * Provides list of tokens and its amount
+ * Output example:
+[
+  {
+    AAAAA: 0
+  },
+  {
+   ETH: 20
+  }
+]
+*/
+export const tokensAndAmountsSelector = (blockchain: string) => createSelector(
+  [
+    filteredBalancesAndTokens(blockchain),
+  ],
+  (
+    balancesInfo,
+  ) => {
+    return balancesInfo
+      .map( (info) => {
+        const symbol = info.balance.symbol()
+        return {
+          [symbol]: info.token
+            .removeDecimals(info.balance.amount()).toNumber(),
+        }
+      })
+      .sort( (a, b) => {
+        const oA = Object.keys(a)[0]
+        const oB = Object.keys(b)[0]
+        return (oA > oB) - (oA < oB)
+      })
+      .toArray()
+  }
+)
+
+/**
+ * Provides balance of selected main wallet
+ * Output example:
+33.234234
+*/
+export const balanceSelector = (blockchain: string) => createSelector(
+  [
+    balanceCalculator(blockchain),
+  ],
+  (
+    calculatedBalance,
+  ) => {
+    return calculatedBalance
+  }
+)
+

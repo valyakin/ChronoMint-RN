@@ -75,7 +75,7 @@ class WalletsListContainer extends PureComponent<TWalletsListProps, TWalletsList
 }
 
 const mapStateToProps = (state) => ({
-  sections: sectionsSelector()(state),
+  sections: sectionsSelector(state),
 })
 
 export default connect(mapStateToProps, null)(WalletsListContainer)
