@@ -11,13 +11,13 @@ import {
   View,
   Text,
 } from 'react-native'
-import styles from './styles/LabeledItemStyles'
-import Label from './Label'
+import Label from 'components/Label'
+import styles from 'components/styles/LabeledItemStyles'
 
 type LabeledItemProps = {
   children?: Element<typeof Text> | Array<Element<typeof Text>>, // This component my be used as pure <Label /> with no children
   labelAlign?: 'left' | 'right' | 'top' | 'bottom',
-  labelTextAlign?: 'left'| 'right',
+  labelTextAlign?: 'left' | 'right',
   labelType?: 'currencyColored', // May be extended in the future like 'currencyColored' | 'otherTypeOfLabel'
   labelText: string,
 }

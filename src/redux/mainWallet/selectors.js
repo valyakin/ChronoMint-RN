@@ -10,6 +10,12 @@ import {
   createSelectorCreator,
   defaultMemoize,
 } from 'reselect'
+import {
+  BLOCKCHAIN_BITCOIN_CASH,
+  BLOCKCHAIN_BITCOIN_GOLD,
+  BLOCKCHAIN_BITCOIN,
+  BLOCKCHAIN_LITECOIN,
+} from 'login/network/BitcoinProvider'
 import { DUCK_MAIN_WALLET } from 'redux/mainWallet/actions'
 import { DUCK_MARKET } from 'redux/market/action'
 import { DUCK_TOKENS } from 'redux/tokens/actions'
@@ -17,6 +23,9 @@ import type AddressModel from 'models/wallet/AddressModel'
 import type BalanceModel from 'models/tokens/BalanceModel'
 import type MainWalletModel from 'models/wallet/MainWalletModel'
 import type TokensCollection from 'models/tokens/TokensCollection'
+import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
+// import { BLOCKCHAIN_NEM } from 'dao/NemDAO'
+const BLOCKCHAIN_NEM = 'NEM' // TODO: replace it to import above after ChronoMint depency upgrade
 
 /**
  * DUCKS GETTERS BEGIN
@@ -226,7 +235,7 @@ export const tokensAndAmountsSelector = (blockchain: string) => createSelector(
   (
     balancesInfo,
   ) => {
-    return balancesInfo
+    let result = balancesInfo
       .map( (info) => {
         const symbol = info.balance.symbol()
         return {
@@ -240,6 +249,36 @@ export const tokensAndAmountsSelector = (blockchain: string) => createSelector(
         return (oA > oB) - (oA < oB)
       })
       .toArray()
+
+    if (!result || !result.length) {
+      switch (blockchain) {
+        case BLOCKCHAIN_BITCOIN_CASH: {
+          result = [{ 'BCC': null }]
+          break
+        }
+        case BLOCKCHAIN_BITCOIN_GOLD: {
+          result = [{ 'BTG': null }]
+          break
+        }
+        case BLOCKCHAIN_BITCOIN: {
+          result = [{ 'BTC': null }]
+          break
+        }
+        case BLOCKCHAIN_LITECOIN: {
+          result = [{ 'LTC': null }]
+          break
+        }
+        case BLOCKCHAIN_NEM: {
+          result = [{ 'XEM': null }, { 'XMIN': null }]
+          break
+        }
+        case BLOCKCHAIN_ETHEREUM: {
+          result = [{ 'ETH': null }]
+          break
+        }
+      }
+    }
+    return result
   }
 )
 
@@ -248,7 +287,7 @@ export const tokensAndAmountsSelector = (blockchain: string) => createSelector(
  * Output example:
 33.234234
 */
-export const balanceSelector = (blockchain: string) => createSelector(
+export const walletBalanceSelector = (blockchain: string) => createSelector(
   [
     balanceCalculator(blockchain),
   ],

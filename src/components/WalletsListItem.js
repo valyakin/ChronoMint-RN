@@ -13,7 +13,10 @@ import {
   View,
 } from 'react-native'
 import styles from 'components/styles/WalletListItemStyles'
-import WalletImage, { type TWalletMode } from 'components/WalletImage'
+import WalletImage from 'components/WalletImage'
+import TokensListContainer, { type TokenInfo } from 'containers/TokensListContainer'
+import WalletBalanceContainer from 'containers/WalletBalanceContainer'
+import isNumber from 'utils/numeric'
 
 type TPrices = {
   [token: string]: {
@@ -25,14 +28,8 @@ export type TCalculatedTokenCollection = TCalculatedToken[]
 export type TWalletsListItemProps = {
   address: string,
   blockchain: string,
-  tokens: TCalculatedToken,
-  walletInfo: any,
-  walletMode?: ?TWalletMode,
   selectedCurrency: string,
-  onItemPress(
-    blockchain: string,
-    address: string,
-  ): void,
+  onItemPress(): void,
 }
 
 const Transactions = ({ transactions }) => !transactions ? null : (
@@ -49,41 +46,56 @@ const Transactions = ({ transactions }) => !transactions ? null : (
   )
 )
 
-// TODO: [AO] Refactoring required
-const TokensList = ({ tokens }) => {
-  if (!tokens || !tokens.length) {
-    return (
-      <Text style={styles.tokens}>
-        {''}
-      </Text>
-    )
-  }
-  const tokensIndex = Object.create(null)
-  tokens
-    .forEach( (tokenObj) => {
-      const tKey = Object.keys(tokenObj)[0]
-      tokensIndex[tKey] = tokenObj[tKey]
-    })
-  let tokensStrings = tokens
-    .map( (tokenObj) => Object.keys(tokenObj)[0])
-    .sort()
-    .reduce( (accumulator, tokenSymbol) => {
-      accumulator.push([tokenSymbol, tokensIndex[tokenSymbol].amount.toFixed(2)].join(': '))
-      return accumulator
-    }, [])
+const RenderTokensList = (list: TokenInfo[]) => {
 
-  if (tokensStrings && tokensStrings.length > 2) {
-    tokensStrings = [
-      tokensStrings[0],
-      ['+', tokensStrings.length - 1, 'more'].join(' '),
-    ]
+  const getDetailedToken = (tokenInfo: TokenInfo) => {
+    const symbol: ?string = Object.keys(tokenInfo)[0]
+    const amount: ?number = Object.values(tokenInfo)[0]
+    const formattedAmount = isNumber(amount)
+      ? amount.toFixed(2)
+      : '-.--'
+    return [symbol || '', formattedAmount].join(': ')
   }
-  tokensStrings = tokensStrings && tokensStrings.join(', ')
+
+  const [firstToken, secondToken, ...restTokens] = list
+  let tokensString = ''
+
+  if (firstToken) {
+    tokensString = getDetailedToken(firstToken)
+    if (secondToken && restTokens.length) {
+      tokensString = [tokensString, '+', restTokens.length, 'more'].join(' ')
+    }
+    if (secondToken && !restTokens.length) {
+      tokensString = [tokensString, getDetailedToken(secondToken)].join(' ')
+    }
+  }
 
   return (
     <Text style={styles.tokens}>
-      {tokensStrings || ''}
+      {tokensString || ''}
     </Text>
+  )
+}
+
+const RenderWalletBalance = (selectedCurrency: string) => (balance: ?number) => {
+
+  const formattedBalance = isNumber(balance)
+    ? balance.toFixed(2)
+    : '-.--'
+
+  return (
+    <View style={styles.balanceContainer}>
+      <Text style={styles.balanceText}>
+        {
+          selectedCurrency
+        }
+      </Text>
+      <Text style={[styles.balanceText, styles.balanceNumber]}>
+        {
+          formattedBalance
+        }
+      </Text>
+    </View>
   )
 }
 
@@ -102,38 +114,15 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
   }
 
   handleOnPress = () => {
-    const {
-      address,
-      blockchain,
-    } = this.props
-    this.props.onItemPress(blockchain, address)
+    this.props.onItemPress()
   }
 
   render () {
     const {
       address,
       blockchain,
-      walletInfo,
-      walletMode,
+      selectedCurrency,
     } = this.props
-
-    const {
-      balance,
-      tokens,
-    } = walletInfo
-
-    let walletTitle = `My ${blockchain} Wallet`
-    if (walletMode === 'shared') {
-      walletTitle = 'My Shared Wallet'
-    }
-    if (walletMode === 'timeLocked') {
-      walletTitle = 'My TimeLocked Wallet'
-    }
-
-    const textCurrencyBalance = [
-      this.props.selectedCurrency,
-      balance !== undefined && balance.toFixed(2) || '--.--',
-    ].join(' ')
 
     return (
       <TouchableOpacity
@@ -147,13 +136,12 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
           <View style={styles.content}>
             <WalletImage
               blockchain={blockchain}
-              walletMode={walletMode}
               style={styles.image}
             />
             <View style={styles.contentColumn}>
               <Text style={styles.title}>
                 {
-                  walletTitle
+                  `My ${blockchain} Wallet`
                 }
               </Text>
               <Text
@@ -165,12 +153,14 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
                   address
                 }
               </Text>
-              <Text style={styles.balance}>
-                {
-                  textCurrencyBalance
-                }
-              </Text>
-              <TokensList tokens={tokens} />
+              <WalletBalanceContainer
+                blockchain={blockchain}
+                render={RenderWalletBalance(selectedCurrency)}
+              />
+              <TokensListContainer
+                blockchain={blockchain}
+                render={RenderTokensList}
+              />
               {/* TEMPORARY DISABLED
                 <View>
                   <Exchange exchange={wallet.exchange} />

@@ -11,14 +11,13 @@ import {
   SectionList,
   View,
 } from 'react-native'
-import MainWalletModel from 'models/wallet/MainWalletModel'
 import SectionHeader from 'components/SectionHeader'
+import styles from 'screens/styles/WalletsListStyles'
 import WalletsListItemContainer from 'containers/WalletsListItemContainer'
-import styles from './styles/WalletsListStyles'
 
 type TWalletItem = {
   address: string,
-  wallet: MainWalletModel,
+  blockchain: string,
 }
 
 export type TWalletListSection = {
@@ -27,7 +26,6 @@ export type TWalletListSection = {
 }
 
 type TRenderItemArgs = {
-  index: number,
   item: TWalletItem,
   section: TWalletListSection,
 }
@@ -41,8 +39,9 @@ export type TWalletsListProps = {
 
 export default class WalletsList extends PureComponent<TWalletsListProps> {
 
-  keyExtractor = ( section: TWalletListSection, index: number) =>
-    [section.blockchain, section.address, index].join('_').replace(/\s/g, '')
+  // Note: this key MUST use 'blockchain' and 'address' to be unique
+  keyExtractor = ( walletItem: TWalletItem, index: number) =>
+    [walletItem.blockchain, walletItem.address, index].join('_').replace(/\s/g, '')
 
   renderItem = ({ item, section }: TRenderItemArgs) => (
     <View style={styles.walletItemHorizontalPaddings}>
@@ -78,12 +77,12 @@ export default class WalletsList extends PureComponent<TWalletsListProps> {
 
     return (
       <SectionList
-        renderItem={this.renderItem}
-        renderSectionHeader={this.renderSectionHeader}
-        sections={sections}
         keyExtractor={this.keyExtractor}
         onRefresh={onRefresh}
         refreshing={isRefreshing}
+        renderItem={this.renderItem}
+        renderSectionHeader={this.renderSectionHeader}
+        sections={sections}
         stickySectionHeadersEnabled={false}
       />
     )

@@ -19,7 +19,8 @@ import {
   BLOCKCHAIN_BITCOIN,
   BLOCKCHAIN_LITECOIN,
 } from 'login/network/BitcoinProvider'
-import { BLOCKCHAIN_NEM } from 'dao/NemDAO'
+// import { BLOCKCHAIN_NEM } from 'dao/NemDAO'
+const BLOCKCHAIN_NEM = 'NEM' // TODO: replace it to import above after ChronoMint depency upgrade
 
 export type TWalletMode =  '2fa' | 'shared' | 'timeLocked'
 
@@ -27,7 +28,7 @@ type WalletImageProps = {
   blockchain: string,
   imageStyle?: TStyle,
   shapeStyle?: TStyle,
-  size?: 'big'|'small',
+  size?: 'big' | 'small',
   style?: TStyle,
   walletMode?: ?TWalletMode,
 }

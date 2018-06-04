@@ -229,7 +229,7 @@ export const makeSelectorMultisigWalletBalanceBySymbolAndAddress = (symbol: stri
 |--------------------------------------------------
 */
 
-export const sectionsSelector = () => createSelector(
+export const sectionsSelector = createSelector(
   [
     getMainWalletStore,
     getMultisigWalletStore,

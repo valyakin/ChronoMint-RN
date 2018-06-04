@@ -57,15 +57,21 @@ const styles = StyleSheet.create({
     fontWeight: '200',
     fontSize: 12,
   },
-  balance: {
+  balanceText: {
     fontSize: 22,
     fontWeight: '700',
-    marginTop: 24,
   },
   tokens: {
     color: colors.foregroundLighter,
     fontWeight: '200',
     marginTop: 4,
+  },
+  balanceContainer: {
+    flexDirection: 'row',
+    marginTop: 24,
+  },
+  balanceNumber: {
+    marginLeft: 4,
   },
   exchange: {
     color: colors.foregroundLighter,

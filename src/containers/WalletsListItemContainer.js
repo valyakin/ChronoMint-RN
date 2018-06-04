@@ -14,9 +14,8 @@ import WalletsListItem, {
   type TWalletsListItemProps,
 } from 'components/WalletsListItem'
 import {
-  makeGetWalletTokensAndBalanceByAddress,
-  makeGetWalletInfoByBockchainAndAddress,
-} from 'redux/wallet/selectors'
+  walletBalanceSelector,
+} from 'redux/mainWallet/selectors'
 
 type TWalletsListItemContainerProps = TWalletsListItemProps & {
   selectWallet(blockchain: string, address: string): void,
@@ -24,20 +23,15 @@ type TWalletsListItemContainerProps = TWalletsListItemProps & {
 }
 
 const makeMapStateToProps = (origState, origProps) => {
-  const walletTokensAndBalanceByAddress = makeGetWalletTokensAndBalanceByAddress(origProps.blockchain, origProps.address)
-  const walletInfoByBcAndAddress = makeGetWalletInfoByBockchainAndAddress(origProps.blockchain, origProps.address)
-  const mapStateToProps = (state, ownProps) => {
-    const balanceAndTokens = walletTokensAndBalanceByAddress(state, ownProps)
-    const walletInfo = walletInfoByBcAndAddress(state, ownProps)
-    const {
-      selectedCurrency,
-    } = state.get(DUCK_MARKET)
+  const blockchain = origProps.blockchain
+  const address = origProps.address
+  const selectedCurrency = origState.get(DUCK_MARKET).selectedCurrency
 
+  const mapStateToProps = (state) => {
     return {
-      blockchain: origProps.blockchain,
+      address,
+      blockchain,
       selectedCurrency,
-      walletInfo,
-      ...balanceAndTokens,
     }
   }
   return mapStateToProps
@@ -50,18 +44,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
 
 class WalletsListItemContainer extends PureComponent<TWalletsListItemContainerProps> {
 
-  handleItemPress = (blockchain: string, address: string): void => {
-  
-    this.props.selectWallet(
-      blockchain,
-      address,
-    )
-
-    // Now we have info about selected wallet in Redux store
-    // Wallet will use this info by itself
-    this.props.navigator.push({
-      screen: 'Wallet',
-    })
+  handleItemPress = (): void => {
+    this.props.selectWallet(this.props.blockchain, this.props.address)
+    this.props.navigator.push({ screen: 'Wallet' })
   }
 
   render () {
@@ -70,19 +55,14 @@ class WalletsListItemContainer extends PureComponent<TWalletsListItemContainerPr
       address,
       blockchain,
       selectedCurrency,
-      tokens,
-      walletMode,
     } = this.props
 
     return (
       <WalletsListItem
         address={address}
-        walletInfo={this.props.walletInfo}
         selectedCurrency={selectedCurrency}
-        tokens={tokens}
         blockchain={blockchain}
         onItemPress={this.handleItemPress}
-        walletMode={walletMode}
       />
     )
   }
