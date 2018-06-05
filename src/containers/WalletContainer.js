@@ -7,6 +7,7 @@
 
 import React, { PureComponent }  from 'react'
 import { connect } from 'react-redux'
+import type { Dispatch } from 'redux'
 import {
   Alert,
 } from 'react-native'
@@ -67,7 +68,7 @@ const makeMapStateToProps = (origState /*, origProps*/) => {
   return mapStateToProps
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   getAccountTransactions: () => dispatch(getAccountTransactions()),
 })
 

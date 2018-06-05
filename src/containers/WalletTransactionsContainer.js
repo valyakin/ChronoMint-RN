@@ -6,6 +6,7 @@
 
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import type { Dispatch } from 'redux'
 import WalletTransactions, { type TWalletTransactionsProps } from 'screens/WalletTransactions'
 import {
   getSelectedWalletStore,
@@ -30,7 +31,7 @@ const makeMapStateToProps = (origState) => {
   return mapStateToProps
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   refreshTransactionsList: () => dispatch(getAccountTransactions()),
 })
 

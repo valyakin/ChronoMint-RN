@@ -102,15 +102,6 @@ export default class Send extends PureComponent<TSendProps, {}> {
       walletTokensAndBalance,
     } = this.props
 
-    /* Structure
-    walletTokensAndBalance {
-      balance: 0,
-      isMultisig: false,
-      tokens: [{ 'LTC': { amount: 0, balance: 0 } }],
-      tokensLength: 0,
-      walletMode: null,
-    }
-    */
     // TODO: [AO] To remove this shame
     const getTokenBalanceBySymbol = (selectedTokenSymbol) => {
       const t = walletTokensAndBalance

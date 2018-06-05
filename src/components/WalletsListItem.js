@@ -46,9 +46,12 @@ const Transactions = ({ transactions }) => !transactions ? null : (
   )
 )
 
-const RenderTokensList = (list: TokenInfo[]) => {
+type TTokensListProps = {
+  list: TokenInfo[],
+}
+class TokensList extends PureComponent<TTokensListProps> {
 
-  const getDetailedToken = (tokenInfo: TokenInfo) => {
+  static getDetailedToken = (tokenInfo: TokenInfo): string => {
     const symbol: ?string = Object.keys(tokenInfo)[0]
     const amount: ?number = Object.values(tokenInfo)[0]
     const formattedAmount = isNumber(amount)
@@ -57,55 +60,60 @@ const RenderTokensList = (list: TokenInfo[]) => {
     return [symbol || '', formattedAmount].join(': ')
   }
 
-  const [firstToken, secondToken, ...restTokens] = list
-  let tokensString = ''
+  static getFormattedTokenslList = (list: TokenInfo[]): string => {
+    const [firstToken, secondToken, ...restTokens] = list
+    let tokensString = ''
 
-  if (firstToken) {
-    tokensString = getDetailedToken(firstToken)
-    if (secondToken && restTokens.length) {
-      tokensString = [tokensString, '+', restTokens.length, 'more'].join(' ')
+    if (firstToken) {
+      tokensString = TokensList.getDetailedToken(firstToken)
+      if (secondToken && restTokens.length) {
+        tokensString = [tokensString, '+', restTokens.length, 'more'].join(' ')
+      }
+      if (secondToken && !restTokens.length) {
+        tokensString = [tokensString, TokensList.getDetailedToken(secondToken)].join(' ')
+      }
     }
-    if (secondToken && !restTokens.length) {
-      tokensString = [tokensString, getDetailedToken(secondToken)].join(' ')
-    }
+    return tokensString
   }
 
-  return (
-    <Text style={styles.tokens}>
-      {tokensString || ''}
-    </Text>
-  )
+  render () {
+    return (
+      <Text style={styles.tokens}>
+        {
+          TokensList.getFormattedTokenslList(this.props.list)
+        }
+      </Text>
+    )
+  }
 }
 
-const RenderWalletBalance = (selectedCurrency: string) => (balance: ?number) => {
+type TWalletBlanaceProps = {
+  balance: ?number,
+  selectedCurrency: string,
+}
+class WalletBalance extends PureComponent<TWalletBlanaceProps> {
 
-  const formattedBalance = isNumber(balance)
+  static getFormattedBalance = (balance: ?number) => isNumber(balance)
     ? balance.toFixed(2)
     : '-.--'
 
-  return (
-    <View style={styles.balanceContainer}>
-      <Text style={styles.balanceText}>
-        {
-          selectedCurrency
-        }
-      </Text>
-      <Text style={[styles.balanceText, styles.balanceNumber]}>
-        {
-          formattedBalance
-        }
-      </Text>
-    </View>
-  )
-}
-
-// TEMPORARY DISABLED
-//
-// const Exchange = ({ exchange }) => !exchange ? null : (
-//   <Text style={styles.exchange}>
-//     {exchange.currency} {exchange.amount}
-//   </Text>
-// )
+  render () {
+    return (
+      <View style={styles.balanceContainer}>
+        <Text style={styles.balanceText}>
+          {
+            this.props.selectedCurrency
+          }
+        </Text>
+        <Text style={[styles.balanceText, styles.balanceNumber]}>
+          {
+            WalletBalance.getFormattedBalance(this.props.balance)
+          }
+        </Text>
+      </View>
+    )
+  }
+} 
 
 export default class WalletsListItem extends PureComponent<TWalletsListItemProps> {
 
@@ -115,6 +123,19 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
 
   handleOnPress = () => {
     this.props.onItemPress()
+  }
+
+  static renderTokensList = (list: TokenInfo[]) => {
+    return <TokensList list={list} />
+  }
+
+  static renderWalletBalance = (selectedCurrency: string) => (balance: ?number) => {
+    return (
+      <WalletBalance
+        balance={balance}
+        selectedCurrency={selectedCurrency}
+      />
+    )
   }
 
   render () {
@@ -155,11 +176,11 @@ export default class WalletsListItem extends PureComponent<TWalletsListItemProps
               </Text>
               <WalletBalanceContainer
                 blockchain={blockchain}
-                render={RenderWalletBalance(selectedCurrency)}
+                render={WalletsListItem.renderWalletBalance(selectedCurrency)}
               />
               <TokensListContainer
                 blockchain={blockchain}
-                render={RenderTokensList}
+                render={WalletsListItem.renderTokensList}
               />
               {/* TEMPORARY DISABLED
                 <View>

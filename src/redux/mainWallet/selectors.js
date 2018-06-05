@@ -24,12 +24,10 @@ import type BalanceModel from 'models/tokens/BalanceModel'
 import type MainWalletModel from 'models/wallet/MainWalletModel'
 import type TokensCollection from 'models/tokens/TokensCollection'
 import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
-// import { BLOCKCHAIN_NEM } from 'dao/NemDAO'
-const BLOCKCHAIN_NEM = 'NEM' // TODO: replace it to import above after ChronoMint depency upgrade
 
-/**
- * DUCKS GETTERS BEGIN
-*/
+const BLOCKCHAIN_NEM = 'NEM' // TODO: replace it to "import { BLOCKCHAIN_NEM } from 'dao/NemDAO" after ChronoMint depency upgrade
+
+//#region DUCKS GETTERS
 
 const mainWalletStore = (state: any): MainWalletModel =>
   state.get(DUCK_MAIN_WALLET)
@@ -46,9 +44,7 @@ const pricesStore = (state: any) =>
 const tokensStore = (state: any): TokensCollection =>
   state.get(DUCK_TOKENS)
 
-/**
- * DUCKS GETTERS END
-*/
+//#endregion
 
 export const getTxsFromDuck = (state: any) => {
   const wallet = state.get(DUCK_MAIN_WALLET)
@@ -62,9 +58,7 @@ export const getTxs = () => createSelector(
   },
 )
 
-/**
- * INTERNAL NOT EXPORTED SELECTORS BEGIN
-*/
+//#region INTERNAL NOT EXPORTED SELECTORS
 
 const selectMainWalletsList = createSelector(
   [
@@ -155,8 +149,6 @@ const balanceCalculator = (blockchain: string) => createSelector(
     selectedCurrency,
     priceList,
   ) => {
-    // console.log(balances, selectedCurrency, priceList)
-    // console.log(balances)
     return balances
       .reduce( (accumulator, tokenBalance) => {
         if (tokenBalance) {
@@ -165,7 +157,6 @@ const balanceCalculator = (blockchain: string) => createSelector(
           const tokenPrice = priceList[ symbol ]
             && priceList[ symbol ][ selectedCurrency ]
             || null
-          // console.log(symbol, balance, tokenPrice)
           accumulator += ( ( balance || 0 ) * ( tokenPrice || 0 ))
         }
         return accumulator
@@ -173,23 +164,21 @@ const balanceCalculator = (blockchain: string) => createSelector(
   }
 )
 
-/**
- * INTERNAL NOT EXPORTED SELECTORS END
-*/
+//#endregion
 
 /**
  * Provides list of wallets sections
  * Output example:
-[
-  {
-    blockchain: 'Bitcoin',
-    address: ''
-  },
-  {
-    blockchain: 'Ethereum',
-    address: ''
-  }
-]
+ * [
+ *   {
+ *     blockchain: 'Bitcoin',
+ *     address: ''
+ *   },
+ *   {
+ *     blockchain: 'Ethereum',
+ *     address: ''
+ *   }
+ * ]
 */
 export const sectionsSelector = createSectionsSelector(
   [
@@ -219,14 +208,14 @@ export const sectionsSelector = createSectionsSelector(
 /**
  * Provides list of tokens and its amount
  * Output example:
-[
-  {
-    AAAAA: 0
-  },
-  {
-   ETH: 20
-  }
-]
+ * [
+ *   {
+ *     AAAAA: 0
+ *   },
+ *   {
+ *    ETH: 20
+ *   }
+ * ]
 */
 export const tokensAndAmountsSelector = (blockchain: string) => createSelector(
   [
@@ -285,7 +274,7 @@ export const tokensAndAmountsSelector = (blockchain: string) => createSelector(
 /**
  * Provides balance of selected main wallet
  * Output example:
-33.234234
+ * 33.234234
 */
 export const walletBalanceSelector = (blockchain: string) => createSelector(
   [
