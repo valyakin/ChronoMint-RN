@@ -13,9 +13,6 @@ import { selectWallet } from 'redux/wallet/actions'
 import WalletsListItem, {
   type TWalletsListItemProps,
 } from 'components/WalletsListItem'
-import {
-  walletBalanceSelector,
-} from 'redux/mainWallet/selectors'
 
 type TWalletsListItemContainerProps = TWalletsListItemProps & {
   selectWallet(blockchain: string, address: string): void,
@@ -60,9 +57,9 @@ class WalletsListItemContainer extends PureComponent<TWalletsListItemContainerPr
     return (
       <WalletsListItem
         address={address}
-        selectedCurrency={selectedCurrency}
         blockchain={blockchain}
         onItemPress={this.handleItemPress}
+        selectedCurrency={selectedCurrency}
       />
     )
   }

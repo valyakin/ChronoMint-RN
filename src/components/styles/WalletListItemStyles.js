@@ -78,6 +78,9 @@ const styles = StyleSheet.create({
     fontWeight: '200',
     marginTop: 4,
   },
+  balanceAndTokensRow: {
+    flexDirection: 'row',
+  },
 })
 
 export default styles

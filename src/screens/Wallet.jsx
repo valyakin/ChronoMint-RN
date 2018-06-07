@@ -18,12 +18,11 @@ import MainWalletModel from 'models/wallet/MainWalletModel'
 // TEMPORARY DISABLED
 //
 // import Separator from 'components/Separator'
-// import WalletOwners from 'containers/WalletOwnersContainer'
-// import WalletTemplates from 'containers/WalletTemplatesContainer'
-// import WalletTokens from 'containers/WalletTokensContainer'
-import WalletTransactions, { type TWalletTransaction } from 'screens/WalletTransactions'
+// import WalletOwnersTab from 'containers/WalletOwnersTabContainer'
+// import WalletTemplatesTab from 'containers/WalletTemplatesTabContainer'
+// import WalletTokensTab from 'containers/WalletTokensTabContainer'
+import WalletTransactionsTab from 'screens/WalletTransactionsTab'
 import styles from 'screens/styles/WalletStyles'
-import { type TWalletMode } from 'components/WalletImage'
 
 export type TMainWalletModel = typeof MainWalletModel
 
@@ -42,25 +41,16 @@ export type TActionButtonProps = {
 export type TTab = 'transactions' | 'tokens' | 'owners' | 'templates'
 
 export type TWalletProps = {
-  isMultisig: boolean,
-  tokensLength: number,
   address: string,
-  balance: any,
   blockchain: string,
-  latestTransactionDate: any,
-  mainWalletTransactionLoadingStatus: any,
   navigator: TNavigator,
-  // prices: TPrices, // TODO: we do not need to get prices here and send it via props. It should be done on 'Send' screen
   tab: TTab,
-  walletMode?: ?TWalletMode,
-  // walletTransactions: TWalletTransaction[],
-  // balanceCalc: number,
   onPressTabOwners(): void,
   onPressTabTemplates(): void,
   onPressTabTokens(): void,
   onPressTabTransactions(): void,
-  // handleTransactionsRefresh(): void,
   onSend(): void,
+  onReceive(): void,
 }
 
 const ActionButton = ({ title, image, onPress }: TActionButtonProps) => (
@@ -83,27 +73,21 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
   render () {
     const {
       address,
-      balance,
-      // balanceCalc,
-      // onPressTabOwners,
-      // onPressTabTemplates,
-      // onPressTabTokens,
-      // onPressTabTransactions,
-      onSend,
-      // tab,
       blockchain,
-      walletMode,
-      tokensLength,
+      onPressTabOwners,
+      onPressTabTemplates,
+      onPressTabTokens,
+      onPressTabTransactions,
+      onSend,
+      onReceive,
+      tab,
     } = this.props
 
     return (
       <View style={styles.screenView}>
-        <WalletTransactions
-          balance={balance}
+        <WalletTransactionsTab
           address={address}
           blockchain={blockchain}
-          tokensLength={tokensLength}
-          walletMode={walletMode}
         />
         <View style={styles.actions}>
           <ActionButton
@@ -114,6 +98,7 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
           <ActionButton
             title={I18n.t('Wallet.receive')}
             image={require('../images/receive-ios.png')}
+            onPress={onReceive}
           />
         </View>
       </View>
@@ -165,7 +150,7 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
     //     </View>*/}
     //     {/*
     //       tab === 'transactions' &&
-    //         <WalletTransactionsContainer
+    //         <WalletTransactionsTabContainer
     //           address={address}
     //           balance={balanceCalc}
     //           tokens={tokens}
@@ -174,7 +159,7 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
     //           walletTransactions={walletTransactions}
     //         />
     //     */}
-    //         <WalletTransactionsContainer
+    //         <WalletTransactionsTabContainer
     //           address={address}
     //           balance={balanceCalc}
     //           tokens={tokens}
@@ -182,9 +167,9 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
     //           mainWalletTransactionLoadingStatus={mainWalletTransactionLoadingStatus}
     //           walletTransactions={walletTransactions}
     //         />
-    //     {/* tab === 'tokens' && <WalletTokens {...this.props} />}
-    //     { tab === 'owners' && <WalletOwners {...this.props} />}
-    //     { tab === 'templates' && <WalletTemplates {...this.props} />*/}
+    //     {/* tab === 'tokens' && <WalletTokensTab {...this.props} />}
+    //     { tab === 'owners' && <WalletOwnersTab {...this.props} />}
+    //     { tab === 'templates' && <WalletTemplatesTab {...this.props} />*/}
     //     <View style={styles.actions}>
     //       <ActionButton
     //         title={I18n.t('Wallet.send')}

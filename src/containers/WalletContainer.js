@@ -13,16 +13,9 @@ import {
 } from 'react-native'
 import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
 import {
-  getSelectedWalletBalanceInSelectedCurrency,
   getSelectedWalletStore,
-  // makeGetMainWalletTransactionsByBlockchainName,
-  makeGetWalletInfoByBockchainAndAddress,
-  makeGetWalletTransactionsByBlockchainAndAddress,
-  selectMainWalletTransactionsStore,
   type TSelectedWallet,
 } from 'redux/wallet/selectors'
-// import { DUCK_MARKET } from 'redux/market/action'
-import { DUCK_TOKENS } from 'redux/tokens/actions'
 import Wallet, {
   type TWalletProps,
   type TTab,
@@ -34,35 +27,16 @@ export type TWalletContainerState ={
 }
 
 type TWalletContainerProps = TWalletProps & {
-  walletData: any, // TODO: to descibe flowtype
-  selectedWallet: TSelectedWallet,
-  getAccountTransactions: any,
-  transactions: any,
+  address: string,
+  blockchain: string,
 }
 
-const makeMapStateToProps = (origState /*, origProps*/) => {
+const makeMapStateToProps = (origState) => {
   const selectedWallet: TSelectedWallet = getSelectedWalletStore(origState)
-  // const getSelectedWalletTransactions = makeGetMainWalletTransactionsByBlockchainName(selectedWallet.blockchain, selectedWallet.address)
-  const walletInfoByBcAndAddress = makeGetWalletInfoByBockchainAndAddress(selectedWallet.blockchain, selectedWallet.address)
-  const walletTransactionsByBcAndAddress = makeGetWalletTransactionsByBlockchainAndAddress(selectedWallet.blockchain, selectedWallet.address)
-  const mapStateToProps = (state, ownProps) => {
-    // const {
-    //   // prices,
-    //   selectedCurrency,
-    // } = state.get(DUCK_MARKET)
-    const tokens = state.get(DUCK_TOKENS)
-    // const walletTransactions = getSelectedWalletTransactions(state, ownProps)
-    const walletData = walletInfoByBcAndAddress(state, ownProps)
+
+  const mapStateToProps = (state) => {
     return {
-      balanceCalc: getSelectedWalletBalanceInSelectedCurrency(state),
-      mainWalletTransactionLoadingStatus: selectMainWalletTransactionsStore(state),
-      // prices,
-      // selectedCurrency,
-      tokens,
-      walletData,
       selectedWallet,
-      transactions: walletTransactionsByBcAndAddress,
-      // walletTransactions: walletTransactions,
     }
   }
   return mapStateToProps
@@ -106,9 +80,7 @@ class WalletContainer extends PureComponent<TWalletContainerProps, TWalletContai
     } else {
       const {
         address,
-        // balance,
         blockchain,
-        // prices,
       } = this.props
 
       this.props.navigator.push({
@@ -116,14 +88,14 @@ class WalletContainer extends PureComponent<TWalletContainerProps, TWalletContai
         title: 'Send Funds',
         passProps: {
           address: address,
-          // balance: balance,
           blockchain: blockchain,
-          // prices: prices,
-          // selectedBlockchainName: blockchain,
-          // walletAddress: address,
         },
       })
     }
+  }
+
+  handleReceive = () => {
+    Alert.alert('Work in progress', 'Sorry, receiving is under construction still.', [{ text: 'Ok', onPress: () => {}, style: 'cancel' }])
   }
 
   onPressTransactionsRefresh = () => {
@@ -134,20 +106,15 @@ class WalletContainer extends PureComponent<TWalletContainerProps, TWalletContai
     return (
       <Wallet
         address={this.props.selectedWallet.address}
-        balance={this.props.walletData.balance}
         blockchain={this.props.selectedWallet.blockchain}
-        isMultisig={this.props.walletData.isMultisig}
-        latestTransactionDate={this.props.walletData.latestTransactionDate}
-        mainWalletTransactionLoadingStatus={this.props.mainWalletTransactionLoadingStatus}
         navigator={this.props.navigator}
         onPressTabOwners={this.handleOwnersTabClick}
         onPressTabTemplates={this.handleTemplatesTabClick}
         onPressTabTokens={this.handleTokensTabClick}
         onPressTabTransactions={this.handleTransactionsTabClick}
         onSend={this.handleSend}
+        onReceive={this.handleReceive}
         tab={this.state.tab}
-        tokensLength={this.props.walletData.tokensLength}
-        walletMode={this.props.walletData.walletMode}
       />
     )
   }

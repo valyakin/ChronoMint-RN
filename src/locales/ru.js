@@ -5,6 +5,10 @@
  * @flow
  */
 export default {
+  "Tokens": {
+    "one": ", + 1 Токен",
+    "other": ", + {{formatted_number}} Токенов",
+  },
   WalletsList: {
     title: 'Мои кошельки',
   },

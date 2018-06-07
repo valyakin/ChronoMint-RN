@@ -4,12 +4,11 @@
  *
  * @flow
  */
-import { type Store } from 'redux'
-import { type Provider } from 'react-redux'
+
 import { Navigation } from 'react-native-navigation'
+import { type Provider } from 'react-redux'
+import { type Store } from 'redux'
 import { type TState } from './redux/ducks'
-import screenLayout from './utils/screenLayout'
-import LoginScreenLayout from './components/LoginScreenLayout'
 import AccountImportMethod from './containers/AccountImportMethodContainer'
 import AccountPassword from './containers/AccountPasswordContainer'
 import Add2FAWallet from './containers/Add2FAWalletContainer'
@@ -28,18 +27,21 @@ import EnterMnemonic from './containers/EnterMnemonicContainer'
 import EnterPin from './containers/EnterPinContainer'
 import EnterPrivateKey from './containers/EnterPrivateKeyContainer'
 import GenerateMnemonic from './containers/GenerateMnemonicContainer'
+import LoginScreenLayout from './components/LoginScreenLayout'
+import screenLayout from './utils/screenLayout'
 import SelectAccount from './containers/SelectAccountContainer'
 import SelectLanguage from './containers/SelectLanguageContainer'
 import SelectNetwork from './containers/SelectNetworkContainer'
 import SelectToken from './screens/SelectToken'
 import Send from './containers/SendContainer'
 import SetAccountPassword from './containers/SetAccountPasswordContainer'
+import TransactionDetails from './containers/TransactionDetailsContainer'
 import Wallet from './containers/WalletContainer'
 import WalletBackup from './containers/WalletBackupContainer'
-import WalletOwners from './containers/WalletOwnersContainer'
+import WalletOwnersTab from './containers/WalletOwnersTabContainer'
 import WalletsList from './containers/WalletsListContainer'
-import WalletTemplates from './containers/WalletTemplatesContainer'
-import WalletTokens from './containers/WalletTokensContainer'
+import WalletTemplatesTab from './containers/WalletTemplatesTabContainer'
+import WalletTokensTab from './containers/WalletTokensTabContainer'
 
 export default function registerScreens (store: Store<TState, { type: string }>, Provider: Provider<TState, { type: string }>) {
   Navigation.registerComponent('AccountImportMethod', () => screenLayout(LoginScreenLayout)(AccountImportMethod), store, Provider)
@@ -66,10 +68,11 @@ export default function registerScreens (store: Store<TState, { type: string }>,
   Navigation.registerComponent('SelectToken', () => SelectToken, store, Provider)
   Navigation.registerComponent('Send', () => Send, store, Provider)
   Navigation.registerComponent('SetAccountPassword', () => screenLayout(LoginScreenLayout)(SetAccountPassword), store, Provider)
+  Navigation.registerComponent('TransactionDetails', () => TransactionDetails, store, Provider)
   Navigation.registerComponent('Wallet', () => Wallet, store, Provider)
   Navigation.registerComponent('WalletBackup', () => screenLayout(LoginScreenLayout)(WalletBackup), store, Provider)
-  Navigation.registerComponent('WalletOwners', () => WalletOwners, store, Provider)
+  Navigation.registerComponent('WalletOwnersTab', () => WalletOwnersTab, store, Provider)
   Navigation.registerComponent('WalletsList', () => WalletsList, store, Provider)
-  Navigation.registerComponent('WalletTemplates', () => WalletTemplates, store, Provider)
-  Navigation.registerComponent('WalletTokens', () => WalletTokens, store, Provider)
+  Navigation.registerComponent('WalletTemplatesTab', () => WalletTemplatesTab, store, Provider)
+  Navigation.registerComponent('WalletTokensTab', () => WalletTokensTab, store, Provider)
 }

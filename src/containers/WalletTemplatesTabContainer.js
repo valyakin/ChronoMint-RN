@@ -6,7 +6,7 @@
  */
 
 import React, { PureComponent } from 'react'
-import WalletTemplates, { type TTemplate } from '../screens/WalletTemplates'
+import WalletTemplatesTab, { type TTemplate } from 'screens/WalletTemplatesTab'
 
 class WalletTemplatesContainer extends PureComponent<{}, {}> {
   /* eslint-disable-next-line no-unused-vars */
@@ -15,10 +15,12 @@ class WalletTemplatesContainer extends PureComponent<{}, {}> {
   }
   
   render () {
-    return (<WalletTemplates
-      templates={templates}
-      onSelectTemplate={this.handleSelectTemplate}
-    />)
+    return (
+      <WalletTemplatesTab
+        templates={templates}
+        onSelectTemplate={this.handleSelectTemplate}
+      />
+    )
   }
 }
 

@@ -6,23 +6,27 @@
  */
 
 import React, { PureComponent } from 'react'
-import WalletOwners, { type TOwner } from '../screens/WalletOwners'
+import { type TWalletOwner } from 'components/WalletOwner'
+import WalletOwnersTab from 'screens/WalletOwnersTab'
 
-class WalletOwnersContainer extends PureComponent<{}, {}> {
+class WalletOwnersTabContainer extends PureComponent<{}, {}> {
+
   /* eslint-disable-next-line no-unused-vars */
-  handleSelectOwner = (owner: TOwner) => () => {
+  handleSelectOwner = (owner: TWalletOwner) => () => {
     throw 'Not implemented yet'
   }
 
   render () {
-    return (<WalletOwners
-      owners={owners}
-      onSelectOwner={this.handleSelectOwner}
-    />)
+    return (
+      <WalletOwnersTab
+        owners={owners}
+        onSelectOwner={this.handleSelectOwner}
+      />
+    )
   }
 }
 
-export default WalletOwnersContainer
+export default WalletOwnersTabContainer
 
 const owners = [
   {

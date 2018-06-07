@@ -5,22 +5,28 @@
  * @flow
  */
 
-import React, { PureComponent, type ComponentType } from 'react'
 import { connect } from 'react-redux'
-import {
-  View,
-} from 'react-native'
 import {
   tokensAndAmountsSelector,
 } from 'redux/mainWallet/selectors'
 
-export type TokenInfo = {
+export type TTokenInfo = {
   [symbol: string]: number
 }
 
-export type TTokensListProps = {
+export type TTokensListItem = {
+  amount: ?number,
+  symbol: string,
+}
+
+// incoming props
+export type TTokensListFactoryProps = {
   blockchain: string,
-  render(list: TokenInfo[]): ComponentType<TokenInfo[]>,
+}
+
+// outgoing props
+export type TTokensListProps = {
+  list: TTokensListItem[],
 }
 
 const makeMapStateToProps = (origState, origProps) => {
@@ -34,16 +40,4 @@ const makeMapStateToProps = (origState, origProps) => {
   return mapStateToProps
 }
 
-class TokensListContainer extends PureComponent<TTokensListProps & { list: TokenInfo[] }> {
-
-  render () {
-    return (
-      <View>
-        { this.props.render(this.props.list) }
-      </View>
-    )
-  }
-
-}
-
-export default connect(makeMapStateToProps, null)(TokensListContainer)
+export default connect(makeMapStateToProps, null)

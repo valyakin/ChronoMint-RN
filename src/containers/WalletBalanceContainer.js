@@ -5,13 +5,10 @@
  * @flow
  */
 
-import React, { PureComponent, type ComponentType } from 'react'
+import { type ComponentType } from 'react'
 import { connect } from 'react-redux'
 import {
-  View,
-} from 'react-native'
-import {
-  walletBalanceSelector,
+  walletPrimaryBalanceSelector,
 } from 'redux/mainWallet/selectors'
 
 export type TWalletBalanceContainerProps = {
@@ -20,28 +17,17 @@ export type TWalletBalanceContainerProps = {
 }
 
 const makeMapStateToProps = (origState, origProps) => {
-  const getWalletBalanceOnly = walletBalanceSelector(origProps.blockchain)
+  const getWalletPrimaryBalance = walletPrimaryBalanceSelector(origProps.blockchain)
 
   const mapStateToProps = (state) => {
-    const balance = getWalletBalanceOnly(state)
-
     return {
-      balance,
+      balance: getWalletPrimaryBalance(state),
     }
   }
   return mapStateToProps
 }
 
-class WalletBalanceContainer extends PureComponent<TWalletBalanceContainerProps & { balance: number} > {
-
-  render () {
-    return (
-      <View>
-        { this.props.render(this.props.balance) }
-      </View>
-    )
-  }
-
-}
+const WalletBalanceContainer = ({ render, balance }) =>
+  render(balance)
 
 export default connect(makeMapStateToProps, null)(WalletBalanceContainer)

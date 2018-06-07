@@ -6,7 +6,7 @@
  */
 
 import React, { PureComponent } from 'react'
-import WalletTokens, { type TToken, type TWallet } from '../screens/WalletTokens'
+import WalletTokensTab, { type TToken, type TWallet } from 'screens/WalletTokensTab'
 
 type TWalletTokensContainerProps = {
   wallet: TWallet,
@@ -19,10 +19,12 @@ class WalletTokensContainer extends PureComponent<TWalletTokensContainerProps, {
   }
   
   render () {
-    return (<WalletTokens
-      wallet={this.props.wallet}
-      onSelectToken={this.handleSelectToken}
-    />)
+    return (
+      <WalletTokensTab
+        wallet={this.props.wallet}
+        onSelectToken={this.handleSelectToken}
+      />
+    )
   }
 }
 

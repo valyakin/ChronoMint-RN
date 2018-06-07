@@ -10,14 +10,15 @@
       "globals": ["Error", "Array"]
     }],
     ["module-resolver", {
+      "cwd": "babelrc",
       "root": [
-        "./",
+        ".",
         "./src",
         "./node_modules/@chronobank/src",
         "./node_modules/@chronobank/packages"
       ],
       "paths": [
-        "./",
+        ".",
         "./src",
         "./node_modules/@chronobank/src",
         "./node_modules/@chronobank/packages"
