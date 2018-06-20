@@ -79,9 +79,9 @@ export default class TransactionsList extends PureComponent<TTransactionsListPro
       refreshTransactionsList,
     } = this.props
 
-    const lastTransactionDate = latestTransactionDate && moment
-      .unix(latestTransactionDate)
-      .format('DD MMMM YYYY') || null
+    const lastTransactionDate: string = latestTransactionDate
+      && moment(latestTransactionDate).format('DD MMMM YYYY')
+      || 'No date info available'
 
     const TransactionsLoading = () => (
       <View style={styles.transactionsListContainer}>
@@ -159,6 +159,18 @@ export default class TransactionsList extends PureComponent<TTransactionsListPro
 
 class TransactionItem extends PureComponent<TWalletTransaction, TTransactionItemState> {
 
+  static getFormattedBalance = (amount: ?number, symbol: string, type: string) =>  {
+    const isAmountTooSmall = amount > 0 && amount < 0.01
+    let format = isAmountTooSmall ? '%u%n+': '%u%n '
+    format = [
+      (type === 'sending' ? '-' : '+'),
+      format,
+    ].join(' ')
+
+    return I18n.toCurrency(amount, { precision: 2, unit: ` ${symbol} `, format })
+
+  }
+
   goToTx = (props) => {
     const {
       address,
@@ -200,10 +212,6 @@ class TransactionItem extends PureComponent<TWalletTransaction, TTransactionItem
       : styles.receiving
 
     const tType = I18n.t(`TransactionsList.${type}`)
-    const currency = [
-      type === 'sending' ? '-' : '+',
-      I18n.toCurrency(amount, { precision: 2, unit: ` ${symbol} ` }),
-    ].join('')
 
     return (
       <TouchableWithoutFeedback
@@ -229,7 +237,7 @@ class TransactionItem extends PureComponent<TWalletTransaction, TTransactionItem
           </Text>
           <Text style={transactionStyle}>
             {
-              currency
+              TransactionItem.getFormattedBalance(amount, symbol, type)
             }
           </Text>
         </View>
