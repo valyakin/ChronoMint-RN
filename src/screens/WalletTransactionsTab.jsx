@@ -8,40 +8,21 @@ import React, { PureComponent } from 'react'
 import {
   ScrollView,
 } from 'react-native'
-import DetailsSection, { type TDetailSection } from 'components/DetailsSection'
 import styles from 'screens/styles/WalletTransactionsStyles'
 import TransactionsListContainer from 'containers/TransactionsListContainer'
+import WalletInfoContainer from 'containers/WalletInfoContainer'
 
 export type TWalletTransactionsProps = {
-  address: string,
-  balance: any,
-  blockchain: string,
-  tokensLength: number,
+  navigator: any,
 }
 
 export default class WalletTransactions extends PureComponent<TWalletTransactionsProps> {
 
   render () {
-    const {
-      address,
-      balance,
-      blockchain,
-      tokensLength,
-    } = this.props
-
-    const dataForDetailSection: TDetailSection = {
-      address,
-      balance,
-      blockchain,
-      tokensLength,
-    }
-
     return (
       <ScrollView style={styles.mainSection}>
-        <DetailsSection
-          {...dataForDetailSection}
-        />
-        <TransactionsListContainer />
+        <WalletInfoContainer />
+        <TransactionsListContainer navigator={this.props.navigator} />
       </ScrollView>
     )
   }

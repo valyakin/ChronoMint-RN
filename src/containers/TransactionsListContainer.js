@@ -5,33 +5,37 @@
  */
 
 import { connect } from 'react-redux'
+import type { Dispatch } from 'redux'
 import TransactionsList from 'components/TransactionsList'
 import {
-  getSelectedWalletStore,
-  selectMainWalletTransactionsStore,
-  makeGetWalletTransactionsByBlockchainAndAddress,
+  selWalletSelector,
   type TSelectedWallet,
 } from 'redux/wallet/selectors'
+import {
+  listEQTransactions,
+  mwTxFetchingStatus,
+} from 'redux/mainWallet/selectors'
 import { getAccountTransactions } from 'redux/mainWallet/actions'
 
-const makeMapStateToProps = (origState) => {
-  const selectedWallet: TSelectedWallet = getSelectedWalletStore(origState)
-  const walletTransactionsByBcAndAddress = makeGetWalletTransactionsByBlockchainAndAddress(selectedWallet.blockchain, selectedWallet.address)
-  const mapStateToProps = (state, ownProps) => {
+const makeMapStateToProps = (origState, origProps) => {
+  const selectedWallet: TSelectedWallet = selWalletSelector(origState)
+  const getTransactionsData = listEQTransactions(selectedWallet.blockchain, selectedWallet.address)
+  const mapStateToProps = (state) => {
     const {
       transactions,
       latestTransactionDate,
-    } = walletTransactionsByBcAndAddress(state, ownProps)
+    } = getTransactionsData(state)
     return {
       latestTransactionDate,
-      mainWalletTransactionLoadingStatus: selectMainWalletTransactionsStore(state),
+      mainWalletTransactionLoadingStatus: mwTxFetchingStatus(state),
       transactions,
+      navigator: origProps.navigator,
     }
   }
   return mapStateToProps
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   refreshTransactionsList: () => dispatch(getAccountTransactions()),
 })
 

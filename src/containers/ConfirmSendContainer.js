@@ -75,8 +75,10 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
         }
         // Close confirm screen, reset Send screen, go to Wallet screren (TODO: select transactions tab)
         case 'confirm': {
-          this.sendTransaction()
-          this.props.navigator.resetTo({ screen: 'Wallet' })
+          this.sendTransaction() // FIXME: need to catch and handle sending errors. Impossible at the moment.
+          this.props.navigator.resetTo({
+            screen: 'Wallet',
+          })
           break
         }
       }

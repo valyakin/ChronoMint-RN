@@ -14,6 +14,10 @@ export default {
     "one": ", + 1 Token",
     "other": ", + {{formatted_number}} Tokens",
   },
+  "TokensCounter": {
+    "one": "1 Token",
+    "other": "{{formatted_number}} Tokens",
+  },
   WalletsList: {
     title: 'My wallets',
   },

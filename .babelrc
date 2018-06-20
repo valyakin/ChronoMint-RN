@@ -10,7 +10,6 @@
       "globals": ["Error", "Array"]
     }],
     ["module-resolver", {
-      "cwd": "babelrc",
       "root": [
         ".",
         "./src",

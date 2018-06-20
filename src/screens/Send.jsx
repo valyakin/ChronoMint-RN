@@ -5,6 +5,8 @@
  * @flow
  */
 
+//#region imports
+
 import React, { PureComponent } from 'react'
 import {
   Image,
@@ -21,6 +23,12 @@ import Separator from 'components/Separator'
 import styles from 'screens/styles/SendStyles'
 import TokenModel from 'models/tokens/TokenModel'
 import TokensCollection from 'models/tokens/TokensCollection'
+import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
+import { BLOCKCHAIN_NEM } from 'dao/NemDAO'
+
+//#endregion
+
+//#region types
 
 export type TTokenModel = typeof TokenModel
 
@@ -57,6 +65,7 @@ export type TSelectedToken = {
 
 type TSendProps = {
   amount: ?number,
+  blockchain: string,
   amountInCurrency: number,
   // currentTokenBalance: number,
   feeMultiplier: number,
@@ -79,6 +88,8 @@ type TTokenSelectorProps = {
   selectedToken: ?TSelectedToken,
 }
 
+//#endregion
+
 export default class Send extends PureComponent<TSendProps, {}> {
   // Temporary 
   // eslint-disable-next-line complexity
@@ -86,6 +97,7 @@ export default class Send extends PureComponent<TSendProps, {}> {
     const {
       amount,
       amountInCurrency,
+      blockchain,
       // currentTokenBalance,
       feeMultiplier,
       gasFeeAmount,
@@ -117,7 +129,7 @@ export default class Send extends PureComponent<TSendProps, {}> {
     const strings = {
       amountInput: `Amount, ${selectedToken.symbol || ''}`,
       walletValue: selectedToken && [ selectedToken.symbol, selectedToken.amount ].join(' '),
-      walletTitle: `My ${selectedWallet.blockchain} Wallet`,
+      walletTitle: `My ${blockchain} Wallet`,
       walletBalance: `${selectedCurrency} ${currentTokenBalance && currentTokenBalance.toFixed(2)}`,
       sendBalance: `${selectedCurrency} ${amountInCurrency.toFixed(2)}`,
       advancedFee: 'Advanced Fee',
@@ -137,11 +149,18 @@ export default class Send extends PureComponent<TSendProps, {}> {
               selectedWallet.address
             }
           </Text>
-          <Separator style={styles.separatorDark} />
-          <TokenSelector
-            selectedToken={selectedToken}
-            onPress={onSelectToken}
-          />
+          {
+            (this.props.blockchain === BLOCKCHAIN_ETHEREUM || this.props.blockchain === BLOCKCHAIN_NEM)
+              ? (
+                <View>
+                  <Separator style={styles.separatorDark} />
+                  <TokenSelector
+                    selectedToken={selectedToken}
+                    onPress={onSelectToken}
+                  />
+                </View>
+              ) : null
+          }
           <Separator style={styles.separatorDark} />
           <Text style={styles.walletValue}>
             {

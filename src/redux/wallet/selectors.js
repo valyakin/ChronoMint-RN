@@ -82,7 +82,7 @@ const createEqualishWalletsSelector = createSelectorCreator(
 export type TSelectedWallet = {
   address: string,
   blockchain: string,
-  isMultisig: ?boolean,
+  isMultisig?: boolean,
 }
 
 /**
@@ -607,6 +607,35 @@ export const makeGetMainWalletTransactionsByBlockchainName = (
       return result
     })
 }
+
+let isSelectedWalletEqualish = function (v1, v2) {
+
+  if (v1.blockchain !== v2.blockchain) {
+    return false
+  }
+
+  if (v1.address !== v2.address) {
+    return false
+  }
+
+  return true
+}
+const createEqualishSelectedWalletSelector = createSelectorCreator(
+  defaultMemoize,
+  isSelectedWalletEqualish,
+)
+
+export const selWalletSelector = createEqualishSelectedWalletSelector(
+  [
+    getSelectedWalletStore,
+  ],
+  (selectedWalletData) => {
+    return {
+      address: selectedWalletData.address,
+      blockchain: selectedWalletData.blockchain,
+    }
+  }
+)
 
 export const getSelectedWalletBalanceInSelectedCurrency = createSelector(
   [

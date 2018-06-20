@@ -9561,6 +9561,12 @@ react-native-sensitive-info@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/react-native-sensitive-info/-/react-native-sensitive-info-5.1.0.tgz#1655c482f99c80023a23b2d9adab1ae260b1988a"
 
+react-native-tab-view@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-1.0.2.tgz#66e0bc6d38a227ed2b212e3a256b7902f6ce02ed"
+  dependencies:
+    prop-types "^15.6.1"
+
 react-native-tcp@olegdizus/react-native-tcp:
   version "3.3.0"
   resolved "https://codeload.github.com/olegdizus/react-native-tcp/tar.gz/ea9927cc21e422cbb520590b31eb84a2d69c1812"

@@ -5,6 +5,8 @@
  * @flow
  */
 
+//#region imports
+
 import React, { PureComponent } from 'react'
 import {
   ActivityIndicator,
@@ -12,6 +14,7 @@ import {
   Image,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
@@ -20,12 +23,18 @@ import Separator from 'components/Separator'
 import styles from 'components/styles/TransactionsListStyles'
 import TransactionIcon, { type TTransactionType } from 'components/TransactionIcon'
 
+//#endregion
+
+//#region types
+
 export type TWalletTransaction = {
   address: string,
   amount: number,
   confirmations: number,
   symbol: string,
   type: TTransactionType,
+  blockNumber: any,
+  navigator: any,
 }
 
 export type TWalletTransactionList = TWalletTransaction[]
@@ -35,11 +44,14 @@ export type TTransactionsListProps = {
   mainWalletTransactionLoadingStatus: any,
   latestTransactionDate: any,
   refreshTransactionsList(): void,
+  navigator: any,
 }
 
 type TTransactionsListState = {}
 
 type TTransactionItemState = {}
+
+//#endregion
 
 export default class TransactionsList extends PureComponent<TTransactionsListProps, TTransactionsListState> {
 
@@ -52,9 +64,10 @@ export default class TransactionsList extends PureComponent<TTransactionsListPro
     }
   }
 
-  keyExtractor = (item: TWalletTransaction, index: number) => '' + item.address + '_' + index
+  keyExtractor = (item: TWalletTransaction, index: number) =>
+    '' + item.address + '_' + item.blockNumber + '_' + index
 
-  renderItem = ({ item }: { item: TWalletTransaction } ) => <TransactionItem {...item} />
+  renderItem = ({ item }: { item: TWalletTransaction } ) => <TransactionItem {...item} navigator={this.props.navigator} />
 
   // eslint-disable-next-line complexity
   render () {
@@ -88,23 +101,24 @@ export default class TransactionsList extends PureComponent<TTransactionsListPro
       </View>
     )
 
-    const RefreshTransactions = () => (
-      <View style={styles.transactionsListContainer}>
-        <TouchableOpacity
-          onPress={refreshTransactionsList}
-          style={styles.refreshTouch}
-        >
-          <Text style={styles.refreshText}>
-            No transactions available. Tap to refresh.
-          </Text>
-          <View style={styles.refreshImage}>
-            <Image
-              source={require('../images/temporary-reload-icon.png')}
-            />
-          </View>
-        </TouchableOpacity>
-      </View>
-    )
+    /** This code block temporary disabled */
+    // const RefreshTransactions = () => (
+    //   <View style={styles.transactionsListContainer}>
+    //     <TouchableOpacity
+    //       onPress={refreshTransactionsList}
+    //       style={styles.refreshTouch}
+    //     >
+    //       <Text style={styles.refreshText}>
+    //         No transactions available. Tap to refresh.
+    //       </Text>
+    //       <View style={styles.refreshImage}>
+    //         <Image
+    //           source={require('../images/temporary-reload-icon.png')}
+    //         />
+    //       </View>
+    //     </TouchableOpacity>
+    //   </View>
+    // )
 
     const LoadedTransactions = () => {
       return (
@@ -130,7 +144,7 @@ export default class TransactionsList extends PureComponent<TTransactionsListPro
     } else {
       if (mainWalletTransactionLoadingStatus.isInited) {
         if (mainWalletTransactionLoadingStatus.isFetched) {
-          if (lastTransactionDate) {
+          if (transactions && transactions.length) {
             return ( <LoadedTransactions /> )
           } else {
             return (<NoTransactionsExists /> )
@@ -144,6 +158,34 @@ export default class TransactionsList extends PureComponent<TTransactionsListPro
 }
 
 class TransactionItem extends PureComponent<TWalletTransaction, TTransactionItemState> {
+
+  goToTx = (props) => {
+    const {
+      address,
+      amount,
+      blockNumber,
+      confirmations,
+      fee,
+      symbol,
+      txDate,
+      type,
+    } = props
+
+    props.navigator.push({
+      screen: 'TransactionDetails',
+      passProps: {
+        address,
+        amount,
+        blockNumber,
+        confirmations,
+        fee,
+        symbol,
+        txDate,
+        type,
+      },
+    })
+  }
+
   render () {
     const {
       address,
@@ -158,36 +200,40 @@ class TransactionItem extends PureComponent<TWalletTransaction, TTransactionItem
       : styles.receiving
 
     const tType = I18n.t(`TransactionsList.${type}`)
-    const currency = I18n.toCurrency(amount, { precision: 2, unit: ` ${symbol} ` })
+    const currency = [
+      type === 'sending' ? '-' : '+',
+      I18n.toCurrency(amount, { precision: 2, unit: ` ${symbol} ` }),
+    ].join('')
 
     return (
-      <View style={styles.item}>
-        <TransactionIcon
-          type={type}
-          confirmations={confirmations}
-        />
-        <View>
-          <Text />
+      <TouchableWithoutFeedback
+        onPress={() => this.goToTx(this.props)}
+      >
+        <View style={styles.item}>
+          <TransactionIcon
+            type={type}
+            confirmations={confirmations}
+          />
+          <Text
+            style={styles.itemText}
+            ellipsizeMode='middle'
+            numberOfLines={2}
+          >
+            {
+              tType
+            }
+            {'\n'}
+            {
+              address
+            }
+          </Text>
+          <Text style={transactionStyle}>
+            {
+              currency
+            }
+          </Text>
         </View>
-        <Text
-          style={styles.itemText}
-          ellipsizeMode='middle'
-          numberOfLines={2}
-        >
-          {
-            tType
-          }
-          {'\n'}
-          {
-            address
-          }
-        </Text>
-        <Text style={transactionStyle}>
-          {
-            currency
-          }
-        </Text>
-      </View>
+      </TouchableWithoutFeedback>
     )
   }
 }

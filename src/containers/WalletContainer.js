@@ -5,78 +5,87 @@
  * @flow
  */
 
-import React, { PureComponent }  from 'react'
+//#region imports
+
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import type { Dispatch } from 'redux'
 import {
   Alert,
 } from 'react-native'
 import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
+import { BLOCKCHAIN_NEM } from 'dao/NemDAO'
 import {
   getSelectedWalletStore,
   type TSelectedWallet,
 } from 'redux/wallet/selectors'
 import Wallet, {
   type TWalletProps,
-  type TTab,
 } from 'screens/Wallet'
-import { getAccountTransactions } from 'redux/mainWallet/actions'
+import WalletTokensTab from 'containers/WalletTokensTabContainer'
+import WalletTransactionsTab from 'screens/WalletTransactionsTab'
+import {
+  SceneMap,
+  type Route,
+  type NavigationState,
+} from 'react-native-tab-view'
 
-export type TWalletContainerState ={
-  tab: TTab,
+//#endregion
+
+//#region types
+type TTabRoute = {
+  key: string,
+  title: string,
 }
+
+export type TWalletContainerState = NavigationState<Route<TTabRoute>>
 
 type TWalletContainerProps = TWalletProps & {
+  getAccountTransactions(): void,
   address: string,
-  blockchain: string,
 }
+
+//#endregion
+
+//#region maps
 
 const makeMapStateToProps = (origState) => {
   const selectedWallet: TSelectedWallet = getSelectedWalletStore(origState)
 
-  const mapStateToProps = (state) => {
+  const mapStateToProps = () => {
     return {
-      selectedWallet,
+      address: selectedWallet.address,
+      blockchain: selectedWallet.blockchain,
     }
   }
   return mapStateToProps
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  getAccountTransactions: () => dispatch(getAccountTransactions()),
-})
+//#endregion
 
-class WalletContainer extends PureComponent<TWalletContainerProps, TWalletContainerState> {
+class WalletContainer extends Component<TWalletContainerProps, TWalletContainerState> {
 
-  constructor (props){
+  constructor (props) {
     super(props)
-    this.props.navigator.setTitle({ title: `My ${props.selectedWallet.blockchain} Wallet` }) // TODO: to fix bug with blinking header
-  }
-
-  state = {
-    tab: 'transactions',
-  }
-
-  handleTransactionsTabClick = () => {
-    this.setState({ tab: 'transactions' })
-  }
-
-  handleOwnersTabClick = () => {
-    this.setState({ tab: 'owners' })
-  }
-
-  handleTemplatesTabClick = () => {
-    this.setState({ tab: 'templates' })
-  }
-
-  handleTokensTabClick = () => {
-    this.setState({ tab: 'tokens' })
+    this.props.navigator.setTitle({ title: `My ${props.blockchain} Wallet` }) // TODO: to fix bug with blinking header
+    const defaultState = {
+      index: 0,
+      routes: [
+        { key: 'transactions', title: 'Transactions' },
+      ],
+    }
+    if (this.props.blockchain === BLOCKCHAIN_ETHEREUM || this.props.blockchain === BLOCKCHAIN_NEM) {
+      defaultState.routes.push({ key: 'tokens', title: 'Tokens' })
+    }
+    this.state = { ...defaultState }
   }
 
   handleSend = () => {
     // TODO: [AO] This is temporary limitation. At the moment we can't send not-ETH funds
-    if (this.props.selectedWallet.blockchain !== BLOCKCHAIN_ETHEREUM) {
-      Alert.alert('Work in progress', 'Sorry, sending non-Ethereum funds still in development. Please choose Ethereum wallet to continue.', [{ text: 'Ok', onPress: () => {}, style: 'cancel' }])
+    if (this.props.blockchain === BLOCKCHAIN_NEM) {
+      Alert.alert(
+        'Work in progress',
+        'Sorry, sending NEM funds still in development. Please choose Ethereum or BitCoin-like wallet to continue.',
+        [{ text: 'Ok', onPress: () => {}, style: 'cancel' }])
     } else {
       const {
         address,
@@ -95,30 +104,41 @@ class WalletContainer extends PureComponent<TWalletContainerProps, TWalletContai
   }
 
   handleReceive = () => {
-    Alert.alert('Work in progress', 'Sorry, receiving is under construction still.', [{ text: 'Ok', onPress: () => {}, style: 'cancel' }])
+    Alert.alert(
+      'Work in progress',
+      'Sorry, receiving is under construction still.',
+      [{ text: 'Ok', onPress: () => {}, style: 'cancel' }]
+    )
   }
 
-  onPressTransactionsRefresh = () => {
-    this.props.getAccountTransactions()
-  }
+  handleIndexChange = (index: number) =>
+    this.setState({
+      // [AO] This state is using via onIndexChange below
+      // eslint-disable-next-line react/no-unused-state
+      index,
+    })
 
   render () {
+    const {
+      blockchain,
+      navigator,
+    } = this.props
     return (
       <Wallet
-        address={this.props.selectedWallet.address}
-        blockchain={this.props.selectedWallet.blockchain}
-        navigator={this.props.navigator}
-        onPressTabOwners={this.handleOwnersTabClick}
-        onPressTabTemplates={this.handleTemplatesTabClick}
-        onPressTabTokens={this.handleTokensTabClick}
-        onPressTabTransactions={this.handleTransactionsTabClick}
+        blockchain={blockchain}
+        onIndexChange={this.handleIndexChange}
+        navigationState={this.state}
+        navigator={navigator}
+        renderScene={SceneMap({
+          transactions: () => <WalletTransactionsTab navigator={this.props.navigator} />,
+          tokens: WalletTokensTab,
+        })}
         onSend={this.handleSend}
         onReceive={this.handleReceive}
-        tab={this.state.tab}
       />
     )
   }
 
 }
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(WalletContainer)
+export default connect(makeMapStateToProps, null)(WalletContainer)

@@ -5,27 +5,35 @@
  * @flow
  */
 
-import React, { PureComponent } from 'react'
-import WalletTokensTab, { type TToken, type TWallet } from 'screens/WalletTokensTab'
+//#region imports
 
-type TWalletTokensContainerProps = {
-  wallet: TWallet,
+import { connect } from 'react-redux'
+import WalletTokensTab from 'screens/WalletTokensTab'
+import {
+  getSelectedWalletStore,
+  getMarketPricesSelectedCurrencyStore,
+} from 'redux/wallet/selectors'
+import {
+  tokensAndAmountsSelector,
+} from 'redux/mainWallet/selectors'
+
+//#endregion
+
+//#region maps
+
+const makeMapStateToProps =(origState) => {
+  const { blockchain } = getSelectedWalletStore(origState)
+  const getTokens = tokensAndAmountsSelector(blockchain)
+  const mapStateToProps = (state) => {
+    return {
+      blockchain,
+      selectedCurrency: getMarketPricesSelectedCurrencyStore(state),
+      tokens: getTokens(state),
+    }
+  }
+  return mapStateToProps
 }
 
-class WalletTokensContainer extends PureComponent<TWalletTokensContainerProps, {}> {
-  /* eslint-disable-next-line no-unused-vars */
-  handleSelectToken = (token: TToken) => () => {
-    throw 'Not implemented yet'
-  }
-  
-  render () {
-    return (
-      <WalletTokensTab
-        wallet={this.props.wallet}
-        onSelectToken={this.handleSelectToken}
-      />
-    )
-  }
-}
+//#endregions
 
-export default WalletTokensContainer
+export default connect(makeMapStateToProps, null)(WalletTokensTab)

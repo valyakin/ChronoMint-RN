@@ -37,14 +37,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   tabItem: {
-    backgroundColor: '#4e3d99',
-    color: colors.background,
     fontSize: 12,
     paddingHorizontal: 14,
     paddingVertical: 8,
   },
   tabsContainer: {
     backgroundColor: colors.primary,
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: colors.primary,
     flexDirection: 'row',
     justifyContent: 'center',
     paddingVertical: 10,

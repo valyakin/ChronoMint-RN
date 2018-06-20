@@ -5,24 +5,30 @@
  * @flow
  */
 
-import React, { PureComponent }  from 'react'
+//#region imports
+
+import React, { PureComponent } from 'react'
 import {
+  Animated,
+  Dimensions,
   Image,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
 import { type Navigator as TNavigator } from 'react-native-navigation'
 import MainWalletModel from 'models/wallet/MainWalletModel'
-// TEMPORARY DISABLED
-//
-// import Separator from 'components/Separator'
-// import WalletOwnersTab from 'containers/WalletOwnersTabContainer'
-// import WalletTemplatesTab from 'containers/WalletTemplatesTabContainer'
-// import WalletTokensTab from 'containers/WalletTokensTabContainer'
-import WalletTransactionsTab from 'screens/WalletTransactionsTab'
+import {
+  TabView,
+} from 'react-native-tab-view'
+import Separator from 'components/Separator'
 import styles from 'screens/styles/WalletStyles'
+
+//#endregion
+
+//#region types
 
 export type TMainWalletModel = typeof MainWalletModel
 
@@ -41,17 +47,16 @@ export type TActionButtonProps = {
 export type TTab = 'transactions' | 'tokens' | 'owners' | 'templates'
 
 export type TWalletProps = {
-  address: string,
   blockchain: string,
+  navigationState: any,
   navigator: TNavigator,
-  tab: TTab,
-  onPressTabOwners(): void,
-  onPressTabTemplates(): void,
-  onPressTabTokens(): void,
-  onPressTabTransactions(): void,
-  onSend(): void,
+  renderScene: any,
+  onIndexChange(index: number): void,
   onReceive(): void,
+  onSend(): void,
 }
+
+//#endregion
 
 const ActionButton = ({ title, image, onPress }: TActionButtonProps) => (
   <TouchableOpacity
@@ -70,24 +75,93 @@ const ActionButton = ({ title, image, onPress }: TActionButtonProps) => (
 
 export default class Wallet extends PureComponent<TWalletProps, {}> {
 
-  render () {
-    const {
-      address,
-      blockchain,
-      onPressTabOwners,
-      onPressTabTemplates,
-      onPressTabTokens,
-      onPressTabTransactions,
-      onSend,
-      onReceive,
-      tab,
-    } = this.props
+  _renderLabel = ({ position, navigationState }) => ({ route, index, jump }) => {
+    const inputRange = navigationState.routes.map((x, i) => i)
+
+    // tab text color
+    const color = position.interpolate({
+      inputRange,
+      outputRange: inputRange.map( (i) =>
+        i === index
+          ? '#4D35AE'
+          : '#FFFFFF'
+      ),
+    })
+
+    // tab background color
+    const backgroundColor = position.interpolate({
+      inputRange,
+      outputRange: inputRange.map( (i) =>
+        i === index
+          ? '#FFFFFF'
+          : '#4e3d99'
+      ),
+    })
 
     return (
+      <Animated.View
+        style={{ backgroundColor }}
+        key={route.key}
+      >
+        <TouchableWithoutFeedback
+          onPress={jump}
+        >
+          <Animated.Text style={[styles.tabItem, { color }]}>
+            {
+              route.title
+            }
+          </Animated.Text>
+        </TouchableWithoutFeedback>
+      </Animated.View>
+    )
+  }
+
+  _renderTabBar = (props) => {
+
+    // If we have only one tab, then do not display TabBar
+    if (!props.navigationState.routes || props.navigationState.routes.length < 2) {
+      return null
+    }
+
+    return (
+      <View style={styles.tabsContainer}>
+        {
+          props.navigationState
+            .routes
+            .map((route, index, array) => {
+              const jump = () => props.jumpTo(route.key)
+              return [
+                this._renderLabel(props)({ route, index, jump }),
+                (index !== array.length - 1)
+                  ? <Separator style={styles.separator} key={'s_'+route.key} />
+                  : null,
+              ]
+            })
+        }
+      </View>
+    )
+  }
+
+  render () {
+    const {
+      onIndexChange,
+      renderScene,
+      onSend,
+      onReceive,
+      navigationState,
+    } = this.props
+    return (
       <View style={styles.screenView}>
-        <WalletTransactionsTab
-          address={address}
-          blockchain={blockchain}
+        <TabView
+          navigationState={navigationState}
+          renderScene={renderScene}
+          renderTabBar={this._renderTabBar}
+          onIndexChange={onIndexChange}
+          initialLayout={{
+            height: 0,
+            width: Dimensions.get('window').width,
+          }}
+          useNativeDriver
         />
         <View style={styles.actions}>
           <ActionButton
@@ -104,84 +178,5 @@ export default class Wallet extends PureComponent<TWalletProps, {}> {
       </View>
     )
 
-    // THIS IS TEMPORARY DISABLED TABS. PLEASE KEEP IT AS IS
-    //
-    // return (
-    //   <View style={styles.screenView}>
-    //   {/*  <View style={styles.tabsContainer}>
-    //       <Text
-    //         style={styles.tabItem}
-    //         onPress={onPressTabTransactions}
-    //       >
-    //         Transactions
-    //       </Text>
-    //       <Separator style={styles.separator} />*/}
-    //       {/* Alexey Ozerov: Do not understand a logic here. We have array of tokens, which one should be compared with btc?
-    //         this.props.wallet.token !== 'btc' && ([
-    //           <Text
-    //             style={styles.tabItem}
-    //             onPress={onPressTabTokens}
-    //             key='0'
-    //           >
-    //             Tokens
-    //           </Text>,
-    //           <Separator style={styles.separator} key='1' />,
-    //         ])
-    //       */}
-    //       {/* mode === 'shared' && ([
-    //         <Text
-    //           style={styles.tabItem}
-    //           onPress={onPressTabOwners}
-    //           key='0'
-    //         >
-    //           Owners
-    //         </Text>,
-    //         <Separator
-    //           style={styles.separator}
-    //           key='1'
-    //         />,
-    //       ])*/}
-    //       {/*<Text
-    //         style={styles.tabItem}
-    //         onPress={onPressTabTemplates}
-    //       >
-    //         Templates
-    //       </Text>
-    //     </View>*/}
-    //     {/*
-    //       tab === 'transactions' &&
-    //         <WalletTransactionsTabContainer
-    //           address={address}
-    //           balance={balanceCalc}
-    //           tokens={tokens}
-    //           wallet={wallet}
-    //           mainWalletTransactionLoadingStatus={mainWalletTransactionLoadingStatus}
-    //           walletTransactions={walletTransactions}
-    //         />
-    //     */}
-    //         <WalletTransactionsTabContainer
-    //           address={address}
-    //           balance={balanceCalc}
-    //           tokens={tokens}
-    //           wallet={wallet}
-    //           mainWalletTransactionLoadingStatus={mainWalletTransactionLoadingStatus}
-    //           walletTransactions={walletTransactions}
-    //         />
-    //     {/* tab === 'tokens' && <WalletTokensTab {...this.props} />}
-    //     { tab === 'owners' && <WalletOwnersTab {...this.props} />}
-    //     { tab === 'templates' && <WalletTemplatesTab {...this.props} />*/}
-    //     <View style={styles.actions}>
-    //       <ActionButton
-    //         title={I18n.t('Wallet.send')}
-    //         image={require('../images/send-ios.png')}
-    //         onPress={onSend}
-    //       />
-    //       <ActionButton
-    //         title={I18n.t('Wallet.receive')}
-    //         image={require('../images/receive-ios.png')}
-    //       />
-    //     </View>
-    //   </View>
-    // )
   }
 }

@@ -11,7 +11,18 @@ import {
 import colors from 'utils/colors'
 
 const styles = StyleSheet.create({
-
+  container: {
+    backgroundColor: colors.background,
+    flexGrow: 1,
+    paddingTop: 20,
+    paddingLeft: 20,
+  },
+  icon: {
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })
 
 export default styles

@@ -71,10 +71,9 @@ const FeeSlider = ({
   step = 0.1,
   handleValueChange = () => {}, // [AO] Do nothing by default
 }: FeeSliderProps) => {
-
   const tokenInfo = tokenSymbol &&
      calculatedFeeValue &&
-     [tokenSymbol, calculatedFeeValue].join(' ') || 'EEE'
+     [tokenSymbol, calculatedFeeValue.toFixed(8)].join(' ') || '-.--'
 
   const currencyInfo = tokenSymbol &&
     selectedCurrency &&

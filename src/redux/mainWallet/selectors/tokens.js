@@ -10,7 +10,10 @@ import {
 } from 'reselect'
 import { filteredBalancesAndTokens } from 'redux/mainWallet/selectors/balance'
 import { getPrimaryToken } from 'redux/mainWallet/selectors/utils'
+import { DUCK_TOKENS } from 'redux/tokens/actions'
 
+export const selectTokensStore = (state) =>
+  state.get(DUCK_TOKENS) // TokensCollection, array of TokenModel
 /**
  * Provides list of tokens and its amount
  * Output example:
@@ -57,3 +60,35 @@ export const tokensAndAmountsSelector = (blockchain: string) => createSelector(
     return result
   }
 )
+
+export const makeGetTokenSymbolListByBlockchainName = (blockchainName: string) =>
+  createSelector(
+    [
+      selectTokensStore,
+    ],
+    (mainWalletTokens) =>
+      mainWalletTokens
+        .list()
+        .filter( (token) => {
+          const res = token.blockchain() === blockchainName
+          return res
+        })
+        .map( (token) => token.symbol() )
+        .toArray()
+  )
+
+export const makeGetLastBlockForBlockchain = (symbol: string) => {
+  return createSelector(
+    [
+      selectTokensStore,
+    ],
+    (
+      tokens,
+    ) => {
+      if (!symbol) {
+        return null
+      }
+      return tokens.latestBlocks()[tokens.item(symbol).blockchain()]
+    },
+  )
+}

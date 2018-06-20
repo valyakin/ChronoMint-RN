@@ -60,7 +60,7 @@ export default class ConfirmSend extends React.PureComponent<TConfirmSendProps, 
         >
           <Text style={styles.lightGreyText}>
             {
-              `${selectedCurrency} ${amountToSend.currency.toFixed(2)}`
+              `${selectedCurrency} ${amountToSend && amountToSend.currency && amountToSend.currency.toFixed(2)}`
             }
           </Text>
         </LabeledItem>
@@ -73,7 +73,7 @@ export default class ConfirmSend extends React.PureComponent<TConfirmSendProps, 
             }
             <Text style={styles.lightGreyText}>
               {
-                ` (${selectedCurrency} ${fee.currency.toFixed(2)})`
+                ` (${selectedCurrency} ${fee && fee.currency && fee.currency.toFixed(2)})`
               }
             </Text>
           </Text>
@@ -87,7 +87,7 @@ export default class ConfirmSend extends React.PureComponent<TConfirmSendProps, 
             }
             <Text style={styles.lightGreyText}>
               {
-                ` (${selectedCurrency} ${balance.currency.toFixed(2)})`
+                ` (${selectedCurrency} ${balance && balance.currency && balance.currency.toFixed(2)})`
               }
             </Text>
           </Text>

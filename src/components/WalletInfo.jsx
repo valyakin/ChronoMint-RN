@@ -1,5 +1,4 @@
-/**
- * Copyright 2017–2018, LaborX PTY
+/* Copyright 2017–2018, LaborX PTY
  * Licensed under the AGPL Version 3 license.
  *
  * @flow
@@ -7,55 +6,31 @@
 
 import React, { PureComponent, type ComponentType } from 'react'
 import {
-  Image,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native'
 import I18n from 'react-native-i18n'
-import isNumber from 'utils/numeric'
 import PrimaryBalanceContainerFactory, {
   type TPrimaryBalanceFactoryProps,
   type TPrimaryBalanceProps,
 } from 'containers/PrimaryBalanceContainerFactory'
-import PrimaryTokenContainerFactory, {
-  type TPrimaryTokenFactoryProps,
-  type TPrimaryTokenProps,
-} from 'containers/PrimaryTokenContainerFactory'
-import styles from 'components/styles/WalletListItemStyles'
 import TokensListContainerFactory, {
   type TTokensListProps,
   type TTokensListFactoryProps,
 } from 'containers/TokensListContainerFactory'
+import PrimaryTokenContainerFactory, {
+  type TPrimaryTokenFactoryProps,
+  type TPrimaryTokenProps,
+} from 'containers/PrimaryTokenContainerFactory'
 import WalletImage from 'components/WalletImage'
+import styles from 'components/styles/WalletInfoStyles'
+import isNumber from 'utils/numeric'
 
-type TPrices = {
-  [token: string]: {
-    [currency: string]: number
-  }
-}
-type TCalculatedToken = TPrices[]
-export type TCalculatedTokenCollection = TCalculatedToken[]
-export type TWalletsListItemProps = {
+export type TWalletInfoProps = {
   address: string,
   blockchain: string,
   selectedCurrency: string,
-  onItemPress(): void,
 }
-
-const Transactions = ({ transactions }) => !transactions ? null : (
-  !transactions[1] ? (
-    <Image
-      source={require('../images/indicator-receiving-0.png')}
-    />
-  ) : (
-    <View style={styles.transactionsNumberContainer}>
-      <Text style={styles.transactionsNumber}>
-        {transactions.length}
-      </Text>
-    </View>
-  )
-)
 
 class TokensCounter extends PureComponent<TTokensListProps> {
 
@@ -66,7 +41,7 @@ class TokensCounter extends PureComponent<TTokensListProps> {
     }
 
     return (
-      <Text style={styles.tokens}>
+      <Text style={styles.walletDetails}>
         {
           I18n.t('Tokens', { count: tokensLength, formatted_number: tokensLength })
         }
@@ -93,16 +68,17 @@ class PrimaryToken extends PureComponent<TPrimaryTokenProps> {
   }
 
   render () {
+
+    const prBlanaceText = [
+      this.props.symbol,
+      PrimaryToken.getFormattedBalance(this.props.amount),
+    ].join(' ')
+
     return (
       <View style={styles.balanceContainer}>
-        <Text style={styles.balanceText}>
+        <Text style={styles.balance}>
           {
-            this.props.symbol
-          }
-        </Text>
-        <Text style={[styles.balanceText, styles.balanceNumber]}>
-          {
-            PrimaryToken.getFormattedBalance(this.props.amount)
+            prBlanaceText
           }
         </Text>
       </View>
@@ -135,7 +111,7 @@ class PrimaryBalance extends PureComponent<TPrimaryBalanceProps> {
     ].join(' ')
 
     return (
-      <Text style={styles.tokens}>
+      <Text style={styles.walletDetails}>
         {
           displayPrimaryBalanceText
         }
@@ -148,64 +124,39 @@ const TokensListContainer: ComponentType<TTokensListFactoryProps> = TokensListCo
 const PrimaryTokenContainer: ComponentType<TPrimaryTokenFactoryProps> = PrimaryTokenContainerFactory(PrimaryToken)
 const PrimaryBalanceContainer: ComponentType<TPrimaryBalanceFactoryProps> = PrimaryBalanceContainerFactory(PrimaryBalance)
 
-export default class WalletsListItem extends PureComponent<TWalletsListItemProps> {
-
-  handleOnPress = () => {
-    this.props.onItemPress()
-  }
-
+export default class WalletInfo extends PureComponent<TWalletInfoProps> {
   render () {
     const {
       address,
       blockchain,
       selectedCurrency,
     } = this.props
-
     return (
-      <TouchableOpacity
-        style={styles.container}
-        onPress={this.handleOnPress}
-      >
-        <View>
-          <View style={styles.transactions}>
-            <Transactions transactions={[1]} />
-          </View>
-          <View style={styles.content}>
-            <WalletImage
-              blockchain={blockchain}
-              style={styles.image}
-            />
-            <View style={styles.contentColumn}>
-              <Text style={styles.title}>
-                {
-                  `My ${blockchain} Wallet`
-                }
-              </Text>
-              <Text
-                style={styles.address}
-                ellipsizeMode='middle'
-                numberOfLines={1}
-              >
-                {
-                  address
-                }
-              </Text>
-              <PrimaryTokenContainer
-                blockchain={blockchain}
-              />
-              <View style={styles.balanceAndTokensRow}>
-                <PrimaryBalanceContainer
-                  blockchain={blockchain}
-                  selectedCurrency={selectedCurrency}
-                />
-                <TokensListContainer
-                  blockchain={blockchain}
-                />
-              </View>
-            </View>
-          </View>
+      <View style={styles.walletDetailsSection}>
+        <WalletImage
+          blockchain={blockchain}
+          imageStyle={styles.walletImageIcon}
+          shapeStyle={styles.walletImageShape}
+          size='big'
+        />
+        <Text style={styles.address}>
+          {
+            address
+          }
+        </Text>
+        <PrimaryTokenContainer
+          blockchain={blockchain}
+        />
+        <View style={styles.balanceAndTokensRow}>
+          <PrimaryBalanceContainer
+            blockchain={blockchain}
+            selectedCurrency={selectedCurrency}
+          />
+          <TokensListContainer
+            blockchain={blockchain}
+          />
         </View>
-      </TouchableOpacity>
+      </View>
     )
   }
 }

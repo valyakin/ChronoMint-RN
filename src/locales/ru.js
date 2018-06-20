@@ -9,6 +9,10 @@ export default {
     "one": ", + 1 Токен",
     "other": ", + {{formatted_number}} Токенов",
   },
+  "TokensCounter": {
+    "one": "1 Токен",
+    "other": "{{formatted_number}} Токенов",
+  },
   WalletsList: {
     title: 'Мои кошельки',
   },

@@ -17,28 +17,33 @@ import TransactionIcon, { type TTransactionType, type TIconMode } from 'componen
 type TTransactionDetailsProps = {
   address: string,
   amount: number,
-  blockchain: string,
+  blockNumber: number,
   confirmations: number,
   fee: number,
-  transactionType: TTransactionType,
-  selectedCurrency: string,
-  currencyPrice: number,
+  symbol: string,
+  txDate: number,
+  type: TTransactionType,
+  navigator: any,
 }
 
 export default class TransactionDetails extends PureComponent<TTransactionDetailsProps, {}> {
+  constructor (props: TTransactionDetailsProps) {
+    super(props)
+    this.props.navigator.setTitle({ title: `${props.type === 'sending' ? 'Sending Funds' : 'Receiving Funds'}` })
+  }
   render () {
     const {
       address,
       amount,
-      blockchain,
+      blockNumber,
       confirmations,
-      currencyPrice,
       fee,
-      selectedCurrency,
-      transactionType,
+      symbol,
+      txDate,
+      type,
     } = this.props
 
-    const iconMode: TIconMode = 'big'
+    const iconMode: TIconMode = 'small'
 
     const Estimation = (confirmations, blockchain) => {
       /*Ivan Abdulov [15:13]
@@ -49,45 +54,54 @@ export default class TransactionDetails extends PureComponent<TTransactionDetail
 
     return (
       <View style={styles.container}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={styles.icon}>
+            <TransactionIcon
+              type={type}
+              confirmations={confirmations}
+              mode={iconMode}
+            />
+          </View>
+          <LabeledItem
+            labelText={type === 'sending' ? 'Send To' : 'Receiving from'}
+          >
+            <Text>
+              {
+                address
+              }
+            </Text>
+          </LabeledItem>
+        </View>
         <LabeledItem
-          labelText='Send To'
-        >
-          <Text>
-            {
-              recipientAddress
-            }
-          </Text>
-        </LabeledItem>
-        <LabeledItem
-          labelText={`${currentToken} ${amountToSend.token}`}
+          labelText={`${symbol} ${amount}`}
           labelType='currencyColored'
         >
-          <Text style={styles.lightGreyText}>
+          {/*<Text style={styles.lightGreyText}>
             {
               `${selectedCurrency} ${amountToSend.currency.toFixed(2)}`
             }
-          </Text>
+          </Text>*/}
         </LabeledItem>
         <LabeledItem
           labelText='Fee'
         >
           <Text>
             {
-              `${currentToken} ${fee.token}`
+              `${symbol} ${fee.toFixed(6)}`
             }
-            <Text style={styles.lightGreyText}>
+            {/*<Text style={styles.lightGreyText}>
               {
                 ` (${selectedCurrency} ${fee.currency.toFixed(2)})`
               }
-            </Text>
+            </Text>*/}
           </Text>
         </LabeledItem>
-        <LabeledItem
+        {/*<LabeledItem
           labelText='Balance'
         >
           <Text>
             {
-              `${currentToken}  ${balance.token}`
+              `${symbol}  ${balance.token}`
             }
             <Text style={styles.lightGreyText}>
               {
@@ -95,7 +109,7 @@ export default class TransactionDetails extends PureComponent<TTransactionDetail
               }
             </Text>
           </Text>
-        </LabeledItem>
+        </LabeledItem>*/}
       </View>
     )
   }

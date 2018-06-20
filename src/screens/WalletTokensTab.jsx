@@ -5,6 +5,8 @@
  * @flow
  */
 
+//#region imports
+
 import React, { PureComponent } from 'react'
 import {
   FlatList,
@@ -16,86 +18,85 @@ import {
 import I18n from 'react-native-i18n'
 import colors from 'utils/colors'
 
+//#endregion
+
+//#region types
+
 export type TToken = {
-  id: string,
-  amount: number,
-  image: any,
+  [symbol: string]: number,
 }
 
-export type TBalance = {
-  currency: string,
-  amount: number,
+export type TTokenList = TToken[]
+
+export type TWalletTokensProps = {
+  blockchain: string,
+  selectedCurrency: string,
+  tokens: TTokenList,
 }
 
-export type TWallet = {
-  tokens: Array<TToken>,
-  balance: TBalance,
+type TTokenProps = {
+  blockchain: string,
+  selectedCurrency: string,
+  token: TToken,
 }
 
-type TWalletTokensProps = {
-  wallet: TWallet,
-  onSelectToken: (token: TToken) => () => void,
-}
+//#endregion
 
-type TTokenProps = TToken & {
-  balance: TBalance,
-  onSelectToken: () => void,
-}
-
-export default class WalletTokens extends PureComponent<TWalletTokensProps, {}> {
-  keyExtractor = (id: string) => id
+export default class WalletTokens extends PureComponent<TWalletTokensProps> {
+  keyExtractor = (token: TToken, index: number) => '' + Object.keys(token)[0] + '_' + index
 
   renderItem = ({ item }: { item: TToken }) =>
-    (<Token
-      {...item}
-      balance={this.props.wallet.balance}
-      onSelectToken={this.props.onSelectToken(item)}
-    />)
+    (
+      <Token
+        blockchain={this.props.blockchain}
+        selectedCurrency={this.props.selectedCurrency}
+        token={item}
+      />
+    )
 
   render () {
     return (
-      <FlatList
-        data={this.props.wallet.tokens}
-        keyExtractor={this.keyExtractor}
-        renderItem={this.renderItem}
-        style={styles.list}
-      />
+      <View style={{marginTop: -8, paddingBottom: 10}}>
+        <FlatList
+          data={this.props.tokens}
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderItem}
+          style={styles.list}
+        />
+      </View>
     )
   }
 }
 
+const tokenImages = {
+  'Ethereum': require('../images/coin-ethereum-small.png'),
+  'NEM': require('../images/coin-nem-small.png'),
+}
+
 class Token extends PureComponent<TTokenProps, {}> {
   render () {
-    const {
-      amount,
-      balance,
-      id,
-      image,
-    } = this.props
-
-    const strings = {
-      amount: I18n.toNumber(amount, { precision: 2 }),
-      balanceAmount: I18n.toNumber(balance.amount, { precision: 2 }),
-    }
-
+    const symbol = Object.keys(this.props.token)[0]
+    const amount = Object.values(this.props.token)[0]
     return (
       <View style={styles.token}>
-        { image && (
+        <View style={{flex: 2, flexDirection: 'row', alignItems: 'center'}}>
           <Image
-            source={image}
+            source={tokenImages[this.props.blockchain]}
             style={styles.image}
           />
-        ) }
-        <Text style={styles.value}>
-          { id }
-          &nbsp;
-          { strings.amount }
-        </Text>
-        <Text style={styles.balance}>
-          { balance.currency }
-          &nbsp;
-          { strings.balanceAmount }
-        </Text>
+          <Text style={styles.value}>
+            { symbol }
+            &nbsp;
+            { amount.toFixed(2) }
+          </Text>
+        </View>
+        <View style={{flex: 1}}>
+          <Text style={styles.balance}>
+            { this.props.selectedCurrency }
+            &nbsp;
+            { '0.00' }
+          </Text>
+        </View>
       </View>
     )
   }

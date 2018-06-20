@@ -57,7 +57,7 @@ class TransactionIcon extends PureComponent<TTransactionIconProps> {
 
   static getTIcon = (type: TTransactionType, confirmations: number, mode?: TIconMode = 'small') => {
 
-    const iconsSet = mode && mode === 'big' ? transBigIcons : transIcons
+    const iconsSet = mode === 'big' ? transBigIcons : transIcons
 
     if (confirmations >= 4) {
       return iconsSet[type][4]
@@ -69,7 +69,7 @@ class TransactionIcon extends PureComponent<TTransactionIconProps> {
   render () {
     return (
       <Image
-        source={TransactionIcon.getTIcon(this.props.type, this.props.confirmations)}
+        source={TransactionIcon.getTIcon(this.props.type, this.props.confirmations, this.props.mode)}
       />
     )
   }
