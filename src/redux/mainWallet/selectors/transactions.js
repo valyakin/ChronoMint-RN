@@ -167,7 +167,7 @@ export const listTransactions = (blockchain: string, address: string) => {
         } else {
           return transactionDirection === 'receiving'
             ? fromAddr
-            : toAddr.split(',').filter((addr)  => addr !== myAddress)[0]
+            : toAddr.split(',').filter((addr)  => addr !== myAddress)[0] || myAddress // FIXME: logic of selection what to display must be verified
         }
       }
 
@@ -182,7 +182,6 @@ export const listTransactions = (blockchain: string, address: string) => {
           return isNeedIt
         })
         .map( (txModel: TxModel) => {
-          const js = txModel.toJS()
           const blockNumber = txModel.blockNumber()
           const recipient = txModel.to()
           const fee = txModel.fee()
@@ -198,11 +197,11 @@ export const listTransactions = (blockchain: string, address: string) => {
             amount: convertAmountToNumber(txSymbol, txModel.value()),
             symbol: txSymbol,
             confirmations: calculateConfirmations(latestBlockNumber, blockNumber),
-            txDate: parseInt(txModel.get('date'), 10) * 1000,
+            txDate: parseInt(txModel.get('time'), 10),
           }
         })
         .toArray()
-        .sort( ({ blockNumber: a }, { blockNumber: b }) =>
+        .sort( ({ txDate: a }, { txDate: b }) =>
           (a < b) - (a > b)
         )
       const latestTransactionDate = transactions && ( transactions[0] !== undefined ) && transactions[0].txDate || null
