@@ -119,12 +119,26 @@
     "react-native-version": "^2.6.0",
     "react-test-renderer": "16.2.0",
     "redux-devtools-extension": "^2.13.2",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "standard": "^11.0.1"
   },
   "lint-staged": {
     "./src/**/*.(js|jsx)": [
       "eslint --fix",
       "git add"
+    ]
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "plugins": [
+      "flowtype",
+      "react",
+      "react-native"
+    ],
+    "globals": [
+      "MouseEvent",
+      "$Keys",
+      "__DEV__"
     ]
   },
   "resolutions": {
