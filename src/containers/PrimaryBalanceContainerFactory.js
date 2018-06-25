@@ -8,7 +8,7 @@
 import { connect } from 'react-redux'
 
 import {
-  walletPrimaryBalanceSelector,
+  walletPrimaryBalanceSelector
 } from 'redux/mainWallet/selectors'
 
 // incoming props
@@ -28,7 +28,7 @@ const makeMapStateToProps = (origState, origProps) => {
   const mapStateToProps = (state) => {
     const balance = getPrimaryBalance(state)
     return {
-      balance,
+      balance
     }
   }
   return mapStateToProps

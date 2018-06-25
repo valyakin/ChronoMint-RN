@@ -24,15 +24,15 @@ class AddMultiSigWalletContainer extends PureComponent<TAddMultiSigWalletContain
     leftButtons: [
       {
         title: 'Cancel',
-        id: 'cancel',
-      },
+        id: 'cancel'
+      }
     ],
     rightButtons: [
       {
         title: 'Done',
-        id: 'done',
-      },
-    ],
+        id: 'done'
+      }
+    ]
   }
 
   constructor (props: TAddMultiSigWalletContainerProps) {
@@ -40,7 +40,7 @@ class AddMultiSigWalletContainer extends PureComponent<TAddMultiSigWalletContain
 
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)
   }
-  
+
   handleNavigatorEvent = ({ type, id }: { type: string, id: string }) => {
     if (type === 'NavBarButtonPress' && id === 'cancel') {
       this.props.navigator.pop()
@@ -61,6 +61,6 @@ const walletOwners: Array<TWalletOwner> = [
     id: 'you',
     name: 'You',
     address: '0x19e7e376e7c213b7e7e7e46cc70a5dd086daff2as',
-    image: require('../images/profile-circle-small.png'),
-  },
+    image: require('../images/profile-circle-small.png')
+  }
 ]

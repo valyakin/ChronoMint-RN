@@ -5,9 +5,9 @@
  * @flow
  */
 /**
- * 
+ *
  * This file contains global area polyfills
- * 
+ *
  */
 /* eslint-disable */
 import 'core-js/es6/symbol'

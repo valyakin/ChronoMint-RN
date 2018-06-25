@@ -14,7 +14,7 @@ type FetchingStatus = 'FETCHING' | 'SYNCING' | 'SYNCED'
 export const STATUS = {
   'FETCHING': 'FETCHING',
   'SYNCING': 'SYNCING',
-  'SYNCED': 'SYNCED',
+  'SYNCED': 'SYNCED'
 }
 
 type FetchingIndicatorProps = {
@@ -28,9 +28,9 @@ const FetchingIndicator = (props: FetchingIndicatorProps) => {
   const bulletStyle = {
     [STATUS.FETCHING]: styles.bulletFetching,
     [STATUS.SYNCING]: styles.bulletSyncing,
-    [STATUS.SYNCED]: styles.bulletSynced,
+    [STATUS.SYNCED]: styles.bulletSynced
   }[status]
-  
+
   return (
     <View style={[styles.container, style]} >
       <View style={[styles.bullet, bulletStyle]} />
@@ -40,35 +40,35 @@ const FetchingIndicator = (props: FetchingIndicatorProps) => {
 }
 
 FetchingIndicator.defaultProps = {
-  status: STATUS.FETCHING,
+  status: STATUS.FETCHING
 }
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 4,
+    padding: 4
   },
   bullet: {
     width: 8,
     height: 8,
     borderRadius: 4,
     backgroundColor: colors.red,
-    margin: 4,
+    margin: 4
   },
   bulletFetching: {
-    backgroundColor: colors.grayDark,
+    backgroundColor: colors.grayDark
   },
   bulletSyncing: {
-    backgroundColor: colors.orange,
+    backgroundColor: colors.orange
   },
   bulletSynced: {
-    backgroundColor: colors.green,
+    backgroundColor: colors.green
   },
   label: {
     fontSize: 12,
-    color: colors.background,
-  },
+    color: colors.background
+  }
 })
 
 export default FetchingIndicator

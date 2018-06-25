@@ -20,6 +20,6 @@ const styles = StyleSheet.create({
     minWidth: StyleSheet.hairlineWidth,
     flexGrow: 0,
     flexShrink: 0,
-    alignSelf: 'stretch',
-  },
+    alignSelf: 'stretch'
+  }
 })

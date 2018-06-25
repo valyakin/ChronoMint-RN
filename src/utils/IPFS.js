@@ -37,7 +37,7 @@ class IPFS {
     return new Promise((resolve, reject) => {
       const putValue = value ? {
         Data: Buffer.from(JSON.stringify(value)),
-        Links: [],
+        Links: []
       } : ''
       this.getAPI().object.put(putValue, (err, response) => {
         if (err) {
@@ -90,13 +90,13 @@ class IPFS {
       img.onload = () => {
         resolve({
           width: img.width,
-          height: img.height,
+          height: img.height
         })
       }
       img.onerror = () => {
         resolve({
           width: 0,
-          height: 0,
+          height: 0
         })
       }
       img.src = URL.createObjectURL(file.file())
@@ -118,7 +118,7 @@ class IPFS {
           value: 'Wrong image aspect ratio (Limit from 1:2 to 2:1)',
           // TODO @dkchv: !!!
           min: '1:2',
-          max: '2:1',
+          max: '2:1'
         })
       }
     }
@@ -140,7 +140,7 @@ class IPFS {
     if (file.size() > config.maxFileSize) {
       errors.push({
         value: 'max file size',
-        limit: config.maxFileSize,
+        limit: config.maxFileSize
       })
     }
 
@@ -176,7 +176,7 @@ class IPFS {
     const content: Buffer = await this.getRawData(file)
     const putValue = Buffer.from(JSON.stringify({
       path: file.path(),
-      content,
+      content
     }))
 
     try {

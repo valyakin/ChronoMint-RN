@@ -9,7 +9,7 @@ import FileModel, { fileConfig } from 'models/FileSelect/FileModel'
 const noopURL = {
   createObjectURL () {
     return ''
-  },
+  }
 }
 
 class NoopFileReader {
@@ -33,13 +33,13 @@ function getImageDimensions (file) {
     img.onload = () => {
       resolve({
         width: img.width,
-        height: img.height,
+        height: img.height
       })
     }
     img.onerror = () => {
       resolve({
         width: 0,
-        height: 0,
+        height: 0
       })
     }
     img.src = url.createObjectURL(file.file())
@@ -61,7 +61,7 @@ const checkImageFile = async (file: FileModel, config: fileConfig) => {
         value: 'Wrong image aspect ratio (Limit from 1:2 to 2:1)',
         // TODO @dkchv: !!!
         min: '1:2',
-        max: '2:1',
+        max: '2:1'
       })
     }
   }

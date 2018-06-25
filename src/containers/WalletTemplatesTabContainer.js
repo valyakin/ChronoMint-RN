@@ -13,7 +13,7 @@ class WalletTemplatesContainer extends PureComponent<{}, {}> {
   handleSelectTemplate = (template: TTemplate) => () => {
     throw 'Not implemented yet'
   }
-  
+
   render () {
     return (
       <WalletTemplatesTab
@@ -33,6 +33,6 @@ const templates = [
     value: 0.1,
     title: 'Subscription payment',
     address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
-    image: require('../images/coin-ethereum-small.png'),
-  },
+    image: require('../images/coin-ethereum-small.png')
+  }
 ]

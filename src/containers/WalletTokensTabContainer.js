@@ -5,35 +5,35 @@
  * @flow
  */
 
-//#region imports
+// #region imports
 
 import { connect } from 'react-redux'
 import WalletTokensTab from 'screens/WalletTokensTab'
 import {
   getSelectedWalletStore,
-  getMarketPricesSelectedCurrencyStore,
+  getMarketPricesSelectedCurrencyStore
 } from 'redux/wallet/selectors'
 import {
-  tokensAndAmountsSelector,
+  tokensAndAmountsSelector
 } from 'redux/mainWallet/selectors'
 
-//#endregion
+// #endregion
 
-//#region maps
+// #region maps
 
-const makeMapStateToProps =(origState) => {
+const makeMapStateToProps = (origState) => {
   const { blockchain } = getSelectedWalletStore(origState)
   const getTokens = tokensAndAmountsSelector(blockchain)
   const mapStateToProps = (state) => {
     return {
       blockchain,
       selectedCurrency: getMarketPricesSelectedCurrencyStore(state),
-      tokens: getTokens(state),
+      tokens: getTokens(state)
     }
   }
   return mapStateToProps
 }
 
-//#endregions
+// #endregions
 
 export default connect(makeMapStateToProps, null)(WalletTokensTab)

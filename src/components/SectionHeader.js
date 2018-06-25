@@ -18,7 +18,7 @@ type SectionHeaderProps = {
 export default class SectionHeader extends React.Component<SectionHeaderProps, void> {
   render () {
     const { title, isDark = false, style } = this.props
-    
+
     if (isDark) {
       return (
         <Text style={[ styles.titleDark, style ]}>
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     color: colors.background,
-    fontWeight: '900',
+    fontWeight: '900'
   },
   container: {
     backgroundColor: '#EFEFF3',
@@ -52,6 +52,6 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderTopColor: '#C7C7CC',
-    borderBottomColor: '#C7C7CC',
-  },
+    borderBottomColor: '#C7C7CC'
+  }
 })

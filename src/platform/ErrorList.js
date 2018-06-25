@@ -42,7 +42,7 @@ class ErrorList {
     if (typeof error === 'string') {
       // token only
       this.errors.push({
-        value: error,
+        value: error
       })
     } else {
       // object with params

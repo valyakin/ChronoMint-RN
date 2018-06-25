@@ -23,23 +23,23 @@ export default {
   grayLight: '#f7f9ff',
   gray: '#e9efff',
   grayDark: '#ccccdf',
-  
+
   primary: '#614DBA',
   primaryLight: '#786AB7',
   primaryDarkest: '#05326A',
-  
+
   green: '#68CC8E',
   red: '#C25451',
   orange: '#FFAB00',
   blue: '#2962FF',
   blueDark: '#6A75BC',
-  
+
   shadowDark: 'rgba(0, 0, 0, 0.24)',
   shadowLight: 'rgba(0, 0, 0, 0.12)',
-  
+
   lht: '#17579c',
   ethColor: '#161240',
   time: '#4a8fb9',
-  
-  transparent: 'transparent',
+
+  transparent: 'transparent'
 }

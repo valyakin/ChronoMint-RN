@@ -16,7 +16,7 @@ export default class TextButton extends React.Component<TextButtonProps, {}> {
       <TouchableOpacity
         style={[
           styles.container,
-          style,
+          style
         ]}
         onPress={onPress}
         {...restProps}
@@ -32,13 +32,13 @@ export default class TextButton extends React.Component<TextButtonProps, {}> {
 const styles: StyleSheet = StyleSheet.create({
   container: {
     padding: 20,
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
   label: {
     color: '#ffffff',
     fontWeight: '900',
-    fontSize: 16,
-  },
+    fontSize: 16
+  }
 })
 
 type TextButtonProps = {

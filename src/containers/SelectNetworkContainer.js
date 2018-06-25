@@ -22,7 +22,7 @@ class SelectNetworkContainer extends PureComponent<TSelectNetworkContainerProps,
 
     this.props.navigator.toggleDrawer({
       side: 'left',
-      to: 'closed',
+      to: 'closed'
     })
   }
 
@@ -38,7 +38,7 @@ const mapStateToProps = (state) => {
   const network = state.get(DUCK_NETWORK) || {}
 
   return {
-    networks: network.networks,
+    networks: network.networks
   }
 }
 

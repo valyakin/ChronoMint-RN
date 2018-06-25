@@ -20,7 +20,7 @@ export const indicators = {
   sending75: require('../images/indicator-sending-75.png'),
   sending100: require('../images/indicator-sending-100.png'),
   shared: require('../images/indicator-shared-wallet.png'),
-  timeLocked: require('../images/indicator-time-locked.png'),
+  timeLocked: require('../images/indicator-time-locked.png')
 }
 
 export const PIN_LENGTH = 4

@@ -16,9 +16,9 @@ type Props = {
 }
 
 const checkboxIcon = (isChecked) => {
-  return isChecked ?
-    require('../images/checkbox-checked.png') :
-    require('../images/checkbox.png')
+  return isChecked
+    ? require('../images/checkbox-checked.png')
+    : require('../images/checkbox.png')
 }
 
 const Checkbox = ({ label, isDark, isChecked, onPress }: Props) => (
@@ -43,17 +43,17 @@ const styles = StyleSheet.create({
   container: {
     padding: 8,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   label: {
-    color: colors.foreground,
+    color: colors.foreground
   },
   labelDark: {
-    color: colors.backgroundLight,
+    color: colors.backgroundLight
   },
   checkboxContainer: {
-    marginRight: 8,
-  },
+    marginRight: 8
+  }
 })
 
 export default Checkbox

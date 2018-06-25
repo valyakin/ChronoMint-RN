@@ -30,7 +30,7 @@ type TEnterPinContainerState = {
 
 class EnterPinContainer extends PureComponent<TEnterPinContainerProps, TEnterPinContainerState> {
   state = {
-    pin: '',
+    pin: ''
   }
 
   handleChangePin = (pin: string) => {
@@ -56,7 +56,7 @@ class EnterPinContainer extends PureComponent<TEnterPinContainerProps, TEnterPin
       password,
       privateKey,
       pin,
-      account,
+      account
     } = this.props
 
     if (account) {
@@ -78,8 +78,8 @@ class EnterPinContainer extends PureComponent<TEnterPinContainerProps, TEnterPin
         pin,
         privateKey: this.props.privateKey,
         password: this.props.password,
-        account: this.props.account,
-      },
+        account: this.props.account
+      }
     })
   }
 

@@ -23,7 +23,7 @@ export type TAddEthereumWalletContainerProps = {
 class AddEthereumWalletContainer extends PureComponent<TAddEthereumWalletContainerProps, {}> {
   handlePress = ({ screen }: { screen: string }) => () => {
     this.props.navigator.push({
-      screen: screen,
+      screen: screen
     })
   }
 
@@ -42,34 +42,34 @@ const walletTypes: Array<TWalletType> = [
     id: 'standard',
     image: require('../images/wallet-circle.png'),
     title: 'Standard wallet',
-    screen: 'AddStandardWallet',
+    screen: 'AddStandardWallet'
   },
   {
     id: 'timeLocked',
     image: require('../images/type-time-locked-circle-small.png'),
     title: 'Time Locked',
     description: 'Make this wallet active for transactions on specific date and time.',
-    screen: 'AddTimeLockedWallet',
+    screen: 'AddTimeLockedWallet'
   },
   {
     id: 'twoFA',
     image: require('../images/type-2fa-circle-small.png'),
     title: '2 Factor Authentucation',
     description: 'Protect your Wallet from unauthorized access by enabling two-factor authentication.',
-    screen: 'Add2FAWallet',
+    screen: 'Add2FAWallet'
   },
   {
     id: 'multisignature',
     title: 'Multi-Signature',
     image: require('../images/type-shared-circle-small.png'),
     description: 'Make the wallet controlled by multiple owners.',
-    screen: 'AddMultiSignatureWallet',
+    screen: 'AddMultiSignatureWallet'
   },
   {
     id: 'advanced',
     title: 'Advanced',
     image: require('../images/type-advanced-circle-small.png'),
     description: 'Make the wallet with custom tokens.',
-    screen: 'AddAdvancedWallet',
-  },
+    screen: 'AddAdvancedWallet'
+  }
 ]

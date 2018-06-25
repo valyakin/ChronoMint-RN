@@ -19,7 +19,7 @@ type TEnterPrivateKeyContainerState = {
 
 class EnterPrivateKeyContainer extends PureComponent<TEnterPrivateKeyContainerProps, TEnterPrivateKeyContainerState> {
   state = {
-    privateKey: '',
+    privateKey: ''
   }
 
   handleChangePrivateKey = (privateKey: string): void => {
@@ -29,10 +29,10 @@ class EnterPrivateKeyContainer extends PureComponent<TEnterPrivateKeyContainerPr
   handleDone = (): void => {
     const {
       navigator,
-      onPrivateKeyLogin,
+      onPrivateKeyLogin
     } = this.props
     const {
-      privateKey,
+      privateKey
     } = this.state
 
     onPrivateKeyLogin(privateKey)
@@ -41,8 +41,8 @@ class EnterPrivateKeyContainer extends PureComponent<TEnterPrivateKeyContainerPr
       screen: 'SetAccountPassword',
       title: 'Set Account Password',
       passProps: {
-        privateKey: privateKey,
-      },
+        privateKey: privateKey
+      }
     })
   }
 

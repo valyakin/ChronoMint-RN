@@ -16,14 +16,14 @@ type TAccountImportMethodContainerProps = {
 class AccountImportMethodContainer extends PureComponent<TAccountImportMethodContainerProps, {}> {
   handleCreateWallet = () => {
     this.props.navigator.push({
-      screen: 'SetAccountPassword',
+      screen: 'SetAccountPassword'
     })
   }
 
   handleSelectAccountImportMethod = ({ screen, title }: TAccountImportMethod) => () => {
     this.props.navigator.push({
       screen,
-      title,
+      title
     })
   }
 
@@ -44,13 +44,13 @@ const accountImportMethods: Array<TAccountImportMethod> = [
     screen: 'EnterMnemonic',
     title: 'Enter mnemonic',
     label: I18n.t('ImportAccount.mnemonic'),
-    image: require('../images/mnemonic.png'),
+    image: require('../images/mnemonic.png')
   },
   {
     id: 'privateKey',
     screen: 'EnterPrivateKey',
     title: 'Enter private key',
     label: I18n.t('ImportAccount.privateKey'),
-    image: require('../images/private-key.png'),
-  },
+    image: require('../images/private-key.png')
+  }
 ]

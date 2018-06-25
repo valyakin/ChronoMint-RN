@@ -5,13 +5,13 @@
  * @flow
  */
 
-import React, { PureComponent }  from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { type Dispatch } from 'redux'
 import { DUCK_MARKET } from 'redux/market/action'
 import { selectWallet } from 'redux/wallet/actions'
 import WalletsListItem, {
-  type TWalletsListItemProps,
+  type TWalletsListItemProps
 } from 'components/WalletsListItem'
 
 type TWalletsListItemContainerProps = TWalletsListItemProps & {
@@ -28,7 +28,7 @@ const makeMapStateToProps = (origState, origProps) => {
     return {
       address,
       blockchain,
-      selectedCurrency,
+      selectedCurrency
     }
   }
   return mapStateToProps
@@ -36,22 +36,20 @@ const makeMapStateToProps = (origState, origProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   selectWallet: (blockchain: string, address: string) =>
-    dispatch(selectWallet(blockchain, address)),
+    dispatch(selectWallet(blockchain, address))
 })
 
 class WalletsListItemContainer extends PureComponent<TWalletsListItemContainerProps> {
-
   handleItemPress = (): void => {
     this.props.selectWallet(this.props.blockchain, this.props.address)
     this.props.navigator.push({ screen: 'Wallet' })
   }
 
   render () {
-
     const {
       address,
       blockchain,
-      selectedCurrency,
+      selectedCurrency
     } = this.props
 
     return (

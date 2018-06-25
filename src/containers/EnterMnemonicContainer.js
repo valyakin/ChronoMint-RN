@@ -23,23 +23,23 @@ const inputsList = Array(MNEMONIC_LENGTH).fill(1)
 
 class EnterMnemonicContainer extends PureComponent<TEnterMnemonicContainerProps, TEnterMnemonicContainerState> {
   state = {
-    mnemonicWords: [],
+    mnemonicWords: []
   }
 
   handleEnterWord = (index: number) => (word: string): void => {
     const { mnemonicWords } = this.state
-    
+
     mnemonicWords[index] = word.trim()
 
     if (/\s+$/.test(word)) {
-      (index + 1 === MNEMONIC_LENGTH) ?
-        this.handleLogin() :
-        this.inputs[index + 1].focus()
+      (index + 1 === MNEMONIC_LENGTH)
+        ? this.handleLogin()
+        : this.inputs[index + 1].focus()
     }
-    
+
     this.setState({ mnemonicWords })
   }
-  
+
   handleLogin = async (): Promise<void> => {
     const mnemonic = this.state.mnemonicWords.join(' ')
 
@@ -55,8 +55,8 @@ class EnterMnemonicContainer extends PureComponent<TEnterMnemonicContainerProps,
       screen: 'SetAccountPassword',
       title: 'Set Account Password',
       passProps: {
-        privateKey,
-      },
+        privateKey
+      }
     })
   }
 

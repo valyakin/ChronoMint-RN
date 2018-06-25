@@ -27,7 +27,7 @@ const getNestedReducers = (ducks) => {
 }
 
 const appReducer = (reducers) => combineReducers({
-  ...getNestedReducers(reducers),
+  ...getNestedReducers(reducers)
 })
 
 const configureStore = (): Store<TState, { type: string }> => {
@@ -47,9 +47,9 @@ const configureStore = (): Store<TState, { type: string }> => {
 
   const middleware = [thunk]
 
-  //#region Logger
+  // #region Logger
   // Two lines below to avoid strange behaviour, when process.env.NODE_ENV is undefined,
-  // but console.log(process.env) displays Object {NODE_ENV: 'development} 
+  // but console.log(process.env) displays Object {NODE_ENV: 'development}
   const processEnv = process.env
   const isDevelopmentEnv = processEnv.NODE_ENV
 
@@ -59,24 +59,24 @@ const configureStore = (): Store<TState, { type: string }> => {
       'market/UPDATE_LAST_MARKET',
       'market/UPDATE_PRICES',
       'market/UPDATE_RATES',
-      'tokens/fetched',
+      'tokens/fetched'
     ]
     const rLogger = rCreateLogger({
       collapsed: true,
-      predicate: (getState, action) => !IGNORED_ACTIONS.includes(action.type),
+      predicate: (getState, action) => !IGNORED_ACTIONS.includes(action.type)
     })
     middleware.push(rLogger)
   }
-  //#endregion
+  // #endregion
 
   const createStoreWithMiddleware = composeEnhancers(
-    applyMiddleware(...middleware), 
-    autoRehydrate(),
+    applyMiddleware(...middleware),
+    autoRehydrate()
   )(createStore)
-  
+
   return createStoreWithMiddleware(
     rootReducer,
-    initialState,
+    initialState
   )
 }
 
@@ -90,9 +90,9 @@ export const injectReducer = (ducks: {}) => {
 persistStore(store,
   {
     storage: createSensitiveStorage({
-      keychainService: "ChronoMint",
-      sharedPreferencesName: "ChronoMint",
+      keychainService: 'ChronoMint',
+      sharedPreferencesName: 'ChronoMint'
     }),
-    whitelist: ['sensitive'],
+    whitelist: ['sensitive']
   }
 )

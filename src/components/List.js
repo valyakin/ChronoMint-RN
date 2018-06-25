@@ -22,7 +22,6 @@ const SectionHeader = ({ title }) => (
 )
 
 export default class List extends React.Component<Props, {}> {
-
   renderItem = ({ item }) => (
     <ListItem
       {...item}
@@ -67,12 +66,12 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.backgroundDark,
     borderBottomWidth: 1,
-    borderBottomColor: colors.backgroundDark,
+    borderBottomColor: colors.backgroundDark
   },
   list: {
     backgroundColor: colors.backgroundLight,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: colors.backgroundDark,
-  },
+    borderColor: colors.backgroundDark
+  }
 })

@@ -55,7 +55,6 @@ class SessionStorage {
   static clearAccount () {
     return SessionStorage._removeFromSS('account')
   }
-
 }
 
 export default SessionStorage

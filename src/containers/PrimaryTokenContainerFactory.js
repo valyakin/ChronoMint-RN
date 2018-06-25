@@ -7,7 +7,7 @@
 
 import { connect } from 'react-redux'
 import {
-  primaryTokenAmount,
+  primaryTokenAmount
 } from 'redux/mainWallet/selectors'
 
 // incoming props
@@ -26,7 +26,7 @@ const makeMapStateToProps = (origState, origProps) => {
   const mapStateToProps = (state) => {
     const primaryToken = getPrimaryTokenAmount(state)
     return {
-      ...primaryToken,
+      ...primaryToken
     }
   }
   return mapStateToProps

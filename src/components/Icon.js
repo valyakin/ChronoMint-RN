@@ -11,7 +11,7 @@ const Icon = ({ source, style }: any) => (
   <View
     style={[
       styles.container,
-      style,
+      style
     ]}
   >
     <Image
@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     justifyContent: 'center',
-    alignItems: 'center',
-  },
+    alignItems: 'center'
+  }
 })
 
 export default Icon

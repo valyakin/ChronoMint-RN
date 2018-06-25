@@ -24,7 +24,7 @@ class SelectLanguageContainer extends PureComponent<TSelectLanguageContainerProp
 
     this.props.navigator.toggleDrawer({
       side: 'right',
-      to: 'closed',
+      to: 'closed'
     })
   }
 
@@ -40,5 +40,5 @@ export default SelectLanguageContainer
 
 const languages = [
   { locale: 'en', name: 'English (USA)' },
-  { locale: 'ru', name: 'Русский' },
+  { locale: 'ru', name: 'Русский' }
 ]

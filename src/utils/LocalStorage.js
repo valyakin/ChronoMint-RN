@@ -8,14 +8,14 @@
 import { AsyncStorage } from 'react-native'
 import {
   LOCAL_ID,
-  LOCAL_PROVIDER_ID,
+  LOCAL_PROVIDER_ID
 } from 'login/network/settings'
 import logger from '../utils/logger'
 
 class Storage {
   /**
    * Fetches key and passes the result to callback, along with an Error if there is any.
-   * @param {string} key 
+   * @param {string} key
    * @param {callback} callback
    */
   getItem = (key, callback) => {
@@ -39,10 +39,9 @@ class Storage {
   removeItem = (key, callback) => {
     return AsyncStorage.removeItem(key, callback)
   }
-
 }
 
-const storage = new Storage ()
+const storage = new Storage()
 
 const hasLocalStorage = typeof AsyncStorage !== 'undefined'
 
@@ -83,8 +82,8 @@ const _setToLS = (key, data) => {
 }
 
 /**
- * 
- * @param {string} key 
+ *
+ * @param {string} key
  */
 const _removeFromLS = (key) => {
   if (hasLocalStorage) {
@@ -191,7 +190,7 @@ class LocalStorage {
 
   /**
    * Set locale directly
-   * @param {string} locale 
+   * @param {string} locale
    */
   static setLocale (locale) {
     _locale = locale
@@ -203,7 +202,7 @@ class LocalStorage {
   }
 
   /**
-   * @param {string} url 
+   * @param {string} url
    */
   static setLastURL (url) {
     return _set(LAST_URL, url)

@@ -10,7 +10,6 @@ import { type TWalletOwner } from 'components/WalletOwner'
 import WalletOwnersTab from 'screens/WalletOwnersTab'
 
 class WalletOwnersTabContainer extends PureComponent<{}, {}> {
-
   /* eslint-disable-next-line no-unused-vars */
   handleSelectOwner = (owner: TWalletOwner) => () => {
     throw 'Not implemented yet'
@@ -33,12 +32,12 @@ const owners = [
     address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
     id: '0',
     image: require('../images/profile-circle-small.png'),
-    name: 'You',
+    name: 'You'
   },
   {
     address: '1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9',
     id: '1',
     image: require('../images/profile-circle-small.png'),
-    name: 'Owner name',
-  },
+    name: 'Owner name'
+  }
 ]

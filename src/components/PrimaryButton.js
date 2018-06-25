@@ -15,7 +15,7 @@ export default class PrimaryButton extends React.Component {
       <TouchableOpacity
         style={[
           styles.container,
-          style,
+          style
         ]}
         {...restProps}
       >
@@ -36,12 +36,12 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     borderRadius: 30,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   label: {
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '900',
-    lineHeight: 20,
-  },
+    lineHeight: 20
+  }
 })

@@ -25,12 +25,11 @@ type WalletAlertActionProps = {
 }
 
 export default class WalletAlert extends PureComponent<WalletAlertProps> {
-
   renderActionButton = (item, index, actions) => ([
     <WalletAlertAction {...item} key={item.id} />,
-    (index < actions.length - 1) && <Separator key={index} />,
+    (index < actions.length - 1) && <Separator key={index} />
   ])
-  
+
   render () {
     const { actions, title, children, style, contentContainerStyle } = this.props
 
@@ -57,7 +56,7 @@ class WalletAlertAction extends PureComponent<WalletAlertActionProps> {
     const {
       title,
       onPress,
-      isMain,
+      isMain
     } = this.props
 
     return (
@@ -77,30 +76,30 @@ const styles = StyleSheet.create({
   action: {
     flex: 1,
     justifyContent: 'center',
-    padding: 16,
+    padding: 16
   },
   actions: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   actionTitle: {
     color: colors.primaryLight,
     fontSize: 16,
     fontWeight: '200',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   actionTitleMain: {
-    fontWeight: '700',
+    fontWeight: '700'
   },
   container: {
     backgroundColor: colors.background,
-    borderRadius: 3,
+    borderRadius: 3
   },
   content: {
     padding: 24,
-    paddingBottom: 16,
+    paddingBottom: 16
   },
   title: {
     paddingHorizontal: 24,
-    paddingVertical: 8,
-  },
+    paddingVertical: 8
+  }
 })

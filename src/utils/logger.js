@@ -9,7 +9,7 @@ class Logger {
     if (!__DEV__) return
     console.log(arguments) // eslint-disable-line
   }
-  
+
   static warn () {
     if (!__DEV__) return
     console.warn(arguments) // eslint-disable-line
@@ -26,4 +26,4 @@ class Logger {
   }
 }
 
-export default new Logger ()
+export default new Logger()

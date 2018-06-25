@@ -17,15 +17,15 @@ class AddStandardWalletContainer extends PureComponent<TAddStandardWalletContain
     leftButtons: [
       {
         title: 'Cancel',
-        id: 'cancel',
-      },
+        id: 'cancel'
+      }
     ],
     rightButtons: [
       {
         title: 'Done',
-        id: 'done',
-      },
-    ],
+        id: 'done'
+      }
+    ]
   }
 
   constructor (props: TAddStandardWalletContainerProps) {
@@ -33,7 +33,7 @@ class AddStandardWalletContainer extends PureComponent<TAddStandardWalletContain
 
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)
   }
-  
+
   handleNavigatorEvent = ({ type, id }: { type: string, id: string }) => {
     if (type === 'NavBarButtonPress' && id === 'cancel') {
       this.props.navigator.pop()

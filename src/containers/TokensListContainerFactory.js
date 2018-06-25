@@ -7,7 +7,7 @@
 
 import { connect } from 'react-redux'
 import {
-  tokensAndAmountsSelector,
+  tokensAndAmountsSelector
 } from 'redux/mainWallet/selectors'
 
 export type TTokenInfo = {
@@ -34,7 +34,7 @@ const makeMapStateToProps = (origState, origProps) => {
   const mapStateToProps = (state) => {
     const list = getTokensAmountList(state)
     return {
-      list,
+      list
     }
   }
   return mapStateToProps

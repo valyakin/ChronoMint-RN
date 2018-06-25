@@ -16,7 +16,7 @@ const pin = (pin: string) => (
 
 const isValid = {
   password,
-  pin,
+  pin
 }
 
 export default isValid

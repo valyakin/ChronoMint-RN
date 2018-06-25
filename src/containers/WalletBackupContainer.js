@@ -27,7 +27,7 @@ class WalletBackupContainer extends PureComponent<TWalletBackupContainerProps, {
       usePinProtection,
       privateKey,
       password,
-      navigator,
+      navigator
     } = this.props
 
     let mnemonic = this.props.mnemonic || generateMnemonic()
@@ -39,8 +39,8 @@ class WalletBackupContainer extends PureComponent<TWalletBackupContainerProps, {
         passProps: {
           mnemonic,
           privateKey,
-          password,
-        },
+          password
+        }
       })
     }
 
@@ -51,8 +51,8 @@ class WalletBackupContainer extends PureComponent<TWalletBackupContainerProps, {
         passProps: {
           mnemonic,
           privateKey,
-          password,
-        },
+          password
+        }
       })
     }
 

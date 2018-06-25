@@ -32,17 +32,17 @@ type TAccountPasswordContainerState = {
 
 class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerProps, TAccountPasswordContainerState> {
   static navigatorStyle = {
-    navBarHidden: true,
+    navBarHidden: true
   }
 
   state = {
-    password: '',
+    password: ''
   }
 
   handleChangePassword = (password: string) => {
     this.setState({ password })
   }
-  
+
   handleLogin = async () => {
     const { password } = this.state
 
@@ -56,7 +56,7 @@ class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerPr
   handleUseWallet = () => {
     this.props.navigator.push({
       screen: 'SelectAccount',
-      title: 'Select account',
+      title: 'Select account'
     })
   }
 
@@ -68,7 +68,7 @@ class AccountPasswordContainer extends PureComponent<TAccountPasswordContainerPr
     return (<AccountPassword
       account={{
         ...this.props.account,
-        image: require('../images/profile-circle-small.png'),
+        image: require('../images/profile-circle-small.png')
       }}
       onChangePassword={this.handleChangePassword}
       onLogin={this.handleLogin}

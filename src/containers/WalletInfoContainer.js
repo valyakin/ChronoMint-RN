@@ -9,7 +9,7 @@ import WalletInfo from 'components/WalletInfo'
 import {
   getSelectedWalletStore,
   getMarketPricesSelectedCurrencyStore,
-  type TSelectedWallet,
+  type TSelectedWallet
 } from 'redux/wallet/selectors'
 
 const mapStateToProps = (state) => {
@@ -17,7 +17,7 @@ const mapStateToProps = (state) => {
   return {
     address: selectedWallet.address,
     blockchain: selectedWallet.blockchain,
-    selectedCurrency: getMarketPricesSelectedCurrencyStore(state),
+    selectedCurrency: getMarketPricesSelectedCurrencyStore(state)
   }
 }
 

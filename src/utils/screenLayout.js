@@ -7,10 +7,10 @@
 import * as React from 'react'
 
 const screenLayout = (Layout) => (ScreenContent) => {
-  if (!Layout) { 
-    throw new Error ('No wrapper set for scene')
+  if (!Layout) {
+    throw new Error('No wrapper set for scene')
   }
-  
+
   const ScreenWrapper = (props) => (
     <Layout screenOptions={ScreenContent.screenOptions || {}} navigator={props.navigator} >
       <ScreenContent {...props} />
@@ -19,7 +19,7 @@ const screenLayout = (Layout) => (ScreenContent) => {
 
   ScreenWrapper.navigatorStyle = {
     ...(Layout.navigatorStyle || {}),
-    ...(ScreenContent.navigatorStyle || {}),
+    ...(ScreenContent.navigatorStyle || {})
   }
 
   ScreenWrapper.navigatorButtons = ScreenContent.navigatorButtons || Layout.navigatorButtons

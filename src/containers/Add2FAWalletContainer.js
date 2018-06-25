@@ -17,15 +17,15 @@ class Add2FAWalletContainer extends PureComponent<TAdd2FAWalletContainerProps, {
     leftButtons: [
       {
         title: 'Cancel',
-        id: 'cancel',
-      },
+        id: 'cancel'
+      }
     ],
     rightButtons: [
       {
         title: 'Done',
-        id: 'done',
-      },
-    ],
+        id: 'done'
+      }
+    ]
   }
 
   constructor (props: TAdd2FAWalletContainerProps) {
@@ -33,7 +33,7 @@ class Add2FAWalletContainer extends PureComponent<TAdd2FAWalletContainerProps, {
 
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)
   }
-  
+
   handleNavigatorEvent = ({ type, id }: { type: string, id: string }) => {
     if (type === 'NavBarButtonPress' && id === 'cancel') {
       this.props.navigator.pop()

@@ -5,33 +5,33 @@
  * @flow
  */
 
-//#region imports
+// #region imports
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  Alert,
+  Alert
 } from 'react-native'
 import { BLOCKCHAIN_ETHEREUM } from 'dao/EthereumDAO'
 import { BLOCKCHAIN_NEM } from 'dao/NemDAO'
 import {
   getSelectedWalletStore,
-  type TSelectedWallet,
+  type TSelectedWallet
 } from 'redux/wallet/selectors'
 import Wallet, {
-  type TWalletProps,
+  type TWalletProps
 } from 'screens/Wallet'
 import WalletTokensTab from 'containers/WalletTokensTabContainer'
 import WalletTransactionsTab from 'screens/WalletTransactionsTab'
 import {
   SceneMap,
   type Route,
-  type NavigationState,
+  type NavigationState
 } from 'react-native-tab-view'
 
-//#endregion
+// #endregion
 
-//#region types
+// #region types
 type TTabRoute = {
   key: string,
   title: string,
@@ -44,9 +44,9 @@ type TWalletContainerProps = TWalletProps & {
   address: string,
 }
 
-//#endregion
+// #endregion
 
-//#region maps
+// #region maps
 
 const makeMapStateToProps = (origState) => {
   const selectedWallet: TSelectedWallet = getSelectedWalletStore(origState)
@@ -54,24 +54,23 @@ const makeMapStateToProps = (origState) => {
   const mapStateToProps = () => {
     return {
       address: selectedWallet.address,
-      blockchain: selectedWallet.blockchain,
+      blockchain: selectedWallet.blockchain
     }
   }
   return mapStateToProps
 }
 
-//#endregion
+// #endregion
 
 class WalletContainer extends Component<TWalletContainerProps, TWalletContainerState> {
-
   constructor (props) {
     super(props)
     this.props.navigator.setTitle({ title: `My ${props.blockchain} Wallet` }) // TODO: to fix bug with blinking header
     const defaultState = {
       index: 0,
       routes: [
-        { key: 'transactions', title: 'Transactions' },
-      ],
+        { key: 'transactions', title: 'Transactions' }
+      ]
     }
     if (this.props.blockchain === BLOCKCHAIN_ETHEREUM || this.props.blockchain === BLOCKCHAIN_NEM) {
       defaultState.routes.push({ key: 'tokens', title: 'Tokens' })
@@ -89,7 +88,7 @@ class WalletContainer extends Component<TWalletContainerProps, TWalletContainerS
     } else {
       const {
         address,
-        blockchain,
+        blockchain
       } = this.props
 
       this.props.navigator.push({
@@ -97,8 +96,8 @@ class WalletContainer extends Component<TWalletContainerProps, TWalletContainerS
         title: 'Send Funds',
         passProps: {
           address: address,
-          blockchain: blockchain,
-        },
+          blockchain: blockchain
+        }
       })
     }
   }
@@ -115,13 +114,13 @@ class WalletContainer extends Component<TWalletContainerProps, TWalletContainerS
     this.setState({
       // [AO] This state is using via onIndexChange below
       // eslint-disable-next-line react/no-unused-state
-      index,
+      index
     })
 
   render () {
     const {
       blockchain,
-      navigator,
+      navigator
     } = this.props
     return (
       <Wallet
@@ -131,14 +130,13 @@ class WalletContainer extends Component<TWalletContainerProps, TWalletContainerS
         navigator={navigator}
         renderScene={SceneMap({
           transactions: () => <WalletTransactionsTab navigator={this.props.navigator} />,
-          tokens: WalletTokensTab,
+          tokens: WalletTokensTab
         })}
         onSend={this.handleSend}
         onReceive={this.handleReceive}
       />
     )
   }
-
 }
 
 export default connect(makeMapStateToProps, null)(WalletContainer)

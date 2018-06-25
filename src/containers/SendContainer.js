@@ -5,7 +5,7 @@
  * @flow
  */
 
-//#region imports
+// #region imports
 
 import React from 'react'
 import type { Dispatch } from 'redux'
@@ -13,7 +13,7 @@ import { connect } from 'react-redux'
 import { Alert } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import {
-  getGasPriceMultiplier,
+  getGasPriceMultiplier
 } from 'redux/session/selectors'
 import { getTokens } from 'redux/tokens/selectors'
 import { DUCK_TOKENS, estimateBtcFee } from 'redux/tokens/actions'
@@ -22,7 +22,7 @@ import {
   makeGetWalletInfoByBockchainAndAddress,
   selectMarketPricesSelectedCurrencyStore,
   selectMarketPricesListStore,
-  type TSelectedWallet,
+  type TSelectedWallet
 } from 'redux/wallet/selectors'
 import * as EthereumDAO from 'dao/EthereumDAO'
 import Amount from 'models/Amount'
@@ -34,13 +34,13 @@ import Send, {
   type TSelectedToken,
   type TTokenModel,
   type TTokensCollectionModel,
-  type TWalletTokensAndBalanceByAddress,
+  type TWalletTokensAndBalanceByAddress
 } from 'screens/Send'
 import { getPrimaryToken } from 'redux/mainWallet/selectors/utils'
 
-//#endregion
+// #endregion
 
-//#region types
+// #region types
 
 type TSendContainerProps = {
   blockchain: string,
@@ -70,9 +70,9 @@ type TSendState = {
   selectedToken: ?TSelectedToken,
 }
 
-//#endregion
+// #endregion
 
-//#region maps
+// #region maps
 
 const makeMapStateToProps = (origState) => {
   const selectedWallet: TSelectedWallet = getSelectedWalletStore(origState)
@@ -91,7 +91,7 @@ const makeMapStateToProps = (origState) => {
       address: selectedWallet.address,
       selectedWallet: selectedWallet,
       prices,
-      blockchain: selectedWallet.blockchain,
+      blockchain: selectedWallet.blockchain
     }
   }
 
@@ -101,31 +101,30 @@ const makeMapStateToProps = (origState) => {
 function mapDispatchToProps (dispatch: Dispatch<any>) {
   return {
     // estimateGas: (tokenId, params, callback, gasPriseMultiplier, address) => dispatch(estimateGas(tokenId, params, callback, gasPriseMultiplier, address)),
-    estimateBtcFee: (params, callback) => dispatch(estimateBtcFee(params, callback)),
+    estimateBtcFee: (params, callback) => dispatch(estimateBtcFee(params, callback))
   }
 }
 
-//#endregion
+// #endregion
 
 class SendContainer extends React.PureComponent<TSendContainerProps, TSendState> {
-
-  //#region navigation
+  // #region navigation
   static navigatorButtons = {
     leftButtons: [
       {
         title: 'Cancel',
-        id: 'cancel',
-      },
+        id: 'cancel'
+      }
     ],
     rightButtons: [
       {
         title: 'Done',
-        id: 'done',
-      },
-   
-    ],
+        id: 'done'
+      }
+
+    ]
   }
-  //#endregion
+  // #endregion
 
   constructor (props) {
     super(props)
@@ -134,9 +133,9 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
     const firstAvailableTokenSymbol = Object.keys(firtsAvailableToken)[0]
     const selectedToken = {
       symbol: firstAvailableTokenSymbol,
-      amount: firtsAvailableToken[firstAvailableTokenSymbol].amount,
+      amount: firtsAvailableToken[firstAvailableTokenSymbol].amount
     }
-    const selectedDAO = tokenService.getDAO( props.tokensDuck.getBySymbol(firstAvailableTokenSymbol)) || null
+    const selectedDAO = tokenService.getDAO(props.tokensDuck.getBySymbol(firstAvailableTokenSymbol)) || null
     this.state = {
       amount: null,
       amountInCurrency: 0,
@@ -148,7 +147,7 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
       isRecipientInputValid: false,
       recipient: '',
       selectedDAO,
-      selectedToken,
+      selectedToken
     }
   }
 
@@ -163,18 +162,18 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
           currentToken: selectedTokenSymbol,
           amountToSend: {
             token: this.state.amount,
-            currency: this.state.amountInCurrency,
+            currency: this.state.amountInCurrency
           },
           fee: {
             token: this.state.gasFeeAmount,
-            currency: this.state.gasFeeAmountInCurrency,
+            currency: this.state.gasFeeAmountInCurrency
           },
           balance: {
             token: amount,
-            currency: balance,
+            currency: balance
           },
-          feeMultiplier: this.state.feeMultiplier,
-        },
+          feeMultiplier: this.state.feeMultiplier
+        }
       })
     } else {
       Alert.alert(
@@ -182,8 +181,8 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
         'Please fill address and amount',
         [{ text: 'Ok', onPress: () => {}, style: 'cancel' }]
       )
-    } 
-  } 
+    }
+  }
 
   handleNavigatorEvent = ({ type, id }) => {
     if (type === 'NavBarButtonPress') {
@@ -191,10 +190,10 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
         this.state.selectedToken.symbol ||
         null
 
-      const CT = this.props.walletTokensAndBalance && 
+      const CT = this.props.walletTokensAndBalance &&
         selectedTokenSymbol &&
         this.props.walletTokensAndBalance.tokens
-          .find( (tObj) => {
+          .find((tObj) => {
             return Object.keys(tObj)[0] === selectedTokenSymbol
           })
 
@@ -232,7 +231,7 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
     }
     this.setState({
       recipient: value,
-      isRecipientInputValid: dummyValidationOfRecipientInput,
+      isRecipientInputValid: dummyValidationOfRecipientInput
     }, () => {
       if (this.state.isAmountInputValid) {
         if (this.props.blockchain === EthereumDAO.BLOCKCHAIN_ETHEREUM) {
@@ -252,11 +251,11 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
         this.state.selectedToken &&
         this.props.prices[ this.state.selectedToken.symbol ] &&
         this.props.prices[ this.state.selectedToken.symbol ][ this.props.selectedCurrency ] || 0 // TODO: handle wrong values correctly
-      const dummyValidationOfAmountInput: boolean =  (localeValue !== null && localeValue !== undefined && localeValue !== '' && localeValue > 0)
+      const dummyValidationOfAmountInput: boolean = (localeValue !== null && localeValue !== undefined && localeValue !== '' && localeValue > 0)
       this.setState({
         amount: localeValue,
         amountInCurrency: tokenPrice * localeValue,
-        isAmountInputValid: dummyValidationOfAmountInput,
+        isAmountInputValid: dummyValidationOfAmountInput
       }, () => {
         if (this.state.isRecipientInputValid) {
           if (this.props.blockchain === EthereumDAO.BLOCKCHAIN_ETHEREUM) {
@@ -270,7 +269,7 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
       this.setState({
         amount: value ? parseFloat(value.replace(',', '.').replace(' ', '')) : null,
         amountInCurrency: 0,
-        isAmountInputValid: false,
+        isAmountInputValid: false
       })
     }
   }
@@ -285,20 +284,20 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
           this.setState({
             selectedToken: {
               symbol: data.symbol,
-              amount: data.amount,
+              amount: data.amount
             },
-            selectedDAO: tokenService.getDAO( this.props.tokensDuck.getBySymbol(data.symbol)) || null,
+            selectedDAO: tokenService.getDAO(this.props.tokensDuck.getBySymbol(data.symbol)) || null
           })
-        },
-      },
+        }
+      }
     })
   }
-  
+
   // eslint-disable-next-line complexity
   handleFeeSliderChange = (value: number) => {
     if (this.state.gasFee !== null) {
       if (this.props.blockchain === EthereumDAO.BLOCKCHAIN_ETHEREUM) {
-        const newGasFee =this.state.gasFee &&
+        const newGasFee = this.state.gasFee &&
           this.state.selectedDAO &&
           (new Amount(this.state.selectedDAO.removeDecimals(this.state.gasFee.mul(this.state.feeMultiplier)))).toNumber()
 
@@ -311,7 +310,7 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
         this.setState({
           feeMultiplier: value,
           gasFeeAmount: newGasFee,
-          gasFeeAmountInCurrency: newGasFeePrice,
+          gasFeeAmountInCurrency: newGasFeePrice
         })
       } else {
         const newGasFee = this.state.gasFeeAmount &&
@@ -324,12 +323,12 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
         this.setState({
           feeMultiplier: value,
           gasFeeAmount: newGasFee,
-          gasFeeAmountInCurrency: newGasFeePrice,
+          gasFeeAmountInCurrency: newGasFeePrice
         })
       }
     } else {
       this.setState({
-        feeMultiplier: value,
+        feeMultiplier: value
       })
     }
   }
@@ -337,10 +336,10 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
   requestBcFeeEstimations = () => {
     const params = {
       address: this.props.selectedWallet.address,
-      recipient:  this.state.recipient,
+      recipient: this.state.recipient,
       amount: new BigNumber(this.state.amount),
       formFee: this.state.feeMultiplier,
-      blockchain: this.props.blockchain,
+      blockchain: this.props.blockchain
     }
     this.props.estimateBtcFee(params, (error, { fee }) => {
       if (error) {
@@ -358,7 +357,7 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
       this.setState({
         gasFee: feeBtc,
         gasFeeAmount: feeBtc.toNumber(),
-        gasFeeAmountInCurrency: newBcFeePrice,
+        gasFeeAmountInCurrency: newBcFeePrice
       })
     })
   }
@@ -371,7 +370,7 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
         this.state.selectedDAO._estimateGas &&
         // eslint-disable-next-line no-underscore-dangle
         this.state.selectedDAO._estimateGas(to, weiValue)
-          .then( ({ gasFee }: { gasFee: BigNumber }) => {
+          .then(({ gasFee }: { gasFee: BigNumber }) => {
             const newGasFee = this.state.selectedDAO &&
               (new Amount(this.state.selectedDAO.removeDecimals(gasFee.mul(this.state.feeMultiplier)))).toNumber()
             const tokenPrice = this.props.prices &&
@@ -383,10 +382,10 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
             this.setState({
               gasFee,
               gasFeeAmount: newGasFee,
-              gasFeeAmountInCurrency: newGasFeePrice,
+              gasFeeAmountInCurrency: newGasFeePrice
             })
           })
-          .catch( (error) => {
+          .catch((error) => {
             if (error) {
               // eslint-disable-next-line no-console
               console.log('Error during fetching gasPrice. No info how to handle it.', error)
@@ -399,11 +398,11 @@ class SendContainer extends React.PureComponent<TSendContainerProps, TSendState>
     const {
       selectedWallet,
       walletTokensAndBalance,
-      blockchain,
+      blockchain
     } = this.props
 
-    const { 
-      selectedToken,
+    const {
+      selectedToken
     } = this.state
 
     // const selectedTokenSymbol: ?string = selectedToken && selectedToken.symbol || null

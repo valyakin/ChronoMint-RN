@@ -13,17 +13,17 @@ class Download2FAAppContainer extends PureComponent<{}, {}> {
     leftButtons: [
       {
         title: 'Cancel',
-        id: 'cancel',
-      },
+        id: 'cancel'
+      }
     ],
     rightButtons: [
       {
         title: 'Proceed',
-        id: 'proceed',
-      },
-    ],
+        id: 'proceed'
+      }
+    ]
   }
-  
+
   render () {
     return (<Download2FAApp />)
   }

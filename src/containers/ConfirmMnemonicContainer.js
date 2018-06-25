@@ -32,7 +32,7 @@ class ConfirmMnemonicContainer extends PureComponent<TConfirmMnemonicContainerPr
 
   handleDone = async (): Promise<void> => {
     const { usePinProtection, navigator, mnemonic, password } = this.props
-    
+
     if (mnemonic !== this.state.mnemonic.join(' ')) {
       this.addError(I18n.t('ConfirmMnemonic.wrongMnemonicError'))
       return this.resetState()
@@ -43,25 +43,25 @@ class ConfirmMnemonicContainer extends PureComponent<TConfirmMnemonicContainerPr
     if (!usePinProtection) {
       return this.props.onLogin()
     }
-    
+
     navigator.push({
       screen: 'EnterPin',
       passProps: {
         mnemonic,
         password,
-        privateKey,
-      },
+        privateKey
+      }
     })
   }
-  
+
   handleWord = (word: string) => (): void => {
     this.setState(({ words, mnemonic }) => {
       words.splice(words.indexOf(word), 1)
       words.push('emptyWord')
-      
+
       return {
         mnemonic: [...mnemonic, word],
-        words: [...words],
+        words: [...words]
       }
     }, () => {
       if (this.state.mnemonic.length === MNEMONIC_LENGTH) {
@@ -69,10 +69,10 @@ class ConfirmMnemonicContainer extends PureComponent<TConfirmMnemonicContainerPr
       }
     })
   }
-  
+
   createInitialState = (): TConfirmMnemonicContainerState => ({
     mnemonic: [],
-    words: this.props.mnemonic.split(' ').sort(() => Math.random() - 0.5),
+    words: this.props.mnemonic.split(' ').sort(() => Math.random() - 0.5)
   })
 
   addError = (error: string) => {

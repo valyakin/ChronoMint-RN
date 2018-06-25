@@ -7,7 +7,7 @@
 import * as React from 'react'
 import {
   View,
-  Image,
+  Image
 } from 'react-native'
 import { indicators } from 'utils/globals'
 import { type StyleObj as TStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
@@ -17,12 +17,12 @@ import {
   BLOCKCHAIN_BITCOIN_CASH,
   BLOCKCHAIN_BITCOIN_GOLD,
   BLOCKCHAIN_BITCOIN,
-  BLOCKCHAIN_LITECOIN,
+  BLOCKCHAIN_LITECOIN
 } from 'login/network/BitcoinProvider'
 // import { BLOCKCHAIN_NEM } from 'dao/NemDAO'
 const BLOCKCHAIN_NEM = 'NEM' // TODO: replace it to import above after ChronoMint depency upgrade
 
-export type TWalletMode =  '2fa' | 'shared' | 'timeLocked'
+export type TWalletMode = '2fa' | 'shared' | 'timeLocked'
 
 type WalletImageProps = {
   blockchain: string,
@@ -39,7 +39,7 @@ const walletImages = {
   [BLOCKCHAIN_BITCOIN_GOLD]: require('../images/wallet-circle-small.png'),
   [BLOCKCHAIN_BITCOIN]: require('../images/coin-bitcoin-small.png'),
   [BLOCKCHAIN_LITECOIN]: require('../images/coin-litecoin-small.png'),
-  [BLOCKCHAIN_NEM]: require('../images/coin-nem-small.png'),
+  [BLOCKCHAIN_NEM]: require('../images/coin-nem-small.png')
 }
 
 const walletBigImages = {
@@ -48,7 +48,7 @@ const walletBigImages = {
   [BLOCKCHAIN_BITCOIN_GOLD]: require('../images/wallet-circle-big.png'),
   [BLOCKCHAIN_BITCOIN]: require('../images/coin-bitcoin-big.png'),
   [BLOCKCHAIN_LITECOIN]: require('../images/coin-litecoin-big.png'),
-  [BLOCKCHAIN_NEM]: require('../images/coin-nem-big.png'),
+  [BLOCKCHAIN_NEM]: require('../images/coin-nem-big.png')
 }
 
 const getFallbackWalletImage = (blockchain: ?string, size: string = 'small') => {
@@ -58,7 +58,7 @@ const getFallbackWalletImage = (blockchain: ?string, size: string = 'small') => 
     BLOCKCHAIN_BITCOIN,
     BLOCKCHAIN_ETHEREUM,
     BLOCKCHAIN_LITECOIN,
-    BLOCKCHAIN_NEM,
+    BLOCKCHAIN_NEM
   ]
 
   if (blockchain && bcsList.includes(blockchain)) {
@@ -78,9 +78,8 @@ const WalletImage = ({
   shapeStyle,
   imageStyle,
   style,
-  size,
+  size
 }: WalletImageProps) => {
-
   // Size guard. Default is small wallet icon
   let imageSize = 'small'
   if (size) {
@@ -98,19 +97,19 @@ const WalletImage = ({
           />
       }
       {
-        (typeof blockchain !== 'undefined') ?
-          <Image source={wImage} /> :
-          <View
+        (typeof blockchain !== 'undefined')
+          ? <Image source={wImage} />
+          : <View
             style={[
               styles.walletImageShape,
-              shapeStyle,
+              shapeStyle
             ]}
           >
             <Image
               source={wImage}
               style={[
                 styles.walletImage,
-                imageStyle,
+                imageStyle
               ]}
             />
           </View>
@@ -120,4 +119,3 @@ const WalletImage = ({
 }
 
 export default WalletImage
-

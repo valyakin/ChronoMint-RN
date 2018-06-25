@@ -48,16 +48,16 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
     leftButtons: [
       {
         title: 'Cancel',
-        id: 'cancel',
-      },
+        id: 'cancel'
+      }
     ],
     rightButtons: [
       {
         title: 'Confirm',
-        id: 'confirm',
-      },
-   
-    ],
+        id: 'confirm'
+      }
+
+    ]
   }
 
   constructor (props: TConfirmSendContainerProps) {
@@ -77,7 +77,7 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
         case 'confirm': {
           this.sendTransaction() // FIXME: need to catch and handle sending errors. Impossible at the moment.
           this.props.navigator.resetTo({
-            screen: 'Wallet',
+            screen: 'Wallet'
           })
           break
         }
@@ -110,17 +110,17 @@ class ConfirmSendContainer extends PureComponent<TConfirmSendContainerProps, {}>
 }
 
 const mapStateToProps = (state) => ({
-  tokensDuck: getTokens(state),
+  tokensDuck: getTokens(state)
 })
 
-const mapDispatchToProps  = (dispatch: Dispatch<any>) => {
+const mapDispatchToProps = (dispatch: Dispatch<any>) => {
   return {
     mainTransfer: (
       token,
       amount,
       recipient,
-      feeMultiplier: number,
-    ) => dispatch(mainTransfer(token, amount, recipient, feeMultiplier)),
+      feeMultiplier: number
+    ) => dispatch(mainTransfer(token, amount, recipient, feeMultiplier))
   }
 }
 

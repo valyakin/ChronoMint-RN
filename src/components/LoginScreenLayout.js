@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Image,
   View,
-  ScrollView,
+  ScrollView
 } from 'react-native'
 
 export default class LoginScreenLayout extends React.Component {
@@ -20,9 +20,9 @@ export default class LoginScreenLayout extends React.Component {
     topBarElevationShadowEnabled: false,
     navBarTransparent: true,
     navBarTranslucent: true,
-    drawUnderNavBar: true,
+    drawUnderNavBar: true
   }
-  
+
   render () {
     return (
       <KeyboardAvoidingView behavior='position'>
@@ -31,7 +31,7 @@ export default class LoginScreenLayout extends React.Component {
             source={require('../images/background.jpg')}
             style={[
               styles.backgroundImage,
-              this.props.screenOptions.screen === 'SetAccountPassword' ? styles.backgroundImageFull : {},
+              this.props.screenOptions.screen === 'SetAccountPassword' ? styles.backgroundImageFull : {}
             ]}
           />
           <View style={styles.screenContent}>
@@ -45,18 +45,18 @@ export default class LoginScreenLayout extends React.Component {
 
 const styles = StyleSheet.create({
   screenView: {
-    backgroundColor: '#242045',
+    backgroundColor: '#242045'
   },
   screenContent: {
     paddingTop: 64,
-    paddingBottom: 30,
+    paddingBottom: 30
   },
   backgroundImage: {
     resizeMode: 'contain',
     position: 'absolute',
-    top: -140,
+    top: -140
   },
   backgroundImageFull: {
-    top: 0,
-  },
+    top: 0
+  }
 })

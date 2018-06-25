@@ -70,30 +70,29 @@ const styles = StyleSheet.create({
   container: {
     height: 48,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   leftSection: {
     width: 24,
-    marginHorizontal: 8,
+    marginHorizontal: 8
   },
   rightSection: {
-    marginHorizontal: 8,
+    marginHorizontal: 8
   },
   arrow: {
     marginRight: 16,
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   text: {
     color: colors.foreground,
     flex: 1,
-    textAlign: 'left',
+    textAlign: 'left'
   },
   textDark: {
     color: colors.backgroundLight,
     flex: 1,
-    textAlign: 'left',
-  },
+    textAlign: 'left'
+  }
 })
-

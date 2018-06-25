@@ -76,13 +76,13 @@ class Button extends React.Component<ButtonProps, {}> {
 
   render () {
     const { style, icon, iconPosition, label, isDark, isDisabled } = this.props
-  
+
     return (
       <TouchableOpacity
         style={[
           styles.container,
-          ( isDisabled && styles.containerDisabled ),
-          style,
+          (isDisabled && styles.containerDisabled),
+          style
         ]}
         activeOpacity={isDisabled ? 1 : 0.2}
         onPress={this.handlePress}
@@ -103,22 +103,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   containerDisabled: {
-    backgroundColor: colors.blueDark,
+    backgroundColor: colors.blueDark
   },
   leftSection: {
-    marginRight: 8,
+    marginRight: 8
   },
   label: {
     color: colors.foreground,
-    height: 24,
-  }, 
+    height: 24
+  },
   labelDark: {
     color: colors.backgroundLight,
-    height: 24,
-  },
+    height: 24
+  }
 })
 
 export default Button

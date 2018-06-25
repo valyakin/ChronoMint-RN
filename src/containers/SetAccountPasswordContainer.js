@@ -27,23 +27,23 @@ type TSetAccountPasswordContainerState = {
 
 class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordContainerProps, TSetAccountPasswordContainerState> {
   static navigatorStyle = {
-    navBarHidden: true,
+    navBarHidden: true
   }
 
   state = {
     password: '',
-    passwordConfirmation: '',
+    passwordConfirmation: ''
   }
 
   handleSelectNetwork = () => {
     this.props.navigator.push({
-      screen: 'SelectNetwork',
+      screen: 'SelectNetwork'
     })
   }
 
   handleSelectLanguage = () => {
     this.props.navigator.push({
-      screen: 'SelectLanguage',
+      screen: 'SelectLanguage'
     })
   }
 
@@ -59,7 +59,7 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
     const {
       mnemonic,
       privateKey,
-      navigator,
+      navigator
     } = this.props
 
     const { password, passwordConfirmation } = this.state
@@ -76,36 +76,36 @@ class SetAccountPasswordContainer extends PureComponent<TSetAccountPasswordConta
       passProps: {
         mnemonic,
         privateKey,
-        password,
-      },
+        password
+      }
     })
   }
 
   handleUseWallet = () => {
     this.props.navigator.push({
       screen: 'SelectAccount',
-      title: I18n.t('SelectAccount.title'),
+      title: I18n.t('SelectAccount.title')
     })
   }
 
   handleWallet = () => {
     this.props.navigator.push({
-      screen: 'WalletsList',
+      screen: 'WalletsList'
     })
   }
-  
+
   handleLastAccount = () => {
     if (lastAccount) return
 
     lastAccount = true
-    
+
     this.props.navigator.push({
       screen: 'EnterPin',
       title: 'EnterPin',
       passProps: {
         isLogin: true,
-        account: this.props.lastAccount,
-      },
+        account: this.props.lastAccount
+      }
     })
   }
 

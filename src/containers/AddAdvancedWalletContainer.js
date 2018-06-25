@@ -24,32 +24,32 @@ class AddAdvancedWalletContainer extends PureComponent<TAddAdvancedWalletContain
       leftButtons: [
         {
           title: 'Cancel',
-          id: 'cancel',
-        },
+          id: 'cancel'
+        }
       ],
       rightButtons: [
         {
           title: 'Done',
-          id: 'done',
-        },
-      ],
+          id: 'done'
+        }
+      ]
     }
-  
+
     constructor (props: TAddAdvancedWalletContainerProps) {
       super(props)
-  
+
       this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)
     }
-    
+
     handleNavigatorEvent = ({ type, id }: { type: string, id: string }) => {
       if (type === 'NavBarButtonPress' && id === 'cancel') {
         this.props.navigator.pop()
       }
     }
-    
+
     handleAddNewToken = () => {
       this.props.navigator.push({
-        screen: 'AddTokenToAdvancedWallet',
+        screen: 'AddTokenToAdvancedWallet'
       })
     }
 
@@ -68,12 +68,11 @@ const tokens: Array<TToken> = [
     id: 'eth',
     image: require('../images/coin-bitcoin-small.png'),
     isChecked: true,
-    title: 'Ethereum',
+    title: 'Ethereum'
   },
   {
     id: 'time',
     image: require('../images/coin-time-small.png'),
-    title: 'Time',
-  },
+    title: 'Time'
+  }
 ]
-

@@ -16,7 +16,7 @@ import {
   addError,
   clearErrors,
   DUCK_NETWORK,
-  loading,
+  loading
 } from 'login/redux/network/actions'
 import networkService from 'login/network/NetworkService'
 import mnemonicProvider from 'login/network/mnemonicProvider'
@@ -27,7 +27,7 @@ import {
   bccProvider,
   btcProvider,
   btgProvider,
-  ltcProvider,
+  ltcProvider
 } from 'login/network/BitcoinProvider'
 import { nemProvider } from 'login/network/NemProvider'
 import startAppRoot from '../app'
@@ -35,7 +35,7 @@ import {
   addAccount,
   DUCK_SENSITIVE,
   setUsePinProtection,
-  setLastAccount,
+  setLastAccount
 } from '../redux/sensitive/actions'
 import isValid from '../utils/validators'
 import salt from '../utils/salt'
@@ -65,7 +65,7 @@ type TLoginHOCProps = {
   selectNetwork: (network: number) => void,
   selectProvider: (providerId: number) => void,
   storedAccounts: any,
-  usePinProtection: boolean, 
+  usePinProtection: boolean,
 }
 
 type TLoginHOCState = {
@@ -86,19 +86,18 @@ export type TWithLoginProps = TLoginHOCProps & {
 
 export default function withLogin (Screen: ComponentType<any>): ComponentType<any> {
   class LoginHOC extends PureComponent<TLoginHOCProps, TLoginHOCState> {
-
     state = {
-      password: '',
+      password: ''
     }
-    
+
     loginSetup = async ({ ethereum, btc, bcc, btg, ltc, nem }): Promise<void> => {
       const web3 = new Web3()
       const eProvider = ethereum.getProvider()
-  
+
       web3Provider.setWeb3(web3)
       web3Provider.setProvider(eProvider)
       web3Provider.reinit(web3, eProvider)
-      
+
       try {
         await this.props.loadAccounts()
         await this.props.selectAccount(this.props.accounts[ 0 ])
@@ -115,16 +114,16 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
 
     onLogin = async (): Promise<void> => {
       this.props.clearErrors()
-      
+
       const isPassed = await this.props.checkNetwork()
-      
+
       if (isPassed) {
         this.props.createNetworkSession(
           this.props.selectedAccount,
           this.props.selectedProviderId,
           this.props.selectedNetworkId
         )
-        
+
         this.props.login(this.props.selectedAccount)
 
         startAppRoot('wallet')
@@ -162,32 +161,32 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
         this.props.addError(e.message)
       }
     }
-    
+
     onPasswordLogin = async (account, password: string): Promise<void> => {
       const {
         encryptedWithPasswordPrivateKey,
-        passwordHash,
+        passwordHash
       } = account
       try {
         this.props.clearErrors()
 
         if (!isValid.password(password)) {
-          throw('Invalid password')
+          throw ('Invalid password')
         }
 
         const hash = createHash('sha256')
         hash.update(salt(password))
 
         if (hash.digest('hex') !== passwordHash) {
-          throw('Incorrect password')
+          throw ('Incorrect password')
         }
 
         const decipher = createDecipher('aes-256-cbc', password)
         let privateKey = decipher.update(encryptedWithPasswordPrivateKey, 'hex', 'utf8')
         privateKey += decipher.final('utf8')
-        
+
         await this.onPrivateKeyLogin(privateKey)
-        
+
         this.onLogin()
       } catch (error) {
         this.props.addError(error)
@@ -197,35 +196,35 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
     onPinLogin = async (account, pin: string): Promise<void> => {
       const {
         encryptedWithPinPrivateKey,
-        pinHash,
+        pinHash
       } = account
       try {
         this.props.clearErrors()
 
         if (!isValid.pin(pin)) {
-          throw('Invalid password')
+          throw ('Invalid password')
         }
 
         const hash = createHash('sha256')
         hash.update(salt(pin))
 
         if (hash.digest('hex') !== pinHash) {
-          throw('Incorrect password')
+          throw ('Incorrect password')
         }
 
         const decipher = createDecipher('aes-256-cbc', salt(pin))
         let privateKey = decipher.update(encryptedWithPinPrivateKey, 'hex', 'utf8')
         privateKey += decipher.final('utf8')
-        
+
         await this.onPrivateKeyLogin(privateKey)
-        
+
         this.onLogin()
       } catch (error) {
         this.props.addError(error)
       }
     }
 
-    onSetPassword = (password: string, passwordConfirmation: string): Promise<void> => 
+    onSetPassword = (password: string, passwordConfirmation: string): Promise<void> =>
       new Promise((resolve, reject) => {
         this.props.clearErrors()
 
@@ -243,7 +242,7 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
       const {
         storedAccounts,
         selectedAccount,
-        addAccount,
+        addAccount
       } = this.props
 
       if (storedAccounts.has(selectedAccount)) {
@@ -252,23 +251,22 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
 
       return addAccount({
         address: selectedAccount,
-        privateKey,
+        privateKey
       }, password, pin)
     }
-    
+
     renderError = (error: string): void => {
       Alert.alert(
         'Error',
         error,
         [
-          { text: 'OK', onPress: this.props.clearErrors },
+          { text: 'OK', onPress: this.props.clearErrors }
         ],
         { cancelable: false }
       )
     }
-    
-    render () {
 
+    render () {
       if (this.props.errors) {
         this.props.errors.forEach(this.renderError)
       }
@@ -283,7 +281,7 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
         onPinLogin: this.onPinLogin,
         onPrivateKeyLogin: this.onPrivateKeyLogin,
         onSetPassword: this.onSetPassword,
-        onStoreAccount: this.storeAccount,
+        onStoreAccount: this.storeAccount
       }
 
       return <Screen {...props} />
@@ -292,7 +290,7 @@ export default function withLogin (Screen: ComponentType<any>): ComponentType<an
 
   return connect(
     mapStateToProps,
-    mapDispatchToProps,
+    mapDispatchToProps
   )(LoginHOC)
 }
 
@@ -312,7 +310,7 @@ function mapStateToProps (state: any) {
     selectedAccount: network.selectedAccount,
     selectedNetworkId: network.selectedNetworkId,
     selectedProviderId: network.selectedProviderId,
-    usePinProtection: sensitive.usePinProtection,
+    usePinProtection: sensitive.usePinProtection
   }
 }
 
@@ -332,7 +330,6 @@ function mapDispatchToProps (dispatch: Dispatch<any>) {
     selectNetwork: (network) => networkService.selectNetwork(network),
     selectProvider: (providerId) => networkService.selectProvider(providerId),
     setLastAccount: (address) => dispatch(setLastAccount(address)),
-    addAccount: (account, password, pin) => dispatch(addAccount(account, password, pin)),
+    addAccount: (account, password, pin) => dispatch(addAccount(account, password, pin))
   }
 }
-

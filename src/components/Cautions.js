@@ -39,26 +39,26 @@ export default Cautions
 
 const styles = StyleSheet.create({
   item: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   bullet: {
     color: colors.orange,
-    paddingRight: 16,
+    paddingRight: 16
   },
   container: {
     flexDirection: 'row',
-    marginHorizontal: 16,
+    marginHorizontal: 16
   },
   list: {
     flex: 1,
-    marginRight: 24,
+    marginRight: 24
   },
   image: {
     marginTop: 4,
-    marginRight: 24,
+    marginRight: 24
   },
   text: {
     color: colors.backgroundLight,
-    fontSize: 16,
-  },
+    fontSize: 16
+  }
 })

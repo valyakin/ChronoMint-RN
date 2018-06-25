@@ -46,38 +46,38 @@ const menuItems = [
   {
     id: 'wallets',
     title: I18n.t('Drawer.wallets'),
-    image: require('../images/wallet.png'),
+    image: require('../images/wallet.png')
   },
   {
     id: 'deposits',
     title: I18n.t('Drawer.deposits'),
-    image: require('../images/deposit.png'),
+    image: require('../images/deposit.png')
   },
   {
     id: 'exchange',
     title: I18n.t('Drawer.exchange'),
-    image: require('../images/exchange.png'),
+    image: require('../images/exchange.png')
   },
   {
     id: 'voting',
     title: I18n.t('Drawer.voting'),
-    image: require('../images/voting.png'),
+    image: require('../images/voting.png')
   },
   {
     id: 'bonuses',
     title: I18n.t('Drawer.bonuses'),
-    image: require('../images/bonuses.png'),
+    image: require('../images/bonuses.png')
   },
   {
     id: 'assets',
     title: I18n.t('Drawer.assets'),
-    image: require('../images/assets.png'),
+    image: require('../images/assets.png')
   },
   {
     id: 'portfolio',
     title: I18n.t('Drawer.portfolio'),
-    image: require('../images/stats.png'),
-  },
+    image: require('../images/stats.png')
+  }
 ]
 
 const currentNetwork = 'Rinkeby (test network)'

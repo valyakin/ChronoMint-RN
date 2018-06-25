@@ -44,7 +44,7 @@ export {
   tokens,
   voting,
   wallet,
-  watcher,
+  watcher
 }
 
 export type TState = {} | {

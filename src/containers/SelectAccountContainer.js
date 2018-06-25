@@ -23,7 +23,7 @@ class SelectAccountContainer extends PureComponent<TSelectAccountContainerProps,
   handleImportAccount = () => {
     this.props.navigator.push({
       screen: 'AccountImportMethod',
-      title: I18n.t('ImportAccount.title'),
+      title: I18n.t('ImportAccount.title')
     })
   }
 
@@ -32,8 +32,8 @@ class SelectAccountContainer extends PureComponent<TSelectAccountContainerProps,
       screen: 'AccountPassword',
       title: 'Enter account password',
       passProps: {
-        account,
-      },
+        account
+      }
     })
   }
 

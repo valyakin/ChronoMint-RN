@@ -17,15 +17,15 @@ class AddTokenToAdvancedWalletContainer extends PureComponent<TAddTokenToAdvance
     leftButtons: [
       {
         title: 'Cancel',
-        id: 'cancel',
-      },
+        id: 'cancel'
+      }
     ],
     rightButtons: [
       {
         title: 'Add',
-        id: 'add',
-      },
-    ],
+        id: 'add'
+      }
+    ]
   }
 
   constructor (props: TAddTokenToAdvancedWalletContainerProps) {
@@ -33,7 +33,7 @@ class AddTokenToAdvancedWalletContainer extends PureComponent<TAddTokenToAdvance
 
     this.props.navigator.setOnNavigatorEvent(this.handleNavigatorEvent)
   }
-  
+
   handleNavigatorEvent = ({ type, id }: { type: string, id: string }) => {
     if (type === 'NavBarButtonPress' && id === 'cancel') {
       this.props.navigator.pop()

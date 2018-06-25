@@ -23,10 +23,10 @@ export type TAddWalletContainerProps = {
 class AddWalletContainer extends PureComponent<TAddWalletContainerProps, {}> {
   handleWalletTypePress = ({ screen }: TWalletType) => () => {
     this.props.navigator.push({
-      screen,
+      screen
     })
   }
-  
+
   render () {
     return (<AddWallet
       onWalletTypePress={this.handleWalletTypePress}
@@ -42,24 +42,24 @@ const walletTypes: Array<TWalletType> = [
     id: 'bitcoin',
     image: require('../images/coin-bitcoin-big.png'),
     screen: 'AddEthereumWallet',
-    title: I18n.t('AddWallet.bitcoinWallet'),
+    title: I18n.t('AddWallet.bitcoinWallet')
   },
   {
     id: 'litecoin',
     image: require('../images/coin-litecoin-big.png'),
     screen: 'AddEthereumWallet',
-    title: I18n.t('AddWallet.litecoinWallet'),
+    title: I18n.t('AddWallet.litecoinWallet')
   },
   {
     id: 'ethereum',
     image: require('../images/coin-ethereum-big.png'),
     screen: 'AddEthereumWallet',
-    title: I18n.t('AddWallet.ethereumWallet'),
+    title: I18n.t('AddWallet.ethereumWallet')
   },
   {
     id: 'nem',
     image: require('../images/coin-nem-big.png'),
     screen: 'AddEthereumWallet',
-    title: I18n.t('AddWallet.nemWallet'),
-  },
+    title: I18n.t('AddWallet.nemWallet')
+  }
 ]

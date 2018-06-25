@@ -14,7 +14,7 @@ export default class Input extends Component {
   input = {}
 
   focus = () => this.input.focus()
-  
+
   render () {
     const { style, ...restProps } = this.props
 
@@ -23,7 +23,7 @@ export default class Input extends Component {
         {...restProps}
         style={[
           styles.input,
-          style,
+          style
         ]}
         ref={this.refInput}
         placeholderTextColor='#9997b2'
@@ -40,6 +40,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#9997B2',
     paddingBottom: 15,
     color: '#9997B2',
-    fontSize: 16,
-  },
+    fontSize: 16
+  }
 })

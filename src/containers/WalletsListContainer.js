@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import I18n from 'react-native-i18n'
 import { sectionsSelector } from 'redux/mainWallet/selectors'
 import WalletsList, {
-  type TWalletsListProps,
+  type TWalletsListProps
 } from 'screens/WalletsList'
 
 type TWalletsListContainerState = {
@@ -22,15 +22,15 @@ class WalletsListContainer extends PureComponent<TWalletsListProps, TWalletsList
     leftButtons: [
       {
         id: 'drawer',
-        icon: require('images/burger.png'),
-      },
+        icon: require('images/burger.png')
+      }
     ],
-    rightButtons : [
+    rightButtons: [
       {
         id: 'addWallet',
-        icon: require('images/plus.png'),
-      },
-    ],
+        icon: require('images/plus.png')
+      }
+    ]
   }
 
   constructor (props) {
@@ -39,12 +39,12 @@ class WalletsListContainer extends PureComponent<TWalletsListProps, TWalletsList
   }
 
   state = {
-    isRefreshing: false,
+    isRefreshing: false
   }
 
   handleRefresh = () => {
     this.setState({
-      isRefreshing: true,
+      isRefreshing: true
     })
 
     setTimeout(() => this.setState({ isRefreshing: false }), 1000)
@@ -57,7 +57,7 @@ class WalletsListContainer extends PureComponent<TWalletsListProps, TWalletsList
     if (type === 'NavBarButtonPress' && id === 'addWallet') {
       this.props.navigator.push({
         screen: 'AddWallet',
-        title: I18n.t('AddWallet.title'),
+        title: I18n.t('AddWallet.title')
       })
     }
   }
@@ -75,7 +75,7 @@ class WalletsListContainer extends PureComponent<TWalletsListProps, TWalletsList
 }
 
 const mapStateToProps = (state) => ({
-  sections: sectionsSelector(state),
+  sections: sectionsSelector(state)
 })
 
 export default connect(mapStateToProps, null)(WalletsListContainer)

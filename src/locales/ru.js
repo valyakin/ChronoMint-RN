@@ -5,16 +5,16 @@
  * @flow
  */
 export default {
-  "Tokens": {
-    "one": ", + 1 Токен",
-    "other": ", + {{formatted_number}} Токенов",
+  'Tokens': {
+    'one': ', + 1 Токен',
+    'other': ', + {{formatted_number}} Токенов'
   },
-  "TokensCounter": {
-    "one": "1 Токен",
-    "other": "{{formatted_number}} Токенов",
+  'TokensCounter': {
+    'one': '1 Токен',
+    'other': '{{formatted_number}} Токенов'
   },
   WalletsList: {
-    title: 'Мои кошельки',
+    title: 'Мои кошельки'
   },
   SetAccountPassword: {
     password: 'Пароль',
@@ -24,6 +24,6 @@ export default {
     useExistingWallet: 'Использовать существующий кошелек',
     copyright: 'Copyright ©2018 LaborX Australia Pty Ltd. All Rights Reserved.',
     mismatchPasswords: 'Passwords do not match',
-    invalidPassword: 'Password is not valid',
-  },
+    invalidPassword: 'Password is not valid'
+  }
 }

@@ -9,11 +9,11 @@ import type { Dispatch } from 'redux'
 import TransactionsList from 'components/TransactionsList'
 import {
   selWalletSelector,
-  type TSelectedWallet,
+  type TSelectedWallet
 } from 'redux/wallet/selectors'
 import {
   listEQTransactions,
-  mwTxFetchingStatus,
+  mwTxFetchingStatus
 } from 'redux/mainWallet/selectors'
 import { getAccountTransactions } from 'redux/mainWallet/actions'
 
@@ -23,20 +23,20 @@ const makeMapStateToProps = (origState, origProps) => {
   const mapStateToProps = (state) => {
     const {
       transactions,
-      latestTransactionDate,
+      latestTransactionDate
     } = getTransactionsData(state)
     return {
       latestTransactionDate,
       mainWalletTransactionLoadingStatus: mwTxFetchingStatus(state),
       transactions,
-      navigator: origProps.navigator,
+      navigator: origProps.navigator
     }
   }
   return mapStateToProps
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  refreshTransactionsList: () => dispatch(getAccountTransactions()),
+  refreshTransactionsList: () => dispatch(getAccountTransactions())
 })
 
 export default connect(makeMapStateToProps, mapDispatchToProps)(TransactionsList)
