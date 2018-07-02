@@ -8,10 +8,10 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import I18n from 'react-native-i18n'
-import { sectionsSelector } from 'redux/mainWallet/selectors'
+import { sectionsSelector } from '../redux/mainWallet/selectors'
 import WalletsList, {
   type TWalletsListProps
-} from 'screens/WalletsList'
+} from '../screens/WalletsList'
 
 type TWalletsListContainerState = {
   isRefreshing: boolean,
@@ -22,13 +22,13 @@ class WalletsListContainer extends PureComponent<TWalletsListProps, TWalletsList
     leftButtons: [
       {
         id: 'drawer',
-        icon: require('images/burger.png')
+        icon: require('../images/burger.png')
       }
     ],
     rightButtons: [
       {
         id: 'addWallet',
-        icon: require('images/plus.png')
+        icon: require('../images/plus.png')
       }
     ]
   }
