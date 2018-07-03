@@ -1,7 +1,15 @@
 patch-package
 --- a/node_modules/metro-resolver/src/resolve.js
 +++ b/node_modules/metro-resolver/src/resolve.js
-@@ -106,9 +106,30 @@ platform)
+@@ -17,6 +17,7 @@ const InvalidPackageError = require('./InvalidPackageError');
+ const formatFileCandidates = require('./formatFileCandidates');
+ const isAbsolutePath = require('absolute-path');
+ const path = require('path');
++const fs = require('fs');
+ 
+ 
+ 
+@@ -106,9 +107,30 @@ platform)
      }
    }
  
