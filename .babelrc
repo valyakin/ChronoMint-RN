@@ -1,8 +1,14 @@
 {
-  "presets": ["react-native"],
+  "presets": [
+    "@babel/env",
+    "@babel/preset-react",
+    "@babel/flow"
+  ],
   "sourceMaps": true,
   "plugins": [
-    "transform-decorators-legacy",
+    "@babel/plugin-transform-flow-strip-types",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    "@babel/plugin-proposal-class-properties",
     "functional-hmr",
     "transform-new-target",
     "transform-exponentiation-operator",

@@ -16,12 +16,16 @@
     "test": "jest"
   },
   "dependencies": {
+    "@babel/core": "^7.0.0-beta.51",
+    "@babel/plugin-proposal-decorators": "^7.0.0-beta.51",
+    "@babel/preset-env": "^7.0.0-beta.51",
     "@chronobank/core": "^1.0.0",
+    "@chronobank/core-dependencies": "*",
     "@chronobank/login": "^1.0.0",
+    "D": "^1.0.0",
     "assert": "^1.1.1",
     "asyncstorage-down": "^4.0.1",
     "axios": "^0.17.1",
-    "babel-plugin-transform-exponentiation-operator": "^6.24.1",
     "bignumber.js": "^4.1.0",
     "bitcoinjs-lib": "^3.3.2",
     "browserify-zlib": "~0.1.4",
@@ -56,6 +60,7 @@
     "react-native-tab-view": "^1.0.2",
     "react-native-tcp": "olegdizus/react-native-tcp",
     "react-native-udp": "^2.1.0",
+    "react-native-uuid": "^1.4.9",
     "react-redux": "^5.0.6",
     "readable-stream": "1.0.33",
     "redux": "^3.7.2",
@@ -72,7 +77,6 @@
     "string_decoder": "~0.10.25",
     "timers-browserify": "^1.0.1",
     "tty-browserify": "0.0.0",
-    "react-native-uuid": "^1.4.9",
     "uport-connect": "^0.7.0",
     "url": "~0.10.1",
     "util": "~0.10.3",
@@ -80,13 +84,18 @@
     "webstomp-client": "^1.2.0"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.1",
-    "babel-jest": "22.2.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.51",
+    "@babel/preset-flow": "^7.0.0-beta.51",
+    "@babel/preset-react": "^7.0.0-beta.51",
+    "babel-eslint": "^8.2.5",
+    "babel-jest": "^23.2.0",
     "babel-plugin-functional-hmr": "^1.0.24",
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-plugin-transform-inline-environment-variables": "^0.4.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "babel-plugin-transform-es3-member-expression-literals": "^6.22.0",
+    "babel-plugin-transform-exponentiation-operator": "^6.24.1",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "babel-plugin-transform-new-target": "^7.0.0-alpha.14",
     "babel-plugin-transform-object-set-prototype-of-to-assign": "^6.22.0",
     "babel-plugin-transform-react-constant-elements": "^6.23.0",
@@ -97,7 +106,7 @@
     "flow-bin": "0.72.0",
     "flow-typed": "^2.4.0",
     "husky": "^0.14.3",
-    "jest": "22.2.0",
+    "jest": "23.2.0",
     "lint-staged": "^7.0.4",
     "patch-package": "^5.1.1",
     "postinstall-postinstall": "^1.0.0",
@@ -134,5 +143,10 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/**"
+    ]
   }
 }

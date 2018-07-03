@@ -26,6 +26,9 @@ const extraNodeModulesGetter = {
     if (extraCustomNodeModules.hasOwnProperty(name)) {
       return extraCustomNodeModules[name];
     } else {
+      // if (name.includes('core')) {
+      //   console.log('rn cli %s to %s', name, path.join(process.cwd(), `node_modules/${name}`))
+      // }
       return path.join(process.cwd(), `node_modules/${name}`);
     }
   },
@@ -49,9 +52,9 @@ module.exports = {
   getProjectRoots () {
     return [
       __dirname,
-      path.resolve('src/platform'),
+      path.resolve(fs.realpathSync('node_modules/@chronobank/core-dependencies')),
       path.resolve(fs.realpathSync('node_modules/@chronobank/core')),
-      path.resolve(fs.realpathSync('node_modules/@chronobank/login')),
+      path.resolve(fs.realpathSync('node_modules/@chronobank/login'))
     ]
   },
   getSourceExts: () => [ 'jsx' ],

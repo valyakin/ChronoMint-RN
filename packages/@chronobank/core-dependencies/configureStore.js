@@ -5,4 +5,4 @@
  * @flow
  */
 
-export * from '../redux/configureStore'
+export * from '../../../src/redux/configureStore'
