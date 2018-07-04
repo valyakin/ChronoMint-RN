@@ -21,7 +21,7 @@ git clone git@github.com:ozalexo/ChronoMint.git
 git checkout feature/uuid
 ```
 Note: Chanages from feature/uuid are required. In the nearest future it will be replaced to origin repo with develop (or release) branch
-2. Enable yarn links (if the were noe enabled before, check it by `ls -al ~/.config/yarn/link/\@chronobank`):
+2. Enable yarn links (if they were not enabled before, check it by `ls -al ~/.config/yarn/link/\@chronobank`):
 ```bash
 cd ChronoMint/packages/core
 yarn link
