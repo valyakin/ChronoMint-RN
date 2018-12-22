@@ -1,6 +1,10 @@
 # OSX
 #
 .DS_Store
+ios/index
+
+# VSCode
+.vscode
 
 # Xcode
 #
@@ -52,9 +56,5 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 
-google-play-api-secret.json
-.vscode
-
-# Flow-typed
-#
-flow-typed
+# Bundle artifact
+*.jsbundle
