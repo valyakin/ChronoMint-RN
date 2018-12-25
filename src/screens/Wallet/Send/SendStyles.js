@@ -60,21 +60,24 @@ export default StyleSheet.create({
     backgroundColor: '#707070',
   },
   textInput: {
-    borderBottomColor: '#C7C7CC',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    fontSize: 16,
-    fontWeight: '200',
-    marginLeft: 20,
-    marginVertical: 8,
-    paddingVertical: 8,
+    flex: 1,
+    flexDirection: 'row',
+  },
+  recipientLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
   tokenImage: {
-    alignSelf: 'flex-end',
     height: 64,
     position: 'absolute',
     right: 20,
     top: -32,
     width: 64,
+  },
+  qrImage: {
+    width: 32,
+    height: 32,
   },
   tokenSelector: {
     flexDirection: 'row',

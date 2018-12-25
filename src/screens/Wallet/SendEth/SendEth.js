@@ -25,7 +25,11 @@ import {
   coin_bitcoin,
   coin_ethereum,
   coin_time_small,
+  scan_qr,
 } from '../../../images'
+import ConfirmSendModal from './Modals/ConfirmSendModal'
+import PasswordEnterModal from './Modals/PasswordEnterModal'
+import QRscanner from '../QRscannerModal'
 import styles from './SendEthStyles'
 
 
@@ -58,8 +62,6 @@ export default class SendEth extends PureComponent {
       onCloseConfirmModal,
       onPasswordConfirm,
       onSendConfirm,
-      PasswordEnterModal,
-      ConfirmSendModal,
       showPasswordModal,
       showConfirmModal,
       error,
@@ -69,6 +71,8 @@ export default class SendEth extends PureComponent {
       price,
       // currentTokenBalance,
       feeMultiplier,
+      recipient,
+      amount,
       gasLimit,
       gasLimitInCurrency,
       onChangeAmount = () => { },
@@ -82,6 +86,9 @@ export default class SendEth extends PureComponent {
       //txDraft
       onTxDraftCreate,
       onTxDraftRemove,
+      onQRpageOpen,
+      showQRscanner,
+      onQRscan,
     } = this.props
 
     const currentTokenBalance = selectedWallet.tokens ?
@@ -93,7 +100,7 @@ export default class SendEth extends PureComponent {
       amountInput: `Amount, ${selectedToken && selectedToken.symbol || ''}`,
       walletValue: selectedToken && [selectedToken.symbol, selectedToken.amount].join(' '),
       walletTitle: `My ${blockchain} Wallet`,
-      walletBalance: `${selectedCurrency} ${currentTokenBalance && price && (price*currentTokenBalance).toFixed(2)}`,
+      walletBalance: `${selectedCurrency} ${currentTokenBalance && price && (price * currentTokenBalance).toFixed(2)}`,
       sendBalance: `${selectedCurrency} ${amountInCurrency.toFixed(2)}`,
       advancedFee: 'Advanced Fee',
       scanQr: 'Scan QR code',
@@ -113,6 +120,13 @@ export default class SendEth extends PureComponent {
             onDidFocus={onTxDraftCreate}
             onWillBlur={onTxDraftRemove}
           />
+          {
+            showQRscanner && <QRscanner
+              visible={showQRscanner}
+              modalToggle={onQRpageOpen}
+              onQRscan={onQRscan}
+            />
+          }
           {
             showPasswordModal && <PasswordEnterModal
               passProps={passProps}
@@ -165,11 +179,23 @@ export default class SendEth extends PureComponent {
               source={cryptoImages[blockchain] || coin_time_small}
               style={styles.tokenImage}
             />
-            <Input
-              placeholder='Recipient Address'
-              onChange={onChangeRecipient}
-              name='recipient'
-            />
+            <View style={styles.recipientLine}>
+              <Input
+                placeholder='Recipient Address'
+                onChange={onChangeRecipient}
+                name='recipient'
+                style={styles.textInput}
+                value={recipient}
+              />
+              <TouchableOpacity
+                onPress={onQRpageOpen}
+                style={styles.qrImageWrapper}>
+                <Image
+                  source={scan_qr}
+                  style={styles.qrImage}
+                />
+              </TouchableOpacity>
+            </View>
             <Input
               placeholder={strings.amountInput}
               keyboardType='numeric'
@@ -211,4 +237,5 @@ SendEth.propTypes = {
   showPasswordModal: PropTypes.bool,
   showConfirmModal: PropTypes.bool,
   error: PropTypes.string,
+  recipient: PropTypes.string,
 }

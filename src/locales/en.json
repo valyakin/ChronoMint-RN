@@ -213,6 +213,7 @@
     "SetAccountPassword": "Set Account Password",
     "WalletList": "Wallets List",
     "Wallet": "Wallet",
-    "Send": "Send Funds"
+    "Send": "Send Funds",
+    "QRscanner": "Scan QR code"
   }
 }

@@ -6,7 +6,6 @@
 import React from 'react'
 import {
   Alert,
-  Button,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -27,21 +26,21 @@ import {
   requestBitcoinEstimateFeeRate,
 } from '@chronobank/bitcoin/service/api'
 import { prepareBitcoinTransaction } from '@chronobank/bitcoin/utils'
-import { getBitcoinWallets } from '@chronobank/bitcoin/redux/selectors'
+import { getBitcoinCurrentWallet } from '@chronobank/bitcoin/redux/selectors'
 import { getCurrentNetwork } from '@chronobank/network/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
 import { convertBTCToSatoshi, convertSatoshiToBTC } from '@chronobank/bitcoin/utils/amount'
 import { selectMarketPrices } from '@chronobank/market/redux/selectors'
-import ConfirmSendModal from './Modals/ConfirmSendModal'
-import PasswordEnterModal from './Modals/PasswordEnterModal'
+import TextButton from '../../../components/TextButton'
 import Send from './Send'
 
 const mapStateToProps = (state) => {
   const masterWalletAddress = getCurrentWallet(state)
 
   return {
+    masterWalletAddress,
     prices: selectMarketPrices(state),
-    BTCwallets: getBitcoinWallets(masterWalletAddress)(state),
+    currentBTCWallet: getBitcoinCurrentWallet(masterWalletAddress)(state),
     network: getCurrentNetwork(state),
   }
 }
@@ -63,8 +62,8 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
 class SendContainer extends React.Component {
   constructor (props) {
     super(props)
-    const first = Object.keys(props.BTCwallets[props.navigation.state.params.address].tokens)[0]
-    const firtsAvailableToken = props.BTCwallets[props.navigation.state.params.address].tokens[first]
+    const first = Object.keys(props.currentBTCWallet.tokens)[0]
+    const firtsAvailableToken = props.currentBTCWallet.tokens[first]
     const selectedToken = {
       symbol: firtsAvailableToken.symbol,
       amount: firtsAvailableToken.amount,
@@ -74,6 +73,7 @@ class SendContainer extends React.Component {
       amountInCurrency: 0,
       confirmSendModal: false,
       enterPasswordModal: false,
+      showQRscanner: false,
       error: null,
       fee: null,
       feeEstimation: 1,
@@ -96,10 +96,9 @@ class SendContainer extends React.Component {
     return {
       ...params,
       headerRight: (
-        <Button
-          onPress={() => params.handleGoToPasswordModal()}
-          title='Done'
-          color='#fff'
+        <TextButton
+          onPress={params.handleGoToPasswordModal}
+          label='Done'
         />
       ),
     }
@@ -420,6 +419,14 @@ class SendContainer extends React.Component {
     deleteBitcoinTxDraft({ address, masterWalletAddress })
   }
 
+  handleQRpageOpen = () => {
+    this.setState({ showQRscanner: !this.state.showQRscanner })
+  }
+
+  handleQRscan = (scannedAddress) => {
+    this.handleChangeRecipient('recipient', scannedAddress.data)
+  }
+
 
   render () {
     const {
@@ -434,13 +441,13 @@ class SendContainer extends React.Component {
       recipient,
       selectedToken,
       modalProps,
+      showQRscanner,
     } = this.state
     const {
       blockchain,
       selectedCurrency,
-      address,
     } = this.props.navigation.state.params
-    const { BTCwallets, prices } = this.props
+    const { currentBTCWallet, prices } = this.props
     const blockchainPrice = prices &&
       prices[selectedToken.symbol] &&
       prices[selectedToken.symbol][selectedCurrency]
@@ -459,7 +466,7 @@ class SendContainer extends React.Component {
         recipient={recipient}
         selectedCurrency={selectedCurrency}
         selectedToken={selectedToken}
-        selectedWallet={BTCwallets[address]}
+        selectedWallet={currentBTCWallet}
         passProps={modalProps}
         //
         price={blockchainPrice}
@@ -468,15 +475,16 @@ class SendContainer extends React.Component {
         onCloseConfirmModal={this.handleCloseConfirmModal}
         onPasswordConfirm={this.handlePasswordConfirm}
         onSendConfirm={this.handleSendConfirm}
-        PasswordEnterModal={PasswordEnterModal}
-        ConfirmSendModal={ConfirmSendModal}
         //state
         showPasswordModal={enterPasswordModal}
         showConfirmModal={confirmSendModal}
+        showQRscanner={showQRscanner}
         error={error}
         //txDraft
         onTxDraftCreate={this.handleTxDraftCreate}
         onTxDraftRemove={this.handleTxDraftRemove}
+        onQRpageOpen={this.handleQRpageOpen}
+        onQRscan={this.handleQRscan}
       />
     )
   }

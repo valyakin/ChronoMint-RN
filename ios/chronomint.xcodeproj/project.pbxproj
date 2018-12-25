@@ -23,11 +23,13 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		331F1A9B605F4A75A03D6C92 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C6396F82B60C4418B68A3DAF /* libRNCamera.a */; };
 		3468AE47644C40A4BA8F4926 /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2974427C40CD48A4BAE5E44B /* libRNKeychain.a */; };
 		6F5B7958D8174FB5B8E09B31 /* libTouchID.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31DFFCD1528C4CCCB242347C /* libTouchID.a */; };
 		6FC5EECE38D9446DA416A0D4 /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 138CE6F8745A4C2D80267DE6 /* libRNRandomBytes.a */; };
 		713782F518104C669ADBC7FD /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AAE288C7B1440A4B3073FDD /* libRNDeviceInfo.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		9556196C84E04D6287AF0020 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C3FBBD35DD4B40BC996E339D /* libReactNativePermissions.a */; };
 		AD98EF8D1D35455E84ADB0AD /* libRNLanguages.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E6A51E6B8B0459B9399DA1A /* libRNLanguages.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		F8FF78D9030E490AAA7C18FC /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF067B1981B04543BFE40682 /* libSplashScreen.a */; };
@@ -145,6 +147,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 73EEC9391BFE4B1D00D468EB;
 			remoteInfo = RNRandomBytes;
+		};
+		1A81C0FE21D0FE5300BFDA01 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 153F5AAFC4A744249FF90906 /* ReactNativePermissions.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9D23B34F1C767B80008B4819;
+			remoteInfo = ReactNativePermissions;
+		};
+		1A81C10121D0FE5300BFDA01 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2446C2A5E5C94FDBA4D8525E /* RNCamera.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
+			remoteInfo = RNCamera;
 		};
 		1ACF5AD1219DBC8200FDBBF6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -386,8 +402,10 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ChronoMint/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ChronoMint/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		153F5AAFC4A744249FF90906 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		1A0E3B54219EB7C3005D61E1 /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNRandomBytes.xcodeproj; path = "../node_modules/react-native-secure-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; };
 		1E6A51E6B8B0459B9399DA1A /* libRNLanguages.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNLanguages.a; sourceTree = "<group>"; };
+		2446C2A5E5C94FDBA4D8525E /* RNCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
 		2974427C40CD48A4BAE5E44B /* libRNKeychain.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNKeychain.a; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		31DFFCD1528C4CCCB242347C /* libTouchID.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libTouchID.a; sourceTree = "<group>"; };
@@ -398,7 +416,9 @@
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		AECC57126974475F990C86C0 /* RNLanguages.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNLanguages.xcodeproj; path = "../node_modules/react-native-languages/ios/RNLanguages.xcodeproj"; sourceTree = "<group>"; };
+		C3FBBD35DD4B40BC996E339D /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
 		C49D708822634A24AE736C2B /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
+		C6396F82B60C4418B68A3DAF /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
 		C9A4CD8CA7734BF8A9E92EBE /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; };
 		E7BBACD5EB784E6CAAFB3F68 /* libRNLanguages-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNLanguages-tvOS.a"; sourceTree = "<group>"; };
 		EACD38778FF3423B8AAFAAC3 /* RNKeychain.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNKeychain.xcodeproj; path = "../node_modules/react-native-keychain/RNKeychain.xcodeproj"; sourceTree = "<group>"; };
@@ -437,6 +457,8 @@
 				3468AE47644C40A4BA8F4926 /* libRNKeychain.a in Frameworks */,
 				713782F518104C669ADBC7FD /* libRNDeviceInfo.a in Frameworks */,
 				6F5B7958D8174FB5B8E09B31 /* libTouchID.a in Frameworks */,
+				331F1A9B605F4A75A03D6C92 /* libRNCamera.a in Frameworks */,
+				9556196C84E04D6287AF0020 /* libReactNativePermissions.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -596,6 +618,8 @@
 				2974427C40CD48A4BAE5E44B /* libRNKeychain.a */,
 				3AAE288C7B1440A4B3073FDD /* libRNDeviceInfo.a */,
 				31DFFCD1528C4CCCB242347C /* libTouchID.a */,
+				C6396F82B60C4418B68A3DAF /* libRNCamera.a */,
+				C3FBBD35DD4B40BC996E339D /* libReactNativePermissions.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -612,6 +636,22 @@
 			isa = PBXGroup;
 			children = (
 				1A0E3B59219EB7C3005D61E1 /* libRNRandomBytes.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A81C0F921D0FE5300BFDA01 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A81C0FF21D0FE5300BFDA01 /* libReactNativePermissions.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A81C0FB21D0FE5300BFDA01 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A81C10221D0FE5300BFDA01 /* libRNCamera.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -672,6 +712,8 @@
 				EACD38778FF3423B8AAFAAC3 /* RNKeychain.xcodeproj */,
 				C49D708822634A24AE736C2B /* RNDeviceInfo.xcodeproj */,
 				F30CE03681D94019A720F171 /* TouchID.xcodeproj */,
+				2446C2A5E5C94FDBA4D8525E /* RNCamera.xcodeproj */,
+				153F5AAFC4A744249FF90906 /* ReactNativePermissions.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -773,6 +815,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 7SHEC94536;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -835,6 +878,14 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = 1A81C0F921D0FE5300BFDA01 /* Products */;
+					ProjectRef = 153F5AAFC4A744249FF90906 /* ReactNativePermissions.xcodeproj */;
+				},
+				{
+					ProductGroup = 1A81C0FB21D0FE5300BFDA01 /* Products */;
+					ProjectRef = 2446C2A5E5C94FDBA4D8525E /* RNCamera.xcodeproj */;
 				},
 				{
 					ProductGroup = 1A0490F821B7AF56003B9FE8 /* Products */;
@@ -973,6 +1024,20 @@
 			fileType = archive.ar;
 			path = libRNRandomBytes.a;
 			remoteRef = 1A0E3B58219EB7C3005D61E1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1A81C0FF21D0FE5300BFDA01 /* libReactNativePermissions.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativePermissions.a;
+			remoteRef = 1A81C0FE21D0FE5300BFDA01 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1A81C10221D0FE5300BFDA01 /* libRNCamera.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCamera.a;
+			remoteRef = 1A81C10121D0FE5300BFDA01 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1ACF5AD2219DBC8200FDBBF6 /* libRNLanguages.a */ = {
@@ -1285,15 +1350,19 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-languages/ios",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)..\node_modules\neact-native-keychainRNKeychainManager",
-					"$(SRCROOT)..\node_modules\neact-native-device-infoiosRNDeviceInfo",
-					"$(SRCROOT)..\node_modules\neact-native-touch-id",
+					"$(SRCROOT)/../node_modules/react-native-keychainRNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-device-infoiosRNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 				);
 				INFOPLIST_FILE = ChronoMintTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1325,15 +1394,19 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-languages/ios",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
-					"$(SRCROOT)..\node_modules\neact-native-keychainRNKeychainManager",
-					"$(SRCROOT)..\node_modules\neact-native-device-infoiosRNDeviceInfo",
-					"$(SRCROOT)..\node_modules\neact-native-touch-id",
+					"$(SRCROOT)/../node_modules/react-native-keychainRNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-device-infoiosRNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 				);
 				INFOPLIST_FILE = ChronoMintTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1358,6 +1431,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 7SHEC94536;
@@ -1365,9 +1440,11 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-secure-randombytes",
-					"$(SRCROOT)..\node_modules\neact-native-keychainRNKeychainManager",
-					"$(SRCROOT)..\node_modules\neact-native-device-infoiosRNDeviceInfo",
-					"$(SRCROOT)..\node_modules\neact-native-touch-id",
+					"$(SRCROOT)/../node_modules/react-native-keychainRNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-device-infoiosRNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 				);
 				INFOPLIST_FILE = ChronoMint/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1378,6 +1455,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.chronobank.chronomintapp;
 				PRODUCT_NAME = ChronoMint;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1386,15 +1464,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7SHEC94536;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-secure-randombytes",
-					"$(SRCROOT)..\node_modules\neact-native-keychainRNKeychainManager",
-					"$(SRCROOT)..\node_modules\neact-native-device-infoiosRNDeviceInfo",
-					"$(SRCROOT)..\node_modules\neact-native-touch-id",
+					"$(SRCROOT)/../node_modules/react-native-keychainRNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-device-infoiosRNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-touch-id",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 				);
 				INFOPLIST_FILE = ChronoMint/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1405,6 +1487,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.chronobank.chronomintapp;
 				PRODUCT_NAME = ChronoMint;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

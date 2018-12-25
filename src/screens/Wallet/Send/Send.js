@@ -13,18 +13,22 @@ import {
   View,
 } from 'react-native'
 import PropTypes from 'prop-types'
+import { NavigationEvents } from 'react-navigation'
 import { BLOCKCHAIN_ETHEREUM } from '@chronobank/ethereum/constants'
 import { BLOCKCHAIN_BITCOIN } from '@chronobank/bitcoin/constants'
 import FeeSlider from '../../../components/FeeSlider'
 import Input from '../../../components/Input'
 import Separator from '../../../components/Separator'
-import { NavigationEvents } from 'react-navigation'
 import {
   chevron_right,
   coin_bitcoin,
   coin_ethereum,
   coin_time_small,
+  scan_qr,
 } from '../../../images'
+import ConfirmSendModal from './Modals/ConfirmSendModal'
+import PasswordEnterModal from './Modals/PasswordEnterModal'
+import QRscanner from '../QRscannerModal'
 import styles from './SendStyles'
 
 
@@ -57,13 +61,14 @@ export default class Send extends PureComponent {
       onCloseConfirmModal,
       onPasswordConfirm,
       onSendConfirm,
-      PasswordEnterModal,
-      ConfirmSendModal,
       showPasswordModal,
       showConfirmModal,
+      showQRscanner,
       error,
       amountInCurrency,
       blockchain,
+      recipient,
+      amount,
       price,
       feeMultiplier,
       fee,
@@ -77,6 +82,8 @@ export default class Send extends PureComponent {
       passProps,
       onTxDraftCreate,
       onTxDraftRemove,
+      onQRpageOpen,
+      onQRscan,
     } = this.props
 
     const currentTokenBalance = selectedWallet.tokens ?
@@ -88,7 +95,7 @@ export default class Send extends PureComponent {
       amountInput: `Amount, ${selectedToken && selectedToken.symbol || ''}`,
       walletValue: selectedToken && [selectedToken.symbol, selectedToken.amount].join(' '),
       walletTitle: `My ${blockchain} Wallet`,
-      walletBalance: `${selectedCurrency} ${currentTokenBalance && price && (price*currentTokenBalance).toFixed(2)}`,
+      walletBalance: `${selectedCurrency} ${currentTokenBalance && price && (price * currentTokenBalance).toFixed(2)}`,
       sendBalance: `${selectedCurrency} ${amountInCurrency.toFixed(2)}`,
       advancedFee: 'Advanced Fee',
       scanQr: 'Scan QR code',
@@ -108,6 +115,13 @@ export default class Send extends PureComponent {
             onDidFocus={onTxDraftCreate}
             onWillBlur={onTxDraftRemove}
           />
+          {
+            showQRscanner && <QRscanner
+              visible={showQRscanner}
+              modalToggle={onQRpageOpen}
+              onQRscan={onQRscan}
+            />
+          }
           {
             showPasswordModal && <PasswordEnterModal
               passProps={passProps}
@@ -153,16 +167,29 @@ export default class Send extends PureComponent {
               source={cryptoImages[blockchain] || coin_time_small}
               style={styles.tokenImage}
             />
-            <Input
-              placeholder='Recipient Address'
-              onChange={onChangeRecipient}
-              name='recipient'
-            />
+            <View style={styles.recipientLine}>
+              <Input
+                placeholder='Recipient Address'
+                onChange={onChangeRecipient}
+                name='recipient'
+                style={styles.textInput}
+                value={recipient}
+              />
+              <TouchableOpacity
+                onPress={onQRpageOpen}
+                style={styles.qrImageWrapper}>
+                <Image
+                  source={scan_qr}
+                  style={styles.qrImage}
+                />
+              </TouchableOpacity>
+            </View>
             <Input
               placeholder={strings.amountInput}
               keyboardType='numeric'
               onChange={onChangeAmount}
               name='amount'
+              value={amount}
             />
             <Text style={styles.sendBalance}>
               {

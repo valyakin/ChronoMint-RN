@@ -6,7 +6,6 @@
 import React from 'react'
 import {
   Alert,
-  Button,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -24,8 +23,7 @@ import { balanceToAmount } from '@chronobank/ethereum/utils/amount'
 import { getCurrentNetwork } from '@chronobank/network/redux/selectors'
 import { selectMarketPrices } from '@chronobank/market/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
-import ConfirmSendModal from './Modals/ConfirmSendModal'
-import PasswordEnterModal from './Modals/PasswordEnterModal'
+import TextButton from '../../../components/TextButton'
 import SendEth from './SendEth'
 
 const mapStateToProps = (state) => {
@@ -56,6 +54,7 @@ class SendEthContainer extends React.Component {
       amountInCurrency: 0,
       confirmSendModal: false,
       enterPasswordModal: false,
+      showQRscanner: false,
       error: null,
       gasLimit: null,
       gasLimitInCurrency: null,
@@ -74,10 +73,9 @@ class SendEthContainer extends React.Component {
     return {
       ...params,
       headerRight: (
-        <Button
-          onPress={() => params.handleGoToPasswordModal()}
-          title='Done'
-          color='#fff'
+        <TextButton
+          onPress={params.handleGoToPasswordModal}
+          label='Done'
         />
       ),
     }
@@ -330,6 +328,14 @@ class SendEthContainer extends React.Component {
     deleteEthereumTxDraft({ masterWalletAddress })
   }
 
+  handleQRpageOpen = () => {
+    this.setState({ showQRscanner: !this.state.showQRscanner })
+  }
+
+  handleQRscan = (scannedAddress) => {
+    this.handleChangeRecipient('recipient', scannedAddress.data)
+  }
+
 
   render () {
     const {
@@ -344,6 +350,7 @@ class SendEthContainer extends React.Component {
       recipient,
       selectedToken,
       modalProps,
+      showQRscanner,
     } = this.state
     const {
       blockchain,
@@ -377,15 +384,16 @@ class SendEthContainer extends React.Component {
         onCloseConfirmModal={this.handleCloseConfirmModal}
         onPasswordConfirm={this.handlePasswordConfirm}
         onSendConfirm={this.handleSendConfirm}
-        PasswordEnterModal={PasswordEnterModal}
-        ConfirmSendModal={ConfirmSendModal}
         //state
         showPasswordModal={enterPasswordModal}
         showConfirmModal={confirmSendModal}
+        showQRscanner={showQRscanner}
         error={error}
         //txDraft
         onTxDraftCreate={this.handleTxDraftCreate}
         onTxDraftRemove={this.handleTxDraftRemove}
+        onQRpageOpen={this.handleQRpageOpen}
+        onQRscan={this.handleQRscan}
       />
     )
   }
