@@ -15,7 +15,29 @@ export default StyleSheet.create({
     backgroundColor: colors.primary,
     flexDirection: 'row',
   },
-  authButton: {
-    color: colors.primary,
+  goback: {
+    alignSelf: 'flex-start',
+    padding: 16,
+  },
+  gobackText: {
+    fontSize: 17,
+    fontWeight: '500',
+  },
+  primaryButton: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  enterPasswordWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  biometryTypeWrapper: {
+    alignItems: 'center',
+  },
+  biometryType: {
+    marginLeft: 10,
+    width: 32,
+    height: 32,
   },
 })

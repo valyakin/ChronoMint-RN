@@ -24,6 +24,19 @@ export default StyleSheet.create({
     marginBottom: headerHeight,
     alignSelf: 'center',
   },
+  loginButtonLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  biometryTypeWrapper: {
+    alignItems: 'center',
+  },
+  biometryType: {
+    marginLeft: 10,
+    width: 32,
+    height: 32,
+  },
   copyright: {
     alignSelf: 'center',
     color: colors.dustygray,
@@ -40,7 +53,8 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   primaryButton: {
-    marginBottom: 30,
+    flex: 1,
+    flexDirection: 'row',
   },
   forgotButton: {
     marginBottom: 30,

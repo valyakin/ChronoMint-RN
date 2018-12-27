@@ -52,20 +52,44 @@ export default class Start extends PureComponent {
   )
 
   renderAccountsList = () => {
-    const { accounts } = this.props
-    if (!accounts || accounts.length === 0) {
-      return <Text style={styles.noAccountsText}>No Accounts To Show</Text>
-    }
+    const {
+      accounts,
+      onClickUseExistingButton,
+      onToggleScreenContent,
+    } = this.props
     return (
-      <FlatList
-        data={this.props.accounts}
-        ItemSeparatorComponent={CustomizedSeparator}
-        keyExtractor={this.keyExtractor}
-        ListFooterComponent={CustomizedSeparator}
-        ListHeaderComponent={CustomizedSeparator}
-        renderItem={this.renderItem}
-        style={styles.accountsList}
-      />
+      <React.Fragment>
+        {
+          !accounts || accounts.length === 0
+            ? <Text style={styles.noAccountsText}>No Accounts To Show</Text>
+            : <FlatList
+              data={this.props.accounts}
+              ItemSeparatorComponent={CustomizedSeparator}
+              keyExtractor={this.keyExtractor}
+              ListFooterComponent={CustomizedSeparator}
+              ListHeaderComponent={CustomizedSeparator}
+              renderItem={this.renderItem}
+              style={styles.accountsList}
+            />
+        }
+
+        <PrimaryButton
+          label={i18n.t('StartPage.addAnExistingAccount')}
+          onPress={onClickUseExistingButton}
+          style={styles.primaryButton}
+          upperCase
+        />
+        <Text style={styles.orText}>
+          {
+            i18n.t('StartPage.or')
+          }
+        </Text>
+        <TextButton
+          label={i18n.t('StartPage.createNewAccount')}
+          onPress={onToggleScreenContent}
+          style={styles.textButton}
+        />
+      </React.Fragment>
     )
   }
 
@@ -119,11 +143,21 @@ export default class Start extends PureComponent {
           value={values.confirmPassword}
         />
         <PrimaryButton
-          label={i18n.t('StartPage.createWallet')}
+          label={i18n.t('StartPage.createNewAccount')}
           onPress={handleSubmit}
           style={styles.primaryButton}
           disabled={!isValid || isSubmitting}
           upperCase
+        />
+        <Text style={styles.orText}>
+          {
+            i18n.t('StartPage.or')
+          }
+        </Text>
+        <TextButton
+          label={i18n.t('StartPage.useExistingAccount')}
+          onPress={this.props.onToggleScreenContent}
+          style={styles.textButton}
         />
       </React.Fragment>
     )
@@ -152,7 +186,6 @@ export default class Start extends PureComponent {
     const keyboardVerticalOffset = -headerHeight
     const {
       showAccountsList,
-      onToggleScreenContent,
     } = this.props
 
     return (
@@ -180,21 +213,6 @@ export default class Start extends PureComponent {
                   ? this.renderAccountsList()
                   : this.renderCreateAccountForm()
               }
-              <TextButton
-                label={showAccountsList ? i18n.t('StartPage.showCreateForm') : i18n.t('StartPage.showAccountsList')}
-                onPress={onToggleScreenContent}
-                style={styles.textButton}
-              />
-              <Text style={styles.orText}>
-                {
-                  i18n.t('StartPage.or')
-                }
-              </Text>
-              <TextButton
-                label={i18n.t('StartPage.useExistingWallet')}
-                onPress={this.props.onClickUseExistingButton}
-                style={styles.textButton}
-              />
             </View>
           </KeyboardAvoidingView>
           <Text style={styles.copyright}>

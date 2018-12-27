@@ -16,6 +16,8 @@ import {
 import {
   ChronoWalletIcon,
   ChronoWalletText,
+  touchID,
+  faceID,
 } from '../../../images'
 import Input from '../../../components/Input'
 import PrimaryButton from '../../../components/PrimaryButton'
@@ -29,6 +31,11 @@ import styles from './LoginStyles'
 
 const CustomizedSeparator = () => <Separator style={styles.separator} />
 
+const biometryTypes = {
+  TouchID: touchID,
+  FaceID: faceID,
+}
+
 export default class Login extends PureComponent {
   static propTypes = {
     error: PropTypes.string,
@@ -39,13 +46,13 @@ export default class Login extends PureComponent {
   }
 
   renderAccount = () => {
-    const { address } = this.props
+    const { address, onAccountClick } = this.props
     return (
       <React.Fragment>
         <CustomizedSeparator />
         <AccountItem
           address={address}
-          onPress={() => { }}
+          onPress={onAccountClick}
         />
         <CustomizedSeparator />
       </React.Fragment>
@@ -86,13 +93,6 @@ export default class Login extends PureComponent {
                 source={ChronoWalletText}
                 style={styles.logoText}
               />
-              {
-                biometryType &&
-                <TextButton
-                  label={`${biometryType} Auth`}
-                  onPress={onScan}
-                />
-              }
 
               {
                 this.renderAccount()
@@ -103,13 +103,27 @@ export default class Login extends PureComponent {
                 onChange={onChangePassword}
                 error={error}
                 style={styles.input}
+                secureTextEntry
               />
-              <PrimaryButton
-                label='Log in'
-                upperCase
-                style={styles.primaryButton}
-                onPress={onLoginClick}
-              />
+              <View style={styles.loginButtonLine}>
+                <PrimaryButton
+                  label='Log in'
+                  upperCase
+                  style={styles.primaryButton}
+                  onPress={onLoginClick}
+                />
+                {
+                  biometryType &&
+                  <TouchableWithoutFeedback
+                    onPress={onScan}
+                    style={styles.biometryTypeWrapper}>
+                    <Image
+                      source={biometryTypes[biometryType]}
+                      style={styles.biometryType}
+                    />
+                  </TouchableWithoutFeedback>
+                }
+              </View>
               <TextButton
                 label={i18n.t('LoginPage.forgotPassword')}
                 style={styles.forgotButton}
