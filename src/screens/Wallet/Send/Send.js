@@ -6,7 +6,6 @@
 import React, { PureComponent } from 'react'
 import {
   Image,
-  ScrollView,
   Text,
   TouchableOpacity,
   View,
