@@ -31,16 +31,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
 
 class WalletListItemContainer extends PureComponent {
 
-  selectWallet = ({ blockchain, address }) => {
-    const {
-      selectBitcoinWallet,
-      selectEthereumWallet,
-    } = this.props
-    return blockchain === BLOCKCHAIN_ETHEREUM
-      ? selectEthereumWallet({ address })
-      : selectBitcoinWallet({ address })
-  }
-
   handleItemPress = () => {
     const {
       address,
@@ -48,6 +38,8 @@ class WalletListItemContainer extends PureComponent {
       navigation,
       selectedCurrency,
       masterWalletAddress,
+      selectBitcoinWallet,
+      selectEthereumWallet,
     } = this.props
 
     const params = {
@@ -57,13 +49,10 @@ class WalletListItemContainer extends PureComponent {
       masterWalletAddress,
     }
 
-    this.selectWallet({ blockchain, address })
-      .then(() => {
-        navigation.navigate('Wallet', params)
-      })
-      .catch((error) => {
-        Alert.alert('Can\'t select wallet. ', error)
-      })
+    blockchain === BLOCKCHAIN_ETHEREUM
+      ? selectEthereumWallet({ address })
+      : selectBitcoinWallet({ address })
+    navigation.navigate('Wallet', params)
   }
 
   render () {

@@ -49,12 +49,12 @@ export const selectBitcoinWallet = ({ address }) => (dispatch, getState) => {
             txList,
             latestTxDate: Math.max(...timestamps),
           }))
-          dispatch(Actions.bitcoinSelectWallet(address))
-          return resolve()
         })
         .catch((error) => {
-          return reject(error)
+          console.warn(error)
         })
+      dispatch(Actions.bitcoinSelectWallet(address))
+      return resolve()
     } catch (e) {
       return reject(e)
     }
