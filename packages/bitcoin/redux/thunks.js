@@ -4,6 +4,9 @@
  */
 
 import { getCurrentNetwork } from '@chronobank/network/redux/selectors'
+import { getCurrentWallet } from '@chronobank/session/redux/selectors'
+import { requestBitcoinTransactionsHistoryByAddress } from '../service/api'
+import { convertSatoshiToBTC } from '../utils/amount'
 import { getAddress } from '../utils'
 import * as Actions from './actions'
 
@@ -21,9 +24,36 @@ export const createBitcoinWallet = (privateKey, ethAddress) => (dispatch, getSta
   })
 }
 
-export const selectBitcoinWallet = ({ address }) => (dispatch) => {
+export const selectBitcoinWallet = ({ address }) => (dispatch, getState) => {
   return new Promise((resolve, reject) => {
     try {
+      dispatch(requestBitcoinTransactionsHistoryByAddress(address))
+        .then((response) => {
+          const masterWalletAddress = getCurrentWallet(getState())
+          const timestamps = []
+          const txList = response.payload.data.map((tx) => {
+            timestamps.push(tx.timestamp)
+            return {
+              from: tx.inputs[0].address,
+              to: tx.outputs[0].address,
+              amount: tx.outputs[0].value,
+              balance: convertSatoshiToBTC(tx.outputs[0].value),
+              timestamp: tx.timestamp,
+              hash: tx.hash,
+              confirmations: tx.confirmations,
+            }
+          })
+          dispatch(updateBitcoinTxHistory({
+            address,
+            masterWalletAddress,
+            txList,
+            latestTxDate: Math.max(...timestamps),
+          }))
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.warn(error)
+        })
       dispatch(Actions.bitcoinSelectWallet(address))
       return resolve()
     } catch (e) {

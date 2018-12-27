@@ -4,7 +4,10 @@
  */
 
 import * as Keychain from 'react-native-keychain'
+import { getCurrentWallet } from '@chronobank/session/redux/selectors'
+import { requestEthereumTransactionsHistoryByAddress } from '../service/api'
 import { encryptWallet, createEthWallet, mnemonicToPrivateKeyAndAddress } from '../utils'
+import { amountToBalance } from '../utils/amount'
 import * as Actions from './actions'
 
 // eslint-disable-next-line import/prefer-default-export
@@ -55,9 +58,41 @@ export const updateEthereumBalance = ({ tokenSymbol, address, balance, amount })
   })
 }
 
-export const selectEthereumWallet = ({ address }) => (dispatch) => {
+export const selectEthereumWallet = ({ address }) => (dispatch, getState) => {
   return new Promise((resolve, reject) => {
     try {
+      dispatch(requestEthereumTransactionsHistoryByAddress(address))
+        .then((response) => {
+          const masterWalletAddress = getCurrentWallet(getState())
+          const timestamps = []
+          const txList = response.payload.data.map((tx) => {
+            timestamps.push(tx.timestamp)
+            return {
+              balance: amountToBalance(tx.value).toString(),
+              blockNumber: tx.blockNumber,
+              confirmations: tx.confirmations,
+              from: tx.from,
+              gas: tx.gas,
+              gasPrice: tx.gasPrice,
+              hash: tx.hash,
+              index: tx.index,
+              nonce: tx.nonce,
+              timestamp: tx.timestamp,
+              to: tx.to,
+              value: tx.value,
+            }
+          })
+          dispatch(updateEthereumTxHistory({
+            address,
+            masterWalletAddress,
+            txList,
+            latestTxDate: Math.max(...timestamps),
+          }))
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.warn(error)
+        })
       dispatch(Actions.selectEthereumWallet({ address }))
       return resolve()
     } catch (e) {
