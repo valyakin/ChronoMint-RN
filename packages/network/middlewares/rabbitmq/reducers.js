@@ -40,17 +40,14 @@ const subscribeFailure = (state, action) => {
   }
 }
 
-const unsubscribeSuccess = (state, action) => {
-  const {
-    // eslint-disable-next-line no-unused-vars
-    [action.channel]: unsubscribedChannel,
-    otherChannels,
-  } = state.subscriptions
+const unsubscribeSuccess = (state, { channel }) => {
+  const subscriptions = Object.assign({}, state.subscriptions)
+  delete subscriptions[channel]
 
   return {
     ...state,
     error: null,
-    subscriptions: otherChannels,
+    subscriptions,
   }
 }
 

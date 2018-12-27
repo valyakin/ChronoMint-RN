@@ -10,7 +10,6 @@ import { encryptWallet, createEthWallet, mnemonicToPrivateKeyAndAddress } from '
 import { amountToBalance } from '../utils/amount'
 import * as Actions from './actions'
 
-// eslint-disable-next-line import/prefer-default-export
 export const createAccountByMnemonic = (mnemonic, password) => async (dispatch) => {
   return new Promise(async (resolve, reject) => {
     try {

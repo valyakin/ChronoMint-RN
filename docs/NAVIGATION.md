@@ -25,8 +25,7 @@ Drawers must be ontop of all other screens.
 * RootNavigator: switch between Login and Wallet stacks
 
 ## File structure
-* src/containers/Drawer* - containers of all drawers
-* src/components/Drawer* - drawers itself
+* src/components/Drawer* - drawers with containers itself
 * src/navigation - all stacks and drawers (here we will add new screens)
 * src/screens/Login/Start - very first screen of the App. Also contains unique buttons for header: Network and Language select. These buttons are not used anywhere else, that's why they are located here.
 

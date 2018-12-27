@@ -1,7 +1,7 @@
- /**
- * Copyright 2017–2018, LaborX PTY
- * Licensed under the AGPL Version 3 license.
- */
+/**
+* Copyright 2017–2018, LaborX PTY
+* Licensed under the AGPL Version 3 license.
+*/
 
 import { createSelector } from 'reselect'
 import { DUCK_NETWORK } from './constants'
@@ -24,6 +24,16 @@ export const getDuckNetwork = (state) =>
 export const getCurrentNetwork = createSelector(
   getDuckNetwork,
   (network) => network.selected
+)
+
+export const getCurrentNetworkBlockchains = createSelector(
+  getCurrentNetwork,
+  (selected) => selected.blockchain
+)
+
+export const getCurrentNetworkBlockchainChannels = (blockchain) => createSelector(
+  getCurrentNetworkBlockchains,
+  (blockchains) => blockchains[blockchain].channels
 )
 
 /**

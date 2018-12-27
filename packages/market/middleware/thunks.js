@@ -26,7 +26,7 @@ export const updateMarket = (updateData) => (
   if (newMarketData.LASTMARKET) {
     dispatch(MarketMiddlewareActions.marketLastUpdate(symbol, newMarketData.LASTMARKET))
   } else {
-    newMarketData.LASTMARKET = selectLastMarket(state)[ symbol ]
+    newMarketData.LASTMARKET = selectLastMarket(state)[symbol]
   }
 
   state = getState()
@@ -74,7 +74,7 @@ export const requestMarketPrices = () => async (dispatch, getState) => {
     })
   } else {
     try {
-      const response  = await requestPrices(tokenList, currencyList)
+      const response = await requestPrices(tokenList, currencyList)
       prices.data = response.data
     } catch (error) {
       dispatch(MarketMiddlewareActions.updateMarketPricesFailure(error))

@@ -9,10 +9,10 @@ import {
   DrawerActions,
 } from 'react-navigation'
 import DrawerNetworkNavigator from './DrawerNetworkNavigator'
-import DrawerLanguageContainer from '../containers/DrawerLanguageContainer'
+import DrawerLanguage from '../components/DrawerLanguage'
 
-const renderDrawerLanguageContainer = (props) => (
-  <DrawerLanguageContainer {...props} />
+const renderDrawerLanguage = (props) => (
+  <DrawerLanguage {...props} />
 )
 
 const DrawerLanguageNavigator = createDrawerNavigator(
@@ -21,7 +21,7 @@ const DrawerLanguageNavigator = createDrawerNavigator(
   },
   {
     drawerPosition: 'right',
-    contentComponent: renderDrawerLanguageContainer,
+    contentComponent: renderDrawerLanguage,
     getCustomActionCreators: (route, stateKey) => {
       return {
         toggleLanguageDrawer: () =>

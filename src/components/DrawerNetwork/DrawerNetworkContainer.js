@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import { getAvailableNetworkList } from '@chronobank/network/redux/selectors'
 import { getNetworkStatusList } from '@chronobank/ethereum/middleware/selectors.js' 
 import { networkSelect } from '@chronobank/network/redux/thunks'
-import DrawerNetwork from '../../components/DrawerNetwork'
+import DrawerNetwork from './DrawerNetwork'
 
 const mapStateToProps = (ownState) => {
   const networks = getAvailableNetworkList(ownState)

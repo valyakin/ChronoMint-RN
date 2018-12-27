@@ -4,7 +4,7 @@
  */
 
 import { connect } from 'react-redux'
-import DrawerMainMenu from '../../components/DrawerMainMenu'
+import DrawerLanguage from './DrawerLanguage'
 
 /* eslint-disable no-unused-vars */
 const mapStateToProps = (ownState, ownProps) => {
@@ -20,4 +20,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 /* eslint-enable no-unused-vars */
 
-export default connect(mapStateToProps, mapDispatchToProps)(DrawerMainMenu)
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerLanguage)

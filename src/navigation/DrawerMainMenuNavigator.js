@@ -9,10 +9,10 @@ import {
   DrawerActions,
 } from 'react-navigation'
 import WalletStack from './WalletStack'
-import DrawerMainMenuContainer from '../containers/DrawerMainMenuContainer'
+import DrawerMainMenu from '../components/DrawerMainMenu'
 
-const renderDrawerMainMenuContainer = (props) => (
-  <DrawerMainMenuContainer {...props} />
+const renderDrawerMainMenu = (props) => (
+  <DrawerMainMenu {...props} />
 )
 
 const DrawerMainMenuNavigator = createDrawerNavigator(
@@ -20,7 +20,7 @@ const DrawerMainMenuNavigator = createDrawerNavigator(
     WalletStack,
   },
   {
-    contentComponent: renderDrawerMainMenuContainer,
+    contentComponent: renderDrawerMainMenu,
     getCustomActionCreators: (route, stateKey) => {
       return {
         toggleMainMenuDrawer: () =>

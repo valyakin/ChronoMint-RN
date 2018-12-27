@@ -111,9 +111,9 @@ const createRmqMiddleware = () => {
         return Promise.reject(error)
       })
   }
-  
+
   const mutations = {
-  
+
     [MW_RMQ_CONNECT]: connect,
     [MW_RMQ_DISCONNECT]: disconnect,
     [MW_RMQ_SUBSCRIBE]: subscribe,

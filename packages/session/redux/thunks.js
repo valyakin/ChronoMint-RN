@@ -3,7 +3,6 @@
  * Licensed under the AGPL Version 3 license.
  */
 
-import { createBitcoinWallet } from '@chronobank/bitcoin/redux/thunks'
 import {
   login,
   logout,
@@ -17,12 +16,14 @@ import {
   rmqDisconnect,
   rmqSubscribe,
 } from '@chronobank/network/redux/thunks'
+import { BLOCKCHAIN_BITCOIN } from '@chronobank/bitcoin/constants'
+import { getCurrentNetworkBlockchainChannels } from '@chronobank/network/redux/selectors'
 import { marketAddToken } from '@chronobank/market/redux/thunks'
 import { getBitcoinWalletsList } from '@chronobank/bitcoin/redux/selectors'
 import { getBalance } from '@chronobank/ethereum/middleware/thunks'
 import { updateEthereumBalance } from '@chronobank/ethereum/redux/thunks'
 import * as apiBTC from '@chronobank/bitcoin/service/api'
-import { updateBitcoinBalance, updateBitcoinTxHistory } from '@chronobank/bitcoin/redux/thunks'
+import { updateBitcoinBalance, updateBitcoinTxHistory, createBitcoinWallet } from '@chronobank/bitcoin/redux/thunks'
 import { parseBitcoinBalanceData, convertSatoshiToBTC } from '@chronobank/bitcoin/utils/amount'
 import * as EthAmountUtils from '@chronobank/ethereum/utils/amount'
 
@@ -38,6 +39,7 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
       dispatch(marketAddToken('ETH'))
       dispatch(rmqConnect())
         .then(() => {
+          const bitcoinChannels = getCurrentNetworkBlockchainChannels(BLOCKCHAIN_BITCOIN)(getState())
           dispatch(getBalance(ethAddress))
             .then((amount) => {
               const balance = EthAmountUtils.amountToBalance(amount)
@@ -70,7 +72,7 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
                   })
                 dispatch(rmqSubscribe({
                   // TODO: need to get channel name from store
-                  channel: `/exchange/events/testnet-bitcoin-middleware-chronobank-io_balance.${address}`,
+                  channel: `${bitcoinChannels.balance}.${address}`,
                   handler: ({ body }) => {
                     if (!body) {
                       // TODO: need to handle possible errors in reply
@@ -102,7 +104,7 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
                 //subscribe on transactions
                 dispatch(rmqSubscribe({
                   // TODO: need to get channel name from store
-                  channel: `/exchange/events/testnet-bitcoin-middleware-chronobank-io_transaction.${address}`,
+                  channel: `${bitcoinChannels.transaction}.${address}`,
                   handler: ({ body }) => {
                     if (!body) {
                       // TODO: need to handle possible errors in reply
@@ -153,11 +155,20 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
 }
 
 export const logoutThunk = () => (dispatch) => {
-  try {
-    dispatch(rmqDisconnect())
-    dispatch(stopMarket())
-    return dispatch(logout())
-  } catch (error) {
-    return Promise.reject(error)
-  }
+  return new Promise((resolve, reject) => {
+    try {
+      dispatch(stopMarket())
+      dispatch(rmqDisconnect())
+        .then(() => {
+          dispatch(logout())
+          return resolve()
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.warn(error)
+        })
+    } catch (error) {
+      return reject(error)
+    }
+  })
 }

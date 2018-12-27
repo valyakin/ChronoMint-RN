@@ -38,7 +38,6 @@ class WalletListContainer extends PureComponent {
     ),
     dropBitcoinSelectedWallet: PropTypes.func,
     dropEthereumSelectedWallet: PropTypes.func,
-    rmqSubscribe: PropTypes.func,
     masterWalletAddress: PropTypes.string,
     navigation: PropTypes.shape({
       navigate: PropTypes.func,

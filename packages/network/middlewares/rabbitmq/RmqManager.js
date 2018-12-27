@@ -15,10 +15,10 @@ class RmqManager {
   }
 
   connect (baseUrl, user, password, handlers) {
-    this.disconnect()
+    this.client && this.ws && this.disconnect()
     return new Promise((resolve, reject) => {
       try {
-        this.ws =  new SockJS(baseUrl)
+        this.ws = new SockJS(baseUrl)
       } catch (error) {
         return reject(error.message)
       }
@@ -38,6 +38,10 @@ class RmqManager {
             .then(() => {
               return resolve()
             })
+            .catch((error) => {
+              // eslint-disable-next-line no-console
+              console.warn(error)
+            })
         },
         (error) => {
           if (!this.resolved) {
@@ -55,14 +59,18 @@ class RmqManager {
       try {
         this.unsubscribeAll()
           .then(() => {
-            if (this.client && this.client.close) {
-              this.client.close()
-              this.client = null
+            if (this.ws && this.ws.close) {
+              this.ws.close()
+              this.ws = null
             }
-            this.webstomp && this.webstomp.disconnect && this.webstomp.disconnect(() => {
-              this.webstomp = null
+            this.client && this.client.disconnect && this.client.disconnect(() => {
+              this.client = null
               return resolve()
             })
+          })
+          .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.warn(error)
           })
       } catch (error) {
         return reject(error)
@@ -99,9 +107,11 @@ class RmqManager {
   }
 
   async unsubscribeAll () {
-    for (const subscription of this.subscriptions) {
-      await subscription.unsubscribe()
+    const subscriptionsList = Object.assign({}, this.subscriptions)
+    for (const subscription of Object.entries(subscriptionsList)) {
+      await this.unsubscribe(subscription)
     }
+    return Promise.resolve()
   }
 
   async resubscribeAll () {
