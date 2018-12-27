@@ -88,13 +88,12 @@ export const selectEthereumWallet = ({ address }) => (dispatch, getState) => {
             txList,
             latestTxDate: Math.max(...timestamps),
           }))
+          dispatch(Actions.selectEthereumWallet({ address }))
+          return resolve()
         })
         .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.warn(error)
+          return reject(error)
         })
-      dispatch(Actions.selectEthereumWallet({ address }))
-      return resolve()
     } catch (e) {
       return reject(e)
     }

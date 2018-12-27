@@ -5,6 +5,7 @@
 
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import { Alert } from 'react-native'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import { selectCurrentCurrency } from '@chronobank/market/redux/selectors'
@@ -30,14 +31,22 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
 
 class WalletListItemContainer extends PureComponent {
 
+  selectWallet = ({ blockchain, address }) => {
+    const {
+      selectBitcoinWallet,
+      selectEthereumWallet,
+    } = this.props
+    return blockchain === BLOCKCHAIN_ETHEREUM
+      ? selectEthereumWallet({ address })
+      : selectBitcoinWallet({ address })
+  }
+
   handleItemPress = () => {
     const {
       address,
       blockchain,
       navigation,
       selectedCurrency,
-      selectBitcoinWallet,
-      selectEthereumWallet,
       masterWalletAddress,
     } = this.props
 
@@ -48,11 +57,13 @@ class WalletListItemContainer extends PureComponent {
       masterWalletAddress,
     }
 
-
-    blockchain === BLOCKCHAIN_ETHEREUM
-      ? selectEthereumWallet({ address })
-      : selectBitcoinWallet({ address })
-    navigation.navigate('Wallet', params)
+    this.selectWallet({ blockchain, address })
+      .then(() => {
+        navigation.navigate('Wallet', params)
+      })
+      .catch((error) => {
+        Alert.alert('Can\'t select wallet. ', error)
+      })
   }
 
   render () {
