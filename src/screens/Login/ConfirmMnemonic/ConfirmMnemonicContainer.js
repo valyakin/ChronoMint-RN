@@ -10,6 +10,8 @@ import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import { createAccountByMnemonic } from '@chronobank/ethereum/redux/thunks'
 import { getEthAccountList } from '@chronobank/ethereum/redux/selectors'
+import i18n from '../../../locales/translation'
+import { MNEMONIC_LENGTH } from '../../../common/constants/globals'
 import ConfirmMnemonic from './ConfirmMnemonic'
 
 const mapStateToProps = (state) => {
@@ -28,6 +30,23 @@ class ConfirmMnemonicContainer extends PureComponent {
     this.state = this.createInitialState()
   }
 
+  handleClear = () => {
+    this.resetState()
+  }
+
+  handleUndo = () => {
+    const { words, mnemonic, prevWords, prevMnemonic } = this.state
+    if (words != prevWords && mnemonic !== prevMnemonic) {
+      this.setState({
+        words: this.state.prevWords,
+        mnemonic: this.state.prevMnemonic,
+      })
+    } else {
+      Alert.alert('You can\'t make an undo.')
+    }
+  }
+
+
   handleDone = () => {
     const {
       mnemonic,
@@ -37,10 +56,10 @@ class ConfirmMnemonicContainer extends PureComponent {
       createAccountByMnemonic,
     } = this.props
 
-    // if (mnemonic !== this.state.mnemonic.join(' ')) {
-    //   this.addError(i18n.t('ConfirmMnemonic.wrongMnemonicError'))
-    //   return this.resetState()
-    // }
+    if (mnemonic !== this.state.mnemonic.join(' ')) {
+      this.addError(i18n.t('ConfirmMnemonic.wrongMnemonicError'))
+      return this.resetState()
+    }
 
     createAccountByMnemonic(mnemonic, password)
       .then(() => {
@@ -62,21 +81,22 @@ class ConfirmMnemonicContainer extends PureComponent {
     navigation.navigate(page, params)
   }
 
-  handleWord = (/*word*/) => () => {
-    // if (word) {
-    //   this.setState(({ words, mnemonic }) => {
-    //     words[words.indexOf(word)] = ''
-
-    //     return {
-    //       mnemonic: [...mnemonic, word],
-    //       words: [...words],
-    //     }
-    //   }, () => {
-    //     if (this.state.mnemonic.length === MNEMONIC_LENGTH) {
-    this.handleDone()
-    //     }
-    //   })
-    // }
+  handleWord = (word) => {
+    if (word) {
+      const { mnemonic, words } = this.state
+      const newWords = [...words]
+      newWords[newWords.indexOf(word)] = ''
+      this.setState({
+        prevMnemonic: mnemonic,
+        prevWords: words,
+        mnemonic: [...mnemonic, word],
+        words: [...newWords],
+      }, () => {
+        if (this.state.mnemonic.length === MNEMONIC_LENGTH) {
+          this.handleDone()
+        }
+      })
+    }
   }
 
   createInitialState = () => {
@@ -100,6 +120,8 @@ class ConfirmMnemonicContainer extends PureComponent {
     return (
       <ConfirmMnemonic
         onDone={this.handleDone}
+        onClear={this.handleClear}
+        onUndo={this.handleUndo}
         onWord={this.handleWord}
         mnemonic={mnemonic}
         words={words}

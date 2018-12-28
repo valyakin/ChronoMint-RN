@@ -153,6 +153,8 @@
   "ConfirmMnemonic": {
     "title": "Confirm recovery phrase",
     "done": "Done",
+    "undo": "Undo",
+    "clear": "Clear",
     "wrongMnemonicError": "Wrong mnemonic. Try again"
   },
   "GenerateMnemonic": {
