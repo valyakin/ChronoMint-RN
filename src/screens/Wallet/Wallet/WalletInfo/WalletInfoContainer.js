@@ -5,6 +5,7 @@
 
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import { Clipboard } from 'react-native'
 import PropTypes from 'prop-types'
 import { getBitcoinWallets } from '@chronobank/bitcoin/redux/selectors'
 import { getEthereumWalletList } from '@chronobank/ethereum/redux/selectors'
@@ -22,6 +23,11 @@ const mapStateToProps = (state) => {
 }
 
 class WalletInfoContainer extends PureComponent {
+
+
+  handleCopyAddress = () => {
+    Clipboard.setString(this.props.address)
+  }
 
   render () {
     const {
@@ -42,6 +48,7 @@ class WalletInfoContainer extends PureComponent {
         blockchain={blockchain}
         selectedCurrency={selectedCurrency}
         wallet={wallet}
+        onCopyAddress={this.handleCopyAddress}
       />
     )
   }

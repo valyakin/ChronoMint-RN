@@ -45,7 +45,6 @@ export default StyleSheet.create({
     flex: 1,
   },
   title: {
-    marginTop: 8,
     fontWeight: '700',
   },
   address: {
@@ -60,5 +59,16 @@ export default StyleSheet.create({
     color: colors.foregroundLighter,
     fontWeight: '200',
     marginTop: 4,
+  },
+  walletLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  copyImage: {
+    width: 32,
+    height: 32,
+    marginHorizontal: 30,
   },
 })

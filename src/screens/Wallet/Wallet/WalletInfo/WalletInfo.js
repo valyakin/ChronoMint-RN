@@ -6,8 +6,13 @@ import React, { PureComponent } from 'react'
 import {
   Text,
   View,
+  TouchableOpacity,
+  Image,
 } from 'react-native'
 import PropTypes from 'prop-types'
+import {
+  clipboard,
+} from '../../../../images'
 import TokensCounter from '../../../../components/TokensCounter'
 import PrimaryToken from '../../../../components/PrimaryToken'
 import PrimaryBalance from '../../../../components/PrimaryBalance'
@@ -29,6 +34,7 @@ export default class WalletInfo extends PureComponent {
       blockchain,
       wallet,
       selectedCurrency,
+      onCopyAddress = () => { },
     } = this.props
     return (
       <View style={styles.walletDetailsSection}>
@@ -38,11 +44,21 @@ export default class WalletInfo extends PureComponent {
           shapeStyle={styles.walletImageShape}
           size='big'
         />
-        <Text style={styles.address}>
-          {
-            address
-          }
-        </Text>
+        <View style={styles.addressLine}>
+          <Text style={styles.address}>
+            {
+              address
+            }
+          </Text>
+          <TouchableOpacity
+            onPress={onCopyAddress}
+            style={styles.copyAddress}>
+            <Image
+              source={clipboard}
+              style={styles.copyImage}
+            />
+          </TouchableOpacity>
+        </View>
         <PrimaryToken
           blockchain={blockchain}
         />

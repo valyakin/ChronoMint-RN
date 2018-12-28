@@ -43,7 +43,7 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
           dispatch(getBalance(ethAddress))
             .then((amount) => {
               const balance = EthAmountUtils.amountToBalance(amount)
-              updateEthereumBalance({ tokenSymbol: 'ETH', address: ethAddress, balance, amount })
+              dispatch(updateEthereumBalance({ tokenSymbol: 'ETH', address: ethAddress, balance, amount }))
             })
             .catch((error) => {
               return reject('Requiesting ETH balance error', error)

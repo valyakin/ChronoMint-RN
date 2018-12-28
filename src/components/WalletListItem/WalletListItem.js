@@ -13,8 +13,8 @@ import {
 import PropTypes from 'prop-types'
 import {
   indicator_receiving_0,
+  clipboard,
 } from '../../images'
-// import TokensCounter from '../TokensCounter'
 import PrimaryToken from '../PrimaryToken'
 import PrimaryBalance from '../PrimaryBalance'
 import WalletImage from '../WalletImage'
@@ -44,6 +44,7 @@ export default class WalletListItem extends PureComponent {
       blockchain,
       selectedCurrency,
       onItemPress = () => { },
+      onCopyAddress = () => { },
       wallet,
     } = this.props
 
@@ -62,11 +63,21 @@ export default class WalletListItem extends PureComponent {
               style={styles.image}
             />
             <View style={styles.contentColumn}>
-              <Text style={styles.title}>
-                {
-                  `My ${blockchain} Wallet`
-                }
-              </Text>
+              <View style={styles.walletLine}>
+                <Text style={styles.title}>
+                  {
+                    `My ${blockchain} Wallet`
+                  }
+                </Text>
+                <TouchableOpacity
+                  onPress={onCopyAddress}
+                  style={styles.copyAddress}>
+                  <Image
+                    source={clipboard}
+                    style={styles.copyImage}
+                  />
+                </TouchableOpacity>
+              </View>
               <Text
                 style={styles.address}
                 ellipsizeMode='middle'
@@ -83,7 +94,7 @@ export default class WalletListItem extends PureComponent {
                 <PrimaryBalance
                   blockchain={blockchain}
                   selectedCurrency={selectedCurrency}
-                  wallet={wallet} 
+                  wallet={wallet}
                 />
                 {/* <TokensCounter
                   blockchain={blockchain}
@@ -103,4 +114,5 @@ WalletListItem.propTypes = {
   blockchain: PropTypes.string,
   selectedCurrency: PropTypes.string,
   onItemPress: PropTypes.func,
+  onCopyAddress: PropTypes.func,
 }

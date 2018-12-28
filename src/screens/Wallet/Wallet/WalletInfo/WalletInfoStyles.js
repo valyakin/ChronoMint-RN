@@ -57,4 +57,12 @@ export default StyleSheet.create({
   balanceAndTokensRow: {
     flexDirection: 'row',
   },
+  addressLine: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  copyImage: {
+    width: 32,
+    height: 32,
+  },
 })
