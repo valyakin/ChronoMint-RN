@@ -156,25 +156,43 @@ const bitcoinTxUpdateRecipient = (state, { recipient, address, masterWalletAddre
   }
 }
 
-const bitcoinTxUpdateHistory = (state, { latestTxDate, txList, address, masterWalletAddress }) => {
+const bitcoinTxUpdateHistory = (state, { latestTxDate, txList, address, masterWalletAddress, withReset }) => {
+  console.log('WItH RESET: ', withReset)
   let list = Object.assign({}, state.list)
-  list = {
-    ...list,
-    [masterWalletAddress]: {
-      ...list[masterWalletAddress],
-      [address]: {
-        ...list[masterWalletAddress][address],
-        transactions: {
-          ...list[masterWalletAddress][address].transactions,
-          latestTxDate,
-          txList: [
-            ...list[masterWalletAddress][address].transactions.txList,
-            ...txList,
-          ],
+  list = withReset
+    ? {
+      ...list,
+      [masterWalletAddress]: {
+        ...list[masterWalletAddress],
+        [address]: {
+          ...list[masterWalletAddress][address],
+          transactions: {
+            ...list[masterWalletAddress][address].transactions,
+            latestTxDate,
+            txList: [
+              ...txList,
+            ],
+          },
         },
       },
-    },
-  }
+    }
+    : {
+      ...list,
+      [masterWalletAddress]: {
+        ...list[masterWalletAddress],
+        [address]: {
+          ...list[masterWalletAddress][address],
+          transactions: {
+            ...list[masterWalletAddress][address].transactions,
+            latestTxDate,
+            txList: [
+              ...list[masterWalletAddress][address].transactions.txList,
+              ...txList,
+            ],
+          },
+        },
+      },
+    }
 
   return {
     ...state,
@@ -376,7 +394,7 @@ const bitcoinTxUpdate = (state, { entry }) => {
     },
   }
 }
-  
+
 
 const mutations = {
 

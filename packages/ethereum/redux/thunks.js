@@ -86,6 +86,7 @@ export const selectEthereumWallet = ({ address }) => (dispatch, getState) => {
             masterWalletAddress,
             txList,
             latestTxDate: Math.max(...timestamps),
+            withReset: true,
           }))
         })
         .catch((error) => {
@@ -200,10 +201,10 @@ export const updateEthereumTxDraftSignedTx = ({ signedTx, masterWalletAddress })
   })
 }
 
-export const updateEthereumTxHistory = ({ latestTxDate, txList, masterWalletAddress, address }) => (dispatch) => {
+export const updateEthereumTxHistory = ({ latestTxDate, txList, masterWalletAddress, address, withReset = false }) => (dispatch) => {
   return new Promise((resolve, reject) => {
     try {
-      dispatch(Actions.ethereumTxUpdateHistory({ latestTxDate, txList, masterWalletAddress, address }))
+      dispatch(Actions.ethereumTxUpdateHistory({ latestTxDate, txList, masterWalletAddress, address, withReset }))
       return resolve()
     } catch (e) {
       return reject(e)

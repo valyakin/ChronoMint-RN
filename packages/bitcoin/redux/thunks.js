@@ -48,6 +48,7 @@ export const selectBitcoinWallet = ({ address }) => (dispatch, getState) => {
             masterWalletAddress,
             txList,
             latestTxDate: Math.max(...timestamps),
+            withReset: true,
           }))
         })
         .catch((error) => {
@@ -83,10 +84,10 @@ export const updateBitcoinTxDraftAmount = ({ address, masterWalletAddress, amoun
   })
 }
 
-export const updateBitcoinTxHistory = ({ latestTxDate, txList, masterWalletAddress, address }) => (dispatch) => {
+export const updateBitcoinTxHistory = ({ latestTxDate, txList, masterWalletAddress, address, withReset = false }) => (dispatch) => {
   return new Promise((resolve, reject) => {
     try {
-      dispatch(Actions.bitcoinTxUpdateHistory({ latestTxDate, txList, masterWalletAddress, address }))
+      dispatch(Actions.bitcoinTxUpdateHistory({ latestTxDate, txList, masterWalletAddress, address, withReset }))
       return resolve()
     } catch (e) {
       return reject(e)
