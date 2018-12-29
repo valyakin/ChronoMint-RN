@@ -20,9 +20,10 @@ import { BLOCKCHAIN_BITCOIN } from '@chronobank/bitcoin/constants'
 import { getCurrentNetworkBlockchainChannels } from '@chronobank/network/redux/selectors'
 import { marketAddToken } from '@chronobank/market/redux/thunks'
 import { getBitcoinWalletsList } from '@chronobank/bitcoin/redux/selectors'
-import { getBalance } from '@chronobank/ethereum/middleware/thunks'
+import { getBalance, initContracts } from '@chronobank/ethereum/middleware/thunks'
 import { updateEthereumBalance } from '@chronobank/ethereum/redux/thunks'
 import * as apiBTC from '@chronobank/bitcoin/service/api'
+import * as apiETH from '@chronobank/ethereum/service/api'
 import { updateBitcoinBalance, updateBitcoinTxHistory, createBitcoinWallet } from '@chronobank/bitcoin/redux/thunks'
 import { parseBitcoinBalanceData, convertSatoshiToBTC } from '@chronobank/bitcoin/utils/amount'
 import * as EthAmountUtils from '@chronobank/ethereum/utils/amount'
@@ -42,6 +43,12 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
           const bitcoinChannels = getCurrentNetworkBlockchainChannels(BLOCKCHAIN_BITCOIN)(getState())
           dispatch(getBalance(ethAddress))
             .then((amount) => {
+              dispatch(apiETH.requestEthereumSubscribeWalletByAddress(ethAddress))
+                .then((result) => console.log('result: ', result))
+                .catch((er) => console.log('er: ', er))
+              dispatch(apiETH.requestEthereumBalanceByAddress(ethAddress))
+                .then((result) => console.log('result: ', result))
+                .catch((er) => console.log('er: ', er))
               const balance = EthAmountUtils.amountToBalance(amount)
               dispatch(updateEthereumBalance({ tokenSymbol: 'ETH', address: ethAddress, balance, amount }))
             })
@@ -138,6 +145,7 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
                   },
                 }))
               })
+              dispatch(initContracts())
               dispatch(login(ethAddress))
               return resolve()
             })

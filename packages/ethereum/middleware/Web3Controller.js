@@ -102,7 +102,7 @@ export default class Web3Controller {
                     this.dispatch(Web3Actions.connectSuccess(this.networkIndex, this.host))
                     this.checkSyncStatus()
                     // this.initContracts()
-                    // this.subscribeOnContractsEvents()
+                    this.subscribeOnContractsEvents()
                   } else {
                     this.provider.disconnect()
                     this.web3 = null
@@ -253,37 +253,44 @@ export default class Web3Controller {
     return this.tokens[tokenContractName]
   }
 
-  async loadTokens () {
+  async loadTokens (tokenAddresses = []) {
     const Erc20Manager = this.contracts.get('ERC20Manager')
     if (Erc20Manager) {
-      const res = await Erc20Manager.methods.getTokens([]).call()
-      /* eslint-disable no-underscore-dangle */
-      const addresses = res._tokensAddresses
-      const names = res._names
-      const symbols = res._symbols
-      const urls = res._urls
-      const decimalsArr = res._decimalsArr
-      const ipfsHashes = res._ipfsHashes
-      /* eslint-enable no-underscore-dangle */
-      const gasPrice = await this.web3.eth.getGasPrice()
-      const bnGasPrice = new BigNumber(gasPrice)
-      addresses.forEach((address, i) => {
-        const model = {
-          address: address.toLowerCase(),
-          name: web3utils.toUtf8(names[i]),
-          symbol: web3utils.toUtf8(symbols[i]).toUpperCase(),
-          url: web3utils.toUtf8(urls[i]),
-          decimals: parseInt(decimalsArr[i]),
-          icon: Utils.bytes32ToIPFSHash(ipfsHashes[i]),
-          feeRate: {
-            wei: bnGasPrice,
-            gwei: web3utils.fromWei(bnGasPrice, 'gwei'),
-          },
-          events: false,
-        }
-        this.initTokenContract(model.symbol, model.address)
-      })
-      this.subscribeOnTokenEvents()
+      try {
+        const res = await Erc20Manager.methods.getTokens(tokenAddresses).call()
+        
+        /* eslint-disable no-underscore-dangle */
+        const addresses = res._tokensAddresses
+        const names = res._names
+        const symbols = res._symbols
+        const urls = res._urls
+        const decimalsArr = res._decimalsArr
+        const ipfsHashes = res._ipfsHashes
+        /* eslint-enable no-underscore-dangle */
+        const gasPrice = await this.web3.eth.getGasPrice()
+        const bnGasPrice = new BigNumber(gasPrice)
+        addresses.forEach((address, i) => {
+          const model = {
+            address: address.toLowerCase(),
+            name: web3utils.toUtf8(names[i]),
+            symbol: web3utils.toUtf8(symbols[i]).toUpperCase(),
+            url: web3utils.toUtf8(urls[i]),
+            decimals: parseInt(decimalsArr[i]),
+            icon: Utils.bytes32ToIPFSHash(ipfsHashes[i]),
+            feeRate: {
+              wei: bnGasPrice,
+              gwei: web3utils.fromWei(bnGasPrice, 'gwei'),
+            },
+            events: false,
+          }
+          this.initTokenContract(model.symbol, model.address)
+        })
+        this.subscribeOnTokenEvents()
+      } catch (error) {
+      // eslint-disable-next-line no-console
+        console.warn(error)
+      }
+
     } else {
       // eslint-disable-next-line no-console
       //#console.log('Contract Erc20Manager is not initialized.')
