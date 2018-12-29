@@ -52,6 +52,7 @@ export const selectBitcoinWallet = ({ address }) => (dispatch, getState) => {
           }))
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
           console.warn(error)
         })
       dispatch(Actions.bitcoinSelectWallet(address))

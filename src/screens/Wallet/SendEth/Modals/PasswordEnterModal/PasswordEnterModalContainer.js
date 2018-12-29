@@ -136,8 +136,10 @@ class PasswordEnterModalContainer extends React.Component {
           signedTx: signedTXresults.rawTransaction,
         })
           .then(() => this.props.confirmPassword())
+          // eslint-disable-next-line no-console
           .catch((error) => console.log(error))
       })
+      // eslint-disable-next-line no-console
       .catch((error) => console.log(error))
   }
 

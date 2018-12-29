@@ -133,6 +133,7 @@ class SendEthContainer extends React.Component {
       })
       .catch((error) => {
         Alert.alert('Error, while making a gasprice, chainid, nonce requests to middleware.')
+        // eslint-disable-next-line no-console
         console.log(error)
       })
   }
@@ -298,6 +299,7 @@ class SendEthContainer extends React.Component {
       })
       .catch((error) => {
         Alert.alert('Error, while making a gas estimate request to middleware.')
+        // eslint-disable-next-line no-console
         console.warn(error)
       })
   }

@@ -90,6 +90,7 @@ export const selectEthereumWallet = ({ address }) => (dispatch, getState) => {
           }))
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
           console.warn(error)
         })
       dispatch(Actions.selectEthereumWallet({ address }))

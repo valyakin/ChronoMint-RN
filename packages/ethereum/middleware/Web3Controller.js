@@ -60,6 +60,7 @@ export default class Web3Controller {
   }
 
   onEndHandler = (error) => {
+    // eslint-disable-next-line no-console
     console.log('onEndHandler error', error)
     this.dispatch(Web3Actions.connectFailure(this.networkIndex, this.networkIndex, error))
     this.provider && this.provider.disconnect()

@@ -157,7 +157,6 @@ const bitcoinTxUpdateRecipient = (state, { recipient, address, masterWalletAddre
 }
 
 const bitcoinTxUpdateHistory = (state, { latestTxDate, txList, address, masterWalletAddress, withReset }) => {
-  console.log('WItH RESET: ', withReset)
   let list = Object.assign({}, state.list)
   list = withReset
     ? {

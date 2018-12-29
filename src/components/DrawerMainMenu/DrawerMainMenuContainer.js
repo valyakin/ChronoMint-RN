@@ -24,12 +24,13 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
 class DrawerMainMenuContainer extends React.PureComponent {
 
   handleLogout = () => {
+    // eslint-disable-next-line no-console
     console.log(this.props)
     const { logoutThunk, navigation } = this.props
     logoutThunk()
-    .then(() => {
-      navigation.navigate('Start')
-    })
+      .then(() => {
+        navigation.navigate('Start')
+      })
   }
 
   render () {
