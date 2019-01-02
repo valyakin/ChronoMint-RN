@@ -258,7 +258,7 @@ export default class Web3Controller {
     if (Erc20Manager) {
       try {
         const res = await Erc20Manager.methods.getTokens(tokenAddresses).call()
-        
+
         /* eslint-disable no-underscore-dangle */
         const addresses = res._tokensAddresses
         const names = res._names
@@ -287,7 +287,7 @@ export default class Web3Controller {
         })
         this.subscribeOnTokenEvents()
       } catch (error) {
-      // eslint-disable-next-line no-console
+        // eslint-disable-next-line no-console
         console.warn(error)
       }
 
