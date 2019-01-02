@@ -58,6 +58,7 @@ class SendEthContainer extends React.Component {
       showQRscanner: false,
       error: null,
       gasLimit: null,
+      gasDefault: null,
       gasLimitInCurrency: null,
       feeMultiplier: 1,
       isAmountInputValid: false,
@@ -248,9 +249,10 @@ class SendEthContainer extends React.Component {
           prices[this.state.selectedToken.symbol][selectedCurrency]) ||
         0 // TODO: handle wrong values correctly
 
-      const newGasLimit = this.state.gasLimit ? this.state.gasLimit * value : null
-      const newGasPrice = newGasLimit ? newGasLimit * tokenPrice : null
-
+      let newGasLimit = this.state.gasLimit ? this.state.gasDefault * value : null
+      let newGasPrice = newGasLimit ? newGasLimit * tokenPrice : null
+      newGasLimit = parseInt(newGasLimit)
+      newGasPrice = parseInt(newGasPrice)
       this.setState({
         feeMultiplier: value,
         gasLimit: newGasLimit,
@@ -290,6 +292,7 @@ class SendEthContainer extends React.Component {
       .then((results) => {
         this.setState({
           gasLimit: results,
+          gasDefault: results,
         }, () => {
           updateEthereumTxDraftGasLimit({
             masterWalletAddress,

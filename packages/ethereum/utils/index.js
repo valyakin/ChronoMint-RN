@@ -82,7 +82,7 @@ export const checkPrivateKey = (privateKey) => {
   return finalPrivate
 }
 
-export const signEthTransaction = ({tx, privateKey}) => {
+export const signEthTransaction = ({ tx, privateKey }) => {
   const accounts = new Accounts()
   const signedTx = accounts.signTransaction(tx, privateKey)
   return signedTx

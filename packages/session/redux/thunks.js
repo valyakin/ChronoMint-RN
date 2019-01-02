@@ -41,14 +41,16 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
       dispatch(rmqConnect())
         .then(() => {
           const bitcoinChannels = getCurrentNetworkBlockchainChannels(BLOCKCHAIN_BITCOIN)(getState())
-          dispatch(getBalance(ethAddress))
-            .then((amount) => {
-              dispatch(apiETH.requestEthereumSubscribeWalletByAddress(ethAddress))
-                .then((result) => console.log('result: ', result))
-                .catch((er) => console.log('er: ', er))
+          dispatch(apiETH.requestEthereumSubscribeWalletByAddress(ethAddress))
+            .then((result) => {
+              console.log('result: ', result)
               dispatch(apiETH.requestEthereumBalanceByAddress(ethAddress))
                 .then((result) => console.log('result: ', result))
                 .catch((er) => console.log('er: ', er))
+            })
+            .catch((er) => console.log('er: ', er))
+          dispatch(getBalance(ethAddress))
+            .then((amount) => {
               const balance = EthAmountUtils.amountToBalance(amount)
               dispatch(updateEthereumBalance({ tokenSymbol: 'ETH', address: ethAddress, balance, amount }))
             })
