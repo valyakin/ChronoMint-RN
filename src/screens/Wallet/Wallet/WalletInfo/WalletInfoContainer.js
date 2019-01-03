@@ -10,7 +10,8 @@ import PropTypes from 'prop-types'
 import { getBitcoinWallets } from '@chronobank/bitcoin/redux/selectors'
 import { getEthereumWalletList } from '@chronobank/ethereum/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
-import { BLOCKCHAIN_ETHEREUM } from '@chronobank/ethereum/constants'
+import { BLOCKCHAIN_ETHEREUM, ETH_PRIMARY_TOKEN } from '@chronobank/ethereum/constants'
+import { BTC_PRIMARY_TOKEN } from '@chronobank/bitcoin/constants'
 import WalletInfo from './WalletInfo'
 
 const mapStateToProps = (state) => {
@@ -42,6 +43,10 @@ class WalletInfoContainer extends PureComponent {
       ? ethereumWallets[address]
       : bitcoinWallets[address]
 
+    const primaryTokenSymbol = blockchain === BLOCKCHAIN_ETHEREUM
+      ? ETH_PRIMARY_TOKEN
+      : BTC_PRIMARY_TOKEN
+
     return (
       <WalletInfo
         address={address}
@@ -49,6 +54,7 @@ class WalletInfoContainer extends PureComponent {
         selectedCurrency={selectedCurrency}
         wallet={wallet}
         onCopyAddress={this.handleCopyAddress}
+        primaryTokenSymbol={primaryTokenSymbol}
       />
     )
   }

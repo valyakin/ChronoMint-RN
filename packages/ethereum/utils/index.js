@@ -42,7 +42,6 @@ export const mnemonicToPrivateKeyAndAddress = (mnemonic, path = WALLET_HD_PATH) 
   const hdWallet = hdKey.fromMasterSeed(mnemonicSeed)
   const wallet = hdWallet.derivePath(path).getWallet()
   const account = accounts.privateKeyToAccount(`0x${wallet.getPrivateKey().toString('hex')}`)
-
   wallets.add(account)
 
   const walletAccount = wallets[0]

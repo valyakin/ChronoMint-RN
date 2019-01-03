@@ -16,6 +16,7 @@ import WalletList from '../screens/Wallet/WalletList'
 import Wallet from '../screens/Wallet/Wallet'
 import Send from '../screens/Wallet/Send'
 import SendEth from '../screens/Wallet/SendEth'
+import TokenSelector from '../screens/Wallet/TokenSelector'
 import i18n from '../locales/translation'
 
 const transitionConfig = () => {
@@ -73,6 +74,13 @@ const WalletStack = createStackNavigator(
         headerLeft: <HeaderBackButton onPress={() => navigation.goBack()} tintColor='white' />,
       }),
       screen: SendEth,
+    },
+    'TokenSelector': {
+      navigationOptions: ({ navigation }) => ({
+        title: i18n.t('ScreensTitles.TokenSelector'),
+        headerLeft: <HeaderBackButton onPress={() => navigation.goBack()} tintColor='white' />,
+      }),
+      screen: TokenSelector,
     },
   },
   {

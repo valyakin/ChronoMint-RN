@@ -356,6 +356,10 @@ class SendEthContainer extends React.Component {
     this.handleChangeRecipient('recipient', scannedAddress.data)
   }
 
+  handleSelectToken = () => {
+    this.props.navigation.navigate('TokenSelector')
+  }
+
 
   render () {
     const {

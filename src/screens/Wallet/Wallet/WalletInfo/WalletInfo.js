@@ -25,7 +25,9 @@ export default class WalletInfo extends PureComponent {
     address: PropTypes.string,
     blockchain: PropTypes.string,
     selectedCurrency: PropTypes.string,
+    primaryTokenSymbol: PropTypes.string,
     wallet: PropTypes.shape({}),
+    onCopyAddress: PropTypes.func,
   }
 
   render () {
@@ -34,10 +36,11 @@ export default class WalletInfo extends PureComponent {
       blockchain,
       wallet,
       selectedCurrency,
+      primaryTokenSymbol,
       onCopyAddress = () => { },
     } = this.props
 
-    const primaryToken = wallet.tokens[Object.keys(wallet.tokens)[0]]
+    const primaryToken = wallet.tokens[primaryTokenSymbol]
 
     return (
       <View style={styles.walletDetailsSection}>
