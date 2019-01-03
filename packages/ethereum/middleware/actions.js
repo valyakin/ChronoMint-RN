@@ -95,8 +95,9 @@ export const getChainId = () => ({
   type: ActionTypes.WEB3_MIDDLEWARE_METHOD_GET_CHAIN_ID,
 })
 
-export const initContracts = () => ({
+export const initContracts = (ethAddress) => ({
   type: ActionTypes.WEB3_MIDDLEWARE_INIT_CONTRACTS,
+  ethAddress,
 })
 
 export const estimateGas = ({ from, to, value, data, gasPrice, nonce }) => ({

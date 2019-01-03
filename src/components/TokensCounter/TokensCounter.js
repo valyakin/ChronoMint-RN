@@ -9,13 +9,11 @@ import {
 } from 'react-native'
 import i18n from '../../locales/translation'
 import styles from './TokenCounterStyles'
-import testData from './testData.json'
 
 export default class TokensCounter extends PureComponent {
 
   render () {
-    const tokensLength = testData.tokensLength
-    // const tokensLength = this.props.list.length - 1
+    const tokensLength = Object.keys(this.props.wallet.tokens).length - 1
     if (!tokensLength) {
       return null
     }

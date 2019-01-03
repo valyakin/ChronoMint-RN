@@ -21,7 +21,7 @@ import {
 import { getCurrentEthWallet } from '@chronobank/ethereum/redux/selectors'
 import { balanceToAmount } from '@chronobank/ethereum/utils/amount'
 import { getCurrentNetwork } from '@chronobank/network/redux/selectors'
-import { selectMarketPrices } from '@chronobank/market/redux/selectors'
+import { selectMarketPrices, selectCurrentCurrency } from '@chronobank/market/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
 import TextButton from '../../../components/TextButton'
 import styles from './SendEthStyles'
@@ -32,6 +32,7 @@ const mapStateToProps = (state) => {
 
   return {
     masterWalletAddress,
+    selectedCurrency: selectCurrentCurrency(state),
     prices: selectMarketPrices(state),
     currentEthWallet: getCurrentEthWallet(masterWalletAddress)(state),
     network: getCurrentNetwork(state),
@@ -85,8 +86,18 @@ class SendEthContainer extends React.Component {
   }
 
   static propTypes = {
+    updateEthereumTxDraftTo: PropTypes.func,
+    createEthereumTxDraft: PropTypes.func,
+    deleteEthereumTxDraft: PropTypes.func,
+    estimateGas: PropTypes.func,
+    updateEthereumTxDraftValue: PropTypes.func,
+    updateEthereumTxDraftGasLimit: PropTypes.func,
+    getNonce: PropTypes.func,
+    getGasPrice: PropTypes.func,
+    getChainId: PropTypes.func,
     updateEthereumTxDraftGasPriceChainIdNonce: PropTypes.func,
     masterWalletAddress: PropTypes.string,
+    selectedCurrency: PropTypes.string,
     currentEthWallet: PropTypes.shape({}),
     network: PropTypes.shape({}),
     prices: PropTypes.shape({}),
@@ -96,10 +107,7 @@ class SendEthContainer extends React.Component {
       navigate: PropTypes.func,
       state: PropTypes.shape({
         params: PropTypes.shape({
-          address: PropTypes.string,
           blockchain: PropTypes.string,
-          selectedCurrency: PropTypes.string,
-          masterWalletAddress: PropTypes.string,
         }),
       }),
     }),
@@ -188,8 +196,8 @@ class SendEthContainer extends React.Component {
         prices,
         updateEthereumTxDraftValue,
         masterWalletAddress,
+        selectedCurrency,
       } = this.props
-      const { selectedCurrency } = this.props.navigation.state.params
       if (!(value.endsWith(',') || value.endsWith('.') || value.endsWith('0'))) {
         const inputValue = value.replace(',', '.').replace(' ', '')
         const localeValue = new BigNumber(inputValue).toNumber()
@@ -237,10 +245,8 @@ class SendEthContainer extends React.Component {
       prices,
       updateEthereumTxDraftGasLimit,
       masterWalletAddress,
-    } = this.props
-    const {
       selectedCurrency,
-    } = this.props.navigation.state.params
+    } = this.props
     if (this.state.gasLimit !== null) {
 
       const tokenPrice =
@@ -368,9 +374,8 @@ class SendEthContainer extends React.Component {
     } = this.state
     const {
       blockchain,
-      selectedCurrency,
     } = this.props.navigation.state.params
-    const { currentEthWallet, prices } = this.props
+    const { currentEthWallet, prices, selectedCurrency } = this.props
     const blockchainPrice = prices &&
       prices[selectedToken.symbol] &&
       prices[selectedToken.symbol][selectedCurrency]

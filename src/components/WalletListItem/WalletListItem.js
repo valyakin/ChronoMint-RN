@@ -17,6 +17,7 @@ import {
 } from '../../images'
 import PrimaryToken from '../PrimaryToken'
 import PrimaryBalance from '../PrimaryBalance'
+import TokensCounter from '../TokensCounter'
 import WalletImage from '../WalletImage'
 import styles from './WalletListItemStyles'
 
@@ -96,9 +97,10 @@ export default class WalletListItem extends PureComponent {
                   selectedCurrency={selectedCurrency}
                   wallet={wallet}
                 />
-                {/* <TokensCounter
+                <TokensCounter
                   blockchain={blockchain}
-                /> */}
+                  wallet={wallet}
+                />
               </View>
             </View>
           </View>

@@ -6,6 +6,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Alert } from 'react-native'
+import { getCurrentNetwork } from '@chronobank/network/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
 import { getCurrentEthWallet } from '@chronobank/ethereum/redux/selectors'
 import { getBitcoinCurrentWallet } from '@chronobank/bitcoin/redux/selectors'
@@ -19,11 +20,23 @@ import { signTransaction } from '@chronobank/bitcoin/utils'
 import { name as appName } from '../../../../../../app.json'
 import PasswordEnterModal from './PasswordEnterModal'
 
+const authenticateErrors = {
+  'NOT_SUPPORTED': 'Not supported.',
+  'NOT_AVAILABLE': 'Not supported.',
+  'NOT_PRESENT': 'Not supported.',
+  'NOT_ENROLLED': 'Not supported.',
+  'AUTHENTICATION_FAILED': 'Authenticate failed.',
+  'AUTHENTICATION_CANCELED': 'Authenticate cancelled.',
+  'FINGERPRINT_ERROR_LOCKOUT': 'Too many attempts.Try again Later.',
+  'FINGERPRINT_ERROR_LOCKOUT_PERMANENT': 'Too many attempts.Fingerprint sensor disabled',
+}
+
 const mapStateToProps = (state) => {
   const masterWalletAddress = getCurrentWallet(state)
 
   return {
     masterWalletAddress,
+    network: getCurrentNetwork(state),
     masterWallet: getCurrentEthWallet(masterWalletAddress)(state),
     currentBTCWallet: getBitcoinCurrentWallet(masterWalletAddress)(state),
   }
@@ -74,19 +87,28 @@ class PasswordEnterModalContainer extends React.Component {
   authenticate = () => {
     return TouchID.authenticate(`${appName} Application`)
       .then(() => {
-        const {
-          masterWalletAddress,
-        } = this.props.passProps
-        return Keychain.getInternetCredentials(masterWalletAddress)
+        const { masterWalletAddress } = this.props
+        Keychain.getInternetCredentials(masterWalletAddress)
+          .then((keychain) => {
+            this.handleConfirmClick({ password: keychain.password })
+          })
+          .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.warn(error)
+          })
       })
-      .then((keychain) => this.handleConfirmClick({ password: keychain.password }))
-      .catch(() => { })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        if (authenticateErrors[error.code]) {
+          Alert.alert(authenticateErrors[error.code])
+        } else {
+          Alert.alert('Authenticate error.')
+        }
+      })
   }
 
   handleConfirmClick = async ({ password }) => {
-    const {
-      masterWallet,
-    } = this.props
+    const { masterWallet } = this.props
     const pass = password ? password : this.state.password
     decryptWallet(masterWallet.encrypted, pass)
       .then((results) => {
@@ -102,18 +124,19 @@ class PasswordEnterModalContainer extends React.Component {
   handleSign = ({ privateKey }) => {
     const {
       updateBitcoinTxDraftSignedTx,
-      passProps,
       currentBTCWallet,
+      network,
+      masterWalletAddress,
     } = this.props
     const signedTx = signTransaction({
       unsignedTxHex: currentBTCWallet.txDraft.unsignedTx,
-      network: passProps.network.networkType,
+      network: network.networkType,
       privateKey,
     })
     if (signedTx) {
       updateBitcoinTxDraftSignedTx({
         address: currentBTCWallet.address,
-        masterWalletAddress: passProps.masterWalletAddress,
+        masterWalletAddress,
         signedTx,
       })
       this.props.confirmPassword()
@@ -126,7 +149,6 @@ class PasswordEnterModalContainer extends React.Component {
       biometryType,
     } = this.state
     const {
-      passProps,
       visible,
       modalToggle,
       error,
@@ -138,7 +160,6 @@ class PasswordEnterModalContainer extends React.Component {
         onConfirmPassword={this.handleConfirmClick}
         onScan={this.handleScan}
         biometryType={biometryType}
-        passProps={passProps}
         visible={visible}
         modalToggle={modalToggle}
         error={error}

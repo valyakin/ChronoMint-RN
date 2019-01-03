@@ -26,7 +26,6 @@ const mapStateToProps = (state) => {
 
   return {
     sections: getSections(masterWalletAddress)(state),
-    masterWalletAddress,
   }
 }
 
@@ -61,13 +60,12 @@ class WalletListContainer extends PureComponent {
   }
 
   render () {
-    const { navigation, sections, masterWalletAddress } = this.props
+    const { navigation, sections } = this.props
 
     return (
       <WalletList
         navigation={navigation}
         sections={sections}
-        masterWalletAddress={masterWalletAddress}
         onRemoveSelectedWallet={this.handleRemoveSelectedWallet}
       />
     )

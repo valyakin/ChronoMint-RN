@@ -70,6 +70,7 @@ export default class WalletInfo extends PureComponent {
           />
           <TokensCounter
             blockchain={blockchain}
+            wallet={wallet}
           />
         </View>
       </View>

@@ -67,22 +67,24 @@ const ethereumCreateDerivedWallet = (state, { masterWalletAddress, address }) =>
 }
 
 const updateEthereumBalance = (state, { tokenSymbol, address, balance, amount }) => {
-  return {
-    ...state,
-    list: {
-      ...state.list,
-      [address]: {
-        ...state.list[address],
-        tokens: {
-          ...state.list[address].tokens,
-          [tokenSymbol]: {
-            ...state.list[address].tokens[tokenSymbol],
-            balance,
-            amount,
-          },
+  let list = Object.assign({}, state.list)
+  list = {
+    ...list,
+    [address]: {
+      ...list[address],
+      tokens: {
+        ...list[address].tokens,
+        [tokenSymbol]: {
+          ...list[address].tokens[tokenSymbol],
+          balance,
+          amount,
         },
       },
     },
+  }
+  return {
+    ...state,
+    list,
   }
 }
 

@@ -5,6 +5,9 @@
 
 import Web3 from 'web3'
 import { Map } from 'immutable'
+import { marketAddToken } from '@chronobank/market/redux/thunks'
+import { amountToBalance } from '../utils/amount'
+import { updateEthereumBalance } from '../redux/thunks'
 import ERC20DAODefaultABI from './abi/ERC20DAODefaultABI'
 // import TokenManagementInterfaceABI from 'chronobank-smart-contracts/build/contracts/TokenManagementInterface.json'
 import BigNumber from 'bignumber.js'
@@ -133,8 +136,19 @@ export default class Web3Controller {
     })
   }
 
-  initTokenContract (tokenSymbol, tokenAddress) {
+  initTokenContract (tokenSymbol, tokenAddress, parentAddress) {
     this.tokens = this.tokens.set(tokenSymbol, new this.web3.eth.Contract(ERC20DAODefaultABI.abi, tokenAddress))
+    if (parentAddress) {
+      this.dispatch(Web3Thunks.getBalance(tokenAddress))
+        .then((amount) => {
+          const balance = amountToBalance(amount)
+          this.dispatch(marketAddToken(tokenSymbol))
+          this.dispatch(updateEthereumBalance({ tokenSymbol, address: parentAddress, balance, amount }))
+        })
+        .catch((error) => {
+          console.warn(`Requiesting ${tokenSymbol} balance error`, error)
+        })
+    }
   }
 
   unsubscribeFromAllEvents () {
@@ -253,11 +267,12 @@ export default class Web3Controller {
     return this.tokens[tokenContractName]
   }
 
-  async loadTokens (tokenAddresses = []) {
+  async loadTokens (ethAddress) {
     const Erc20Manager = this.contracts.get('ERC20Manager')
     if (Erc20Manager) {
       try {
-        const res = await Erc20Manager.methods.getTokens(tokenAddresses).call()
+        const res = await Erc20Manager.methods.getTokens([]).call()
+        console.log('RESULTS: ', res)
 
         /* eslint-disable no-underscore-dangle */
         const addresses = res._tokensAddresses
@@ -283,7 +298,7 @@ export default class Web3Controller {
             },
             events: false,
           }
-          this.initTokenContract(model.symbol, model.address)
+          this.initTokenContract(model.symbol, model.address, ethAddress)
         })
         this.subscribeOnTokenEvents()
       } catch (error) {
@@ -297,7 +312,7 @@ export default class Web3Controller {
     }
   }
 
-  initContracts () {
+  initContracts (ethAddress) {
     const abstractContracts = [
       'ChronoBankPlatformEmitterABI',
       'FeeInterfaceABI',
@@ -325,7 +340,7 @@ export default class Web3Controller {
         }
       }
     })
-    this.loadTokens()
+    this.loadTokens(ethAddress)
   }
 
   getWeb3Instance () {

@@ -64,8 +64,8 @@ export const estimateGas = ({ from, to, value, data, gasPrice, nonce }) => (disp
 export const getGasPrice = () => (dispatch) =>
   dispatch(Actions.getGasPrice())
 
-export const initContracts = () => (dispatch) =>
-  dispatch(Actions.initContracts())
+export const initContracts = (ethAddress) => (dispatch) =>
+  dispatch(Actions.initContracts(ethAddress))
 
 export const getChainId = () => (dispatch) =>
   dispatch(Actions.getChainId())

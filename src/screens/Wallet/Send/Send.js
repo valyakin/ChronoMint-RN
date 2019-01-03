@@ -55,7 +55,6 @@ export default class Send extends PureComponent {
       selectedCurrency,
       selectedToken,
       selectedWallet,
-      passProps,
       onTxDraftCreate,
       onTxDraftRemove,
       onQRpageOpen,
@@ -99,7 +98,6 @@ export default class Send extends PureComponent {
         }
         {
           showPasswordModal && <PasswordEnterModal
-            passProps={passProps}
             visible={showPasswordModal}
             modalToggle={onTogglePasswordModal}
             error={error}

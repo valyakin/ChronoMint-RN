@@ -7,6 +7,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Alert } from 'react-native'
+import { selectCurrentCurrency } from '@chronobank/market/redux/selectors'
 import { getCurrentEthWallet } from '@chronobank/ethereum/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
 import { getBitcoinCurrentWallet } from '@chronobank/bitcoin/redux/selectors'
@@ -17,9 +18,9 @@ const mapStateToProps = (state) => {
   const masterWalletAddress = getCurrentWallet(state)
 
   return {
+    selectedCurrency: selectCurrentCurrency(state),
     currentBTCWallet: getBitcoinCurrentWallet(masterWalletAddress)(state),
     currentETHWallet: getCurrentEthWallet(masterWalletAddress)(state),
-    masterWalletAddress,
   }
 }
 
@@ -35,10 +36,7 @@ class WalletContainer extends Component {
       navigate: PropTypes.func,
       state: PropTypes.shape({
         params: PropTypes.shape({
-          address: PropTypes.string,
           blockchain: PropTypes.string,
-          selectedCurrency: PropTypes.string,
-          masterWalletAddress: PropTypes.string,
         }),
       }),
     }),
@@ -51,17 +49,10 @@ class WalletContainer extends Component {
       state,
     } = this.props.navigation
     const {
-      address,
       blockchain,
-      selectedCurrency,
-      masterWalletAddress,
     } = state.params
-
     const params = {
-      address,
       blockchain,
-      selectedCurrency,
-      masterWalletAddress,
     }
 
 
@@ -87,10 +78,8 @@ class WalletContainer extends Component {
   render () {
     const {
       blockchain,
-      address,
-      selectedCurrency,
     } = this.props.navigation.state.params
-    const { currentBTCWallet, currentETHWallet, navigation } = this.props
+    const { currentBTCWallet, currentETHWallet, navigation, selectedCurrency } = this.props
     const currentWallet = blockchain === BLOCKCHAIN_ETHEREUM
       ? currentETHWallet
       : currentBTCWallet
@@ -110,7 +99,7 @@ class WalletContainer extends Component {
         navigation={navigation}
         latestTransactionDate={latestTransactionDate}
         transactions={transactions}
-        address={address}
+        address={currentWallet.address}
         selectedCurrency={selectedCurrency}
         onSend={this.handleSend}
         onReceive={this.handleReceive}

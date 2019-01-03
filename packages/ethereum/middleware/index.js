@@ -50,8 +50,9 @@ const getGasPrice = () =>
 const loadTokens = () =>
   w3c.loadTokens()
 
-const initContracts = () =>
-  w3c.initContracts()
+const initContracts = (store, { ethAddress }) =>
+  w3c.initContracts(ethAddress)
+
 
 // const getWeb3Instance = (store, action, next) => {
 //   next(action)

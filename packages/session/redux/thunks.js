@@ -147,7 +147,7 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
                   },
                 }))
               })
-              dispatch(initContracts())
+              dispatch(initContracts(ethAddress))
               dispatch(login(ethAddress))
               return resolve()
             })
