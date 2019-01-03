@@ -49,6 +49,8 @@ export default class WalletListItem extends PureComponent {
       wallet,
     } = this.props
 
+    const primaryToken = wallet.tokens[Object.keys(wallet.tokens)[0]]
+
     return (
       <TouchableOpacity
         style={styles.container}
@@ -89,7 +91,7 @@ export default class WalletListItem extends PureComponent {
                 }
               </Text>
               <PrimaryToken
-                blockchain={blockchain}
+                token={primaryToken}
               />
               <View style={styles.balanceAndTokensRow}>
                 <PrimaryBalance

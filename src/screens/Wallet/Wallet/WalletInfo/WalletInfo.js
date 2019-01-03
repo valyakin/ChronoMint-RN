@@ -36,6 +36,9 @@ export default class WalletInfo extends PureComponent {
       selectedCurrency,
       onCopyAddress = () => { },
     } = this.props
+
+    const primaryToken = wallet.tokens[Object.keys(wallet.tokens)[0]]
+
     return (
       <View style={styles.walletDetailsSection}>
         <WalletImage
@@ -60,7 +63,8 @@ export default class WalletInfo extends PureComponent {
           </TouchableOpacity>
         </View>
         <PrimaryToken
-          blockchain={blockchain}
+          token={primaryToken}
+          whiteStyle={styles.primaryToken}
         />
         <View style={styles.balanceAndTokensRow}>
           <PrimaryBalance

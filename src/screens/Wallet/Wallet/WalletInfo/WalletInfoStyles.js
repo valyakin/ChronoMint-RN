@@ -27,6 +27,9 @@ export default StyleSheet.create({
   walletDetails: {
     color: colors.darkpurple,
   },
+  primaryToken: {
+    color: colors.light,
+  },
   address: {
     color: colors.background,
     fontSize: 11,

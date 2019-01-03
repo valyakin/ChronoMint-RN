@@ -16,29 +16,35 @@ import styles from './PrimaryTokenStyles'
 export default class PrimaryToken extends PureComponent {
 
   static getFormattedBalance = (balance) => {
-    if (!isNumber(balance)) {
+    if (!balance) {
       return ''
-    }
-
-    if (balance > 0 && balance < 0.0001) {
-      return '0.0000+'
     } else {
-      return balance ? balance.toFixed(4) : balance.toFixed(2)
+      if (!isNumber(balance)) {
+        return ''
+      }
+
+      if (balance > 0 && balance < 0.0001) {
+        return '0.0000+'
+      } else {
+        return balance ? balance.toFixed(4) : balance.toFixed(2)
+      }
     }
   }
 
   render () {
-    const { symbol, amount } = this.props
+    const { token, whiteStyle } = this.props
+    const balance = token && token.balance
+    const balanceText = { ...styles.balanceText, ...whiteStyle }
     return (
       <View style={styles.balanceContainer}>
-        <Text style={styles.balanceText}>
+        <Text style={balanceText}>
           {
-            symbol
+            token.symbol
           }
         </Text>
-        <Text style={[styles.balanceText, styles.balanceNumber]}>
+        <Text style={[balanceText, styles.balanceNumber]}>
           {
-            PrimaryToken.getFormattedBalance(amount)
+            PrimaryToken.getFormattedBalance(+balance)
           }
         </Text>
       </View>
@@ -47,6 +53,8 @@ export default class PrimaryToken extends PureComponent {
 }
 
 PrimaryToken.propTypes = {
-  amount: PropTypes.number,
-  symbol: PropTypes.string,
+  token: PropTypes.shape({
+    // amount: PropTypes.number,
+    // symbol: PropTypes.string,
+  }),
 }

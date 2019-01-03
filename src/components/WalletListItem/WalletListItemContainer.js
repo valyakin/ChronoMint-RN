@@ -51,7 +51,7 @@ class WalletListItemContainer extends PureComponent {
   }
 
   handleCopyAddress = () => {
-    Clipboard.setString(this.props.address);
+    Clipboard.setString(this.props.address)
   }
 
   render () {
