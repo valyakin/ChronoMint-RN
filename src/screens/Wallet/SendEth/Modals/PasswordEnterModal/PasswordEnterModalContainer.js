@@ -14,6 +14,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import TouchID from 'react-native-touch-id'
 import * as Keychain from 'react-native-keychain'
+import { ETH_PRIMARY_TOKEN } from '@chronobank/ethereum/constants'
 import { decryptWallet, signEthTransaction } from '@chronobank/ethereum/utils'
 import { balanceToAmount } from '@chronobank/ethereum/utils/amount'
 import { name as appName } from '../../../../../../app.json'
@@ -75,7 +76,9 @@ class PasswordEnterModalContainer extends React.Component {
           this.setState({ biometryType: 'TouchID' }) //For Android
         }
       })
-      .then(this.authenticate)
+      .then(() => {
+        this.authenticate()
+      })
       .catch(() => {
         Alert.alert('You do not support the ability to scan.')
       })
@@ -126,6 +129,7 @@ class PasswordEnterModalContainer extends React.Component {
       updateEthereumTxDraftSignedTx,
       currentEthWallet,
       masterWalletAddress,
+      token,
     } = this.props
     const {
       nonce,
@@ -148,21 +152,23 @@ class PasswordEnterModalContainer extends React.Component {
       chainId,
     }
 
-    signEthTransaction({
-      tx,
-      privateKey,
-    })
-      .then((signedTXresults) => {
-        updateEthereumTxDraftSignedTx({
-          masterWalletAddress,
-          signedTx: signedTXresults.rawTransaction,
-        })
-          .then(() => this.props.confirmPassword())
-          // eslint-disable-next-line no-console
-          .catch((error) => console.log(error))
+    token.symbol === ETH_PRIMARY_TOKEN
+      ? signEthTransaction({
+        tx,
+        privateKey,
       })
-      // eslint-disable-next-line no-console
-      .catch((error) => console.log(error))
+        .then((signedTXresults) => {
+          updateEthereumTxDraftSignedTx({
+            masterWalletAddress,
+            signedTx: signedTXresults.rawTransaction,
+          })
+            .then(() => this.props.confirmPassword())
+            // eslint-disable-next-line no-console
+            .catch((error) => console.log(error))
+        })
+        // eslint-disable-next-line no-console
+        .catch((error) => console.log(error))
+      : this.props.confirmPassword()
   }
 
 

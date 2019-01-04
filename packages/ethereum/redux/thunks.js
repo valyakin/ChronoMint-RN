@@ -46,10 +46,10 @@ export const createAccountByPrivateKey = (privateKey, password) => (dispatch) =>
   })
 }
 
-export const updateEthereumBalance = ({ tokenSymbol, address, balance, amount }) => (dispatch) => {
+export const updateEthereumBalance = ({ tokenSymbol, address, balance, amount, decimals }) => (dispatch) => {
   return new Promise((resolve, reject) => {
     try {
-      dispatch(Actions.ethereumUpdateBalance({ tokenSymbol, address, balance, amount }))
+      dispatch(Actions.ethereumUpdateBalance({ tokenSymbol, address, balance, amount, decimals }))
       return resolve()
     } catch (e) {
       return reject(e)

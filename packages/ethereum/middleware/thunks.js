@@ -6,7 +6,7 @@
 import { getAvailableNetworkCount } from '@chronobank/network/redux/selectors'
 import * as Actions from './actions'
 
-export const init = () => (dispatch, getState) =>  {
+export const init = () => (dispatch, getState) => {
   const state = getState()
   const networksCount = getAvailableNetworkCount(state)
   const newState = new Array(networksCount)
@@ -66,6 +66,9 @@ export const getGasPrice = () => (dispatch) =>
 
 export const initContracts = (ethAddress) => (dispatch) =>
   dispatch(Actions.initContracts(ethAddress))
+
+export const sendToken = ({ from, to, gasPrice, gas, tokenSymbol, value }) => (dispatch) =>
+  dispatch(Actions.sendToken({ from, to, gasPrice, gas, tokenSymbol, value }))
 
 export const getChainId = () => (dispatch) =>
   dispatch(Actions.getChainId())

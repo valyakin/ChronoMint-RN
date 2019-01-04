@@ -43,7 +43,6 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
           const bitcoinChannels = getCurrentNetworkBlockchainChannels(BLOCKCHAIN_BITCOIN)(getState())
           dispatch(apiETH.requestEthereumSubscribeWalletByAddress(ethAddress))
             .then((result) => {
-              console.log('result: ', result)
               dispatch(apiETH.requestEthereumBalanceByAddress(ethAddress))
                 .then((result) => console.log('result: ', result))
                 .catch((er) => console.log('er: ', er))
@@ -57,6 +56,7 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
             .catch((error) => {
               return reject('Requiesting ETH balance error', error)
             })
+          dispatch(initContracts(ethAddress))
           dispatch(createBitcoinWallet(privateKey, ethAddress))
             .then(() => {
               const BTCwalletsList = getBitcoinWalletsList(ethAddress)(getState())
@@ -147,7 +147,6 @@ export const loginThunk = (ethAddress, privateKey) => (dispatch, getState) => {
                   },
                 }))
               })
-              dispatch(initContracts(ethAddress))
               dispatch(login(ethAddress))
               return resolve()
             })

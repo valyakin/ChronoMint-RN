@@ -66,7 +66,7 @@ const ethereumCreateDerivedWallet = (state, { masterWalletAddress, address }) =>
   }
 }
 
-const updateEthereumBalance = (state, { tokenSymbol, address, balance, amount }) => {
+const updateEthereumBalance = (state, { tokenSymbol, address, balance, amount, decimals = DECIMALS }) => {
   let list = Object.assign({}, state.list)
   list = {
     ...list,
@@ -76,8 +76,10 @@ const updateEthereumBalance = (state, { tokenSymbol, address, balance, amount })
         ...list[address].tokens,
         [tokenSymbol]: {
           ...list[address].tokens[tokenSymbol],
+          symbol: tokenSymbol,
           balance,
           amount,
+          decimals,
         },
       },
     },

@@ -9,6 +9,7 @@ import PropTypes from 'prop-types'
 import { getCurrentTokensArray } from '@chronobank/ethereum/redux/selectors'
 import { selectMarketPrices, selectCurrentCurrency } from '@chronobank/market/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
+import { BLOCKCHAIN_ETHEREUM } from '@chronobank/ethereum/constants'
 import TokenSelector from './TokenSelector'
 
 const mapStateToProps = (state) => {
@@ -29,6 +30,24 @@ class TokenSelectorContainer extends React.Component {
   }
 
   static propTypes = {
+    tokens: PropTypes.arrayOf(
+      PropTypes.shape({}),
+    ),
+    selectedCurrency: PropTypes.string,
+    prices: PropTypes.shape({}),
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }),
+  }
+
+  handleSelectToken = (token) => {
+    const { navigate } = this.props.navigation
+    const params = {
+      BLOCKCHAIN_ETHEREUM,
+      token,
+    }
+
+    navigate('SendEth', params)
   }
 
   render () {
@@ -37,11 +56,11 @@ class TokenSelectorContainer extends React.Component {
       <TokenSelector
         tokens={tokens}
         selectedCurrency={selectedCurrency}
+        onSelectToken={this.handleSelectToken}
         prices={prices}
       />
     )
   }
-
 }
 
 export default connect(mapStateToProps, null)(TokenSelectorContainer)

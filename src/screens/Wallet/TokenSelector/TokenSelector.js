@@ -8,10 +8,11 @@ import {
   View,
   FlatList,
   Text,
+  TouchableOpacity,
 } from 'react-native'
 import PropTypes from 'prop-types'
 import WalletImage from '../../../components/WalletImage'
-import { ETH_PRIMARY_TOKEN, BLOCKCHAIN_ETHEREUM} from '@chronobank/ethereum/constants'
+import { ETH_PRIMARY_TOKEN, BLOCKCHAIN_ETHEREUM } from '@chronobank/ethereum/constants'
 import styles from './TokenSelectorStyles'
 
 const blockchains = {
@@ -20,39 +21,55 @@ const blockchains = {
 
 export default class TokenSelector extends React.Component {
 
+  static propTypes = {
+    prices: PropTypes.shape({}),
+    selectedCurrency: PropTypes.string,
+    onSelectToken: PropTypes.func,
+    tokens: PropTypes.arrayOf(
+      PropTypes.shape({
+        symbol: PropTypes.string,
+        amount: PropTypes.string,
+        balance: PropTypes.number,
+      })
+    ),
+  }
+
   keyExtractor = (item, index) =>
     '' + item.amount + '_' + item.symbol + '_' + index
 
-  renderTokenItem = ({item}) => {
+  renderTokenItem = ({ item }) => {
     const { symbol, balance } = item
-    const {prices, selectedCurrency} = this.props
+    const { prices, selectedCurrency, onSelectToken } = this.props
     const price = prices[symbol] ? prices[symbol][selectedCurrency] : 0
     const amountInCurrency = balance * price
     const formattedBalance = balance > 0 ? balance.toFixed(2) : balance
     const formattedAmountInCurrency = amountInCurrency > 0 ? amountInCurrency.toFixed(2) : amountInCurrency
     const blockchain = blockchains[symbol] ? blockchains[symbol] : 'default'
     return (
-      <View style={styles.tokenContainer}>
-        <WalletImage
-          blockchain={blockchain}
-        />
-        <View style={styles.containerItem}>
-          <Text style={styles.itemText}>
-            {symbol}
-          </Text>
-          <Text style={styles.itemText}>
-            {formattedBalance}
-          </Text>
+      <TouchableOpacity
+        onPress={() => onSelectToken(item)}>
+        <View style={styles.tokenContainer}>
+          <WalletImage
+            blockchain={blockchain}
+          />
+          <View style={styles.containerItem}>
+            <Text style={styles.itemText}>
+              {symbol}
+            </Text>
+            <Text style={styles.itemText}>
+              {formattedBalance}
+            </Text>
+          </View>
+          <View style={styles.containerItem}>
+            <Text style={styles.itemText}>
+              {selectedCurrency}
+            </Text>
+            <Text style={styles.itemText}>
+              {formattedAmountInCurrency}
+            </Text>
+          </View>
         </View>
-        <View style={styles.containerItem}>
-          <Text style={styles.itemText}>
-            {selectedCurrency}
-          </Text>
-          <Text style={styles.itemText}>
-            {formattedAmountInCurrency}
-          </Text>
-        </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 
@@ -68,7 +85,4 @@ export default class TokenSelector extends React.Component {
       </View>
     )
   }
-}
-
-TokenSelector.propTypes = {
 }

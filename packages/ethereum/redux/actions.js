@@ -18,12 +18,13 @@ export const ethereumCreateDerivedWallet = (masterWalletAddress, address) => ({
   address,
 })
 
-export const ethereumUpdateBalance = ({ tokenSymbol, address, balance, amount }) => ({
+export const ethereumUpdateBalance = ({ tokenSymbol, address, balance, amount, decimals }) => ({
   type: ActionTypes.ETHEREUM_UPDATE_BALANCE,
   address,
   amount,
   balance,
   tokenSymbol,
+  decimals,
 })
 
 export const selectEthereumWallet = ({ address }) => ({

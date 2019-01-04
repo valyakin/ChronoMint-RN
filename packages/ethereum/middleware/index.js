@@ -53,6 +53,9 @@ const loadTokens = () =>
 const initContracts = (store, { ethAddress }) =>
   w3c.initContracts(ethAddress)
 
+const sendToken = (store, { from, to, gasPrice, gas, tokenSymbol, value }) =>
+  w3c.sendToken({ from, to, gasPrice, gas, tokenSymbol, value })
+
 
 // const getWeb3Instance = (store, action, next) => {
 //   next(action)
@@ -118,6 +121,7 @@ const mutations = {
   [ActionTypes.WEB3_MIDDLEWARE_METHOD_ESTIMATE_GAS]: estimateGas,
   [ActionTypes.WEB3_MIDDLEWARE_LOAD_TOKENS]: loadTokens,
   [ActionTypes.WEB3_MIDDLEWARE_INIT_CONTRACTS]: initContracts,
+  [ActionTypes.WEB3_MIDDLEWARE_SEND_TOKEN]: sendToken,
   [ActionTypes.WEB3_MIDDLEWARE_METHOD_GET_BALANCE]: getBalance,
   [ActionTypes.WEB3_MIDDLEWARE_METHOD_GET_CHAIN_ID]: getChainId,
   [ActionTypes.WEB3_MIDDLEWARE_METHOD_GET_GAS_PRICE]: getGasPrice,

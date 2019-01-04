@@ -89,14 +89,14 @@ export default class SendEth extends PureComponent {
       onQRscan,
     } = this.props
 
-    const currentTokenBalance = selectedWallet.tokens ?
-      selectedWallet.tokens['ETH'].balance :
+    const currentTokenBalance = selectedToken ?
+      selectedToken.balance :
       null
 
 
     const strings = {
       amountInput: `Amount, ${selectedToken && selectedToken.symbol || ''}`,
-      walletValue: selectedToken && [selectedToken.symbol, selectedToken.amount].join(' '),
+      walletValue: selectedToken && [selectedToken.symbol, selectedToken.balance].join(' '),
       walletTitle: `My ${blockchain} Wallet`,
       walletBalance: `${selectedCurrency} ${currentTokenBalance && price && (price * currentTokenBalance).toFixed(2)}`,
       sendBalance: `${selectedCurrency} ${amountInCurrency.toFixed(2)}`,
@@ -131,6 +131,7 @@ export default class SendEth extends PureComponent {
             modalToggle={onTogglePasswordModal}
             error={error}
             confirmPassword={onPasswordConfirm}
+            token={selectedToken}
           />
         }
         {
@@ -139,6 +140,7 @@ export default class SendEth extends PureComponent {
             modalToggle={onCloseConfirmModal}
             sendConfirm={onSendConfirm}
             onTxDraftRemove={onTxDraftRemove}
+            token={selectedToken}
           />
         }
         <View style={styles.formHeader}>

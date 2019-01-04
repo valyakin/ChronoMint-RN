@@ -45,11 +45,12 @@ const mapDispatchToProps = (dispatch) => bindActionCreators(ActionCreators, disp
 class SendEthContainer extends React.Component {
   constructor (props) {
     super(props)
-    const first = Object.keys(props.currentEthWallet.tokens)[0]
-    const firtsAvailableToken = props.currentEthWallet.tokens[first]
+    const firtsAvailableToken = props.navigation.state.params.token
     const selectedToken = {
       symbol: firtsAvailableToken.symbol,
-      amount: firtsAvailableToken.balance,
+      amount: firtsAvailableToken.amount,
+      balance: firtsAvailableToken.balance,
+      decimals: firtsAvailableToken.decimals,
     }
     this.state = {
       amount: null,
@@ -67,6 +68,20 @@ class SendEthContainer extends React.Component {
       recipient: '',
       firtsAvailableToken,
       selectedToken,
+    }
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (prevProps.navigation.state.params) {
+      if (prevProps.navigation.state.params.token.symbol !== this.props.navigation.state.params.token.symbol) {
+        const selectedToken = {
+          symbol: this.props.navigation.state.params.token.symbol,
+          balance: this.props.navigation.state.params.token.balance,
+          amount: this.props.navigation.state.params.token.amount,
+          decimals: this.props.navigation.state.params.token.decimals,
+        }
+        this.setState({ selectedToken })
+      }
     }
   }
 
@@ -108,6 +123,11 @@ class SendEthContainer extends React.Component {
       state: PropTypes.shape({
         params: PropTypes.shape({
           blockchain: PropTypes.string,
+          token: PropTypes.shape({
+            symbol: PropTypes.string,
+            amount: PropTypes.string,
+            decimals: PropTypes.number,
+          }),
         }),
       }),
     }),
@@ -208,7 +228,8 @@ class SendEthContainer extends React.Component {
             prices[this.state.selectedToken.symbol][selectedCurrency]) ||
           0 // TODO: handle wrong values correctly
         const dummyValidationOfAmountInput =
-          localeValue !== null && localeValue !== undefined && localeValue !== '' && localeValue > 0
+          localeValue !== null && localeValue !== undefined && localeValue !== '' && localeValue > 0 
+          // && localeValue <= +this.state.selectedToken.balance
         this.setState(
           {
             amount: inputValue,
@@ -382,7 +403,7 @@ class SendEthContainer extends React.Component {
     const { currentEthWallet, prices, selectedCurrency } = this.props
     const blockchainPrice = prices &&
       prices[selectedToken.symbol] &&
-      prices[selectedToken.symbol][selectedCurrency]
+      prices[selectedToken.symbol][selectedCurrency] || 0
     return (
       <SendEth
         amount={amount}

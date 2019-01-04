@@ -139,15 +139,47 @@ export default class Web3Controller {
   initTokenContract (tokenSymbol, tokenAddress, parentAddress) {
     this.tokens = this.tokens.set(tokenSymbol, new this.web3.eth.Contract(ERC20DAODefaultABI.abi, tokenAddress))
     if (parentAddress) {
-      this.dispatch(Web3Thunks.getBalance(tokenAddress))
-        .then((amount) => {
-          const balance = amountToBalance(amount)
-          this.dispatch(marketAddToken(tokenSymbol))
-          this.dispatch(updateEthereumBalance({ tokenSymbol, address: parentAddress, balance, amount }))
-        })
-        .catch((error) => {
-          console.warn(`Requiesting ${tokenSymbol} balance error`, error)
-        })
+      try {
+        const currentToken = this.tokens.get(tokenSymbol)
+        currentToken.methods.balanceOf(parentAddress).call({ from: parentAddress })
+          .then((currentBalance) => {
+            currentToken.methods.decimals().call({ from: parentAddress })
+              .then((decimals) => {
+                const tokenDecimals = +decimals
+                const balance = amountToBalance(currentBalance, tokenDecimals)
+                this.dispatch(marketAddToken(tokenSymbol))
+                this.dispatch(updateEthereumBalance({ tokenSymbol, address: parentAddress, balance, amount: currentBalance, decimals: tokenDecimals }))
+              })
+              // eslint-disable-next-line no-console
+              .catch((error) => console.warn('Getting decimals error: ', error))
+          })
+          // eslint-disable-next-line no-console
+          .catch((error) => console.warn('Getting current token balance error: ', error))
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('Error in Tokens contracts: ', error)
+      }
+    }
+  }
+
+  sendToken = ({ from, to, gasPrice, gas, tokenSymbol, value }) => {
+    const currentToken = this.tokens.get(tokenSymbol)
+    // eslint-disable-next-line no-console
+    console.log('currentToken: ', currentToken)
+    try {
+      currentToken.methods.transfer(to, value).send({
+        from,
+        gasPrice,
+        gas,
+        value,
+      })
+        // eslint-disable-next-line no-console
+        .then((results) => console.log('SEND RESULTS: ', results))
+        // eslint-disable-next-line no-console
+        .catch((error) => console.log('SEND error: ', error))
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn('Error during send Token: ', error)
     }
   }
 
@@ -272,7 +304,6 @@ export default class Web3Controller {
     if (Erc20Manager) {
       try {
         const res = await Erc20Manager.methods.getTokens([]).call()
-        console.log('RESULTS: ', res)
 
         /* eslint-disable no-underscore-dangle */
         const addresses = res._tokensAddresses

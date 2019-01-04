@@ -11,7 +11,7 @@ import { selectCurrentCurrency } from '@chronobank/market/redux/selectors'
 import { getCurrentEthWallet } from '@chronobank/ethereum/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
 import { getBitcoinCurrentWallet } from '@chronobank/bitcoin/redux/selectors'
-import { BLOCKCHAIN_ETHEREUM } from '@chronobank/ethereum/constants'
+import { BLOCKCHAIN_ETHEREUM,ETH_PRIMARY_TOKEN } from '@chronobank/ethereum/constants'
 import Wallet from './Wallet'
 
 const mapStateToProps = (state) => {
@@ -44,17 +44,20 @@ class WalletContainer extends Component {
 
   handleSend = () => {
     // TODO: [AO] This is temporary limitation. At the moment we can't send not-ETH funds
+    const { currentETHWallet, navigation } = this.props
     const {
       navigate,
       state,
-    } = this.props.navigation
+    } = navigation
     const {
       blockchain,
     } = state.params
     const params = {
-      blockchain,
+      blockchain: state.params.blockchain,
     }
-
+    const primaryToken = currentETHWallet.tokens[ETH_PRIMARY_TOKEN]
+    
+    blockchain === BLOCKCHAIN_ETHEREUM ? params.token = primaryToken : null
 
     const path = blockchain === BLOCKCHAIN_ETHEREUM ? 'SendEth' : 'Send'
     navigate(path, params)

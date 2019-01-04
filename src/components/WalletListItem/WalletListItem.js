@@ -90,9 +90,12 @@ export default class WalletListItem extends PureComponent {
                   address
                 }
               </Text>
-              <PrimaryToken
-                token={primaryToken}
-              />
+              {
+                primaryToken
+                && <PrimaryToken
+                  token={primaryToken}
+                />
+              }
               <View style={styles.balanceAndTokensRow}>
                 <PrimaryBalance
                   blockchain={blockchain}

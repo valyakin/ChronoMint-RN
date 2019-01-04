@@ -100,6 +100,16 @@ export const initContracts = (ethAddress) => ({
   ethAddress,
 })
 
+export const sendToken = ({ from, to, gasPrice, gas, tokenSymbol, value }) => ({
+  type: ActionTypes.WEB3_MIDDLEWARE_SEND_TOKEN,
+  from,
+  to,
+  gasPrice,
+  gas,
+  tokenSymbol,
+  value,
+})
+
 export const estimateGas = ({ from, to, value, data, gasPrice, nonce }) => ({
   type: ActionTypes.WEB3_MIDDLEWARE_METHOD_ESTIMATE_GAS,
   from,
