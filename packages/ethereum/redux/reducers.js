@@ -118,6 +118,7 @@ const ethereumCreateTxDraft = (state, { masterWalletAddress }) => {
 
 const ethereumDeleteTxDraft = (state, { masterWalletAddress }) => {
   let list = Object.assign({}, state.list)
+  delete list[masterWalletAddress].txDraft
   list = {
     ...list,
     [masterWalletAddress]: {

@@ -32,7 +32,7 @@ const mapStateToProps = (state) => {
   return {
     masterWalletAddress,
     selectedCurrency: selectCurrentCurrency(state),
-    prices: selectMarketPrices(state),
+    prices: selectMarketPrices(state) ,
     currentBTCWallet: getBitcoinCurrentWallet(masterWalletAddress)(state),
     network: getCurrentNetwork(state),
   }
@@ -298,6 +298,7 @@ class SendContainer extends React.Component {
       const tokenPrice =
         (prices &&
           this.state.selectedToken &&
+          prices[this.state.selectedToken.symbol] &&
           prices[this.state.selectedToken.symbol][selectedCurrency]) ||
         0 // TODO: handle wrong values correctly
       const newFeePrice = fee ? fee * tokenPrice : null
@@ -360,7 +361,7 @@ class SendContainer extends React.Component {
           const tokenPrice =
             (prices &&
               this.state.selectedToken &&
-              this.state.selectedToken.symbol &&
+              prices[this.state.selectedToken.symbol] &&
               prices[this.state.selectedToken.symbol][selectedCurrency]) ||
             0 // TODO: handle wrong values correctly
           const newFeePrice = feeEstimation ? feeEstimation * tokenPrice : null
