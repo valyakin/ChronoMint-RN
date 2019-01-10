@@ -11,9 +11,9 @@ import { WALLET_HD_PATH } from '../constants'
 const getDerivedWalletByPrivateKey = (privateKey, path = WALLET_HD_PATH) => {
   const accounts = new Accounts()
   const wallets = accounts.wallet.create()
-  const hdWallet = hdKey.fromMasterSeed(Buffer.from(privateKey, 'hex'))
-  const wallet = hdWallet.derivePath(path).getWallet()
-  const account = accounts.privateKeyToAccount(`0x${wallet.getPrivateKey().toString('hex')}`)
+  const hdWallet = hdKey.fromMasterSeed(Buffer.from(privateKey, 'hex')).derivePath(path)
+  const wallet = hdWallet.getWallet()
+  const account = accounts.privateKeyToAccount(wallet.getPrivateKeyString())
 
   wallets.add(account)
   const newWallet = wallets[0]
@@ -38,11 +38,10 @@ export const decryptWallet = async (entry, password) => {
 export const mnemonicToPrivateKeyAndAddress = (mnemonic, path = WALLET_HD_PATH) => {
   const accounts = new Accounts()
   const wallets = accounts.wallet.create()
-  const mnemonicSeed = new Mnemonic(mnemonic.split(' '), Mnemonic.Words.ENGLISH)
+  const mnemonicSeed = new Mnemonic(mnemonic, Mnemonic.Words.ENGLISH).toSeed()
   const hdWallet = hdKey.fromMasterSeed(mnemonicSeed)
   const wallet = hdWallet.derivePath(path).getWallet()
-  const account = accounts.privateKeyToAccount(`0x${wallet.getPrivateKey().toString('hex')}`)
-
+  const account = accounts.privateKeyToAccount(wallet.getPrivateKeyString())
   wallets.add(account)
 
   const walletAccount = wallets[0]
@@ -82,7 +81,7 @@ export const checkPrivateKey = (privateKey) => {
   return finalPrivate
 }
 
-export const signEthTransaction = ({tx, privateKey}) => {
+export const signEthTransaction = ({ tx, privateKey }) => {
   const accounts = new Accounts()
   const signedTx = accounts.signTransaction(tx, privateKey)
   return signedTx

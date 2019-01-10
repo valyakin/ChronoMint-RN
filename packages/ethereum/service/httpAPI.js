@@ -21,7 +21,10 @@ export const requestSubscribeWalletByAddress = (address) => (dispatch) => {
       request: {
         method: 'POST',
         url: '/addr',
-        data: { address },
+        data: {
+          address,
+          erc20tokens: [],
+        },
       },
     },
   }
@@ -47,7 +50,7 @@ export const requestUnubscribeWalletByAddress = (address) => (dispatch) => {
       request: {
         method: 'DELETE',
         url: '/addr',
-        data: address,
+        data: { address },
       },
     },
   }

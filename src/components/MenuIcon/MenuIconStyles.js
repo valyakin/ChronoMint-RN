@@ -4,15 +4,17 @@
  */
 
 import { StyleSheet } from 'react-native'
-import colors from '../../common/colors'
 
 export default StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: 'column',
+    marginLeft: 16,
+    width: 32,
+    height: 32,
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  menuButton: {
-    color: colors.shadowDark,
+  menuImage: {
+    width: 24,
+    height: 24,
   },
 })

@@ -40,12 +40,13 @@ export const bitcoinTxDraftUpdateFee = ({ address, masterWalletAddress, fee }) =
   masterWalletAddress,
 })
 
-export const bitcoinTxUpdateHistory = ({ address, masterWalletAddress, latestTxDate, txList }) => ({
+export const bitcoinTxUpdateHistory = ({ address, masterWalletAddress, latestTxDate, txList, withReset }) => ({
   type: ActionsTypes.BITCOIN_TX_UPDATE_HISTORY,
   latestTxDate,
   txList,
   address,
   masterWalletAddress,
+  withReset,
 })
 
 export const bitcoinTxDraftUpdateFeeMultiplier = ({ address, masterWalletAddress, feeMultiplier }) => ({

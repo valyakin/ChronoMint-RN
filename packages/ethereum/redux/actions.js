@@ -18,12 +18,13 @@ export const ethereumCreateDerivedWallet = (masterWalletAddress, address) => ({
   address,
 })
 
-export const ethereumUpdateBalance = ({ tokenSymbol, address, balance, amount }) => ({
+export const ethereumUpdateBalance = ({ tokenSymbol, address, balance, amount, decimals }) => ({
   type: ActionTypes.ETHEREUM_UPDATE_BALANCE,
   address,
   amount,
   balance,
   tokenSymbol,
+  decimals,
 })
 
 export const selectEthereumWallet = ({ address }) => ({
@@ -94,10 +95,11 @@ export const updateEthereumTxDraftSignedTx = ({ signedTx, masterWalletAddress })
   masterWalletAddress,
 })
 
-export const ethereumTxUpdateHistory = ({ address, masterWalletAddress, latestTxDate, txList }) => ({
+export const ethereumTxUpdateHistory = ({ address, masterWalletAddress, latestTxDate, txList, withReset }) => ({
   type: ActionTypes.ETHEREUM_TX_UPDATE_HISTORY,
   latestTxDate,
   txList,
   address,
   masterWalletAddress,
+  withReset,
 })

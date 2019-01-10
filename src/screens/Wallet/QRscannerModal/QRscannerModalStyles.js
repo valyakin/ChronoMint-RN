@@ -13,6 +13,21 @@ export default StyleSheet.create({
   },
   actions: {
     backgroundColor: colors.primary,
+  },
+  close: {
+    alignSelf: 'flex-start',
+    padding: 16,
+  },
+  closeText: {
+    fontSize: 17,
+    fontWeight: '500',
+  },
+  scannerWrapper: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  scanner: {
+    flex: 1,
     flexDirection: 'row',
   },
 })

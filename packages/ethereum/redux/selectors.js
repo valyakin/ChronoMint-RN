@@ -5,7 +5,7 @@
 
 import { createSelector } from 'reselect'
 import { DUCK_ETHEREUM } from './constants'
-import { BLOCKCHAIN_ETHEREUM  } from '../constants'
+import { BLOCKCHAIN_ETHEREUM } from '../constants'
 
 export const getDuckEthereum = (state) =>
   state[DUCK_ETHEREUM]
@@ -19,6 +19,29 @@ export const getCurrentEthWallet = (ethAddress) => createSelector(
   getEthereumWalletList,
   (ethereumList) => {
     return ethereumList[ethAddress]
+  }
+)
+
+export const getCurrentTokensArray = (ethAddress) => createSelector(
+  getCurrentEthWallet(ethAddress),
+  (wallet) => {
+    const tokens = Object.keys(wallet.tokens)
+    const filteredTokens = []
+    tokens.forEach((token) => {
+      if (wallet.tokens[token] && wallet.tokens[token].balance && wallet.tokens[token].balance.toNumber() != 0) {
+        filteredTokens.push({
+          ...wallet.tokens[token],
+          balance: wallet.tokens[token].balance.toNumber(),
+          symbol: token,
+        })
+      }
+    })
+    filteredTokens.sort((a, b) => {
+      const item1 = b.symbol
+      const item2 = a.symbol
+      return item2 >= item1 ? 1 : -1
+    })
+    return filteredTokens
   }
 )
 
@@ -59,7 +82,7 @@ export const getEthereumWallets = createSelector(
           data: [
             {
               address: ethereumList[key].address,
-              blockchain: BLOCKCHAIN_ETHEREUM ,
+              blockchain: BLOCKCHAIN_ETHEREUM,
             },
           ],
           title: BLOCKCHAIN_ETHEREUM,

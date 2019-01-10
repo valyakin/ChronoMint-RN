@@ -27,6 +27,9 @@ export default StyleSheet.create({
   walletDetails: {
     color: colors.darkpurple,
   },
+  primaryToken: {
+    color: colors.light,
+  },
   address: {
     color: colors.background,
     fontSize: 11,
@@ -56,5 +59,13 @@ export default StyleSheet.create({
   },
   balanceAndTokensRow: {
     flexDirection: 'row',
+  },
+  addressLine: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  copyImage: {
+    width: 32,
+    height: 32,
   },
 })

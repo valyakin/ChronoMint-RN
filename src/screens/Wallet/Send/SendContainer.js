@@ -11,16 +11,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import BigNumber from 'bignumber.js'
-import {
-  createBitcoinTxDraft,
-  deleteBitcoinTxDraft,
-  updateBitcoinTxDraftRecipient,
-  updateBitcoinTxDraftAmount,
-  updateBitcoinTxDraftToken,
-  updateBitcoinTxDraftFee,
-  updateBitcoinTxDraftFeeMultiplier,
-  updateBitcoinTxDraftUnsignedTx,
-} from '@chronobank/bitcoin/redux/thunks'
+import * as BitcoinThunks from '@chronobank/bitcoin/redux/thunks'
 import {
   requestBitcoinUtxoByAddress,
   requestBitcoinEstimateFeeRate,
@@ -30,7 +21,7 @@ import { getBitcoinCurrentWallet } from '@chronobank/bitcoin/redux/selectors'
 import { getCurrentNetwork } from '@chronobank/network/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
 import { convertBTCToSatoshi, convertSatoshiToBTC } from '@chronobank/bitcoin/utils/amount'
-import { selectMarketPrices } from '@chronobank/market/redux/selectors'
+import { selectMarketPrices, selectCurrentCurrency } from '@chronobank/market/redux/selectors'
 import TextButton from '../../../components/TextButton'
 import styles from './SendStyles'
 import Send from './Send'
@@ -40,6 +31,7 @@ const mapStateToProps = (state) => {
 
   return {
     masterWalletAddress,
+    selectedCurrency: selectCurrentCurrency(state),
     prices: selectMarketPrices(state),
     currentBTCWallet: getBitcoinCurrentWallet(masterWalletAddress)(state),
     network: getCurrentNetwork(state),
@@ -47,18 +39,12 @@ const mapStateToProps = (state) => {
 }
 
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  createBitcoinTxDraft,
-  deleteBitcoinTxDraft,
+const ActionCreators = {
+  ...BitcoinThunks,
   requestBitcoinUtxoByAddress,
   requestBitcoinEstimateFeeRate,
-  updateBitcoinTxDraftRecipient,
-  updateBitcoinTxDraftAmount,
-  updateBitcoinTxDraftToken,
-  updateBitcoinTxDraftFee,
-  updateBitcoinTxDraftFeeMultiplier,
-  updateBitcoinTxDraftUnsignedTx,
-}, dispatch)
+}
+const mapDispatchToProps = (dispatch) => bindActionCreators(ActionCreators, dispatch)
 
 class SendContainer extends React.Component {
   constructor (props) {
@@ -107,6 +93,8 @@ class SendContainer extends React.Component {
   }
 
   static propTypes = {
+    masterWalletAddress: PropTypes.string,
+    selectedCurrency: PropTypes.string,
     createBitcoinTxDraft: PropTypes.func,
     updateBitcoinTxDraftRecipient: PropTypes.func,
     updateBitcoinTxDraftAmount: PropTypes.func,
@@ -117,6 +105,7 @@ class SendContainer extends React.Component {
     deleteBitcoinTxDraft: PropTypes.func,
     requestBitcoinUtxoByAddress: PropTypes.func,
     requestBitcoinEstimateFeeRate: PropTypes.func,
+    currentBTCWallet: PropTypes.shape({}),
     network: PropTypes.shape({}),
     prices: PropTypes.shape({}),
     navigation: PropTypes.shape({
@@ -125,10 +114,7 @@ class SendContainer extends React.Component {
       navigate: PropTypes.func,
       state: PropTypes.shape({
         params: PropTypes.shape({
-          address: PropTypes.string,
           blockchain: PropTypes.string,
-          selectedCurrency: PropTypes.string,
-          masterWalletAddress: PropTypes.string,
         }),
       }),
     }),
@@ -140,16 +126,17 @@ class SendContainer extends React.Component {
 
   handleGoToPasswordModal = () => {
     const {
-      address,
       blockchain,
-      masterWalletAddress,
     } = this.props.navigation.state.params
     const {
       requestBitcoinUtxoByAddress,
       network,
       updateBitcoinTxDraftToken,
       updateBitcoinTxDraftUnsignedTx,
+      masterWalletAddress,
+      currentBTCWallet,
     } = this.props
+    const { address } = currentBTCWallet
 
     if (this.state.isRecipientInputValid && this.state.isAmountInputValid) {
       updateBitcoinTxDraftToken({
@@ -182,12 +169,7 @@ class SendContainer extends React.Component {
                   unsignedTx: transaction.prepared.buildIncomplete().toHex(),
                 })
 
-                const modalProps = {
-                  masterWalletAddress,
-                  network,
-                }
-
-                this.setState({ modalProps }, () => this.handleTogglePasswordModal())
+                this.handleTogglePasswordModal()
               })
               .catch((error) => {
                 Alert.alert("Error, while preparing bitcoin transaction.")
@@ -212,10 +194,10 @@ class SendContainer extends React.Component {
 
   handleChangeRecipient = (name, value) => {
     if (typeof value === 'string') {
-      const { address, masterWalletAddress } = this.props.navigation.state.params
-      const { updateBitcoinTxDraftRecipient } = this.props
-      // Check for Ethereum
-      let dummyValidationOfRecipientInput = value && value.length === 34
+      const { updateBitcoinTxDraftRecipient, masterWalletAddress, currentBTCWallet } = this.props
+      const { address } = currentBTCWallet
+
+      const dummyValidationOfRecipientInput = value && value.length === 34
 
       this.setState(
         {
@@ -238,17 +220,25 @@ class SendContainer extends React.Component {
 
   handleChangeAmount = (name, value) => {
     if (typeof value === 'string') {
-      const { prices, updateBitcoinTxDraftAmount } = this.props
-      const { selectedCurrency, address, masterWalletAddress } = this.props.navigation.state.params
-      if (!(value.endsWith(',') || value.endsWith('.') || value.endsWith('0'))) {
+      const {
+        prices,
+        updateBitcoinTxDraftAmount,
+        masterWalletAddress,
+        selectedCurrency,
+        currentBTCWallet,
+      } = this.props
+      const { address } = currentBTCWallet
+      const tokenPrice =
+        (prices &&
+          this.state.selectedToken &&
+          prices[this.state.selectedToken.symbol] &&
+          prices[this.state.selectedToken.symbol][selectedCurrency]) ||
+        0 // TODO: handle wrong values correctly
+
+      if (value && !(value.endsWith(',') || value.endsWith('.'))) {
         const inputValue = value.replace(',', '.').replace(' ', '')
         const localeValue = new BigNumber(inputValue).toNumber()
-        const tokenPrice =
-          (prices &&
-            this.state.selectedToken &&
-            prices[this.state.selectedToken.symbol] &&
-            prices[this.state.selectedToken.symbol][selectedCurrency]) ||
-          0 // TODO: handle wrong values correctly
+
         const dummyValidationOfAmountInput =
           localeValue !== null && localeValue !== undefined && localeValue !== '' && localeValue > 0
         this.setState(
@@ -269,15 +259,21 @@ class SendContainer extends React.Component {
           }
         )
       } else {
+        const newAmount = this.state.amount.endsWith('.') || this.state.amount.endsWith(',') || this.state.amount.endsWith(' ')
+          ? this.state.amount
+          : value.replace(',', '.').replace(' ', '')
         this.setState({
-          amount: value ? value.replace(',', '.').replace(' ', '') : null,
+          amount: newAmount || '0',
           amountInCurrency: 0,
           isAmountInputValid: false,
         }, () => {
+          const newAmount = value
+            ? new BigNumber(value.replace(',', '').replace('.', '').replace(' ', '')).toNumber()
+            : 0
           updateBitcoinTxDraftAmount({
             address,
             masterWalletAddress,
-            amount: new BigNumber(this.state.amount).toNumber(),
+            amount: newAmount,
           })
         })
       }
@@ -289,12 +285,13 @@ class SendContainer extends React.Component {
       prices,
       updateBitcoinTxDraftFeeMultiplier,
       updateBitcoinTxDraftFee,
+      masterWalletAddress,
+      selectedCurrency,
+      currentBTCWallet,
     } = this.props
     const {
-      selectedCurrency,
       address,
-      masterWalletAddress,
-    } = this.props.navigation.state.params
+    } = currentBTCWallet
     if (this.state.fee !== null) {
       const fee =
         this.state.feeEstimation && this.state.feeEstimation * this.state.feeMultiplier
@@ -349,14 +346,12 @@ class SendContainer extends React.Component {
       prices,
       requestBitcoinEstimateFeeRate,
       updateBitcoinTxDraftFee,
-      navigation,
+      masterWalletAddress,
+      selectedCurrency,
+      currentBTCWallet,
     } = this.props
 
-    const {
-      selectedCurrency,
-      address,
-      masterWalletAddress,
-    } = navigation.state.params
+    const { address } = currentBTCWallet
 
     if (this.state.selectedToken) {
       requestBitcoinEstimateFeeRate()
@@ -414,14 +409,14 @@ class SendContainer extends React.Component {
   }
 
   handleTxDraftCreate = () => {
-    const { createBitcoinTxDraft, navigation } = this.props
-    const { address, masterWalletAddress } = navigation.state.params
+    const { createBitcoinTxDraft, masterWalletAddress, currentBTCWallet } = this.props
+    const { address } = currentBTCWallet
     createBitcoinTxDraft({ address, masterWalletAddress })
   }
 
   handleTxDraftRemove = () => {
-    const { deleteBitcoinTxDraft, navigation } = this.props
-    const { address, masterWalletAddress } = navigation.state.params
+    const { deleteBitcoinTxDraft, masterWalletAddress, currentBTCWallet } = this.props
+    const { address } = currentBTCWallet
     deleteBitcoinTxDraft({ address, masterWalletAddress })
   }
 
@@ -446,14 +441,12 @@ class SendContainer extends React.Component {
       fee,
       recipient,
       selectedToken,
-      modalProps,
       showQRscanner,
     } = this.state
+    const { currentBTCWallet, prices, selectedCurrency, navigation } = this.props
     const {
       blockchain,
-      selectedCurrency,
-    } = this.props.navigation.state.params
-    const { currentBTCWallet, prices } = this.props
+    } = navigation.state.params
     const blockchainPrice = prices &&
       prices[selectedToken.symbol] &&
       prices[selectedToken.symbol][selectedCurrency]
@@ -473,7 +466,6 @@ class SendContainer extends React.Component {
         selectedCurrency={selectedCurrency}
         selectedToken={selectedToken}
         selectedWallet={currentBTCWallet}
-        passProps={modalProps}
         //
         price={blockchainPrice}
 

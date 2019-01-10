@@ -6,8 +6,13 @@ import React, { PureComponent } from 'react'
 import {
   Text,
   View,
+  TouchableOpacity,
+  Image,
 } from 'react-native'
 import PropTypes from 'prop-types'
+import {
+  clipboard,
+} from '../../../../images'
 import TokensCounter from '../../../../components/TokensCounter'
 import PrimaryToken from '../../../../components/PrimaryToken'
 import PrimaryBalance from '../../../../components/PrimaryBalance'
@@ -20,7 +25,9 @@ export default class WalletInfo extends PureComponent {
     address: PropTypes.string,
     blockchain: PropTypes.string,
     selectedCurrency: PropTypes.string,
+    primaryTokenSymbol: PropTypes.string,
     wallet: PropTypes.shape({}),
+    onCopyAddress: PropTypes.func,
   }
 
   render () {
@@ -29,7 +36,12 @@ export default class WalletInfo extends PureComponent {
       blockchain,
       wallet,
       selectedCurrency,
+      primaryTokenSymbol,
+      onCopyAddress = () => { },
     } = this.props
+
+    const primaryToken = wallet.tokens[primaryTokenSymbol]
+
     return (
       <View style={styles.walletDetailsSection}>
         <WalletImage
@@ -38,13 +50,24 @@ export default class WalletInfo extends PureComponent {
           shapeStyle={styles.walletImageShape}
           size='big'
         />
-        <Text style={styles.address}>
-          {
-            address
-          }
-        </Text>
+        <View style={styles.addressLine}>
+          <Text style={styles.address}>
+            {
+              address
+            }
+          </Text>
+          <TouchableOpacity
+            onPress={onCopyAddress}
+            style={styles.copyAddress}>
+            <Image
+              source={clipboard}
+              style={styles.copyImage}
+            />
+          </TouchableOpacity>
+        </View>
         <PrimaryToken
-          blockchain={blockchain}
+          token={primaryToken}
+          whiteStyle={styles.primaryToken}
         />
         <View style={styles.balanceAndTokensRow}>
           <PrimaryBalance
@@ -54,6 +77,7 @@ export default class WalletInfo extends PureComponent {
           />
           <TokensCounter
             blockchain={blockchain}
+            wallet={wallet}
           />
         </View>
       </View>

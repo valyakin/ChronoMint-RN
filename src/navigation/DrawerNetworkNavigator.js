@@ -9,10 +9,10 @@ import {
   DrawerActions,
 } from 'react-navigation'
 import LoginStack from './LoginStack'
-import DrawerNetworkContainer from '../containers/DrawerNetworkContainer'
+import DrawerNetwork from '../components/DrawerNetwork'
 
-const renderDrawerNetworkContainer = (props) => (
-  <DrawerNetworkContainer {...props} />
+const renderDrawerNetwork = (props) => (
+  <DrawerNetwork {...props} />
 )
 
 const DrawerNetworkNavigator = createDrawerNavigator(
@@ -20,7 +20,7 @@ const DrawerNetworkNavigator = createDrawerNavigator(
     LoginStack,
   },
   {
-    contentComponent: renderDrawerNetworkContainer,
+    contentComponent: renderDrawerNetwork,
     getCustomActionCreators: (route, stateKey) => {
       return {
         toggleNetworkDrawer: () =>

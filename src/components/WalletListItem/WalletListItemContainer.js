@@ -5,6 +5,7 @@
 
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import { Clipboard } from 'react-native'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import { selectCurrentCurrency } from '@chronobank/market/redux/selectors'
@@ -35,24 +36,22 @@ class WalletListItemContainer extends PureComponent {
       address,
       blockchain,
       navigation,
-      selectedCurrency,
       selectBitcoinWallet,
       selectEthereumWallet,
-      masterWalletAddress,
     } = this.props
 
     const params = {
       blockchain,
-      address,
-      selectedCurrency,
-      masterWalletAddress,
     }
-
 
     blockchain === BLOCKCHAIN_ETHEREUM
       ? selectEthereumWallet({ address })
       : selectBitcoinWallet({ address })
     navigation.navigate('Wallet', params)
+  }
+
+  handleCopyAddress = () => {
+    Clipboard.setString(this.props.address)
   }
 
   render () {
@@ -67,9 +66,10 @@ class WalletListItemContainer extends PureComponent {
       <WalletListItem
         address={address}
         blockchain={blockchain}
-        onItemPress={this.handleItemPress}
         selectedCurrency={selectedCurrency}
         wallet={wallet}
+        onItemPress={this.handleItemPress}
+        onCopyAddress={this.handleCopyAddress}
       />
     )
   }
@@ -80,7 +80,6 @@ WalletListItemContainer.propTypes = {
     navigate: PropTypes.func,
   }),
   wallet: PropTypes.shape({}),
-  masterWalletAddress: PropTypes.string,
   address: PropTypes.string,
   blockchain: PropTypes.string,
   selectedCurrency: PropTypes.string,

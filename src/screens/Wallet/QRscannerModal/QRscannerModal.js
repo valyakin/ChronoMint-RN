@@ -10,7 +10,7 @@ import {
   SafeAreaView,
 } from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
-import ActionButton from '../../../components/ActionButton'
+import TextButton from '../../../components/TextButton'
 import styles from './QRscannerModalStyles'
 
 
@@ -23,12 +23,16 @@ const QRscannerModal = ({ onSuccess, visible, modalToggle }) => {
     >
       <SafeAreaView style={styles.modal}>
         <View style={styles.actions}>
-          <ActionButton
-            title='Close Scanner'
+          <TextButton
+            texStyle={styles.closeText}
+            style={styles.close}
+            label='Close Scanner'
             onPress={modalToggle}
           />
         </View>
         <QRCodeScanner
+          cameraStyle={styles.scanner}
+          containerStyle={styles.scanner}
           onRead={onSuccess}
           reactivateTimeout={300}
         />

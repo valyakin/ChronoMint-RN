@@ -66,23 +66,27 @@ const ethereumCreateDerivedWallet = (state, { masterWalletAddress, address }) =>
   }
 }
 
-const updateEthereumBalance = (state, { tokenSymbol, address, balance, amount }) => {
-  return {
-    ...state,
-    list: {
-      ...state.list,
-      [address]: {
-        ...state.list[address],
-        tokens: {
-          ...state.list[address].tokens,
-          [tokenSymbol]: {
-            ...state.list[address].tokens[tokenSymbol],
-            balance,
-            amount,
-          },
+const updateEthereumBalance = (state, { tokenSymbol, address, balance, amount, decimals = DECIMALS }) => {
+  let list = Object.assign({}, state.list)
+  list = {
+    ...list,
+    [address]: {
+      ...list[address],
+      tokens: {
+        ...list[address].tokens,
+        [tokenSymbol]: {
+          ...list[address].tokens[tokenSymbol],
+          symbol: tokenSymbol,
+          balance,
+          amount,
+          decimals,
         },
       },
     },
+  }
+  return {
+    ...state,
+    list,
   }
 }
 
@@ -101,7 +105,6 @@ const ethereumCreateTxDraft = (state, { masterWalletAddress }) => {
         from: masterWalletAddress,
         value: null,
         data: '',
-        unsignedTx: null,
         signedTx: null,
       },
     },
@@ -285,22 +288,36 @@ const selectEthereumWallet = (state, { address }) => ({
   selected: address,
 })
 
-const ethereumTxUpdateHistory = (state, { latestTxDate, txList, masterWalletAddress }) => {
+const ethereumTxUpdateHistory = (state, { latestTxDate, txList, masterWalletAddress, withReset }) => {
   let list = Object.assign({}, state.list)
-  list = {
-    ...list,
-    [masterWalletAddress]: {
-      ...list[masterWalletAddress],
-      transactions: {
-        ...list[masterWalletAddress].transactions,
-        latestTxDate,
-        txList: [
-          ...list[masterWalletAddress].transactions.txList,
-          ...txList,
-        ],
+  list = withReset
+    ? {
+      ...list,
+      [masterWalletAddress]: {
+        ...list[masterWalletAddress],
+        transactions: {
+          ...list[masterWalletAddress].transactions,
+          latestTxDate,
+          txList: [
+            ...txList,
+          ],
+        },
       },
-    },
-  }
+    }
+    : {
+      ...list,
+      [masterWalletAddress]: {
+        ...list[masterWalletAddress],
+        transactions: {
+          ...list[masterWalletAddress].transactions,
+          latestTxDate,
+          txList: [
+            ...list[masterWalletAddress].transactions.txList,
+            ...txList,
+          ],
+        },
+      },
+    }
 
   return {
     ...state,

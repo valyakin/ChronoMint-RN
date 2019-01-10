@@ -5,13 +5,12 @@
 
 import React, { PureComponent } from 'react'
 import { SafeAreaView } from 'react-navigation'
-import {
-  Text,
-} from 'react-native'
+import TextButton from '../TextButton'
 import styles from './DrawerMainMenuStyles'
 
 class DrawerMainMenu extends PureComponent {
   render () {
+    const { onLogout } = this.props
     return (
       <SafeAreaView
         style={styles.container}
@@ -20,9 +19,16 @@ class DrawerMainMenu extends PureComponent {
           horizontal: 'never',
         }}
       >
-        <Text>
-          MainMenu stub
-        </Text>
+        <TextButton
+          textStyle={styles.menuButton}
+          label='Main Menu stub'
+          onPress={() => {}}
+        />
+        <TextButton
+          textStyle={styles.menuButton}
+          label='Logout'
+          onPress={onLogout}
+        />
       </SafeAreaView>
     )
   }

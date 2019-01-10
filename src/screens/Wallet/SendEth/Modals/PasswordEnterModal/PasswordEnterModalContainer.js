@@ -9,15 +9,30 @@ import { Alert } from 'react-native'
 import BigNumber from 'bignumber.js'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
 import { getCurrentEthWallet } from '@chronobank/ethereum/redux/selectors'
-import { updateEthereumTxDraftSignedTx } from '@chronobank/ethereum/redux/thunks'
+import { updateEthereumTxDraftSignedTx, updateEthereumTxDraftData, updateEthereumTxDraftGasLimit } from '@chronobank/ethereum/redux/thunks'
+import {
+  sendToken,
+} from '@chronobank/ethereum/middleware/thunks'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import TouchID from 'react-native-touch-id'
 import * as Keychain from 'react-native-keychain'
+import { ETH_PRIMARY_TOKEN } from '@chronobank/ethereum/constants'
 import { decryptWallet, signEthTransaction } from '@chronobank/ethereum/utils'
 import { balanceToAmount } from '@chronobank/ethereum/utils/amount'
 import { name as appName } from '../../../../../../app.json'
 import PasswordEnterModal from './PasswordEnterModal'
+
+const authenticateErrors = {
+  'NOT_SUPPORTED': 'Not supported.',
+  'NOT_AVAILABLE': 'Not supported.',
+  'NOT_PRESENT': 'Not supported.',
+  'NOT_ENROLLED': 'Not supported.',
+  'AUTHENTICATION_FAILED': 'Authenticate failed.',
+  'AUTHENTICATION_CANCELED': 'Authenticate cancelled.',
+  'FINGERPRINT_ERROR_LOCKOUT': 'Too many attempts.Try again Later.',
+  'FINGERPRINT_ERROR_LOCKOUT_PERMANENT': 'Too many attempts.Fingerprint sensor disabled',
+}
 
 const mapStateToProps = (state) => {
   const masterWalletAddress = getCurrentWallet(state)
@@ -31,6 +46,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   updateEthereumTxDraftSignedTx,
+  updateEthereumTxDraftData,
+  updateEthereumTxDraftGasLimit,
+  sendToken,
 }, dispatch)
 
 class PasswordEnterModalContainer extends React.Component {
@@ -65,22 +83,31 @@ class PasswordEnterModalContainer extends React.Component {
         }
       })
       .then(this.authenticate)
-      .catch(() => {
-        Alert.alert('You do not support the ability to scan.')
-      })
+      // eslint-disable-next-line no-console
+      .catch((e) => console.log(e))
   }
 
 
   authenticate = () => {
     return TouchID.authenticate(`${appName} Application`)
       .then(() => {
-        const {
-          masterWalletAddress,
-        } = this.props
-        return Keychain.getInternetCredentials(masterWalletAddress)
+        const { masterWalletAddress } = this.props
+        Keychain.getInternetCredentials(masterWalletAddress)
+          .then((keychain) => {
+            this.handleConfirmClick({ password: keychain.password })
+          })
+          .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.warn(error)
+          })
       })
-      .then((keychain) => this.handleConfirmClick({ password: keychain.password }))
-      .catch(() => { })
+      .catch((error) => {
+        if (authenticateErrors[error.code]) {
+          if (error.code !== 'AUTHENTICATION_CANCELED') {
+            Alert.alert(authenticateErrors[error.code])
+          }
+        }
+      })
   }
 
   handleConfirmClick = async ({ password }) => {
@@ -101,9 +128,12 @@ class PasswordEnterModalContainer extends React.Component {
 
   handleSign = ({ privateKey }) => {
     const {
-      updateEthereumTxDraftSignedTx,
+      updateEthereumTxDraftData,
+      updateEthereumTxDraftGasLimit,
       currentEthWallet,
       masterWalletAddress,
+      sendToken,
+      token,
     } = this.props
     const {
       nonce,
@@ -115,17 +145,64 @@ class PasswordEnterModalContainer extends React.Component {
       value,
       data,
     } = currentEthWallet.txDraft
-    const tx = {
-      to,
-      from,
-      data,
-      value: balanceToAmount(value).toNumber(),
-      nonce,
-      gas: new BigNumber(gasLimit),
-      gasPrice,
-      chainId,
+    let tx = {}
+    if (token.symbol === ETH_PRIMARY_TOKEN) {
+      tx = {
+        to,
+        from,
+        data,
+        value: balanceToAmount(value).toNumber(),
+        nonce,
+        gas: new BigNumber(gasLimit),
+        gasPrice,
+        chainId,
+      }
+      this.signEthereumTransaction({
+        tx,
+        privateKey,
+      })
+    } else {
+      sendToken({
+        from,
+        to,
+        tokenSymbol: token.symbol,
+        value: balanceToAmount(value, token.decimals),
+      })
+        .then((tokenSend) => {
+          updateEthereumTxDraftGasLimit({
+            masterWalletAddress,
+            gasLimit: tokenSend.gasLimit,
+          })
+          updateEthereumTxDraftData({
+            masterWalletAddress,
+            data: tokenSend.data,
+          })
+          tx = {
+            to: tokenSend.to,
+            from: tokenSend.from,
+            data: tokenSend.data,
+            value: tokenSend.value,
+            nonce,
+            gas: new BigNumber(tokenSend.gasLimit),
+            gasPrice,
+            chainId,
+          }
+          this.signEthereumTransaction({
+            tx,
+            privateKey,
+          })
+        })
+        // eslint-disable-next-line no-console
+        .catch((error) => console.log(error))
     }
+  }
 
+  signEthereumTransaction = ({ tx, privateKey }) => {
+    const {
+      updateEthereumTxDraftSignedTx,
+      masterWalletAddress,
+      confirmPassword,
+    } = this.props
     signEthTransaction({
       tx,
       privateKey,
@@ -135,12 +212,13 @@ class PasswordEnterModalContainer extends React.Component {
           masterWalletAddress,
           signedTx: signedTXresults.rawTransaction,
         })
-          .then(() => this.props.confirmPassword())
+          .then(() => confirmPassword())
+          // eslint-disable-next-line no-console
           .catch((error) => console.log(error))
       })
+      // eslint-disable-next-line no-console
       .catch((error) => console.log(error))
   }
-
 
   render () {
     const {

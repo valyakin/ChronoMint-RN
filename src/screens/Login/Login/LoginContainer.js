@@ -15,6 +15,17 @@ import { loginThunk } from '@chronobank/session/redux/thunks'
 import { name as appName } from '../../../../app.json'
 import Login from './Login'
 
+const authenticateErrors = {
+  'NOT_SUPPORTED': 'Not supported.',
+  'NOT_AVAILABLE': 'Not supported.',
+  'NOT_PRESENT': 'Not supported.',
+  'NOT_ENROLLED': 'Not supported.',
+  'AUTHENTICATION_FAILED': 'Authenticate failed.',
+  'AUTHENTICATION_CANCELED': 'Authenticate cancelled.',
+  'FINGERPRINT_ERROR_LOCKOUT': 'Too many attempts.Try again Later.',
+  'FINGERPRINT_ERROR_LOCKOUT_PERMANENT': 'Too many attempts.Fingerprint sensor disabled',
+}
+
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   loginThunk,
 }, dispatch)
@@ -62,12 +73,9 @@ class LoginContainer extends PureComponent {
           this.setState({ biometryType: 'TouchID' }) //For Android
         }
       })
-      .then(() => {
-        this.authenticate()
-      })
-      .catch(() => {
-        Alert.alert('You do not support the ability to scan.')
-      })
+      .then(this.authenticate)
+      // eslint-disable-next-line no-console
+      .catch((e) => console.log(e.code))
   }
 
   authenticate = () => {
@@ -86,8 +94,11 @@ class LoginContainer extends PureComponent {
           })
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn(error)
+        if (authenticateErrors[error.code]) {
+          if (error.code !== 'AUTHENTICATION_CANCELED') {
+            Alert.alert(authenticateErrors[error.code])
+          }
+        }
       })
   }
 

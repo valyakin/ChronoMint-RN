@@ -6,7 +6,6 @@
 import React, { PureComponent } from 'react'
 import {
   Image,
-  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -20,7 +19,6 @@ import FeeSlider from '../../../components/FeeSlider'
 import Input from '../../../components/Input'
 import Separator from '../../../components/Separator'
 import {
-  chevron_right,
   coin_bitcoin,
   coin_ethereum,
   coin_time_small,
@@ -30,28 +28,6 @@ import ConfirmSendModal from './Modals/ConfirmSendModal'
 import PasswordEnterModal from './Modals/PasswordEnterModal'
 import QRscanner from '../QRscannerModal'
 import styles from './SendStyles'
-
-
-const TokenSelector = ({ onPress = () => { }, selectedToken }) => (
-  <TouchableOpacity style={styles.container} onPress={onPress}>
-    <View style={styles.tokenSelector}>
-      {
-        selectedToken && selectedToken.symbol &&
-        <Text style={styles.tokenSelectorLabel}>
-          {
-            selectedToken.symbol
-          }
-        </Text>
-      }
-      <Image source={chevron_right} />
-    </View>
-  </TouchableOpacity>
-)
-
-TokenSelector.propTypes = {
-  onPress: PropTypes.func,
-  selectedToken: PropTypes.string,
-}
 
 export default class Send extends PureComponent {
 
@@ -79,7 +55,6 @@ export default class Send extends PureComponent {
       selectedCurrency,
       selectedToken,
       selectedWallet,
-      passProps,
       onTxDraftCreate,
       onTxDraftRemove,
       onQRpageOpen,
@@ -88,7 +63,7 @@ export default class Send extends PureComponent {
 
     const currentTokenBalance = selectedWallet.tokens ?
       selectedWallet.tokens[Object.keys(selectedWallet.tokens)[0]].amount :
-      null
+      0
 
 
     const strings = {
@@ -123,7 +98,6 @@ export default class Send extends PureComponent {
         }
         {
           showPasswordModal && <PasswordEnterModal
-            passProps={passProps}
             visible={showPasswordModal}
             modalToggle={onTogglePasswordModal}
             error={error}

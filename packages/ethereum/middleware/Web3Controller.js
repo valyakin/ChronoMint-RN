@@ -5,6 +5,9 @@
 
 import Web3 from 'web3'
 import { Map } from 'immutable'
+import { marketAddToken } from '@chronobank/market/redux/thunks'
+import { amountToBalance } from '../utils/amount'
+import { updateEthereumBalance } from '../redux/thunks'
 import ERC20DAODefaultABI from './abi/ERC20DAODefaultABI'
 // import TokenManagementInterfaceABI from 'chronobank-smart-contracts/build/contracts/TokenManagementInterface.json'
 import BigNumber from 'bignumber.js'
@@ -60,6 +63,7 @@ export default class Web3Controller {
   }
 
   onEndHandler = (error) => {
+    // eslint-disable-next-line no-console
     console.log('onEndHandler error', error)
     this.dispatch(Web3Actions.connectFailure(this.networkIndex, this.networkIndex, error))
     this.provider && this.provider.disconnect()
@@ -101,7 +105,7 @@ export default class Web3Controller {
                     this.dispatch(Web3Actions.connectSuccess(this.networkIndex, this.host))
                     this.checkSyncStatus()
                     // this.initContracts()
-                    // this.subscribeOnContractsEvents()
+                    this.subscribeOnContractsEvents()
                   } else {
                     this.provider.disconnect()
                     this.web3 = null
@@ -132,8 +136,55 @@ export default class Web3Controller {
     })
   }
 
-  initTokenContract (tokenSymbol, tokenAddress) {
+  initTokenContract (tokenSymbol, tokenAddress, parentAddress) {
     this.tokens = this.tokens.set(tokenSymbol, new this.web3.eth.Contract(ERC20DAODefaultABI.abi, tokenAddress))
+    if (parentAddress) {
+      try {
+        const currentToken = this.tokens.get(tokenSymbol)
+        currentToken.methods.balanceOf(parentAddress).call({ from: parentAddress })
+          .then((currentBalance) => {
+            currentToken.methods.decimals().call({ from: parentAddress })
+              .then((decimals) => {
+                const tokenDecimals = +decimals
+                const balance = amountToBalance(currentBalance, tokenDecimals)
+                this.dispatch(marketAddToken(tokenSymbol))
+                this.dispatch(updateEthereumBalance({ tokenSymbol, address: parentAddress, balance, amount: currentBalance, decimals: tokenDecimals }))
+              })
+              // eslint-disable-next-line no-console
+              .catch((error) => console.warn('Getting decimals error: ', error))
+          })
+          // eslint-disable-next-line no-console
+          .catch((error) => console.warn('Getting current token balance error: ', error))
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('Error in Tokens contracts: ', error)
+      }
+    }
+  }
+
+  sendToken = async ({ from, to, tokenSymbol, value }) => {
+    const currentToken = this.tokens.get(tokenSymbol)
+    try {
+      // call() will return 1 in case if everything correct
+      // eslint-disable-next-line no-console
+      const newValue = BigNumber.isBigNumber(value)
+        ? value.toString(10)
+        : value
+
+      const gasLimit = await currentToken.methods.transfer(to, newValue).estimateGas({ from, newValue })
+      const data = currentToken.methods.transfer(to, newValue).encodeABI()
+
+      return {
+        from,
+        to: currentToken._address,
+        value: new BigNumber(0),
+        data,
+        gasLimit: gasLimit + 1, // +1 explanation: copied from TimeX. May be we will need some constant here
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn('Error during send Token: ', error)
+    }
   }
 
   unsubscribeFromAllEvents () {
@@ -245,51 +296,58 @@ export default class Web3Controller {
   }
 
   getContractByName (contractName) {
-    return this.contracts[contractName]
+    return this.contracts.get(contractName)
   }
 
   getTokenContractByName (tokenContractName) {
-    return this.tokens[tokenContractName]
+    return this.tokens.get(tokenContractName)
   }
 
-  async loadTokens () {
+  async loadTokens (ethAddress) {
     const Erc20Manager = this.contracts.get('ERC20Manager')
     if (Erc20Manager) {
-      const res = await Erc20Manager.methods.getTokens([]).call()
-      /* eslint-disable no-underscore-dangle */
-      const addresses = res._tokensAddresses
-      const names = res._names
-      const symbols = res._symbols
-      const urls = res._urls
-      const decimalsArr = res._decimalsArr
-      const ipfsHashes = res._ipfsHashes
-      /* eslint-enable no-underscore-dangle */
-      const gasPrice = await this.web3.eth.getGasPrice()
-      const bnGasPrice = new BigNumber(gasPrice)
-      addresses.forEach((address, i) => {
-        const model = {
-          address: address.toLowerCase(),
-          name: web3utils.toUtf8(names[i]),
-          symbol: web3utils.toUtf8(symbols[i]).toUpperCase(),
-          url: web3utils.toUtf8(urls[i]),
-          decimals: parseInt(decimalsArr[i]),
-          icon: Utils.bytes32ToIPFSHash(ipfsHashes[i]),
-          feeRate: {
-            wei: bnGasPrice,
-            gwei: web3utils.fromWei(bnGasPrice, 'gwei'),
-          },
-          events: false,
-        }
-        this.initTokenContract(model.symbol, model.address)
-      })
-      this.subscribeOnTokenEvents()
+      try {
+        const res = await Erc20Manager.methods.getTokens([]).call()
+
+        /* eslint-disable no-underscore-dangle */
+        const addresses = res._tokensAddresses
+        const names = res._names
+        const symbols = res._symbols
+        const urls = res._urls
+        const decimalsArr = res._decimalsArr
+        const ipfsHashes = res._ipfsHashes
+        /* eslint-enable no-underscore-dangle */
+        const gasPrice = await this.web3.eth.getGasPrice()
+        const bnGasPrice = new BigNumber(gasPrice)
+        addresses.forEach((address, i) => {
+          const model = {
+            address: address.toLowerCase(),
+            name: web3utils.toUtf8(names[i]),
+            symbol: web3utils.toUtf8(symbols[i]).toUpperCase(),
+            url: web3utils.toUtf8(urls[i]),
+            decimals: parseInt(decimalsArr[i]),
+            icon: Utils.bytes32ToIPFSHash(ipfsHashes[i]),
+            feeRate: {
+              wei: bnGasPrice,
+              gwei: web3utils.fromWei(bnGasPrice, 'gwei'),
+            },
+            events: false,
+          }
+          this.initTokenContract(model.symbol, model.address, ethAddress)
+        })
+        this.subscribeOnTokenEvents()
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn(error)
+      }
+
     } else {
       // eslint-disable-next-line no-console
       //#console.log('Contract Erc20Manager is not initialized.')
     }
   }
 
-  initContracts () {
+  initContracts (ethAddress) {
     const abstractContracts = [
       'ChronoBankPlatformEmitterABI',
       'FeeInterfaceABI',
@@ -317,7 +375,7 @@ export default class Web3Controller {
         }
       }
     })
-    this.loadTokens()
+    this.loadTokens(ethAddress)
   }
 
   getWeb3Instance () {

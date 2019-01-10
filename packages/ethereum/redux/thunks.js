@@ -4,10 +4,12 @@
  */
 
 import * as Keychain from 'react-native-keychain'
+import { getCurrentWallet } from '@chronobank/session/redux/selectors'
+import { requestEthereumTransactionsHistoryByAddress } from '../service/api'
 import { encryptWallet, createEthWallet, mnemonicToPrivateKeyAndAddress } from '../utils'
+import { amountToBalance } from '../utils/amount'
 import * as Actions from './actions'
 
-// eslint-disable-next-line import/prefer-default-export
 export const createAccountByMnemonic = (mnemonic, password) => async (dispatch) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -44,10 +46,10 @@ export const createAccountByPrivateKey = (privateKey, password) => (dispatch) =>
   })
 }
 
-export const updateEthereumBalance = ({ tokenSymbol, address, balance, amount }) => (dispatch) => {
+export const updateEthereumBalance = ({ tokenSymbol, address, balance, amount, decimals }) => (dispatch) => {
   return new Promise((resolve, reject) => {
     try {
-      dispatch(Actions.ethereumUpdateBalance({ tokenSymbol, address, balance, amount }))
+      dispatch(Actions.ethereumUpdateBalance({ tokenSymbol, address, balance, amount, decimals }))
       return resolve()
     } catch (e) {
       return reject(e)
@@ -55,9 +57,42 @@ export const updateEthereumBalance = ({ tokenSymbol, address, balance, amount })
   })
 }
 
-export const selectEthereumWallet = ({ address }) => (dispatch) => {
+export const selectEthereumWallet = ({ address }) => (dispatch, getState) => {
   return new Promise((resolve, reject) => {
     try {
+      dispatch(requestEthereumTransactionsHistoryByAddress(address))
+        .then((response) => {
+          const masterWalletAddress = getCurrentWallet(getState())
+          const timestamps = []
+          const txList = response.payload.data.map((tx) => {
+            timestamps.push(tx.timestamp)
+            return {
+              balance: amountToBalance(tx.value).toString(),
+              blockNumber: tx.blockNumber,
+              confirmations: tx.confirmations,
+              from: tx.from,
+              gas: tx.gas,
+              gasPrice: tx.gasPrice,
+              hash: tx.hash,
+              index: tx.index,
+              nonce: tx.nonce,
+              timestamp: tx.timestamp,
+              to: tx.to,
+              value: tx.value,
+            }
+          })
+          dispatch(updateEthereumTxHistory({
+            address,
+            masterWalletAddress,
+            txList,
+            latestTxDate: Math.max(...timestamps),
+            withReset: true,
+          }))
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.warn(error)
+        })
       dispatch(Actions.selectEthereumWallet({ address }))
       return resolve()
     } catch (e) {
@@ -99,12 +134,22 @@ export const deleteEthereumTxDraft = ({ masterWalletAddress }) => (dispatch) => 
   })
 }
 
-export const updateEthereumTxDraftGasPriceChainIdNonce = ({ gasPrice, chainId, nonce, masterWalletAddress }) => (dispatch) => {
+export const updateEthereumTxDraftChainIdNonce = ({ chainId, nonce, masterWalletAddress }) => (dispatch) => {
   return new Promise((resolve, reject) => {
     try {
       dispatch(Actions.updateEthereumTxDraftNonce({ nonce, masterWalletAddress }))
-      dispatch(Actions.updateEthereumTxDraftGasPrice({ gasPrice, masterWalletAddress }))
       dispatch(Actions.updateEthereumTxDraftChainId({ chainId, masterWalletAddress }))
+      return resolve()
+    } catch (e) {
+      return reject(e)
+    }
+  })
+}
+
+export const updateEthereumTxDraftGasPrice = ({ gasPrice, masterWalletAddress }) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    try {
+      dispatch(Actions.updateEthereumTxDraftGasPrice({ gasPrice, masterWalletAddress }))
       return resolve()
     } catch (e) {
       return reject(e)
@@ -167,10 +212,10 @@ export const updateEthereumTxDraftSignedTx = ({ signedTx, masterWalletAddress })
   })
 }
 
-export const updateEthereumTxHistory = ({ latestTxDate, txList, masterWalletAddress, address }) => (dispatch) => {
+export const updateEthereumTxHistory = ({ latestTxDate, txList, masterWalletAddress, address, withReset = false }) => (dispatch) => {
   return new Promise((resolve, reject) => {
     try {
-      dispatch(Actions.ethereumTxUpdateHistory({ latestTxDate, txList, masterWalletAddress, address }))
+      dispatch(Actions.ethereumTxUpdateHistory({ latestTxDate, txList, masterWalletAddress, address, withReset }))
       return resolve()
     } catch (e) {
       return reject(e)

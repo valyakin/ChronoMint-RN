@@ -94,7 +94,6 @@ PasswordEnterModal.propTypes = {
     PropTypes.bool,
   ]),
   styles: PropTypes.shape({}),
-  passProps: PropTypes.shape({}),
 }
 
 export default PasswordEnterModal

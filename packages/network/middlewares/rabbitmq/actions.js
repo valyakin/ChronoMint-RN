@@ -58,8 +58,9 @@ export const mwRmqUnsubscribe = ({ channel }) => ({
   channel,
 })
 
-export const rmqUnsubscribeSuccess = () => ({
+export const rmqUnsubscribeSuccess = ({ channel }) => ({
   type: ActionsTypes.RMQ_UNSUBSCRIBE_SUCCESS,
+  channel,
 })
 
 export const rmqUnsubscribeFailure = ({ channel, error }) => ({

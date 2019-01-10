@@ -22,7 +22,13 @@ export default StyleSheet.create({
     paddingVertical: 10,
     width: '32%',
   },
+  doneWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
   primaryButton: {
+    flex: 1,
     marginVertical: 10,
     marginHorizontal: 50,
   },
@@ -47,10 +53,20 @@ export default StyleSheet.create({
   },
   wordButtons: {
     marginHorizontal: 20,
-    marginVertical: 10,
+    marginVertical: 30,
   },
   wordColumns: {
     justifyContent: 'space-between',
+  },
+  buttonsLine: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    justifyContent: 'space-around',
+  },
+  undoAndClear: {
+    flex: 1,
+    flexDirection: 'row',
+    marginHorizontal: 10,
   },
   wordContainer: {
     alignItems: 'center',
