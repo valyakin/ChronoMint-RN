@@ -11,7 +11,9 @@ import {
 import {
   createStackNavigator,
   HeaderBackButton,
+  DrawerActions,
 } from 'react-navigation'
+import MenuIcon from '../components/MenuIcon'
 import WalletList from '../screens/Wallet/WalletList'
 import Wallet from '../screens/Wallet/Wallet'
 import Send from '../screens/Wallet/Send'
@@ -49,8 +51,9 @@ const transitionConfig = () => {
 const WalletStack = createStackNavigator(
   {
     'WalletList': {
-      navigationOptions: () => ({
+      navigationOptions: ({ navigation }) => ({
         title: i18n.t('ScreensTitles.WalletList'),
+        headerLeft: <MenuIcon onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())} />,
       }),
       screen: WalletList,
     },
