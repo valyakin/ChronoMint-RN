@@ -87,6 +87,12 @@ export default class SendEth extends PureComponent {
       onQRpageOpen,
       showQRscanner,
       onQRscan,
+      isRecipientInputValid,
+      isAmountInputValid,
+      recipientTouched,
+      amountTouched,
+      onRecipientTouched,
+      onAmountTouched,
     } = this.props
 
     const currentTokenBalance = selectedToken ?
@@ -185,6 +191,7 @@ export default class SendEth extends PureComponent {
               name='recipient'
               style={styles.textInput}
               value={recipient}
+              onTouch={onRecipientTouched}
             />
             <TouchableOpacity
               onPress={onQRpageOpen}
@@ -195,13 +202,23 @@ export default class SendEth extends PureComponent {
               />
             </TouchableOpacity>
           </View>
+          {
+            recipientTouched && !isRecipientInputValid &&
+            <Text style={styles.errorText}>Recipient must be valid ETH address</Text>
+          }
           <Input
             placeholder={strings.amountInput}
             keyboardType='numeric'
+            style={styles.textInput}
             onChange={onChangeAmount}
             name='amount'
             value={amount}
+            onTouch={onAmountTouched}
           />
+          {
+            amountTouched && !isAmountInputValid &&
+            <Text style={styles.errorText}>Amount must be positive number</Text>
+          }
           <Text style={styles.sendBalance}>
             {
               strings.sendBalance
@@ -237,4 +254,10 @@ SendEth.propTypes = {
   showConfirmModal: PropTypes.bool,
   error: PropTypes.string,
   recipient: PropTypes.string,
+  isRecipientInputValid: PropTypes.bool,
+  isAmountInputValid: PropTypes.bool,
+  recipientTouched: PropTypes.bool,
+  amountTouched: PropTypes.bool,
+  onAmountTouched: PropTypes.func,
+  onRecipientTouched: PropTypes.func,
 }
