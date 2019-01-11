@@ -10,6 +10,7 @@ import {
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
+import * as Yup from 'yup'
 import BigNumber from 'bignumber.js'
 import * as EthereumThunks from '@chronobank/ethereum/redux/thunks'
 import {
@@ -23,6 +24,7 @@ import { balanceToAmount, amountToBalance } from '@chronobank/ethereum/utils/amo
 import { getCurrentNetwork } from '@chronobank/network/redux/selectors'
 import { selectMarketPrices, selectCurrentCurrency } from '@chronobank/market/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
+import { isValidETHAddress } from '@chronobank/ethereum/utils'
 import TextButton from '../../../components/TextButton'
 import styles from './SendEthStyles'
 import SendEth from './SendEth'
@@ -53,7 +55,7 @@ class SendEthContainer extends React.Component {
       decimals: firtsAvailableToken.decimals,
     }
     this.state = {
-      amount: null,
+      amount: '',
       amountInCurrency: 0,
       confirmSendModal: false,
       enterPasswordModal: false,
@@ -69,6 +71,8 @@ class SendEthContainer extends React.Component {
       recipient: '',
       firtsAvailableToken,
       selectedToken,
+      amountTouched: false,
+      recipientTouched: false,
     }
   }
 
@@ -137,8 +141,11 @@ class SendEthContainer extends React.Component {
 
   componentDidMount () {
     this.props.navigation.setParams({ handleGoToPasswordModal: this.handleGoToPasswordModal })
-
   }
+
+  sendAmountValidationSchema = Yup.number()
+    .required()
+    .positive()
 
   getDataForGasEstimation = () => {
     const {
@@ -179,13 +186,7 @@ class SendEthContainer extends React.Component {
 
   handleGoToPasswordModal = () => {
     if (this.state.isRecipientInputValid && this.state.isAmountInputValid) {
-
       this.handleTogglePasswordModal()
-
-    } else {
-      Alert.alert('Input error', 'Please fill address and amount', [
-        { text: 'Ok', onPress: () => { }, style: 'cancel' },
-      ])
     }
   }
 
@@ -195,25 +196,22 @@ class SendEthContainer extends React.Component {
         updateEthereumTxDraftTo,
         masterWalletAddress,
       } = this.props
-      // Check for Ethereum
-      const dummyValidationOfRecipientInput =
-        value &&
-        (value.length >= 40 || value.length <= 44) &&
-        value.startsWith('0x')
-
       this.setState(
         {
           recipient: value,
-          isRecipientInputValid: dummyValidationOfRecipientInput,
+          isRecipientInputValid: isValidETHAddress(value),
         },
         () => {
           updateEthereumTxDraftTo({
             masterWalletAddress,
-            to: this.state.recipient,
+            to: value,
+          }).then(() => {
+            if (this.state.isAmountInputValid && this.state.isRecipientInputValid) {
+              this.requestGasEstimations()
+            }
+          }).catch((error) => {
+            throw new Error('Can not updateEthereumTxDraftTo, value:', value, error)
           })
-          if (this.state.isAmountInputValid) {
-            this.requestGasEstimations()
-          }
         }
       )
     }
@@ -234,27 +232,27 @@ class SendEthContainer extends React.Component {
           prices[this.state.selectedToken.symbol] &&
           prices[this.state.selectedToken.symbol][selectedCurrency]) ||
         0 // TODO: handle wrong values correctly
-        
+
       if (value && !(value.endsWith(',') || value.endsWith('.'))) {
         const inputValue = value.replace(',', '.').replace(' ', '')
         const localeValue = new BigNumber(inputValue).toNumber()
-        const dummyValidationOfAmountInput =
-          localeValue !== null && localeValue !== undefined && localeValue !== '' && localeValue > 0
-        && localeValue <= +this.state.selectedToken.balance
         this.setState(
           {
             amount: inputValue,
             amountInCurrency: tokenPrice * localeValue,
-            isAmountInputValid: dummyValidationOfAmountInput,
+            isAmountInputValid: this.sendAmountValidationSchema.isValidSync(localeValue) && localeValue <= +this.state.selectedToken.balance,
           },
           () => {
             updateEthereumTxDraftValue({
               masterWalletAddress,
               value: localeValue,
+            }).then(() => {
+              if (this.state.isRecipientInputValid && this.state.isAmountInputValid) {
+                this.requestGasEstimations()
+              }
+            }).catch((error) => {
+              throw new Error('Can not updateEthereumTxDraftValue, localeValue:', value, error)
             })
-            if (this.state.isRecipientInputValid) {
-              this.requestGasEstimations()
-            }
           }
         )
       } else {
@@ -400,6 +398,13 @@ class SendEthContainer extends React.Component {
     this.props.navigation.navigate('TokenSelector')
   }
 
+  handleTouchAmount = () => {
+    this.setState({ amountTouched: true })
+  }
+
+  handleTouchRecipient = () => {
+    this.setState({ recipientTouched: true })
+  }
 
   render () {
     const {
@@ -415,6 +420,10 @@ class SendEthContainer extends React.Component {
       selectedToken,
       modalProps,
       showQRscanner,
+      isRecipientInputValid,
+      isAmountInputValid,
+      recipientTouched,
+      amountTouched,
     } = this.state
     const {
       blockchain,
@@ -445,13 +454,20 @@ class SendEthContainer extends React.Component {
         //
         price={blockchainPrice}
 
+        onAmountTouched={this.handleTouchAmount}
+        onRecipientTouched={this.handleTouchRecipient}
+
         onTogglePasswordModal={this.handleGoToPasswordModal}
         onCloseConfirmModal={this.handleCloseConfirmModal}
         onPasswordConfirm={this.handlePasswordConfirm}
         onSendConfirm={this.handleSendConfirm}
         //state
+        isRecipientInputValid={isRecipientInputValid}
+        isAmountInputValid={isAmountInputValid}
         showPasswordModal={enterPasswordModal}
         showConfirmModal={confirmSendModal}
+        recipientTouched={recipientTouched}
+        amountTouched={amountTouched}
         showQRscanner={showQRscanner}
         error={error}
         //txDraft
