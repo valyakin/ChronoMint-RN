@@ -54,7 +54,6 @@ export default StyleSheet.create({
     fontSize: 12,
     fontWeight: '200',
     marginBottom: 30,
-    marginLeft: 20,
   },
   separatorDark: {
     backgroundColor: '#424066',
@@ -116,5 +115,9 @@ export default StyleSheet.create({
     fontWeight: '700',
     marginHorizontal: 20,
     marginTop: 30,
+  },
+  errorText: {
+    color: colors.error,
+    textAlign: 'center',
   },
 })

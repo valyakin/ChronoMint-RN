@@ -11,12 +11,13 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import BigNumber from 'bignumber.js'
+import * as Yup from 'yup'
 import * as BitcoinThunks from '@chronobank/bitcoin/redux/thunks'
 import {
   requestBitcoinUtxoByAddress,
   requestBitcoinEstimateFeeRate,
 } from '@chronobank/bitcoin/service/api'
-import { prepareBitcoinTransaction } from '@chronobank/bitcoin/utils'
+import { prepareBitcoinTransaction, isValidBTCAddress } from '@chronobank/bitcoin/utils'
 import { getBitcoinCurrentWallet } from '@chronobank/bitcoin/redux/selectors'
 import { getCurrentNetwork } from '@chronobank/network/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
@@ -74,6 +75,8 @@ class SendContainer extends React.Component {
       recipient: '',
       firtsAvailableToken,
       selectedToken,
+      amountTouched: false,
+      recipientTouched: false,
     }
   }
 
@@ -123,6 +126,10 @@ class SendContainer extends React.Component {
   componentDidMount () {
     this.props.navigation.setParams({ handleGoToPasswordModal: this.handleGoToPasswordModal })
   }
+
+  sendAmountValidationSchema = Yup.number()
+    .required()
+    .positive()
 
   handleGoToPasswordModal = () => {
     const {
@@ -185,24 +192,20 @@ class SendContainer extends React.Component {
         })
 
 
-    } else {
-      Alert.alert('Input error', 'Please fill address and amount', [
-        { text: 'Ok', onPress: () => { }, style: 'cancel' },
-      ])
     }
   }
 
   handleChangeRecipient = (name, value) => {
+    const { network } = this.props
+
     if (typeof value === 'string') {
       const { updateBitcoinTxDraftRecipient, masterWalletAddress, currentBTCWallet } = this.props
       const { address } = currentBTCWallet
 
-      const dummyValidationOfRecipientInput = value && value.length === 34
-
       this.setState(
         {
           recipient: value,
-          isRecipientInputValid: dummyValidationOfRecipientInput,
+          isRecipientInputValid: isValidBTCAddress(value, network.networkType),
         },
         () => {
           updateBitcoinTxDraftRecipient({
@@ -238,14 +241,11 @@ class SendContainer extends React.Component {
       if (value && !(value.endsWith(',') || value.endsWith('.'))) {
         const inputValue = value.replace(',', '.').replace(' ', '')
         const localeValue = new BigNumber(inputValue).toNumber()
-
-        const dummyValidationOfAmountInput =
-          localeValue !== null && localeValue !== undefined && localeValue !== '' && localeValue > 0
         this.setState(
           {
             amount: inputValue,
             amountInCurrency: tokenPrice * localeValue,
-            isAmountInputValid: dummyValidationOfAmountInput,
+            isAmountInputValid: this.sendAmountValidationSchema.isValidSync(localeValue) && localeValue <= +this.state.selectedToken.amount,
           },
           () => {
             updateBitcoinTxDraftAmount({
@@ -429,6 +429,13 @@ class SendContainer extends React.Component {
     this.handleChangeRecipient('recipient', scannedAddress.data)
   }
 
+  handleTouchAmount = () => {
+    this.setState({ amountTouched: true })
+  }
+
+  handleTouchRecipient = () => {
+    this.setState({ recipientTouched: true })
+  }
 
   render () {
     const {
@@ -443,6 +450,10 @@ class SendContainer extends React.Component {
       recipient,
       selectedToken,
       showQRscanner,
+      isRecipientInputValid,
+      isAmountInputValid,
+      recipientTouched,
+      amountTouched,
     } = this.state
     const { currentBTCWallet, prices, selectedCurrency, navigation } = this.props
     const {
@@ -484,6 +495,14 @@ class SendContainer extends React.Component {
         onTxDraftRemove={this.handleTxDraftRemove}
         onQRpageOpen={this.handleQRpageOpen}
         onQRscan={this.handleQRscan}
+
+        // validation
+        isRecipientInputValid={isRecipientInputValid}
+        isAmountInputValid={isAmountInputValid}
+        recipientTouched={recipientTouched}
+        amountTouched={amountTouched}
+        onAmountTouched={this.handleTouchAmount}
+        onRecipientTouched={this.handleTouchRecipient}
       />
     )
   }
