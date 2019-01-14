@@ -69,8 +69,8 @@ class SetAccountPasswordContainer extends PureComponent {
 
     if (mnemonic) {
       createAccountByMnemonic(mnemonic, password)
-        .then((derivedPrivateKey) => {
-          loginThunk(ethereumMainAddress, derivedPrivateKey)
+        .then((result) => {
+          loginThunk(result.address, result.privateKey)
             .then(() => {
               navigate('WalletList')
             })

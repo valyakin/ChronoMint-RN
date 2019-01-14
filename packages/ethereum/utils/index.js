@@ -40,16 +40,12 @@ export const mnemonicToPrivateKeyAndAddress = (mnemonic, path = WALLET_HD_PATH) 
   const wallets = accounts.wallet.create()
   const mnemonicSeed = new Mnemonic(mnemonic, Mnemonic.Words.ENGLISH).toSeed()
   const hdWallet = hdKey.fromMasterSeed(mnemonicSeed)
-  const wallet = hdWallet.derivePath(path).getWallet()
-  const account = accounts.privateKeyToAccount(wallet.getPrivateKeyString())
+  const hdkey = hdWallet.derivePath(path)._hdkey
+  const account = accounts.privateKeyToAccount(`0x${hdkey._privateKey.toString('hex')}`)
   wallets.add(account)
-
-  const walletAccount = wallets[0]
-
-  return {
-    address: walletAccount.address,
-    privateKey: walletAccount.privateKey,
-  }
+  const newWallet = wallets[0]
+  newWallet.path = path
+  return newWallet
 }
 
 export const createEthWallet = (privateKey) => {
