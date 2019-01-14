@@ -13,9 +13,23 @@ import * as Actions from './actions'
 export const createAccountByMnemonic = (mnemonic, password) => async (dispatch) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { privateKey } = mnemonicToPrivateKeyAndAddress(mnemonic)
-      const derivedPrivateKey = await dispatch(createAccountByPrivateKey(privateKey, password))
-      return resolve(derivedPrivateKey)
+      const decryptedWallet = mnemonicToPrivateKeyAndAddress(mnemonic)
+
+      const ethAddress = decryptedWallet.address
+      const encryptedWallet = await encryptWallet(decryptedWallet, password)
+
+      if (!ethAddress) {
+        return reject('0001: No ETH address!')
+      }
+      if (!encryptedWallet) {
+        return reject('0002: No ETH encrypted wallet!')
+      }
+
+      dispatch(Actions.ethereumCreateWallet(ethAddress, encryptedWallet, decryptedWallet.path))
+      await Keychain.setInternetCredentials(ethAddress, ethAddress, password)
+
+      return resolve(decryptedWallet)
+
     } catch (error) {
       return reject(error)
     }

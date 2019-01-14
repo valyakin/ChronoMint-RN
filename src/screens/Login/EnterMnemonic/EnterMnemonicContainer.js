@@ -34,16 +34,9 @@ class EnterMnemonicContainer extends PureComponent {
     const mnemonicWords = mnemonic && mnemonic.trim().split(' ')
 
     try {
-      const { privateKey } = mnemonicToPrivateKeyAndAddress(mnemonic)
-      const ethereumMainAddress = getAddress(privateKey)
-
-      if (!ethereumMainAddress || !privateKey || mnemonicWords.length !== MNEMONIC_LENGTH) {
-        return Alert.alert(i18n.t('EnterMnemonic.wrongMnemonic'))
-      }
-
       const params = {
         mnemonic,
-        ethereumMainAddress,
+        // ethereumMainAddress,
       }
       navigate('SetAccountPassword', params)
     } catch (error) {
