@@ -7,6 +7,7 @@ import bitcoin, { networks } from 'bitcoinjs-lib'
 import { checkPrivateKey } from '@chronobank/ethereum/utils'
 import coinselect from 'coinselect'
 import BigNumber from 'bignumber.js'
+import WAValidator from 'wallet-address-validator'
 
 // TODO: this info may be obtained from Redux store (see network)
 export const convertToBlockchainNet = (networkType) => {
@@ -116,3 +117,5 @@ export const signTransaction = ({ unsignedTxHex, network, privateKey }) => {
 
   return txb.build().toHex()
 }
+
+export const isValidBTCAddress = (address, network) => WAValidator.validate(address, 'BTC', network === 'bitcoin' ? 'prod' : network)

@@ -45,6 +45,7 @@
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
+    "wallet-address-validator": "^0.2.4",
     "yup": "^0.26.6"
   },
   "devDependencies": {

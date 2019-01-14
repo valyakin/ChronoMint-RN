@@ -54,7 +54,6 @@ export default StyleSheet.create({
     fontSize: 12,
     fontWeight: '200',
     marginBottom: 30,
-    marginLeft: 20,
   },
   separatorDark: {
     backgroundColor: '#424066',

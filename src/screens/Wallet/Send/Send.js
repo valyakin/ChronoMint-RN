@@ -59,6 +59,12 @@ export default class Send extends PureComponent {
       onTxDraftRemove,
       onQRpageOpen,
       onQRscan,
+      isRecipientInputValid,
+      isAmountInputValid,
+      recipientTouched,
+      amountTouched,
+      onRecipientTouched,
+      onAmountTouched,
     } = this.props
 
     const currentTokenBalance = selectedWallet.tokens ?
@@ -147,6 +153,7 @@ export default class Send extends PureComponent {
               name='recipient'
               style={styles.textInput}
               value={recipient}
+              onTouch={onRecipientTouched}
             />
             <TouchableOpacity
               onPress={onQRpageOpen}
@@ -157,13 +164,23 @@ export default class Send extends PureComponent {
               />
             </TouchableOpacity>
           </View>
+          {
+            recipientTouched && !isRecipientInputValid &&
+            <Text style={styles.errorText}>Recipient must be valid BTC address</Text>
+          }
           <Input
             placeholder={strings.amountInput}
+            style={styles.textInput}
             keyboardType='numeric'
             onChange={onChangeAmount}
             name='amount'
             value={amount}
+            onTouch={onAmountTouched}
           />
+          {
+            amountTouched && !isAmountInputValid &&
+            <Text style={styles.errorText}>Amount must be positive number</Text>
+          }
           <Text style={styles.sendBalance}>
             {
               strings.sendBalance
@@ -198,4 +215,10 @@ Send.propTypes = {
   showPasswordModal: PropTypes.bool,
   showConfirmModal: PropTypes.bool,
   error: PropTypes.string,
+  isRecipientInputValid: PropTypes.bool,
+  isAmountInputValid: PropTypes.bool,
+  recipientTouched: PropTypes.bool,
+  amountTouched: PropTypes.bool,
+  onAmountTouched: PropTypes.func,
+  onRecipientTouched: PropTypes.func,
 }
