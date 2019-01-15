@@ -57,7 +57,6 @@ class SendContainer extends React.Component {
       amount: firtsAvailableToken.amount,
     }
     this.state = {
-      amount: null,
       amountInCurrency: 0,
       confirmSendModal: false,
       enterPasswordModal: false,
@@ -70,13 +69,18 @@ class SendContainer extends React.Component {
       gasFee: null,
       gasFeeAmount: null,
       gasFeeAmountInCurrency: null,
-      isAmountInputValid: false,
-      isRecipientInputValid: false,
-      recipient: '',
       firtsAvailableToken,
       selectedToken,
-      amountTouched: false,
-      recipientTouched: false,
+
+      inputAmountValue: '',
+      inputAmountIsValid: false,
+      inputAmountError: 'Amount is required field',
+      inputAmountTouched: false,
+
+      inputRecipientValue: '',
+      inputRecipientIsValid: false,
+      inputRecipientError: 'Recipient is required field',
+      inputRecipientTouched: false,
     }
   }
 
@@ -127,10 +131,6 @@ class SendContainer extends React.Component {
     this.props.navigation.setParams({ handleGoToPasswordModal: this.handleGoToPasswordModal })
   }
 
-  sendAmountValidationSchema = Yup.number()
-    .required()
-    .positive()
-
   handleGoToPasswordModal = () => {
     const {
       blockchain,
@@ -145,7 +145,7 @@ class SendContainer extends React.Component {
     } = this.props
     const { address } = currentBTCWallet
 
-    if (this.state.isRecipientInputValid && this.state.isAmountInputValid) {
+    if (this.state.inputRecipientIsValid && this.state.inputAmountIsValid) {
       updateBitcoinTxDraftToken({
         address,
         masterWalletAddress,
@@ -153,9 +153,9 @@ class SendContainer extends React.Component {
       })
 
       const tx = {
-        to: this.state.recipient,
+        to: this.state.inputRecipientValue,
         from: address,
-        value: convertBTCToSatoshi(this.state.amount),
+        value: convertBTCToSatoshi(this.state.inputAmountValue),
       }
 
       requestBitcoinUtxoByAddress(address)
@@ -195,34 +195,76 @@ class SendContainer extends React.Component {
     }
   }
 
-  handleChangeRecipient = (name, value) => {
+  validateRecipient = (recipient) => {
     const { network } = this.props
 
+    const validationSchema = Yup.string()
+      .typeError('Recipient must be a string')
+      .required('Recipient is required field')
+      .test('is-valid-address', 'Recipient must be a valid BTC address', (value) => isValidBTCAddress(value, network.networkType))
+    return validationSchema.validate(recipient)
+  }
+
+  handleChangeRecipient = (name, value) => {
     if (typeof value === 'string') {
-      const { updateBitcoinTxDraftRecipient, masterWalletAddress, currentBTCWallet } = this.props
+      const {
+        updateBitcoinTxDraftRecipient,
+        masterWalletAddress,
+        currentBTCWallet,
+      } = this.props
       const { address } = currentBTCWallet
 
-      this.setState(
-        {
-          recipient: value,
-          isRecipientInputValid: isValidBTCAddress(value, network.networkType),
-        },
-        () => {
-          updateBitcoinTxDraftRecipient({
-            address,
-            masterWalletAddress,
-            recipient: this.state.recipient,
-          })
-          if (this.state.isAmountInputValid) {
-            this.requestBcFeeEstimations()
+      this.validateRecipient(value).then(() => {
+        this.setState(
+          {
+            inputRecipientValue: value,
+            inputRecipientIsValid: true,
+            inputRecipientError: '',
+          },
+          () => {
+            updateBitcoinTxDraftRecipient({
+              address,
+              masterWalletAddress,
+              recipient: this.state.inputRecipientValue,
+            })
+            if (this.state.inputAmountIsValid) {
+              this.requestBcFeeEstimations()
+            }
           }
-        }
-      )
+        )
+      }).catch((error) => {
+        this.setState(
+          {
+            inputRecipientValue: value,
+            inputRecipientIsValid: false,
+            inputRecipientError: error.message,
+          },
+        )
+      })
     }
+  }
+
+  validateAmount = (amount) => {
+    const { selectedToken } = this.state
+    const validationSchema = Yup.number()
+      .typeError('Amount must be a number')
+      .required('Amount is required field')
+      .moreThan(0, 'Amount must be a positive number')
+      .lessThan(selectedToken.amount ,'Not enough funds')
+    return validationSchema.validate(amount)
   }
 
   handleChangeAmount = (name, value) => {
     if (typeof value === 'string') {
+      const preparedValue = value
+        .replace(' ', '')
+        .replace(',', '.')
+        .replace(/[^0-9.]/g, '')
+        // strip second dot
+        .replace(/(.*\..*)\.(.*)/, (str, g1, g2) => g1 + g2)
+        // strip leading zeros
+        .replace(/0+(0\..+)/, (str, g1) => g1)
+
       const {
         prices,
         updateBitcoinTxDraftAmount,
@@ -230,53 +272,55 @@ class SendContainer extends React.Component {
         selectedCurrency,
         currentBTCWallet,
       } = this.props
-      const { address } = currentBTCWallet
-      const tokenPrice =
-        (prices &&
-          this.state.selectedToken &&
-          prices[this.state.selectedToken.symbol] &&
-          prices[this.state.selectedToken.symbol][selectedCurrency]) ||
-        0 // TODO: handle wrong values correctly
 
-      if (value && !(value.endsWith(',') || value.endsWith('.'))) {
-        const inputValue = value.replace(',', '.').replace(' ', '')
-        const localeValue = new BigNumber(inputValue).toNumber()
+      const { address } = currentBTCWallet
+
+      const tokenPrice = (prices
+        && this.state.selectedToken
+        && prices[this.state.selectedToken.symbol]
+        && prices[this.state.selectedToken.symbol][selectedCurrency])
+        || 0 // TODO: handle wrong values correctly
+
+
+      this.validateAmount(preparedValue).then((newAmount) => {
         this.setState(
           {
-            amount: inputValue,
-            amountInCurrency: tokenPrice * localeValue,
-            isAmountInputValid: this.sendAmountValidationSchema.isValidSync(localeValue) && localeValue <= +this.state.selectedToken.amount,
+            inputAmountValue: preparedValue,
+            inputAmountIsValid: true,
+            inputAmountError: '',
+            amountInCurrency: tokenPrice * newAmount,
           },
           () => {
             updateBitcoinTxDraftAmount({
               address,
               masterWalletAddress,
-              amount: localeValue,
+              amount: newAmount,
             })
-            if (this.state.isRecipientInputValid) {
+            if (this.state.inputRecipientIsValid) {
               this.requestBcFeeEstimations()
             }
           }
         )
-      } else {
-        const newAmount = this.state.amount.endsWith('.') || this.state.amount.endsWith(',') || this.state.amount.endsWith(' ')
-          ? this.state.amount
-          : value.replace(',', '.').replace(' ', '')
-        this.setState({
-          amount: newAmount || '0',
-          amountInCurrency: 0,
-          isAmountInputValid: false,
-        }, () => {
-          const newAmount = value
-            ? new BigNumber(value.replace(',', '').replace('.', '').replace(' ', '')).toNumber()
-            : 0
-          updateBitcoinTxDraftAmount({
-            address,
-            masterWalletAddress,
-            amount: newAmount,
-          })
-        })
-      }
+      }).catch((error) => {
+        this.setState(
+          {
+            inputAmountValue: preparedValue,
+            inputAmountIsValid: false,
+            inputAmountError: error.message,
+            amountInCurrency: 0,
+          },
+          () => {
+            const newAmount = value
+              ? new BigNumber(value.replace(',', '').replace('.', '').replace(' ', '')).toNumber()
+              : 0
+            updateBitcoinTxDraftAmount({
+              address,
+              masterWalletAddress,
+              amount: newAmount,
+            })
+          }
+        )
+      })
     }
   }
 
@@ -430,11 +474,11 @@ class SendContainer extends React.Component {
   }
 
   handleTouchAmount = () => {
-    this.setState({ amountTouched: true })
+    this.setState({ inputAmountTouched: true })
   }
 
   handleTouchRecipient = () => {
-    this.setState({ recipientTouched: true })
+    this.setState({ inputRecipientTouched: true })
   }
 
   render () {
@@ -442,18 +486,21 @@ class SendContainer extends React.Component {
       enterPasswordModal,
       confirmSendModal,
       error,
-      amount,
       amountInCurrency,
       feeMultiplier,
       feeInCurrency,
       fee,
-      recipient,
       selectedToken,
       showQRscanner,
-      isRecipientInputValid,
-      isAmountInputValid,
-      recipientTouched,
-      amountTouched,
+
+      inputRecipientValue,
+      inputRecipientIsValid,
+      inputRecipientTouched,
+      inputRecipientError,
+      inputAmountValue,
+      inputAmountIsValid,
+      inputAmountTouched,
+      inputAmountError,
     } = this.state
     const { currentBTCWallet, prices, selectedCurrency, navigation } = this.props
     const {
@@ -464,17 +511,13 @@ class SendContainer extends React.Component {
       prices[selectedToken.symbol][selectedCurrency]
     return (
       <Send
-        amount={amount}
         amountInCurrency={amountInCurrency}
         blockchain={blockchain}
         feeMultiplier={feeMultiplier}
         fee={fee}
         feeInCurrency={feeInCurrency}
-        onChangeAmount={this.handleChangeAmount}
-        onChangeRecipient={this.handleChangeRecipient}
         onFeeSliderChange={this.handleFeeSliderChange}
         onSelectToken={this.handleSelectToken}
-        recipient={recipient}
         selectedCurrency={selectedCurrency}
         selectedToken={selectedToken}
         selectedWallet={currentBTCWallet}
@@ -496,13 +539,20 @@ class SendContainer extends React.Component {
         onQRpageOpen={this.handleQRpageOpen}
         onQRscan={this.handleQRscan}
 
-        // validation
-        isRecipientInputValid={isRecipientInputValid}
-        isAmountInputValid={isAmountInputValid}
-        recipientTouched={recipientTouched}
-        amountTouched={amountTouched}
-        onAmountTouched={this.handleTouchAmount}
-        onRecipientTouched={this.handleTouchRecipient}
+        // input fields
+        inputAmountValue={inputAmountValue}
+        inputAmountIsValid={inputAmountIsValid}
+        inputAmountError={inputAmountError}
+        inputAmountTouched={inputAmountTouched}
+        onAmountTouch={this.handleTouchAmount}
+        onChangeAmount={this.handleChangeAmount}
+
+        inputRecipientValue={inputRecipientValue}
+        inputRecipientIsValid={inputRecipientIsValid}
+        inputRecipientError={inputRecipientError}
+        inputRecipientTouched={inputRecipientTouched}
+        onRecipientTouch={this.handleTouchRecipient}
+        onChangeRecipient={this.handleChangeRecipient}
       />
     )
   }

@@ -43,14 +43,10 @@ export default class Send extends PureComponent {
       error,
       amountInCurrency,
       blockchain,
-      recipient,
-      amount,
       price,
       feeMultiplier,
       fee,
       feeInCurrency,
-      onChangeAmount = () => { },
-      onChangeRecipient = () => { },
       onFeeSliderChange = () => { },
       selectedCurrency,
       selectedToken,
@@ -59,12 +55,19 @@ export default class Send extends PureComponent {
       onTxDraftRemove,
       onQRpageOpen,
       onQRscan,
-      isRecipientInputValid,
-      isAmountInputValid,
-      recipientTouched,
-      amountTouched,
-      onRecipientTouched,
-      onAmountTouched,
+
+      inputRecipientValue,
+      inputRecipientIsValid,
+      inputRecipientTouched,
+      inputRecipientError,
+      onRecipientTouch,
+      onChangeRecipient = () => { },
+      inputAmountValue,
+      inputAmountIsValid,
+      inputAmountTouched,
+      inputAmountError,
+      onAmountTouch,
+      onChangeAmount = () => { },
     } = this.props
 
     const currentTokenBalance = selectedWallet.tokens ?
@@ -150,10 +153,9 @@ export default class Send extends PureComponent {
             <Input
               placeholder='Recipient Address'
               onChange={onChangeRecipient}
-              name='recipient'
               style={styles.textInput}
-              value={recipient}
-              onTouch={onRecipientTouched}
+              value={inputRecipientValue}
+              onTouch={onRecipientTouch}
             />
             <TouchableOpacity
               onPress={onQRpageOpen}
@@ -165,21 +167,20 @@ export default class Send extends PureComponent {
             </TouchableOpacity>
           </View>
           {
-            recipientTouched && !isRecipientInputValid &&
-            <Text style={styles.errorText}>Recipient must be valid BTC address</Text>
+            inputRecipientTouched && !inputRecipientIsValid &&
+            <Text style={styles.errorText}>{ inputRecipientError }</Text>
           }
           <Input
             placeholder={strings.amountInput}
             style={styles.textInput}
             keyboardType='numeric'
             onChange={onChangeAmount}
-            name='amount'
-            value={amount}
-            onTouch={onAmountTouched}
+            value={inputAmountValue}
+            onTouch={onAmountTouch}
           />
           {
-            amountTouched && !isAmountInputValid &&
-            <Text style={styles.errorText}>Amount must be positive number</Text>
+            inputAmountTouched && !inputAmountIsValid &&
+            <Text style={styles.errorText}>{ inputAmountError }</Text>
           }
           <Text style={styles.sendBalance}>
             {
@@ -215,10 +216,16 @@ Send.propTypes = {
   showPasswordModal: PropTypes.bool,
   showConfirmModal: PropTypes.bool,
   error: PropTypes.string,
-  isRecipientInputValid: PropTypes.bool,
-  isAmountInputValid: PropTypes.bool,
-  recipientTouched: PropTypes.bool,
-  amountTouched: PropTypes.bool,
-  onAmountTouched: PropTypes.func,
-  onRecipientTouched: PropTypes.func,
+
+  inputAmountValue: PropTypes.string,
+  inputAmountIsValid: PropTypes.bool,
+  inputAmountError: PropTypes.string,
+  inputAmountTouched: PropTypes.bool,
+  onAmountTouch: PropTypes.func,
+
+  inputRecipientValue: PropTypes.string,
+  inputRecipientIsValid: PropTypes.bool,
+  inputRecipientError: PropTypes.string,
+  inputRecipientTouched: PropTypes.bool,
+  onRecipientTouch: PropTypes.func,
 }

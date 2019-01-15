@@ -55,7 +55,6 @@ class SendEthContainer extends React.Component {
       decimals: firtsAvailableToken.decimals,
     }
     this.state = {
-      amount: '',
       amountInCurrency: 0,
       confirmSendModal: false,
       enterPasswordModal: false,
@@ -66,13 +65,18 @@ class SendEthContainer extends React.Component {
       gasPrice: null,
       gasPriceInCurrency: null,
       feeMultiplier: 1,
-      isAmountInputValid: false,
-      isRecipientInputValid: false,
-      recipient: '',
       firtsAvailableToken,
       selectedToken,
-      amountTouched: false,
-      recipientTouched: false,
+
+      inputAmountValue: '',
+      inputAmountIsValid: false,
+      inputAmountError: 'Amount is required field',
+      inputAmountTouched: false,
+
+      inputRecipientValue: '',
+      inputRecipientIsValid: false,
+      inputRecipientError: 'Recipient is required field',
+      inputRecipientTouched: false,
     }
   }
 
@@ -143,10 +147,6 @@ class SendEthContainer extends React.Component {
     this.props.navigation.setParams({ handleGoToPasswordModal: this.handleGoToPasswordModal })
   }
 
-  sendAmountValidationSchema = Yup.number()
-    .required()
-    .positive()
-
   getDataForGasEstimation = () => {
     const {
       getNonce,
@@ -185,9 +185,17 @@ class SendEthContainer extends React.Component {
   }
 
   handleGoToPasswordModal = () => {
-    if (this.state.isRecipientInputValid && this.state.isAmountInputValid) {
+    if (this.state.inputRecipientIsValid && this.state.inputAmountIsValid) {
       this.handleTogglePasswordModal()
     }
+  }
+
+  validateRecipient = (recipient) => {
+    const validationSchema = Yup.string()
+      .typeError('Recipient must be a string')
+      .required('Recipient is required field')
+      .test('is-valid-address', 'Recipient must be a valid ETH address', isValidETHAddress)
+    return validationSchema.validate(recipient)
   }
 
   handleChangeRecipient = (name, value) => {
@@ -196,29 +204,60 @@ class SendEthContainer extends React.Component {
         updateEthereumTxDraftTo,
         masterWalletAddress,
       } = this.props
-      this.setState(
-        {
-          recipient: value,
-          isRecipientInputValid: isValidETHAddress(value),
-        },
-        () => {
-          updateEthereumTxDraftTo({
-            masterWalletAddress,
-            to: value,
-          }).then(() => {
-            if (this.state.isAmountInputValid && this.state.isRecipientInputValid) {
-              this.requestGasEstimations()
-            }
-          }).catch((error) => {
-            throw new Error('Can not updateEthereumTxDraftTo, value:', value, error)
-          })
-        }
-      )
+
+      this.validateRecipient(value).then(() => {
+        this.setState(
+          {
+            inputRecipientValue: value,
+            inputRecipientIsValid: true,
+            inputRecipientError: '',
+          },
+          () => {
+            updateEthereumTxDraftTo({
+              masterWalletAddress,
+              to: value,
+            }).then(() => {
+              if (this.state.inputAmountIsValid && this.state.inputRecipientIsValid) {
+                this.requestGasEstimations()
+              }
+            }).catch((error) => {
+              throw new Error('Can not updateEthereumTxDraftTo, value:', value, error)
+            })
+          }
+        )
+      }).catch((error) => {
+        this.setState(
+          {
+            inputRecipientValue: value,
+            inputRecipientIsValid: false,
+            inputRecipientError: error.message,
+          },
+        )
+      })
     }
+  }
+
+  validateAmount = (amount) => {
+    const { selectedToken } = this.state
+    const validationSchema = Yup.number()
+      .typeError('Amount must be a number')
+      .required('Amount is required field')
+      .moreThan(0, 'Amount must be a positive number')
+      .lessThan(selectedToken.balance ,'Not enough funds')
+    return validationSchema.validate(amount)
   }
 
   handleChangeAmount = (name, value) => {
     if (typeof value === 'string') {
+      const preparedValue = value
+        .replace(' ', '')
+        .replace(',', '.')
+        .replace(/[^0-9.]/g, '')
+        // strip second dot
+        .replace(/(.*\..*)\.(.*)/, (str, g1, g2) => g1 + g2)
+        // strip leading zeros
+        .replace(/0+(0\..+)/, (str, g1) => g1)
+
       const {
         prices,
         updateEthereumTxDraftValue,
@@ -226,53 +265,52 @@ class SendEthContainer extends React.Component {
         selectedCurrency,
       } = this.props
 
-      const tokenPrice =
-        (prices &&
-          this.state.selectedToken &&
-          prices[this.state.selectedToken.symbol] &&
-          prices[this.state.selectedToken.symbol][selectedCurrency]) ||
-        0 // TODO: handle wrong values correctly
+      const tokenPrice = (prices
+        && this.state.selectedToken
+        && prices[this.state.selectedToken.symbol]
+        && prices[this.state.selectedToken.symbol][selectedCurrency])
+        || 0 // TODO: handle wrong values correctly
 
-      if (value && !(value.endsWith(',') || value.endsWith('.'))) {
-        const inputValue = value.replace(',', '.').replace(' ', '')
-        const localeValue = new BigNumber(inputValue).toNumber()
+      this.validateAmount(preparedValue).then((newAmount) => {
         this.setState(
           {
-            amount: inputValue,
-            amountInCurrency: tokenPrice * localeValue,
-            isAmountInputValid: this.sendAmountValidationSchema.isValidSync(localeValue) && localeValue <= +this.state.selectedToken.balance,
+            inputAmountValue: preparedValue,
+            inputAmountIsValid: true,
+            inputAmountError: '',
+            amountInCurrency: tokenPrice * newAmount,
           },
           () => {
             updateEthereumTxDraftValue({
               masterWalletAddress,
-              value: localeValue,
+              value: newAmount,
             }).then(() => {
-              if (this.state.isRecipientInputValid && this.state.isAmountInputValid) {
+              if (this.state.inputRecipientIsValid && this.state.inputAmountIsValid) {
                 this.requestGasEstimations()
               }
             }).catch((error) => {
-              throw new Error('Can not updateEthereumTxDraftValue, localeValue:', value, error)
+              throw new Error('Can not updateEthereumTxDraftValue, value:', value, error)
             })
           }
         )
-      } else {
-        const newAmount = this.state.amount.endsWith('.') || this.state.amount.endsWith(',') || this.state.amount.endsWith(' ')
-          ? this.state.amount
-          : value.replace(',', '.').replace(' ', '')
-        this.setState({
-          amount: newAmount || '0',
-          amountInCurrency: 0,
-          isAmountInputValid: false,
-        }, () => {
-          const newAmount = value
-            ? new BigNumber(value.replace(',', '').replace('.', '').replace(' ', '')).toNumber()
-            : 0
-          updateEthereumTxDraftValue({
-            masterWalletAddress,
-            value: newAmount,
-          })
-        })
-      }
+      }).catch((error) => {
+        this.setState(
+          {
+            inputAmountValue: preparedValue,
+            inputAmountIsValid: false,
+            inputAmountError: error.message,
+            amountInCurrency: 0,
+          },
+          () => {
+            const newAmount = preparedValue
+              ? new BigNumber(preparedValue.replace(',', '').replace('.', '').replace(' ', '')).toNumber()
+              : 0
+            updateEthereumTxDraftValue({
+              masterWalletAddress,
+              value: newAmount,
+            })
+          }
+        )
+      })
     }
   }
 
@@ -329,7 +367,7 @@ class SendEthContainer extends React.Component {
     const estimationGasArguments = {
       from,
       to,
-      value: balanceToAmount(this.state.amount, decimals),
+      value: balanceToAmount(this.state.inputAmountValue, decimals),
       gasPrice,
       nonce,
     }
@@ -399,11 +437,11 @@ class SendEthContainer extends React.Component {
   }
 
   handleTouchAmount = () => {
-    this.setState({ amountTouched: true })
+    this.setState({ inputAmountTouched: true })
   }
 
   handleTouchRecipient = () => {
-    this.setState({ recipientTouched: true })
+    this.setState({ inputRecipientTouched: true })
   }
 
   render () {
@@ -411,19 +449,22 @@ class SendEthContainer extends React.Component {
       enterPasswordModal,
       confirmSendModal,
       error,
-      amount,
       amountInCurrency,
       feeMultiplier,
       gasPriceInCurrency,
       gasPrice,
-      recipient,
       selectedToken,
       modalProps,
       showQRscanner,
-      isRecipientInputValid,
-      isAmountInputValid,
-      recipientTouched,
-      amountTouched,
+
+      inputRecipientValue,
+      inputRecipientIsValid,
+      inputRecipientTouched,
+      inputRecipientError,
+      inputAmountValue,
+      inputAmountIsValid,
+      inputAmountTouched,
+      inputAmountError,
     } = this.state
     const {
       blockchain,
@@ -436,38 +477,26 @@ class SendEthContainer extends React.Component {
     const formattedgasPriceInCurrency = amountToBalance(gasPriceInCurrency, selectedToken.decimals).toNumber()
     return (
       <SendEth
-        amount={amount}
         amountInCurrency={amountInCurrency}
         blockchain={blockchain}
         feeMultiplier={feeMultiplier}
         gasPrice={formattedGasPrice}
         gasPriceInCurrency={formattedgasPriceInCurrency}
-        onChangeAmount={this.handleChangeAmount}
-        onChangeRecipient={this.handleChangeRecipient}
         onFeeSliderChange={this.handleFeeSliderChange}
         onSelectToken={this.handleSelectToken}
-        recipient={recipient}
         selectedCurrency={selectedCurrency}
         selectedToken={selectedToken}
         selectedWallet={currentEthWallet}
         passProps={modalProps}
         //
         price={blockchainPrice}
-
-        onAmountTouched={this.handleTouchAmount}
-        onRecipientTouched={this.handleTouchRecipient}
-
         onTogglePasswordModal={this.handleGoToPasswordModal}
         onCloseConfirmModal={this.handleCloseConfirmModal}
         onPasswordConfirm={this.handlePasswordConfirm}
         onSendConfirm={this.handleSendConfirm}
         //state
-        isRecipientInputValid={isRecipientInputValid}
-        isAmountInputValid={isAmountInputValid}
         showPasswordModal={enterPasswordModal}
         showConfirmModal={confirmSendModal}
-        recipientTouched={recipientTouched}
-        amountTouched={amountTouched}
         showQRscanner={showQRscanner}
         error={error}
         //txDraft
@@ -475,6 +504,20 @@ class SendEthContainer extends React.Component {
         onTxDraftRemove={this.handleTxDraftRemove}
         onQRpageOpen={this.handleQRpageOpen}
         onQRscan={this.handleQRscan}
+        // input fields
+        inputAmountValue={inputAmountValue}
+        inputAmountIsValid={inputAmountIsValid}
+        inputAmountError={inputAmountError}
+        inputAmountTouched={inputAmountTouched}
+        onAmountTouch={this.handleTouchAmount}
+        onChangeAmount={this.handleChangeAmount}
+
+        inputRecipientValue={inputRecipientValue}
+        inputRecipientIsValid={inputRecipientIsValid}
+        inputRecipientError={inputRecipientError}
+        inputRecipientTouched={inputRecipientTouched}
+        onRecipientTouch={this.handleTouchRecipient}
+        onChangeRecipient={this.handleChangeRecipient}
       />
     )
   }

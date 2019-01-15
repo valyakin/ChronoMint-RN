@@ -63,18 +63,13 @@ export default class SendEth extends PureComponent {
       showPasswordModal,
       showConfirmModal,
       error,
-      //
       amountInCurrency,
       blockchain,
       price,
       // currentTokenBalance,
       feeMultiplier,
-      recipient,
-      amount,
       gasPrice,
       gasPriceInCurrency,
-      onChangeAmount = () => { },
-      onChangeRecipient = () => { },
       onFeeSliderChange = () => { },
       onSelectToken,
       selectedCurrency,
@@ -87,12 +82,19 @@ export default class SendEth extends PureComponent {
       onQRpageOpen,
       showQRscanner,
       onQRscan,
-      isRecipientInputValid,
-      isAmountInputValid,
-      recipientTouched,
-      amountTouched,
-      onRecipientTouched,
-      onAmountTouched,
+
+      inputRecipientValue,
+      inputRecipientIsValid,
+      inputRecipientTouched,
+      inputRecipientError,
+      onRecipientTouch,
+      onChangeRecipient = () => { },
+      inputAmountValue,
+      inputAmountIsValid,
+      inputAmountTouched,
+      inputAmountError,
+      onAmountTouch,
+      onChangeAmount = () => { },
     } = this.props
 
     const currentTokenBalance = selectedToken ?
@@ -188,10 +190,9 @@ export default class SendEth extends PureComponent {
             <Input
               placeholder='Recipient Address'
               onChange={onChangeRecipient}
-              name='recipient'
               style={styles.textInput}
-              value={recipient}
-              onTouch={onRecipientTouched}
+              value={inputRecipientValue}
+              onTouch={onRecipientTouch}
             />
             <TouchableOpacity
               onPress={onQRpageOpen}
@@ -203,8 +204,8 @@ export default class SendEth extends PureComponent {
             </TouchableOpacity>
           </View>
           {
-            recipientTouched && !isRecipientInputValid &&
-            <Text style={styles.errorText}>Recipient must be valid ETH address</Text>
+            inputRecipientTouched && !inputRecipientIsValid &&
+            <Text style={styles.errorText}>{ inputRecipientError }</Text>
           }
           <Input
             placeholder={strings.amountInput}
@@ -212,12 +213,12 @@ export default class SendEth extends PureComponent {
             style={styles.textInput}
             onChange={onChangeAmount}
             name='amount'
-            value={amount}
-            onTouch={onAmountTouched}
+            value={inputAmountValue}
+            onTouch={onAmountTouch}
           />
           {
-            amountTouched && !isAmountInputValid &&
-            <Text style={styles.errorText}>Amount must be positive number</Text>
+            inputAmountTouched && !inputAmountIsValid &&
+            <Text style={styles.errorText}>{ inputAmountError }</Text>
           }
           <Text style={styles.sendBalance}>
             {
@@ -253,11 +254,16 @@ SendEth.propTypes = {
   showPasswordModal: PropTypes.bool,
   showConfirmModal: PropTypes.bool,
   error: PropTypes.string,
-  recipient: PropTypes.string,
-  isRecipientInputValid: PropTypes.bool,
-  isAmountInputValid: PropTypes.bool,
-  recipientTouched: PropTypes.bool,
-  amountTouched: PropTypes.bool,
-  onAmountTouched: PropTypes.func,
-  onRecipientTouched: PropTypes.func,
+
+  inputAmountValue: PropTypes.string,
+  inputAmountIsValid: PropTypes.bool,
+  inputAmountError: PropTypes.string,
+  inputAmountTouched: PropTypes.bool,
+  onAmountTouch: PropTypes.func,
+
+  inputRecipientValue: PropTypes.string,
+  inputRecipientIsValid: PropTypes.bool,
+  inputRecipientError: PropTypes.string,
+  inputRecipientTouched: PropTypes.bool,
+  onRecipientTouch: PropTypes.func,
 }
