@@ -6,10 +6,7 @@
 import React, { PureComponent } from 'react'
 import { Alert } from 'react-native'
 import PropTypes from 'prop-types'
-import { getAddress } from '@chronobank/ethereum/utils'
-import { mnemonicToPrivateKeyAndAddress } from '@chronobank/ethereum/utils'
 import i18n from '../../../locales/translation'
-import { MNEMONIC_LENGTH } from '../../../common/constants/globals'
 import EnterMnemonic from './EnterMnemonic'
 
 class EnterMnemonicContainer extends PureComponent {
@@ -31,7 +28,6 @@ class EnterMnemonicContainer extends PureComponent {
   handleLogin = () => {
     const { mnemonic } = this.state
     const { navigate } = this.props.navigation
-    const mnemonicWords = mnemonic && mnemonic.trim().split(' ')
 
     try {
       const params = {

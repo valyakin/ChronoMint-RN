@@ -45,6 +45,11 @@ export default StyleSheet.create({
     margin: 20,
     padding: 20,
   },
+  infoLine: {
+    flexDirection: 'row',
+    flexShrink: 1,
+    justifyContent: 'center',
+  },
   word: {
     color: colors.light,
     fontSize: 16,

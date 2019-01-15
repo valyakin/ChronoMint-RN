@@ -6,12 +6,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Alert } from 'react-native'
 import { selectCurrentCurrency } from '@chronobank/market/redux/selectors'
 import { getCurrentEthWallet } from '@chronobank/ethereum/redux/selectors'
 import { getCurrentWallet } from '@chronobank/session/redux/selectors'
 import { getBitcoinCurrentWallet } from '@chronobank/bitcoin/redux/selectors'
-import { BLOCKCHAIN_ETHEREUM,ETH_PRIMARY_TOKEN } from '@chronobank/ethereum/constants'
+import { BLOCKCHAIN_ETHEREUM, ETH_PRIMARY_TOKEN } from '@chronobank/ethereum/constants'
 import Wallet from './Wallet'
 
 const mapStateToProps = (state) => {
@@ -56,7 +55,7 @@ class WalletContainer extends Component {
       blockchain: state.params.blockchain,
     }
     const primaryToken = currentETHWallet.tokens[ETH_PRIMARY_TOKEN]
-    
+
     blockchain === BLOCKCHAIN_ETHEREUM ? params.token = primaryToken : null
 
     const path = blockchain === BLOCKCHAIN_ETHEREUM ? 'SendEth' : 'Send'
@@ -64,11 +63,17 @@ class WalletContainer extends Component {
   }
 
   handleReceive = () => {
-    Alert.alert(
-      'Work in progress',
-      'Sorry, receiving is under construction still.',
-      [{ text: 'Ok', onPress: () => { }, style: 'cancel' }]
-    )
+    const { navigation, currentBTCWallet, currentETHWallet } = this.props
+    const { state, navigate } = navigation
+    const { blockchain } = state.params
+    const currentWallet = blockchain === BLOCKCHAIN_ETHEREUM
+      ? currentETHWallet
+      : currentBTCWallet
+    const params = {
+      currentWallet,
+      blockchain,
+    }
+    navigate('Receive', params)
   }
 
   handleIndexChange = (index) =>

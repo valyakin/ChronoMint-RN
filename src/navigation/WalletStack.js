@@ -17,6 +17,7 @@ import MenuIcon from '../components/MenuIcon'
 import WalletList from '../screens/Wallet/WalletList'
 import Wallet from '../screens/Wallet/Wallet'
 import Send from '../screens/Wallet/Send'
+import Receive from '../screens/Wallet/Receive'
 import SendEth from '../screens/Wallet/SendEth'
 import TokenSelector from '../screens/Wallet/TokenSelector'
 import i18n from '../locales/translation'
@@ -77,6 +78,13 @@ const WalletStack = createStackNavigator(
         headerLeft: <HeaderBackButton onPress={() => navigation.goBack()} tintColor='white' />,
       }),
       screen: SendEth,
+    },
+    'Receive': {
+      navigationOptions: ({ navigation }) => ({
+        title: i18n.t('ScreensTitles.Receive'),
+        headerLeft: <HeaderBackButton onPress={() => navigation.goBack()} tintColor='white' />,
+      }),
+      screen: Receive,
     },
     'TokenSelector': {
       navigationOptions: ({ navigation }) => ({

@@ -52,8 +52,10 @@ export default class ConfirmMnemonic extends PureComponent {
       mnemonic,
       onDone,
       onClear,
+      onSkip,
       onUndo,
       disabled,
+      lastRandomWordIndex,
     } = this.props
 
     return (
@@ -69,6 +71,11 @@ export default class ConfirmMnemonic extends PureComponent {
             </Text>
           ))}
         </View>
+        <View style={styles.infoLine}>
+          <Text style={styles.word}>
+            Select the word on {lastRandomWordIndex} position
+          </Text>
+        </View>
         <View style={{ flexShrink: 1 }}>
           <FlatList
             data={words}
@@ -83,8 +90,14 @@ export default class ConfirmMnemonic extends PureComponent {
         </View>
         <View style={styles.buttonsLine}>
           <PrimaryButton
-            label={i18n.t('ConfirmMnemonic.clear')}
+            label={i18n.t('ConfirmMnemonic.reset')}
             onPress={onClear}
+            style={styles.undoAndClear}
+            upperCase
+          />
+          <PrimaryButton
+            label={i18n.t('ConfirmMnemonic.skip')}
+            onPress={onSkip}
             style={styles.undoAndClear}
             upperCase
           />
@@ -114,6 +127,9 @@ ConfirmMnemonic.propTypes = {
   onClear: PropTypes.func,
   onUndo: PropTypes.func,
   onWord: PropTypes.func,
-  mnemonic: PropTypes.arrayOf((PropTypes.string)),
-  words: PropTypes.arrayOf((PropTypes.string)),
+  onSkip: PropTypes.func,
+  disabled: PropTypes.bool,
+  lastRandomWordIndex: PropTypes.number,
+  mnemonic: PropTypes.arrayOf(PropTypes.string),
+  words: PropTypes.arrayOf(PropTypes.string),
 }

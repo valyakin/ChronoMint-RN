@@ -154,7 +154,8 @@
     "title": "Confirm recovery phrase",
     "done": "Done",
     "undo": "Undo",
-    "clear": "Clear",
+    "skip": "Skip",
+    "reset": "Reset",
     "wrongMnemonicError": "Wrong mnemonic. Try again"
   },
   "GenerateMnemonic": {
@@ -219,6 +220,7 @@
     "WalletList": "Wallets List",
     "Wallet": "Wallet",
     "Send": "Send Funds",
+    "Receive": "Receive Funds",
     "QRscanner": "Scan QR code",
     "TokenSelector": "Select Token"
   }
